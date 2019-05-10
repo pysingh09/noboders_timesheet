@@ -1,0 +1,25 @@
+{% load i18n staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    {% block stylesheet %}
+    {% endblock %}
+    
+    <title>{% block title %}{% endblock %} | ThoughtWin ERP</title>
+</head>
+
+<body>
+    <div class="container">
+    {% block header %}{% endblock %}
+
+    {% block content %}{% endblock %}    
+        
+
+    </div>
+</body>
+</html>

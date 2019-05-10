@@ -1,0 +1,7 @@
+Django==2.0.6
+psycopg2==2.7.3.2
+psycopg2-binary
+Unipath
+
+django-widget-tweaks==1.4.2
+Pillow==5.1.0
