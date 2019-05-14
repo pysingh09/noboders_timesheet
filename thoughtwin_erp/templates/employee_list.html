@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load staticfiles %}    
+{% block title %}{% endblock %}
+{% block content %} 
+    <h2>Company Employee Details</h2>
+    <div class="search-container">
+     <table class = "table" id="myTable1" border="2">
+        <thead>
+          <tr>  
+            <th>Username</th>
+            <th>Employee No</th>
+            <th>Contact</th>
+            <th>Designation</th>
+            <th>Date Of Birth</th>
+            <th>Date Of joining</th>
+            <th>Teamlead</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for person in emp_list %}
+          <tr>
+             <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td>
+            <td>{{ person.employee_id }}</td>s
+            <td>{{ person.contact_no}}</td>
+            <td>{{ person.designation}}</td>
+            <td>{{ person.date_of_birth }}</td>
+            <td>{{ person.date_of_joining }}</td>
+            <td>{{ person.teamlead }}</td>
+          </tr>
+        {% empty %}  
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% block js %}
+  {{block.super}}
+  <script src="{% static 'js/data.js' %}"></script>
+{% endblock js %}
+{% endblock %}

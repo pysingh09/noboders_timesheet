@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
+
 
 # Create your models here.
 ROLE_CHOICES = (
@@ -27,13 +29,13 @@ class Profile(models.Model):
     def __str__(self):  
         return self.user.username
 
-# class Employee_Attendance(models.Model):
-#     employee_no = models.IntegerField(verbose_name=_('Employee Number'))
-#     in_time = models.TimeField(blank=True, verbose_name=_('Time In'))      
-#     out_time = models.TimeField(blank=True, verbose_name=_('Time out'))
-#     date = models.DateField(blank=True, verbose_name=_('Date'))
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     # total_working_hours = models.TimeField(blank=True)
-   
-#     def __str__(self):
-#         return str(self.employee_no)
+
+    # def to_dict_json(self):
+    #     return {
+    #         'user': self.user,
+    #         'employee_id': self.employee_id,
+    #         'contact_no': self.contact_no,
+    #         'designation': self.designation,
+        
+
+

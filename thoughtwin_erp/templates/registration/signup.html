@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% load i18n %}
+{% block content %}
+
+<h2>Signup form</h2>
+<form class="form-horizontal" method="POST" action="{% url 'employee:signup' %}" enctype="multipart/form-data" class="form-horizontal"> 
+{# <form  action="/action_page.php"> #}
+   {% csrf_token %}
+   
+    
+     
+
+  <p>Username  :{{ user_form.username }}</p>{{user_form.errors}}
+  <p>Password  :{{ user_form.password1 }}</p>
+  <p>Confirm Password  :{{ user_form.password2 }}</p>
+  <p>First Name:{{ user_form.first_name }}</p>
+  <p>Last Name :{{ user_form.last_name }}</p>
+  <p>Email     :{{ user_form.email }}</p>
+  <p>Employee Id :{{ profile_form.employee_id }}</p>
+  <p>Contact   :{{ profile_form.contact_no }}</p>
+  <p>Designation   :{{ profile_form.designation }}</p>{{profile_form.errors}}
+  <p>DOB       :{{ profile_form.date_of_birth }}</p>
+  <p>DOJ       :{{ profile_form.date_of_joining}}</p>
+  <p>Teamlead   :{{ profile_form.teamlead }}</p>
+
+
+      <button type="submit">Save changes</button>
+</form>
+
+{% endblock %} 
+
+
+{# <div class="form-group">
+      <label class="control-label col-sm-2" for="username">Username:</label>
+      <div class="col-sm-6">
+        <input type="username" class="form-control" id="username" placeholder="Enter username" name="Username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="pwd">Password:</label>
+      <div class="col-sm-6">
+        <input type="Password" class="form-control" id="pwd" placeholder="Enter Password" name="pwd">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="fname">First Name:</label>
+      <div class="col-sm-6">
+        <input type="first_name" class="form-control" id="fname" placeholder="First Name" name="fname">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="fname">Last Name:</label>
+      <div class="col-sm-6">
+        <input type="last_name" class="form-control" id="fname" placeholder="Last Name" name="fname">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Confirm Password:</label>
+      <div class="col-sm-6">
+        <input type="Password" class="form-control" id="cpwd" placeholder="Confirm Password" name="cpwd">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Confirm Password:</label>
+      <div class="col-sm-6">
+        <input type="Password" class="form-control" id="cpwd" placeholder="Confirm Password" name="cpwd">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Email:</label>
+      <div class="col-sm-6">
+        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="emp_id">Employee Id:</label>
+      <div class="col-sm-6">
+        <input type="employee_id" class="form-control" id="emp_id" placeholder="Enter email" name="emp_id">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="cont">Contact:</label>
+      <div class="col-sm-6">
+        <input type="contact" class="form-control" id="cont" placeholder="Contact" name="cont">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="cont">Designation:</label>
+      <div class="col-sm-6">
+        <input type="designation" class="form-control" id="desn" placeholder="Designation" name="desn">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="cont">Date of Birth:</label>
+      <div class="col-sm-6">
+        <input type="date_of_birth" class="form-control" id="dob" placeholder="Enter DOB" name="dob">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="cont">Date_of_Joining:</label>
+      <div class="col-sm-6">
+        <input type="date_of_joining" class="form-control" id="doj" placeholder="Enter DOJ" name="doj">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="cont">Teamlead:</label>
+      <div class="col-sm-6">
+        <div class="col-md-4 selectContainer">
+        <input type="teamlead" class="form-control" id="tmld" placeholder="select teamlead" name="tmld">
+      </div>
+    </div> #}
+ {#   
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="pwd">Password:</label>
+      <div class="col-sm-10">          
+        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pwd">
+      </div>
+    </div>
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="checkbox">
+          <label><input type="checkbox" name="remember"> Remember me</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+</form> #}
+  
+

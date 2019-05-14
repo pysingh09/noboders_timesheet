@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os,sys
-
+from decouple import config
+from dj_database_url import parse as dburl
 
 #setting ---------------------------------------------------------
 from unipath import Path
@@ -48,7 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    
+    'django_filters',
+    'django_extensions',
     'employee'
 ]
 
@@ -131,3 +133,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+LOGIN_REDIRECT_URL = '/home/'
+LOGOUT_REDIRECT_URL = '/accounts/login'
+AUTH_USER_MODEL = 'auth.User'
+
