@@ -1,9 +1,9 @@
-import json
+import json,csv,io
 from django.shortcuts import render
-from django.views.generic import View ,ListView #CreateView,TemplateView,DetailView,DeleteView
+from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile     
+from employee.models import Profile, EmployeeAttendance
 from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -14,9 +14,9 @@ from django.http import JsonResponse
 #     def get(self, request):
 #         return render(request, 'dashboard/dashboard.html')
 
-@login_required
-def home(request):
-    return render(request,'home.html')
+# @login_required
+# def home(request):
+#     return render(request,'home.html')
 
 def signup(request):
     if request.method == 'POST':    
@@ -35,6 +35,9 @@ def signup(request):
         profile_form = ProfileForm()
     return render(request, 'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form}) 
 
+def employee_profile(request):
+    template_name = "home.html"
+    return render(request,template_name)
 
 class EmployeeListView(ListView):
     model = Profile
@@ -44,6 +47,13 @@ class EmployeeListView(ListView):
         context['emp_list'] = Profile.objects.all()
         return context
 
+def employee_data_table(request):
+    persons = Profile.objects.all()
+    data = [person.to_dict_json() for person in persons]
+    result = {'data': data}
+    response = json.dumps(list(result)) 
+    return JsonResponse(response,safe=False)
+        
 def edit(request, id):  
     employee = Profile.objects.get(id=id)  
     return render(request,'edit.html', {'employee':employee})
@@ -53,19 +63,48 @@ def update(request, id):
     form = ProfileForm(request.POST, instance = employee)  
     if form.is_valid():  
         form.save() 
-        return redirect("/employee_list.html")  
+        return redirect("employee_list.html")  
     return render(request, 'edit.html', {'employee': employee})
-
-def person_json(request):
-    persons = Profile.objects.all()
-    data = [person.to_dict_json() for person in persons]
-    result = {'data': data}
-    response = json.dumps(list(result)) 
-    return JsonResponse(response,safe=False)
+    
 
 
+@permission_required('admin.con_add_log_entry')
+def file_upload(request):
+    template = 'file_upload.html'
+    prompt= {
+             'order' : 'order of csv should be employee_no, in_time, out_time, date'
+    }
+    if request.method == 'GET':
+        return render(request,template,prompt)
 
+    csv_file = request.FILES["csv_file"]
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request,'this is not csv file')
 
+    file_data = csv_file.read().decode("utf-8")
+    io_string =io.StringIO(file_data)
+    next(io_string)
+    for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+        user_profile = Profile.objects.get(employee_id=column[0])
+        _, created= EmployeeAttendance.objects.update_or_create(
+            user=request.user,
+            employee_id = column[0],
+            in_time = column[1],
+            out_time =column[2],
+            date = column[3]
+        )
+    context={}
+    return render(request,template,context)
+
+@login_required
+def home(request):
+    context = {}
+    context['user'] = request.user
+    if request.user.is_superuser:
+        context['attendance_data'] = EmployeeAttendance.objects.all()
+    else:
+        context['attendance_data'] = EmployeeAttendance.objects.filter(user=request.user)
+    return render(request,'home.html', context)
 
 
 # class SnippetListView(ListView):
