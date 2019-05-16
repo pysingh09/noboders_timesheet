@@ -17,9 +17,13 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+# from django.contrib.auth.decorators import user_passes_test
+
+# login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('employee.urls', namespace='employee')),
 

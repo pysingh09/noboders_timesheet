@@ -39,13 +39,11 @@ def employee_profile(request):
     template_name = "home.html"
     return render(request,template_name)
 
+
 class EmployeeListView(ListView):
-    model = Profile
+    model = EmployeeAttendance
     template_name = "employee_list.html"
-    def get_context_data(self, **kwargs):
-        context = super(EmployeeListView, self).get_context_data(**kwargs)
-        context['emp_list'] = Profile.objects.all()
-        return context
+
 
 def employee_data_table(request):
     persons = Profile.objects.all()
@@ -85,9 +83,11 @@ def file_upload(request):
     io_string =io.StringIO(file_data)
     next(io_string)
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+        
+        profile = Profile.objects.get(employee_id=column[0])
         user_profile = Profile.objects.get(employee_id=column[0])
-        created= EmployeeAttendance.objects.update_or_create(
-            user=request.user,
+        _, created= EmployeeAttendance.objects.update_or_create(
+            user=profile.user,
             employee_id = column[0],
             in_time = column[1],
             out_time =column[2],
@@ -99,11 +99,12 @@ def file_upload(request):
 @login_required
 def home(request):
     context = {}
-    context['user'] = request.user
+    # context['user'] = request.user
     if request.user.is_superuser:
         context['attendance_data'] = EmployeeAttendance.objects.all()
     else:
-        context['attendance_data'] = EmployeeAttendance.objects.filter(user=request.user)
+        usr = User.objects.get(id = request.user.id)
+        context['attendance_data'] = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
     return render(request,'home.html', context)
 
 

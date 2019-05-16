@@ -17,12 +17,12 @@
           </tr>
         </thead>
         <tbody>
-        {% for person in emp_list %}
+        {% for person in object_list %}
           <tr>
              <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td>
-            <td>{{ person.employee_id }}</td>s
+            <td>{{ person.employee_id }}</td>
             <td>{{ person.contact_no}}</td>
-            <td>{{ person.designation}}</td>
+            <td>{{ person.get_designation_display }}</td>
             <td>{{ person.date_of_birth }}</td>
             <td>{{ person.date_of_joining }}</td>
             <td>{{ person.teamlead }}</td>
