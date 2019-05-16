@@ -86,7 +86,7 @@ def file_upload(request):
     next(io_string)
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
         user_profile = Profile.objects.get(employee_id=column[0])
-        _, created= EmployeeAttendance.objects.update_or_create(
+        created= EmployeeAttendance.objects.update_or_create(
             user=request.user,
             employee_id = column[0],
             in_time = column[1],
