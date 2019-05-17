@@ -1,19 +1,20 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth.models import User,Group
 from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
-ROLE_CHOICES = (
-        (1, ('MD')),
-        (2, ('Project manager')),
-        (3, ('BDE')),
-        (4 , ('HR')),
-        (5 , ('TeamLead')),
-        (6 , ('Senior developer')),
-        (7 , ('Junior developer')),
-        (8 , ('Trainee')),
-        (9 , ('QA')),
-    )
+# ROLE_CHOICES = (
+#         (1, ('MD')),
+#         (2, ('Project manager')),
+#         (3, ('BDE')),
+#         (4 , ('HR')),
+#         (5 , ('TeamLead')),
+#         (6 , ('Senior developer')),
+#         (7 , ('Junior developer')),
+#         (8 , ('Trainee')),
+#         (9 , ('QA')),
+#     )
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
@@ -22,9 +23,13 @@ class Profile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_('Date Of Birth'))
     date_of_joining = models.DateField(null=True, blank=True, verbose_name=_('Date Of Joining'))
     teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'))
-    designation = models.IntegerField(choices=ROLE_CHOICES, default=7, verbose_name=_('Designation'))
+    designation = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name=_('Designation'))
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_created')
 
-    def __str__(self):  
+    def __str__(self):    
+
         return self.user.username
 
 # class Employee_Attendance(models.Model):
