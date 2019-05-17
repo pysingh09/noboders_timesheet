@@ -10,7 +10,8 @@
 </head>  
 <body>  
 <form method="POST" class="post-form" action="/update/{{employee.id}}">  
-        {% csrf_token %}  
+        {% csrf_token %} 
+        <!-- {{ form.as_p }} -->
     <div class="container">  
 <br>  
     <div class="form-group row">  

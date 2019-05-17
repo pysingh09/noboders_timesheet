@@ -1,3 +1,4 @@
+{% load staticfiles %}  
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,6 +11,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   
   <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="{% static 'js/data.js' %}"></script>
+  
 
   <title>{% block title %}My Site{% endblock %}</title>
   

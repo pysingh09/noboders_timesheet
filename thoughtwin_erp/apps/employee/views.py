@@ -1,5 +1,5 @@
 import json,csv,io
-from django.shortcuts import render
+from django.shortcuts import render,get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
@@ -41,7 +41,7 @@ def employee_profile(request):
 
 
 class EmployeeListView(ListView):
-    model = EmployeeAttendance
+    model = Profile
     template_name = "employee_list.html"
 
 
@@ -58,12 +58,35 @@ def edit(request, id):
 
 def update(request, id):  
     employee = Profile.objects.get(id=id)  
-    form = ProfileForm(request.POST, instance = employee)  
+    form = ProfileForm(request.POST, instance = employee) 
+    # user_form = SignUpForm(request.POST, instance = employee) 
+    import pdb; pdb.set_trace()
     if form.is_valid():  
         form.save() 
-        return redirect("employee_list.html")  
-    return render(request, 'edit.html', {'employee': employee})
-    
+        return redirect("EmployeeListView")  
+    return render(request, 'edit.html', {'form': form})
+ 
+
+# def update(request, id, template_name='employee_list.html'):
+#     book= get_object_or_404(Profile, id=id)
+#     form = ProfileForm(request.POST or None, instance=book)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('employee_list.html')
+#     return render(request, template_name, {'form':form})
+
+
+
+# def update(request, id):  
+#     employee = Profile.objects.get(id=id)
+#     form = ProfileForm(request.POST or None, instance = employee)
+#     # import pdb; pdb.set_trace()
+#     if request.method == 'POST':
+#         if form.is_valid():  
+#             form.save()  
+#             return redirect("employee_list.html")  
+#     return render(request, 'edit.html', {'form': form})  
+
 
 
 @permission_required('admin.con_add_log_entry')
@@ -107,6 +130,10 @@ def home(request):
         context['attendance_data'] = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
     return render(request,'home.html', context)
 
+def profile(request):
+    template_name = "profile.html"
+    return render(request,template_name)
+    
 
 # class SnippetListView(ListView):
 #     model = Profile
