@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'employee.middleware.AuthRequiredMiddleware',#before login redirection
 ]
 
 ROOT_URLCONF = 'thoughtwin_erp.urls'
@@ -132,3 +133,13 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = '/'
 STATIC_URL = '/static/'
+
+
+LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    '/admin',
+    '/login',
+    # '/password_reset',
+    # '/reset',
+    # '/user/exist',
+    # '/create/user',
+)
