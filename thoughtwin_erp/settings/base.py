@@ -39,6 +39,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'app.employee.middlewares.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'thoughtwin_erp.urls'
@@ -135,5 +137,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/accounts/login'
+LOGIN_URL = '/account/login/'
 AUTH_USER_MODEL = 'auth.User'
-
+AUTH_USER_EMAIL_UNIQUE = True
+# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+# LOGIN_EXEMPT_URLS = (
+#         '/signup/$',
+#         '/emplist/',
+#         '/profile/',
+#         )
+    

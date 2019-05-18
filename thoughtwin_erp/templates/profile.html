@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Profile</h1>
+    <h2>Welcome : {{ user.username }}</h2> 
+
+    <p>username  :{{ user.username }}</p>
+    <p>First name:{{ user.first_name }}</p>
+    <p>Last name :{{ user.last_name }}</p>
+    <p>Email     :{{ user.email }}</p>
+    
+    <p>ID :{{ user.profile.employee_id }}</p>
+    <p>Contact :{{ user.profile.contact_no }}</p>
+    <p>DOB :{{ user.profile.date_of_birth }}</p>
+    <p>DOJ :{{ user.profile.date_of_joining}}</p>
+    
+{% endblock %}

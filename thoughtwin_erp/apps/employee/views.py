@@ -7,17 +7,19 @@ from employee.models import Profile, EmployeeAttendance
 from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-
-
-# Create your views here.
-# class Dashboard(View):
-#     def get(self, request):
-#         return render(request, 'dashboard/dashboard.html')
+from datetime import datetime
+def delete_profile(request):        
+    user = request.user
+    user.is_active = False
+    user.save()
+    logout(request)
+    messages.success(request, 'Profile successfully disabled.')
+    return redirect('index')
 
 # @login_required
 # def home(request):
 #     return render(request,'home.html')
-
+@login_required(login_url='/accounts/login')
 def signup(request):
     if request.method == 'POST':    
         user_form = SignUpForm(data=request.POST)
@@ -36,22 +38,21 @@ def signup(request):
     return render(request, 'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form}) 
 
 def employee_profile(request):
-    template_name = "home.html"
+    template_name = "profile.html"
     return render(request,template_name)
 
 
 class EmployeeListView(ListView):
-    model = EmployeeAttendance
+    model = Profile
     template_name = "employee_list.html"
 
+def deactivate_user():
+    if request.method==POST:
+        pk = request.POST.get('pk')
+        profile = Profile.objects.get(pk=pk)
+        profile.block_profile()
 
-def employee_data_table(request):
-    persons = Profile.objects.all()
-    data = [person.to_dict_json() for person in persons]
-    result = {'data': data}
-    response = json.dumps(list(result)) 
-    return JsonResponse(response,safe=False)
-        
+    
 def edit(request, id):  
     employee = Profile.objects.get(id=id)  
     return render(request,'edit.html', {'employee':employee})
@@ -65,7 +66,7 @@ def update(request, id):
     return render(request, 'edit.html', {'employee': employee})
     
 
-
+@login_required(login_url='/accounts/login')
 @permission_required('admin.con_add_log_entry')
 def file_upload(request):
     template = 'file_upload.html'
@@ -85,6 +86,10 @@ def file_upload(request):
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
         
         profile = Profile.objects.get(employee_id=column[0])
+        # in_time= datetime.strptime("column[1]", "%H:%M")
+        # out_time= datetime.strptime("column[2]", "%H:%M")
+        # in_time.strftime("%I:%M %p")
+        # out_time.strftime("%I:%M %p")
         user_profile = Profile.objects.get(employee_id=column[0])
         _, created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
@@ -96,16 +101,36 @@ def file_upload(request):
     context={}
     return render(request,template,context)
 
-@login_required
+@login_required(login_url='/accounts/login')
 def home(request):
     context = {}
-    # context['user'] = request.user
-    if request.user.is_superuser:
-        context['attendance_data'] = EmployeeAttendance.objects.all()
+    if request.user.is_active:
+        if request.user.is_superuser:
+            context['attendance_data'] = EmployeeAttendance.objects.all()
+        else:
+            usr = User.objects.get(id = request.user.id)
+            context['attendance_data'] = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
+        return render(request,'home.html', context)
     else:
-        usr = User.objects.get(id = request.user.id)
-        context['attendance_data'] = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
-    return render(request,'home.html', context)
+        return redirect('/')
+
+
+# def user_login(request):
+#     context={}
+#     if request.method == 'POST':
+#         username=request.POST['username']
+#         password=request.POST['password']
+#         user=authenticate(request,username=username,password=password)
+#         if user:
+#             login(request,user)
+#             if request.GET.get(next,None):
+#                 return HttpResponse(request.GET.)
+#             return HttpResponse(reverce'success')
+#         else:
+#             context['error']='envailid u p'
+#              return render(request,'home.html',context)
+#     else:
+#         return render(request,'home.html',context)
 
 
 # class SnippetListView(ListView):

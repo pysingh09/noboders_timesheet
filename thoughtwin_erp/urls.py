@@ -17,14 +17,25 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import views as auth_views
+# from django.contrib.auth.views import login
+
 # from django.contrib.auth.decorators import user_passes_test
 
+
 # login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('employee.urls', namespace='employee')),
+    # path('accounts/login/', login_forbidden(login), name="login"),
+    # path('accounts/login/', login_forbidden(login), name="login"),
 
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # path('accounts/', 'django.contrib.auth.views.login', {'redirect_if_logged_in': 'home'})
+    path('', include('employee.urls', namespace='employee'))
+
+]
+# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

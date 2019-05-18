@@ -1,26 +1,39 @@
 {% extends 'base.html' %}
+{% load staticfiles %}    
+{% block title %}{% endblock %}
+{% block content %} 
+    <h2>Attendance Details</h2>
+    <div class="search-container">
+     <table class = "table" id="myTable1" border="2">
+        <thead>
+          <tr>
 
-{% block content %}
-    <h1>Profile</h1>
-    <h2>Welcome : {{ user.username }}</h2> 
-
-    <p>username  :{{ user.username }}</p>
-    <p>First name:{{ user.first_name }}</p>
-    <p>Last name :{{ user.last_name }}</p>
-    <p>Email     :{{ user.email }}</p>
-    
-    <p>ID :{{ user.profile.employee_id }}</p>
-    <p>Contact :{{ user.profile.contact_no }}</p>
-    <p>DOB :{{ user.profile.date_of_birth }}</p>
-    <p>DOJ :{{ user.profile.date_of_joining}}</p>
-
-{% for attendance in attendance_data %}
-          
-    <p>{{ attendance.user }}</p>
-    <p>{{ attendance.employee_id }}</p>
-    <p>{{ attendance.in_time}}</p>
-    <p>{{ attendance.out_time}}</p>
-    <p>{{ attendance.date }}</p>
-{% endfor %}        
+            <th>Employee ID</th>
+            <th>IN Time</th>
+            <th>Out Time</th>
+            <th>Date</th>
+            <th>Active</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+        {% for attendance in attendance_data %}
+          <tr>
+            {# <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td> #}
+            <td>{{ attendance.employee_id }}</td>
+            <td>{{ attendance.in_time}}</td>
+            <td>{{ attendance.out_time}}</td>
+            <td>{{ attendance.date }}</td>
+            <td><input type="checkbox"</td>   
+          </tr>
+        {% empty %}  
+        {% endfor %}
+        </tbody>
+      </table>
+      <input type="submit" value="Delete">
+    </div>
+  {% block js %}
+  {{block.super}}
+  <script src="{% static 'js/data.js' %}"></script>
+{% endblock js %}
 {% endblock %}
-
