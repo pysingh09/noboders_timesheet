@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_filters',
     'django_extensions',
-    'employee'
+    'employee',
+
 ]
 
 MIDDLEWARE = [

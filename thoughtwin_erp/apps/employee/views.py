@@ -7,6 +7,7 @@ from employee.models import Profile, EmployeeAttendance
 from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from datetime import datetime, date
 
 
 # Create your views here.
@@ -58,12 +59,16 @@ def edit(request, id):
 
 def update(request, id):  
     employee = Profile.objects.get(id=id)  
-    form = ProfileForm(request.POST, instance = employee) 
+     
     # user_form = SignUpForm(request.POST, instance = employee) 
-    import pdb; pdb.set_trace()
-    if form.is_valid():  
-        form.save() 
-        return redirect("EmployeeListView")  
+    # import pdb; pdb.set_trace()
+    form = ProfileForm(request.POST, instance = employee)
+    if request.method=="POST":
+        form = ProfileForm(request.POST, instance = employee)
+        if form.is_valid():  
+            form.save() 
+            return redirect("employee_list.html") 
+
     return render(request, 'edit.html', {'form': form})
  
 
@@ -109,11 +114,19 @@ def file_upload(request):
         
         profile = Profile.objects.get(employee_id=column[0])
         user_profile = Profile.objects.get(employee_id=column[0])
-        _, created= EmployeeAttendance.objects.update_or_create(
+        
+        import pdb; pdb.set_trace()
+        # in_time1 = datetime.strptime('profile.column[1]' ,"%H:%M")
+        # in_time1 .strftime("%I:%M %p"),
+        # print(in_time1)
+        # in_time2 = datetime.strptime('profile.column[2]' ,"%H:%M")
+        # in_time2 .strftime("%I:%M %p"),
+
+        created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],
-            in_time = column[1],
-            out_time =column[2],
+            in_time = in_time1,
+            out_time =in_time2,
             date = column[3]
         )
     context={}
@@ -124,11 +137,26 @@ def home(request):
     context = {}
     # context['user'] = request.user
     if request.user.is_superuser:
+        # import pdb; pdb.set_trace()
         context['attendance_data'] = EmployeeAttendance.objects.all()
+        # import pdb; pdb.set_trace()
+
+        # context1['attendance_data']= EmployeeAttendance.objects.in_time()
+        # context2['attendance_data']= EmployeeAttendance.objects.in_out()
+        # duration = round((context1-context2).seconds / 3600, 1)
     else:
         usr = User.objects.get(id = request.user.id)
-        context['attendance_data'] = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
+        attendances_data = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
+
+        for attendance_data in attendances_data:
+            # import pdb; pdb.set_trace()
+            a = attendance_data.in_time
+            b = attendance_data.out_time 
+            difference =datetime.combine(date.today(), b) - datetime.combine(date.today(), a)
+            res= difference.seconds / 3600 # float in hours
+            print(b,a,difference)
     return render(request,'home.html', context)
+
 
 def profile(request):
     template_name = "profile.html"

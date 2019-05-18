@@ -24,6 +24,7 @@
             <th>Time_in</th>
             <th>Time_out</th>
             <th>Date</th>
+            <th>Calculation</th>
           </tr>
         </thead>
         <tbody>
@@ -34,9 +35,9 @@
                 <td><p>{{ attendance.in_time}}</p></td>
                 <td><p>{{ attendance.out_time}}</p></td>
                 <td><p>{{ attendance.date }}</p></td>
+             <td><p>{{ duration}}</p></td>
             </tr>
             {% endfor %}        
-            
 
         </tbody>
     </table>
