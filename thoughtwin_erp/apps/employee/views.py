@@ -10,15 +10,6 @@ from django.http import JsonResponse
 from datetime import datetime, date
 
 
-# Create your views here.
-# class Dashboard(View):
-#     def get(self, request):
-#         return render(request, 'dashboard/dashboard.html')
-
-# @login_required
-# def home(request):
-#     return render(request,'home.html')
-
 def signup(request):
     if request.method == 'POST':    
         user_form = SignUpForm(data=request.POST)
@@ -59,9 +50,6 @@ def edit(request, id):
 
 def update(request, id):  
     employee = Profile.objects.get(id=id)  
-     
-    # user_form = SignUpForm(request.POST, instance = employee) 
-    # import pdb; pdb.set_trace()
     form = ProfileForm(request.POST, instance = employee)
     if request.method=="POST":
         form = ProfileForm(request.POST, instance = employee)
@@ -71,28 +59,6 @@ def update(request, id):
 
     return render(request, 'edit.html', {'form': form})
  
-
-# def update(request, id, template_name='employee_list.html'):
-#     book= get_object_or_404(Profile, id=id)
-#     form = ProfileForm(request.POST or None, instance=book)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('employee_list.html')
-#     return render(request, template_name, {'form':form})
-
-
-
-# def update(request, id):  
-#     employee = Profile.objects.get(id=id)
-#     form = ProfileForm(request.POST or None, instance = employee)
-#     # import pdb; pdb.set_trace()
-#     if request.method == 'POST':
-#         if form.is_valid():  
-#             form.save()  
-#             return redirect("employee_list.html")  
-#     return render(request, 'edit.html', {'form': form})  
-
-
 
 @permission_required('admin.con_add_log_entry')
 def file_upload(request):
@@ -113,69 +79,34 @@ def file_upload(request):
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
         
         profile = Profile.objects.get(employee_id=column[0])
-        user_profile = Profile.objects.get(employee_id=column[0])
-        
-        import pdb; pdb.set_trace()
-        # in_time1 = datetime.strptime('profile.column[1]' ,"%H:%M")
-        # in_time1 .strftime("%I:%M %p"),
-        # print(in_time1)
-        # in_time2 = datetime.strptime('profile.column[2]' ,"%H:%M")
-        # in_time2 .strftime("%I:%M %p"),
+        in_time1 = datetime.strptime(column[1] ,'%I:%M%p')
+        in_time2 = datetime.strptime(column[2] ,'%I:%M%p')
 
         created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],
             in_time = in_time1,
-            out_time =in_time2,
-            date = column[3]
+            out_time =in_time2, #10 : 00 PM
+            date = column[3] 
         )
+
     context={}
     return render(request,template,context)
 
 @login_required
 def home(request):
-    context = {}
-    # context['user'] = request.user
+    in_out_time = []
     if request.user.is_superuser:
-        # import pdb; pdb.set_trace()
-        context['attendance_data'] = EmployeeAttendance.objects.all()
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
+        attendances_data = EmployeeAttendance.objects.all()
 
-        # context1['attendance_data']= EmployeeAttendance.objects.in_time()
-        # context2['attendance_data']= EmployeeAttendance.objects.in_out()
-        # duration = round((context1-context2).seconds / 3600, 1)
     else:
-        usr = User.objects.get(id = request.user.id)
-        attendances_data = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
+        attendances_data = EmployeeAttendance.objects.filter(employee_id=request.user.profile.employee_id)
 
-        for attendance_data in attendances_data:
-            # import pdb; pdb.set_trace()
-            a = attendance_data.in_time
-            b = attendance_data.out_time 
-            difference =datetime.combine(date.today(), b) - datetime.combine(date.today(), a)
-            res= difference.seconds / 3600 # float in hours
-            print(b,a,difference)
-    return render(request,'home.html', context)
+    return render(request,'home.html', {'attendances_data' : attendances_data})
 
 
 def profile(request):
     template_name = "profile.html"
     return render(request,template_name)
     
-
-# class SnippetListView(ListView):
-#     model = Profile
-#     template_name = "employee_list.html"
-#     def __init__(self, arg):
-#         super(ClassName, self).__init__()
-#         self.arg = arg
-        
-
-
-# class EmployeeListView(ListView):
-#     model = Profile
-#     template_name = "employee_list.html"
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['filter'] = SnippetFilter(self.request.GET, queryset=self.get_queryset())
-#         return context

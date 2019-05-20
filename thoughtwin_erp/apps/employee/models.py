@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
+from datetime import datetime, date
 
 
 # Create your models here.
@@ -30,12 +31,6 @@ class Profile(models.Model):
     def __str__(self):  
         return self.user.username
 
-# def create_profile(sender , **kwargs):
-#     user= kwargs['instance']
-#     if kwargs['created']:
-#         user_profile = Profile(user=user)
-#         user_profile.save()
-#         post_save.connect(create_profile, sender=User) 
 
 class EmployeeAttendance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
@@ -48,17 +43,10 @@ class EmployeeAttendance(models.Model):
         return str(self.employee_id)
 
 
+    def emp_hour(self):
+
+        return (datetime.combine(date.today(), self.out_time) - datetime.combine(date.today(), self.in_time)).seconds / 3600
 
 
-
-
-
-    # def to_dict_json(self):
-    #     return {
-    #         'user': self.user,
-    #         'employee_id': self.employee_id,
-    #         'contact_no': self.contact_no,
-    #         'designation': self.designation,
-        
 
 
