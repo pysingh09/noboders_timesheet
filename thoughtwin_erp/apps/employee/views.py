@@ -8,13 +8,7 @@ from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from datetime import datetime
-def delete_profile(request):        
-    user = request.user
-    user.is_active = False
-    user.save()
-    logout(request)
-    messages.success(request, 'Profile successfully disabled.')
-    return redirect('index')
+
 
 # @login_required
 # def home(request):
@@ -46,14 +40,38 @@ class EmployeeListView(ListView):
     model = Profile
     template_name = "employee_list.html"
 
-def deactivate_user():
-    if request.method==POST:
-        pk = request.POST.get('pk')
-        profile = Profile.objects.get(pk=pk)
-        profile.block_profile()
 
-    
-def edit(request, id):  
+# def deactivate_user(request,pk):
+#     if request.method==POST:
+#         pk = request.POST.get('pk')
+#         employee = user.objects.get(pk=pk)
+#         employee.is_active = False
+#         employee.save()
+#         messages.success(request, 'Profile successfully disabled.')
+#         return render(request, 'employee_list.html', {'employee': employee})
+#     else:
+#         return render(request, 'employee_list.html')
+
+def deactivate_user(request, pk):
+    employee = get_object(Profile, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        employee.is_active = False
+        user = Profile.objects.all()
+        # attendance = EmployeeAttendance.objects.all()
+        data['emp_list'] = render_to_string('employee_list.html', {'user': user})
+    else:
+        context = {'employee': employee}
+        data['html_form'] = render_to_string('deactivate.html', context, request=request)
+    return JsonResponse(data)
+
+
+
+
+
+
+def edit(request, id):
+
     employee = Profile.objects.get(id=id)  
     return render(request,'edit.html', {'employee':employee})
 
@@ -64,7 +82,7 @@ def update(request, id):
         form.save() 
         return redirect("employee_list.html")  
     return render(request, 'edit.html', {'employee': employee})
-    
+
 
 @login_required(login_url='/accounts/login')
 @permission_required('admin.con_add_log_entry')
@@ -86,16 +104,16 @@ def file_upload(request):
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
         
         profile = Profile.objects.get(employee_id=column[0])
-        # in_time= datetime.strptime("column[1]", "%H:%M")
-        # out_time= datetime.strptime("column[2]", "%H:%M")
+        in_time1= datetime.strptime(column[1], "%I:%M%p")
+        out_time1= datetime.strptime(column[2], "%I:%M%p")
+        # out_time= datetime.strptime("column[2]", "%I:%M%")
         # in_time.strftime("%I:%M %p")
         # out_time.strftime("%I:%M %p")
-        user_profile = Profile.objects.get(employee_id=column[0])
         _, created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],
-            in_time = column[1],
-            out_time =column[2],
+            in_time = in_time1,
+            out_time =out_time1,
             date = column[3]
         )
     context={}
@@ -149,3 +167,12 @@ def home(request):
 #         context = super().get_context_data(**kwargs)
 #         context['filter'] = SnippetFilter(self.request.GET, queryset=self.get_queryset())
 #         return context
+
+
+# def delete_profile(request,id):        
+#     user = Profile.objects.get(id=id)
+#     user.is_active = False
+#     user.save()
+#     logout(request)
+#     messages.success(request, 'Profile successfully disabled.')
+#     return redirect('employee_list')

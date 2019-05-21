@@ -11,6 +11,8 @@ urlpatterns = [
     path('profile/', employee_profile, name='profile'),
     path('file/', file_upload, name='file_upload'),
     path('emplist/', views.EmployeeListView.as_view(), name='employee_list'),
+    # url(r'^books/(?P<pk>\d+)/delete/$', views.book_delete, name='book_delete'),
+    path('deactivate/<int:pk>/', deactivate_user,name='deactivate'),
     path('edit/<int:id>/', edit, name='edit'),
     path('update/<int:id>', update, name='update'),
     
