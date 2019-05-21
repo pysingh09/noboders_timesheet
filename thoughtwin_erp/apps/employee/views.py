@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance
 from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from datetime import datetime
 
@@ -41,33 +42,27 @@ class EmployeeListView(ListView):
     template_name = "employee_list.html"
 
 
-# def deactivate_user(request,pk):
-#     if request.method==POST:
-#         pk = request.POST.get('pk')
-#         employee = user.objects.get(pk=pk)
-#         employee.is_active = False
-#         employee.save()
-#         messages.success(request, 'Profile successfully disabled.')
-#         return render(request, 'employee_list.html', {'employee': employee})
-#     else:
-#         return render(request, 'employee_list.html')
-
-def deactivate_user(request, pk):
-    employee = get_object(Profile, pk=pk)
+@csrf_exempt
+def deactivate_user(request,pk):
+    # import pdb; pdb.set_trace()
+    employee = Profile.objects.get(pk=pk)
     data = dict()
     if request.method == 'POST':
+        # import pdb; pdb.set_trace() 
         employee.is_active = False
+        employee.save()
         user = Profile.objects.all()
-        # attendance = EmployeeAttendance.objects.all()
-        data['emp_list'] = render_to_string('employee_list.html', {'user': user})
-    else:
         context = {'employee': employee}
-        data['html_form'] = render_to_string('deactivate.html', context, request=request)
+        print("hrsds")
+        data['employee'] = render(request,'employee_list.html',context)
+        return JsonResponse(data)
+        # print("yyyyy")
+        # attendance = EmployeeAttendance.objects.all()
+    else:
+        print("yyyyy")
+        context = {'employee': employee}
+        data['html_form'] = render('deactivate.html', context, request=request)
     return JsonResponse(data)
-
-
-
-
 
 
 def edit(request, id):
@@ -106,9 +101,6 @@ def file_upload(request):
         profile = Profile.objects.get(employee_id=column[0])
         in_time1= datetime.strptime(column[1], "%I:%M%p")
         out_time1= datetime.strptime(column[2], "%I:%M%p")
-        # out_time= datetime.strptime("column[2]", "%I:%M%")
-        # in_time.strftime("%I:%M %p")
-        # out_time.strftime("%I:%M %p")
         _, created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],

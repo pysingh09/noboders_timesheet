@@ -3,7 +3,7 @@
 {% block title %}{% endblock %}
 {% block content %} 
     <h2>Company Employee Details</h2>
-       {# <div class="search-container"> #}
+       <div class="search-container">
      <table class = "table" id="myTable1" border="2">
         <thead>
           <tr>
@@ -27,7 +27,7 @@
                 <td>{{ person.date_of_birth }}</td>
                 <td>{{ person.date_of_joining }}</td>
                 <td>{{ person.teamlead }}</td>
-                <td><button class="btn btn-danger js-deactivate-employee" name="pk" value="{{ person.pk }}" onclick="loadDoc()">Deactivate</button></td>
+                <td><button class="btn btn-danger deactivateEmployee" name="pk" value="{{ person.pk }}">Deactivate</button></td>
               </tr>
           {% endfor %}
         </tbody>
