@@ -8,6 +8,9 @@ from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from datetime import datetime, date
+from django.db.models import Count
+from time import sleep
+from django.db.models import Sum
 
 
 def signup(request):
@@ -79,15 +82,17 @@ def file_upload(request):
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
         
         profile = Profile.objects.get(employee_id=column[0])
-        in_time1 = datetime.strptime(column[1] ,'%I:%M%p')
-        in_time2 = datetime.strptime(column[2] ,'%I:%M%p')
-
+        in_time = datetime.strptime(column[1] ,'%I:%M%p')
+        out_time = datetime.strptime(column[2] ,'%I:%M%p')
+        total_working_time = (datetime.combine(date.today(), out_time.time()) - datetime.combine(date.today(), in_time.time())).seconds / 3600
+        
         created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],
-            in_time = in_time1,
-            out_time =in_time2, #10 : 00 PM
-            date = column[3] 
+            in_time = in_time,
+            out_time =out_time, #10 : 00 PM
+            date = column[3],
+            total_working_time = total_working_time
         )
 
     context={}
@@ -97,8 +102,13 @@ def file_upload(request):
 def home(request):
     in_out_time = []
     if request.user.is_superuser:
-        import pdb; pdb.set_trace()
         attendances_data = EmployeeAttendance.objects.all()
+        # EmployeeAttendance.objects.filter(employee_id=7).values('date').union( EmployeeAttendance.objects.filter(employee_id=7).values('date'))
+        # records = EmployeeAttendance.objects.filter(date=[item['date'] for item in duplicates])
+        # print([item.employee_id for item in records])
+        # import pdb; pdb.set_trace()
+        values = EmployeeAttendance.objects.filter(employee_id=7).values('date').annotate(data_sum=Sum('total_working_time'))  # totle calculation
+        print(values)
 
     else:
         attendances_data = EmployeeAttendance.objects.filter(employee_id=request.user.profile.employee_id)

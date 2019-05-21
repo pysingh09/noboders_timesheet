@@ -36,9 +36,10 @@ class EmployeeAttendance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     in_time = models.TimeField(blank=True, verbose_name=_('Time In'))      
-    out_time = models.TimeField(blank=True, verbose_name=_('Time out'))
+    out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
-    # total_working_hours = models.TimeField(blank=True)
+    total_working_time = models.FloatField(default=0)
+    
     def __str__(self):
         return str(self.employee_id)
 
