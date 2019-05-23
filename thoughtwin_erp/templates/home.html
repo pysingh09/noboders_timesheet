@@ -1,34 +1,83 @@
 {% extends 'base.html' %}
 {% load date_time_diff_tags %}
 {% block content %}
-<div class="search-container">
-        <table class = "table" id="myTable1" border="2">
-            
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Employee ID</th>
-                <th>Date</th>
-                <th>Calculation</th>
-              </tr>
-            </thead>
-            <tbody>
-                {% for attendance in attendances_data %}
-                    <tr>
-                        
-                        <td data-toggle="modal" data-target="#myModal"><p>{{ attendance.user }}</p></td>
-                        <td><p>{{ attendance.employee_id }}</p></td>
-                        <td><p>{{ attendance.date }}</p></td>
-                        <td><p>{% get_date_time_diff_tag request attendance.date %}</p></td> 
-                    </tr>
-                   
-                {% endfor %}
-                  
 
-            </tbody>
-        </table>
-                 {% include 'calender.html' %}          
-</div>
 
+
+  <table class = "table" id="myTable1" border="2">
+    <thead>
+      <tr>
+        <th>View details</th>
+        <th>User</th>
+        <th>Employee ID</th>
+        <th>Date</th>
+        <th>Calculation</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for attendance in attendances_data %}
+            <tr>
+                
+                <td><a class="attendence_datetime" href="" data-date="{{ attendance.date }}">View</a></td>
+                <td data-toggle="modal" data-target="#myModal"><p>{{ attendance.user }}</p></td>
+                <td><p>{{ attendance.employee_id }}</p></td>
+                <td><p>{{ attendance.date }}</p></td>
+                <td><p>{% get_date_time_diff_tag request attendance.date %}</p></td> 
+            </tr>
+           
+        {% endfor %}
+          
+
+    </tbody>
+</table>
+
+<!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
     
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">View Selected date Time In Out</h4>
+        </div>
+        <div class="modal-body" id="attendence_model">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+<script>
+$(document).ready(function(){
+  $(".attendence_datetime").click(function(e){
+    e.preventDefault();
+    var dat = $(this).data("date");
+    $.ajax({
+       'url': "{% url "employee:date-time-attendence-view" %}",
+       'type': "POST",
+       // 'dataType': 'json',
+       'data': {
+           'dat': dat,
+           'csrfmiddlewaretoken': '{{ csrf_token }}',
+       },
+
+       success: function( data, textStatus, jQxhr )
+       {
+            $("#attendence_model").html(data);
+            $("#myModal").modal();
+        },
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+    });
+    
+  });
+});
+</script>
+
 {% endblock %}

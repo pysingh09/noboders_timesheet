@@ -109,7 +109,7 @@ def home(request):
             if not att.date in names:
                 names.add(att.date)
                 result.append(att)
-                
+
         return render(request,'home.html', {'attendances_data' : result})        
     
     else:
@@ -132,4 +132,12 @@ def profile(request):
 def profile1(request):
     template_name = "calender.html"
     return render(request,template_name) 
+
+
+def date_time_attendence_view(request):
+    date_str1 = request.POST.get("dat")
+    date_dt1 = datetime.strptime(date_str1, '%B %d, %Y')
+    employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1)
+    template_name = "partial/date_time_popup.html"
+    return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
     

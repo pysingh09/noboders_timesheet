@@ -14,6 +14,6 @@ urlpatterns = [
     path('profile1/',views.profile1, name='profile1'),
     path('update/<int:id>',views.update, name='update'),
     # path('person/json/', person_json, name='person_json'),
-
-
+    
+    path('attendence/date-time-attendence/diff',views.date_time_attendence_view, name='date-time-attendence-view'),
 ]
