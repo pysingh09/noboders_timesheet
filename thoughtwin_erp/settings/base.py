@@ -138,3 +138,4 @@ LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/accounts/login'
 AUTH_USER_MODEL = 'auth.User'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

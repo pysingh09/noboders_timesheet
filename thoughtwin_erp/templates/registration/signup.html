@@ -9,7 +9,7 @@
 <!-- {# <form  action="/action_page.php"> #} -->
   {% csrf_token %}
   {{ form.as_p }}   
-
+`
   <p>Username  :{{ user_form.username }}</p>{{user_form.errors}}
   <p>Password  :{{ user_form.password1 }}</p>
   <p>Confirm Password  :{{ user_form.password2 }}</p>

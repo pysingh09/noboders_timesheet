@@ -1,16 +1,13 @@
 {% extends 'base.html' %}
-
+{% load date_time_diff_tags %}
 {% block content %}
-
-    <div class="search-container">
+<div class="search-container">
         <table class = "table" id="myTable1" border="2">
             
             <thead>
               <tr>
                 <th>User</th>
                 <th>Employee ID</th>
-                <th>Time_in</th>
-                <th>Time_out</th>
                 <th>Date</th>
                 <th>Calculation</th>
               </tr>
@@ -18,18 +15,20 @@
             <tbody>
                 {% for attendance in attendances_data %}
                     <tr>
-                       <td><p>{{ attendance.user }}</p></td>
+                        
+                        <td data-toggle="modal" data-target="#myModal"><p>{{ attendance.user }}</p></td>
                         <td><p>{{ attendance.employee_id }}</p></td>
-                        <td><p>{{ attendance.in_time}}</p></td>
-                        <td><p>{{ attendance.out_time}}</p></td>
                         <td><p>{{ attendance.date }}</p></td>
-                        <td><p>{{ attendance.emp_hour|floatformat:2 }}</p></td> 
+                        <td><p>{% get_date_time_diff_tag request attendance.date %}</p></td> 
                     </tr>
                    
                 {% endfor %}
-                     
-                           
+                  
+
             </tbody>
         </table>
-    </div>
+                 {% include 'calender.html' %}          
+</div>
+
+    
 {% endblock %}

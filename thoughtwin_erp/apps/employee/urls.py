@@ -11,6 +11,7 @@ urlpatterns = [
     path('emplist/', views.EmployeeListView.as_view(), name='employee_list'),
     path('edit/<int:id>/',views.edit, name='edit'),
     path('profile/',views.profile, name='profile'),
+    path('profile1/',views.profile1, name='profile1'),
     path('update/<int:id>',views.update, name='update'),
     # path('person/json/', person_json, name='person_json'),
 

@@ -84,7 +84,7 @@ def file_upload(request):
         profile = Profile.objects.get(employee_id=column[0])
         in_time = datetime.strptime(column[1] ,'%I:%M%p')
         out_time = datetime.strptime(column[2] ,'%I:%M%p')
-        total_working_time = (datetime.combine(date.today(), out_time.time()) - datetime.combine(date.today(), in_time.time())).seconds / 3600
+        # total_working_time = (datetime.combine(date.today(), out_time.time()) - datetime.combine(date.today(), in_time.time())).seconds / 3600
         
         created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
@@ -92,7 +92,7 @@ def file_upload(request):
             in_time = in_time,
             out_time =out_time, #10 : 00 PM
             date = column[3],
-            total_working_time = total_working_time
+            # total_working_time = total_working_time
         )
 
     context={}
@@ -103,20 +103,33 @@ def home(request):
     in_out_time = []
     if request.user.is_superuser:
         attendances_data = EmployeeAttendance.objects.all()
-        # EmployeeAttendance.objects.filter(employee_id=7).values('date').union( EmployeeAttendance.objects.filter(employee_id=7).values('date'))
-        # records = EmployeeAttendance.objects.filter(date=[item['date'] for item in duplicates])
-        # print([item.employee_id for item in records])
-        # import pdb; pdb.set_trace()
-        values = EmployeeAttendance.objects.filter(employee_id=7).values('date').annotate(data_sum=Sum('total_working_time'))  # totle calculation
-        print(values)
-
+        names = set()
+        result = []
+        for att in attendances_data:
+            if not att.date in names:
+                names.add(att.date)
+                result.append(att)
+                
+        return render(request,'home.html', {'attendances_data' : result})        
+    
     else:
-        attendances_data = EmployeeAttendance.objects.filter(employee_id=request.user.profile.employee_id)
+        # import pdb; pdb.set_trace()
+        attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+        names = set()
+        result = []
+        for att in attendances_data:
+            if not att.date in names:
+                names.add(att.date)
+                result.append(att)
 
-    return render(request,'home.html', {'attendances_data' : attendances_data})
+    return render(request,'home.html', {'attendances_data' : result})
 
 
 def profile(request):
     template_name = "profile.html"
     return render(request,template_name)
+
+def profile1(request):
+    template_name = "calender.html"
+    return render(request,template_name) 
     

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from datetime import datetime, date
+import datetime
 
 
 # Create your models here.
@@ -45,8 +46,19 @@ class EmployeeAttendance(models.Model):
 
 
     def emp_hour(self):
+        # import pdb; pdb.set_trace()
+        return (datetime.datetime.combine(date.today(), self.out_time) - datetime.datetime.combine(date.today(), self.in_time)).seconds / 3600
 
-        return (datetime.combine(date.today(), self.out_time) - datetime.combine(date.today(), self.in_time)).seconds / 3600
+    def time_diff(self,dt):
+        import pdb; pdb.set_trace()
+        intime = self.in_time
+        outtime = self.out_time
+        dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
+        dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
+        dateTimeDifference = dateTimeOut - dateTimeIn
+        return dateTimeDifference
+        # import pdb; pdb.set_trace()
+
 
 
 
