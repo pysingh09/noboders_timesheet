@@ -3,6 +3,7 @@
 {% block title %}{% endblock %}
 {% block content %} 
     <h2>Company Employee Details</h2>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
        <div class="search-container">
      <table class = "table" id="myTable1" border="2">
         <thead>
@@ -14,37 +15,31 @@
             <th>Date Of Birth</th>
             <th>Date Of joining</th>
             <th>Teamlead</th>
-            <th>Deactivate</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-            {% for person in object_list %}
+            {% for profile in object_list %}
               <tr>    
-                <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td>
-                <td>{{ person.employee_id }}</td>
-                <td>{{ person.contact_no}}</td>
-                <td>{{ person.get_designation_display }}</td>
-                <td>{{ person.date_of_birth }}</td>
-                <td>{{ person.date_of_joining }}</td>
-                <td>{{ person.teamlead }}</td>
-                <td><button class="btn btn-danger deactivateEmployee" name="pk" value="{{ person.pk }}">Deactivate</button></td>
+                <td><a href="{% url 'employee:edit' profile.pk %}">{{ profile.user }}</a></td>
+                <td>{{ profile.employee_id }}</td>
+                <td>{{ profile.contact_no}}</td>
+                <td>{{ profile.get_designation_display }}</td>
+                <td>{{ profile.date_of_birth }}</td>
+                <td>{{ profile.date_of_joining }}</td>
+                <td>{{ profile.teamlead }}</td>
+                {% if profile.user.is_active %}
+                    <td><button style="background-color: red" class="deactivateEmployee" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
+                {% else %}
+                     <td><button style="background-color: green;" class="deactivateEmployee" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button></td>
+                {% endif %}
               </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <div class="modal fade" id="modal-popup">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
-    </div>
-  </div>
   {% block js %}
   {{block.super}}
-   <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
   <script src="{% static 'js/data.js' %}"></script>
 {% endblock js %}
 {% endblock %}
-
-
-{# <td><button class="btn btn-danger deactivate" onclick="loadDoc()"id="{{person.pk}} ">Deactivate</button></td> #}

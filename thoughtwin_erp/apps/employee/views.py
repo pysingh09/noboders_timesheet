@@ -1,5 +1,6 @@
 import json,csv,io
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
@@ -26,7 +27,8 @@ def signup(request):
             profile = profile_form.save(commit=False)
             profile.user = new_user
             profile.save()
-            return render(request,'registration/signup.html')
+            return render(request,'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form})
+            # return redirect("login.html")
     else:
         user_form = SignUpForm()
         profile_form = ProfileForm()
@@ -44,26 +46,12 @@ class EmployeeListView(ListView):
 
 @csrf_exempt
 def deactivate_user(request,pk):
-    # import pdb; pdb.set_trace()
-    employee = Profile.objects.get(pk=pk)
-    data = dict()
+    profile = Profile.objects.genericet(pk=pk)
     if request.method == 'POST':
-        # import pdb; pdb.set_trace() 
-        employee.is_active = False
-        employee.save()
-        user = Profile.objects.all()
-        context = {'employee': employee}
-        print("hrsds")
-        data['employee'] = render(request,'employee_list.html',context)
-        return JsonResponse(data)
-        # print("yyyyy")
-        # attendance = EmployeeAttendance.objects.all()
-    else:
-        print("yyyyy")
-        context = {'employee': employee}
-        data['html_form'] = render('deactivate.html', context, request=request)
-    return JsonResponse(data)
-
+        profile.user.is_active = request.POST.get('is_active')
+        profile.user.save()
+    return JsonResponse({'status': 'success'})
+    
 
 def edit(request, id):
 
@@ -168,3 +156,13 @@ def home(request):
 #     logout(request)
 #     messages.success(request, 'Profile successfully disabled.')
 #     return redirect('employee_list')
+
+@csrf_exempt
+def delete_record(request,pk):
+    csv_record = EmployeeAttendance.objects.get(pk=pk)
+    # import pdb; pdb.set_trace()
+    if request.method == 'POST': 
+        csv_record.delete()
+        csv_record.save()  
+        print("qqqqqqqqq")
+    return JsonResponse({'status' :'success'})

@@ -11,7 +11,10 @@
             <th>IN Time</th>
             <th>Out Time</th>
             <th>Date</th>
-            <th>Active</th>   
+            <th scope="col" class="action-checkbox-column">
+            <div class="text"><span><input type="checkbox" id="action-toggle"></span></div>
+            <div class="clear"></div>
+            </th>   
           </tr>
         </thead>
         <tbody>
@@ -22,13 +25,13 @@
             <td>{{ attendance.in_time}}</td>
             <td>{{ attendance.out_time}}</td>
             <td>{{ attendance.date }}</td>
-            <td><input type="checkbox"</td>   
+            <td class="action-checkbox">
+              <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select"></td>
           </tr>
-        {% empty %}  
         {% endfor %}
         </tbody>
       </table>
-      <input type="submit" value="Delete">
+      <button class="button btn btn-info delete-row" id="delrow">Delete row</button>
     </div>
   {% block js %}
   {{block.super}}
