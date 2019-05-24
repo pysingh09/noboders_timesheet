@@ -13,7 +13,7 @@ urlpatterns = [
     path('emplist/', views.EmployeeListView.as_view(), name='employee_list'),
     #url(r'^books/(?P<pk>\d+)/delete/$', views.book_delete, name='book_delete'),
     path('deactivate/<int:pk>/', deactivate_user,name='deactivate-user'),
-    path('delete_record/<int:id>/', delete_record, name='delete_record'),
+    path('delete_record/', delete_record, name='delete_record'),
     path('edit/<int:id>/', edit, name='edit'),
     path('update/<int:id>', update, name='update'),
     

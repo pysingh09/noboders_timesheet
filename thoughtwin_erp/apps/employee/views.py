@@ -158,11 +158,12 @@ def home(request):
 #     return redirect('employee_list')
 
 @csrf_exempt
-def delete_record(request,pk):
-    csv_record = EmployeeAttendance.objects.get(pk=pk)
-    # import pdb; pdb.set_trace()
-    if request.method == 'POST': 
-        csv_record.delete()
-        csv_record.save()  
-        print("qqqqqqqqq")
-    return JsonResponse({'status' :'success'})
+def delete_record(request):
+    try:    
+        for pk in request.POST.getlist('pk[]'):
+            obj = EmployeeAttendance.objects.get(pk=pk)
+            obj.delete()
+        return JsonResponse({'status' :'success'})
+    except Exception as e:
+        print("Uh Oh!, we met some error:", str(e))
+        return JsonResponse({'status' :'false'})

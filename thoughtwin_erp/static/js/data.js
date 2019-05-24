@@ -27,14 +27,28 @@ $(document).ready(function(){
     });
 });
 
+
+
+// let valueArr =[]
+// function checkClicked(e){
+
+//     valueArr.push(e.value)
+// }
+
+
+
+let valueArr =[]
+function checkClicked(e){
+    valueArr.push(e.value)
+}
+
 $(document).ready(function(){
-    $('#delrow').click(function(){
+    $('.delete-row').click(function(){
         // debugger
-        var pk = $('.action-select').is(":checked")
-        // debugger
-            $.ajax({
-                'url': '/delete_record/'+pk+'/',
-                'type': "POST",
+        let pk = valueArr;
+        $.ajax({
+                'url': '/delete_record/',
+                'type': "post",
                 'dataType': 'json',
                 'data': {
                     'pk': pk,
@@ -43,15 +57,9 @@ $(document).ready(function(){
                 success: function(response) {
                         if(response.status=="success")
                             location.reload();
+                        
                             
-                
-        }           
+                }         
+        })           
+    });     
     });
-    });
-});
-
-// $("table tbody").find('input[name="record"]').each(function(){
-//                     if($(this).is(":checked")){
-//                         $(this).parents("tr").remove();
-//         }
-//             });
