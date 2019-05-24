@@ -7,7 +7,7 @@
   <table class = "table" id="myTable1" border="2">
     <thead>
       <tr>
-        <th>View details</th>
+        <th>Time details</th>
         <th>User</th>
         <th>Employee ID</th>
         <th>Date</th>
@@ -19,7 +19,7 @@
             <tr>
                 
                 <td><a class="attendence_datetime" href="" data-date="{{ attendance.date }}">View</a></td>
-                <td data-toggle="modal" data-target="#myModal"><p>{{ attendance.user }}</p></td>
+                <td><p>{{ attendance.user }}</p></td>
                 <td><p>{{ attendance.employee_id }}</p></td>
                 <td><p>{{ attendance.date }}</p></td>
                 <td><p>{% get_date_time_diff_tag request attendance.date %}</p></td> 
@@ -79,5 +79,32 @@ $(document).ready(function(){
   });
 });
 </script>
+<!-- <script>
+$(document).ready(function(){
+  $(".attendence_datetime").click(function(e){
+    e.preventDefault();
+    var dat = $(this).data("date");
+    $.ajax({
+       'url': "{% url "employee:date-time-attendence-view" %}",
+       'type': "POST",
+       // 'dataType': 'json',
+       'data': {
+           'dat': dat,
+           'csrfmiddlewaretoken': '{{ csrf_token }}',
+       },
+
+       success: function( data, textStatus, jQxhr )
+       {
+            $("#attendence_model1").html(data);
+            $("#myModal").modal();
+        },
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+    });
+    
+  });
+});
+</script> -->
 
 {% endblock %}

@@ -1,81 +1,8 @@
-{# {% extends 'base.html' %} #}
+{% extends 'base.html' %} 
 {% load staticfiles %}    
 {% block title %} 
-<!-- <html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <title>Index</title>  
-    {% load staticfiles %}  
-    {# <link rel="stylesheet" href="{% static 'css/style.css' %}"/>   #}
-</head>  
-<body>  
-<form method="POST" class="post-form" action="/update/{{employee.id}}">  
-        {% csrf_token %} 
-        {{ form.as_p }} 
-    <div class="container">  
-<br>  
-    <div class="form-group row">  
-    <label class="col-sm-1 col-form-label"></label>  
-    <div class="col-sm-4">  
-    <h3>Update Employee Details</h3>  
-    </div>  
-  </div>
-    <div class="form-group row">  
-    <label class="col-sm-2 col-form-label">Username:</label>  
-    <div class="col-sm-4">  
-        <input type="text" name="user" id="id_user" required maxlength="20" value="{{ employee.user }}"/>  
-    </div>  
-  </div>  
-  <div class="form-group row">  
-    <label class="col-sm-2 col-form-label">Employee ID:</label>  
-    <div class="col-sm-4">  
-        <input type="employee_id" name="employee_id" id="id_employee_id" required maxlength="100" value="{{ employee.employee_id }}" />  
-    </div>  
-  </div>  
-    <div class="form-group row">  
-    <label class="col-sm-2 col-form-label">Contact:</label>  
-    <div class="col-sm-4">  
-        <input type="text" name="eemail" id="id_contact_no" required maxlength="254" value="{{ employee.contact_no }}" />  
-    </div>  
-  </div>  
-    <div class="form-group row">  
-    <label class="col-sm-2 col-form-label">Designation:</label>  
-    <div class="col-sm-4">  
-        <input type="text" name="designation" id="id_designation" required maxlength="15" value="{{ employee.designation }}" />  
-    </div>  
-  </div>  
-    <div class="form-group row">  
-    <label class="col-sm-2 col-form-label">Date Of Birth:</label>  
-    <div class="col-sm-4">  
-        <input type="text" name="date_of_birth" id="id_date_of_birth" required maxlength="15" value="{{ employee.date_of_birth }}" />  
-    </div>  
-  </div>
-  <div class="form-group row">  
-    <label class="col-sm-2 col-form-label">Date Of joining:</label>  
-    <div class="col-sm-4">  
-        <input type="text" name="date_of_joining" id="id_date_of_joining" required maxlength="15" value="{{ employee.date_of_joining }}" />  
-    </div>  
-  </div>
-  <div class="form-group row">  
-    <label class="col-sm-2 col-form-label">Teamlead:</label>  
-    <div class="col-sm-4">  
-        <input type="text" name="teamlead" id="id_teamlead" required maxlength="15" value="{{ employee.teamlead }}" />  
-    </div>  
-  </div>
-    <div class="form-group row">  
-    <label class="col-sm-1 col-form-label"></label>  
-    <div class="col-sm-4">  
-    <button type="submit" class="btn btn-success">Update</button>  
-    </div>  
-  </div>  
-</div>  
-</form>  
-</body>  
-</html>  --> 
-
 
 <form method="POST" class="post-form" action="/update/{{employee.id}}">
-<!-- {# <form  action="/action_page.php"> #} -->
   {% csrf_token %}
   
   {{ form.as_p }}   
@@ -89,5 +16,5 @@
 
       <button type="submit">update</button>
 </form>
-
+ {% include "calender.html" %}
 {% endblock %}

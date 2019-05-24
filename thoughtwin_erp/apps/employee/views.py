@@ -11,7 +11,8 @@ from datetime import datetime, date
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
-
+from django.shortcuts import redirect
+# from date_time_diff_tags import get_date_time_diff_tag
 
 def signup(request):
     if request.method == 'POST':    
@@ -24,7 +25,7 @@ def signup(request):
             profile = profile_form.save(commit=False)
             profile.user = new_user
             profile.save()
-            return render(request,'registration/signup.html')
+            return redirect('/signup/') 
     else:
         user_form = SignUpForm()
         profile_form = ProfileForm()
@@ -110,10 +111,9 @@ def home(request):
                 names.add(att.date)
                 result.append(att)
 
-        return render(request,'home.html', {'attendances_data' : result})        
-    
+        return render(request,'home.html', {'attendances_data' : result})
+        
     else:
-        # import pdb; pdb.set_trace()
         attendances_data = EmployeeAttendance.objects.filter(user=request.user)
         names = set()
         result = []
