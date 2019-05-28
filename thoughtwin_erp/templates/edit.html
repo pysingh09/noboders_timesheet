@@ -1,14 +1,10 @@
-{# {% extends 'base.html' %} #}
+{% extends 'base.html' %}
 {% load staticfiles %}    
 {% block title %}{% endblock %} 
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <title>Index</title>  
-    {% load staticfiles %}  
-    {# <link rel="stylesheet" href="{% static 'css/style.css' %}"/>   #}
-</head>  
-<body>  
+
+{% block content %} 
+<p>{{form.errors}}</p>
+
 <form method="POST" class="post-form" action="/update/{{employee.id}}">  
         {% csrf_token %}  
     <div class="container">  
@@ -34,31 +30,31 @@
     <div class="form-group row">  
     <label class="col-sm-2 col-form-label">Contact:</label>  
     <div class="col-sm-4">  
-        <input type="text" name="eemail" id="id_contact_no" required maxlength="254" value="{{ employee.contact_no }}" />  
+        <input type="text" name="contact_no" id="id_contact_no" required maxlength="254" value="{{ employee.contact_no }}" />  
     </div>  
   </div>  
     <div class="form-group row">  
     <label class="col-sm-2 col-form-label">Designation:</label>  
     <div class="col-sm-4">  
-        <input type="text" name="designation" id="id_designation" required maxlength="15" value="{{ employee.designation }}" />  
+        <input type="text" name="designation" id="id_designation" required maxlength="15" value="{{ employee.get_designation_display }}" />  
     </div>  
   </div>  
     <div class="form-group row">  
     <label class="col-sm-2 col-form-label">Date Of Birth:</label>  
     <div class="col-sm-4">  
-        <input type="text" name="date_of_birth" id="id_date_of_birth" required maxlength="15" value="{{ employee.date_of_birth }}" />  
+        <input type="text" name="date_of_birth" id="id_date_of_birth" required maxlength="15" value="{{ employee.date_of_birth|date:"Y-m-d" }}" />  
     </div>  
   </div>
   <div class="form-group row">  
     <label class="col-sm-2 col-form-label">Date Of joining:</label>  
     <div class="col-sm-4">  
-        <input type="text" name="date_of_joining" id="id_date_of_joining" required maxlength="15" value="{{ employee.date_of_joining }}" />  
+        <input type="text" name="date_of_joining" id="id_date_of_joining" required maxlength="15" value="{{ employee.date_of_joining|date:"Y-m-d" }}" />  
     </div>  
   </div>
   <div class="form-group row">  
     <label class="col-sm-2 col-form-label">Teamlead:</label>  
     <div class="col-sm-4">  
-        <input type="text" name="teamlead" id="id_teamlead" required maxlength="15" value="{{ employee.teamlead }}" />  
+        <input type="text" name="teamlead" id="id_teamlead" required maxlength="15" value="{{   employee.teamlead }}" />  
     </div>  
   </div>
     <div class="form-group row">  
@@ -69,5 +65,4 @@
   </div>  
 </div>  
 </form>  
-</body>  
-</html>  
+{% endblock %}

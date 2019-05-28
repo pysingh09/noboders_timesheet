@@ -1,8 +1,7 @@
 $(document).ready( function () {
-  $('#myTable1').DataTable();
+  $('table').DataTable();
 });
-
-        
+    
 $(document).ready(function(){
     $('.deactivateEmployee').click(function (event) {
              $(this).toggleClass('pressed');
@@ -29,22 +28,45 @@ $(document).ready(function(){
 
 
 
-// let valueArr =[]
-// function checkClicked(e){
-
-//     valueArr.push(e.value)
-// }
-
-
-
 let valueArr =[]
+
 function checkClicked(e){
-    valueArr.push(e.value)
+    if(e.checked == true){
+        valueArr.push(e.value);
+        e.setAttribute("checked","checked");
+        debugger
+        valueArr = _.uniq(valueArr)
+    }else{
+        e.removeAttribute("checked");
+        valueArr.pop(e.value);
+        debugger
+    }
 }
+
+$(document).on("click","#checkall",function (e){
+    $(this).closest('table').find('td input:checkbox').prop('checked', this.checked);
+    var is_checked = $(this).prop('checked');
+    if (is_checked == true){
+        var records= $(e.target).closest('table');
+        $('td input:checkbox').each(function(){
+            $(this).attr('checked',true);
+            // valueArr = [];
+            // debugger
+            valueArr.push($(this).val());
+            valueArr = _.uniq(valueArr)
+        });
+    }
+    else{
+        valueArr = []; 
+        $('td input:checkbox').each(function(){
+            $(this).attr('checked',false);
+
+        });
+    }
+});
 
 $(document).ready(function(){
     $('.delete-row').click(function(){
-        // debugger
         let pk = valueArr;
         $.ajax({
                 'url': '/delete_record/',
@@ -55,11 +77,13 @@ $(document).ready(function(){
                     'csrfmiddlewaretoken': '{{ csrf_token }}',
                 },
                 success: function(response) {
-                        if(response.status=="success")
+                        if(response.status=="success"){
+                            alert("All record is Successfully Deleted!")
                             location.reload();
-                        
-                            
+                        }                                   
                 }         
         })           
     });     
-    });
+});
+
+

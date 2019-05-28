@@ -3,9 +3,8 @@
 {% block title %}{% endblock %}
 {% block content %} 
     <h2>Company Employee Details</h2>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-       <div class="search-container">
-     <table class = "table" id="myTable1" border="2">
+    <div class="search-container">
+     <table class = "table" id="myTable2" border="2">
         <thead>
           <tr>
             <th>Username</th>
@@ -15,23 +14,26 @@
             <th>Date Of Birth</th>
             <th>Date Of joining</th>
             <th>Teamlead</th>
+            <th>Edit</th>
             <th>Action</th>
+
           </tr>
         </thead>
         <tbody>
             {% for profile in object_list %}
               <tr>    
-                <td><a href="{% url 'employee:edit' profile.pk %}">{{ profile.user }}</a></td>
+                <td>{{ profile.user }}</td>
                 <td>{{ profile.employee_id }}</td>
                 <td>{{ profile.contact_no}}</td>
                 <td>{{ profile.get_designation_display }}</td>
                 <td>{{ profile.date_of_birth }}</td>
                 <td>{{ profile.date_of_joining }}</td>
                 <td>{{ profile.teamlead }}</td>
+                <td><a href="{% url 'employee:edit' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span></td>
                 {% if profile.user.is_active %}
-                    <td><button style="background-color: red" class="deactivateEmployee" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
+                    <td><button class="deactivateEmployee btn btn-danger" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
                 {% else %}
-                     <td><button style="background-color: green;" class="deactivateEmployee" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button></td>
+                     <td><button class="deactivateEmployee btn btn-primary" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button></td>
                 {% endif %}
               </tr>
           {% endfor %}

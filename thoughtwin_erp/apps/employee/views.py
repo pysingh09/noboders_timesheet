@@ -55,16 +55,20 @@ def deactivate_user(request,pk):
 
 def edit(request, id):
 
-    employee = Profile.objects.get(id=id)  
+    employee = Profile.objects.get(id=id)
     return render(request,'edit.html', {'employee':employee})
 
-def update(request, id):  
-    employee = Profile.objects.get(id=id)  
-    form = ProfileForm(request.POST, instance = employee)  
-    if form.is_valid():  
-        form.save() 
-        return redirect("employee_list.html")  
+def update(request, id):
+    employee = Profile.objects.get(id=id)
+    if request.method=="POST":
+        form = ProfileForm(request.POST, instance = employee)
+        if form.is_valid():
+            form.save()
+            return redirect("/emplist/")
+        else:
+            return render(request, 'edit.html', {'form': form})
     return render(request, 'edit.html', {'employee': employee})
+
 
 
 @login_required(login_url='/accounts/login')

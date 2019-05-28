@@ -2,38 +2,42 @@
 {% load staticfiles %}    
 {% block title %}{% endblock %}
 {% block content %} 
-    <h2>Attendance Details</h2>
     <div class="search-container">
-     <table class = "table" id="myTable1" border="2">
-        <thead>
-          <tr>
-            <th>Employee ID</th>
-            <th>IN Time</th>
-            <th>Out Time</th>
-            <th>Date</th>
-            <th scope="col" class="action-checkbox-column">
-            <div class="text"><span><input type="checkbox" id="selectAll"></span></div>
-            <div class="clear"></div>
-            </th>   
-          </tr>
-        </thead>
-        <tbody>
-        {% for attendance in attendance_data %}
-            {# <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td> #}
-            <td>{{ attendance.employee_id }}</td>
-            <td>{{ attendance.in_time}}</td>
-            <td>{{ attendance.out_time}}</td>
-            <td>{{ attendance.date }}</td>
-            <td class="action-checkbox">
-              <input type="checkbox" name="record" onchange="{ checkClicked(this) }" id="chkParent" value="{{ attendance.pk }}" class="action-select"></td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+      <div>      
+        <table class = "table" id="myTable1" border="2">
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>IN Time</th>
+              <th>Out Time</th>
+              <th>Date</th>
+              <th scope="col" class="action-checkbox-column">
+              <div class="text"><span><input type="checkbox" id="checkall"></span></div>
+              <div class="clear"></div>
+              </th>   
+            </tr>
+          </thead>
+          <tbody>
+            {% for attendance in attendance_data %}
+              <tr>
+                {# <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td> #}
+                <td>{{ attendance.employee_id }}</td>
+                <td>{{ attendance.in_time}}</td>
+                <td>{{ attendance.out_time}}</td>
+                <td>{{ attendance.date }}</td>
+                <td class="action-checkbox">
+                  <input type="checkbox" name="record" onchange="checkClicked(this)" value="{{ attendance.pk }}" class="action-select"></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       <button class="delete-row" id="delrow">Delete row</button>
     </div>
   {% block js %}
   {{block.super}}
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script>
   <script src="{% static 'js/data.js' %}"></script>
+
 {% endblock js %}
 {% endblock %}
