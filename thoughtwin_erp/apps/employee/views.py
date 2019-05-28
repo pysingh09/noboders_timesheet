@@ -101,26 +101,13 @@ def file_upload(request):
 
 @login_required
 def home(request):
-    in_out_time = []
-    if request.user.is_superuser:
-        attendances_data = EmployeeAttendance.objects.all()
-        names = set()
-        result = []
-        for att in attendances_data:
-            if not att.date in names:
-                names.add(att.date)
-                result.append(att)
-
-        return render(request,'home.html', {'attendances_data' : result})
-        
-    else:
-        attendances_data = EmployeeAttendance.objects.filter(user=request.user)
-        names = set()
-        result = []
-        for att in attendances_data:
-            if not att.date in names:
-                names.add(att.date)
-                result.append(att)
+    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+    names = set()
+    result = []
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
 
     return render(request,'home.html', {'attendances_data' : result})
 
@@ -140,4 +127,18 @@ def date_time_attendence_view(request):
     employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1)
     template_name = "partial/date_time_popup.html"
     return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
+
+def employee_details(request,id):
+    # attendances_data = EmployeeAttendance.objects.get(id=id)
     
+    attendances_data = EmployeeAttendance.objects.filter(user_id=id)
+    # attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+    names = set()
+    result = []
+    # import pdb; pdb.set_trace()
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
+
+    return render(request,'home.html', {'attendances_data' : result})

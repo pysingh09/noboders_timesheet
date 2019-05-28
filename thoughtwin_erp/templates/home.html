@@ -22,7 +22,7 @@
                 <td><p>{{ attendance.user }}</p></td>
                 <td><p>{{ attendance.employee_id }}</p></td>
                 <td><p>{{ attendance.date }}</p></td>
-                <td><p>{% get_date_time_diff_tag request attendance.date %}</p></td> 
+                <td><p>{% get_date_time_diff_tag request attendance.date attendance.user %}</p></td> 
             </tr>
            
         {% endfor %}
@@ -80,32 +80,5 @@ $(document).ready(function(){
   });
 });
 </script>
-<!-- <script>
-$(document).ready(function(){
-  $(".attendence_datetime").click(function(e){
-    e.preventDefault();
-    var dat = $(this).data("date");
-    $.ajax({
-       'url': "{% url "employee:date-time-attendence-view" %}",
-       'type': "POST",
-       // 'dataType': 'json',
-       'data': {
-           'dat': dat,
-           'csrfmiddlewaretoken': '{{ csrf_token }}',
-       },
-
-       success: function( data, textStatus, jQxhr )
-       {
-            $("#attendence_model1").html(data);
-            $("#myModal").modal();
-        },
-        error: function( jqXhr, textStatus, errorThrown ){
-            console.log( errorThrown );
-        }
-    });
-    
-  });
-});
-</script> -->
 
 {% endblock %}

@@ -21,7 +21,7 @@
         <tbody>
         {% for person in object_list %}
           <tr>
-             <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td>
+             <td><a href="{% url 'employee:employee_details' person.user.id %}">{{ person.user }}</a></td>
             <td>{{ person.employee_id }}</td>
             <td>{{ person.contact_no}}</td>
             <td>{{ person.get_designation_display }}</td>

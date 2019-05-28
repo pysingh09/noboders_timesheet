@@ -4,35 +4,37 @@
     <div class="navbar-header">
       <a class="navbar-brand">Thoughtwin</a>
     </div>
-    <ul class="nav navbar-nav">
-      {% if user.is_superuser %}
-      <li class="active"><a class="nav-link" href="{% url 'employee:home' %}">Home</a></li>
-      <li><a href="{% url 'employee:file_upload' %}">CSV Upload</a></li>
-      <li><a href="{% url 'employee:signup' %}">Create Employee</a></li>
-      <li><a href="{% url 'employee:employee_list' %}">Employee List</a></li>
-      {% else %}
-      <li><a href="{% url 'employee:home' %}">Home</a></li>
-      <li><a href="#">Leave</a></li>
-      <li><a href="#">Request Leave</a></li>
-      {% endif %}
-    </ul>
-    
-  
-    {% if user.is_authenticated %}
-    <div class="dropdown right_dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-  </button>
-        <ul class="dropdown-menu dropdown_list">
-          <li><a class="dropdown-item" href="{% url 'employee:profile' %}">Profile</a></li>
-          <li> <a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
-        </ul>
-    </div>
+        <ul class="nav navbar-nav">
+          {% if user.is_superuser %}
+            <li class="active"><a class="nav-link" href="{% url 'employee:home' %}">Home</a></li>
+            <li><a href="{% url 'employee:file_upload' %}">CSV Upload</a></li>
+            <li><a href="{% url 'employee:signup' %}">Create Employee</a></li>
+            <li><a href="{% url 'employee:employee_list' %}">Employee List</a></li>
             {% else %}
-            <a class="navbar-brand">Thoughtwin</a>
-             {% endif %}
+            <li><a href="{% url 'employee:home' %}">Home</a></li>
+            <li><a href="#">Leave</a></li>
+            <li><a href="#">Request Leave</a></li>
+          {% endif %}
+        </ul>
+        
+      
+        {% if user.is_authenticated %}
+          <div class="dropdown right_dropdown">
+             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{ user.username }}
+              </a>
+            <!-- <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> --> <span class="caret"></span>
+            <!-- </button> -->
+                <ul class="dropdown-menu dropdown_list">
+                  <li><a class="dropdown-item" href="{% url 'employee:profile' %}">Profile</a></li>
+                  <li> <a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+                </ul>
+          </div>
+              
+        {% endif %} 
 
   </div>
-  </nav> 
+</nav> 
   <style>
     .right_dropdown{
       text-align: right;
