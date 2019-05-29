@@ -1,7 +1,7 @@
 import json,csv,io
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
+from django.views.generic import View,ListView,TemplateView,UpdateView #DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance
@@ -27,7 +27,7 @@ def signup(request):
             profile = profile_form.save(commit=False)
             profile.user = new_user
             profile.save()
-            return render(request,'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form})
+            return redirect("/emplist/")
             # return redirect("login.html")
     else:
         user_form = SignUpForm()
@@ -46,28 +46,36 @@ class EmployeeListView(ListView):
 
 @csrf_exempt
 def deactivate_user(request,pk):
-    profile = Profile.objects.genericet(pk=pk)
+    profile = Profile.objects.get(pk=pk)
     if request.method == 'POST':
         profile.user.is_active = request.POST.get('is_active')
         profile.user.save()
     return JsonResponse({'status': 'success'})
     
 
-def edit(request, id):
+class EditUserProfileView(UpdateView): 
+    model = Profile
+    form_class = ProfileForm
+    template_name = "update.html"
 
-    employee = Profile.objects.get(id=id)
-    return render(request,'edit.html', {'employee':employee})
+    def get_object(self, *args, **kwargs):
+        user = get_object_or_404(User, pk=self.kwargs['pk'])
+        return user.profile
+    # def get_success_url(self, *args, **kwargs):
+    #     return redirect("/emplist/")
 
-def update(request, id):
-    employee = Profile.objects.get(id=id)
-    if request.method=="POST":
-        form = ProfileForm(request.POST, instance = employee)
-        if form.is_valid():
-            form.save()
-            return redirect("/emplist/")
-        else:
-            return render(request, 'edit.html', {'form': form})
-    return render(request, 'edit.html', {'employee': employee})
+# def update(request, id):
+#     employee = Profile.objects.get(id=id)
+#     if request.method=="POST":
+#         form = ProfileForm(request.POST, instance = employee)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("/emplist/")
+#         else:
+#             return render(request, 'edit.html', {'form': form})
+#     # teamleads = Profile.objects.get()
+#     # teamleads = Profile.objects.filter(designation = 5)
+#     return render(request, 'edit.html', {'employee': employee})
 
 
 

@@ -140,10 +140,5 @@ LOGOUT_REDIRECT_URL = '/accounts/login'
 LOGIN_URL = '/account/login/'
 AUTH_USER_MODEL = 'auth.User'
 AUTH_USER_EMAIL_UNIQUE = True
-# ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
-# LOGIN_EXEMPT_URLS = (
-#         '/signup/$',
-#         '/emplist/',
-#         '/profile/',
-#         )
+
     

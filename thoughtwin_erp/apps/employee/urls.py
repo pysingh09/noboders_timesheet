@@ -14,8 +14,10 @@ urlpatterns = [
     #url(r'^books/(?P<pk>\d+)/delete/$', views.book_delete, name='book_delete'),
     path('deactivate/<int:pk>/', deactivate_user,name='deactivate-user'),
     path('delete_record/', delete_record, name='delete_record'),
-    path('edit/<int:id>/', edit, name='edit'),
-    path('update/<int:id>', update, name='update'),
+    # path('edit/<int:id>/', edit, name='edit'),
+    # path('update/<int:id>', update, name='update'),
+    # url('users/(?P<pk>)/edit/$', EditUserProfileView.as_view(), name="edit-user-profile"),
+    path('users/<int:pk>/', views.EditUserProfileView.as_view(), name="edit-user-profile"),
     
     # path('person/json/', person_json, name='person_json'),
     
