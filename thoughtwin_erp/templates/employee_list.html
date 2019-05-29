@@ -6,33 +6,35 @@
 
     <h2>Company Employee Details</h2>
     <div class="search-container">
-     <table class = "table" id="myTable1" border="2">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Employee ID</th>
-            <th>Contact</th>
-            <th>Designation</th>
-            <th>Date Of Birth</th>
-            <th>Date Of joining</th>
-            <th>Teamlead</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for person in object_list %}
-          <tr>
-             <td><a href="{% url 'employee:employee_details' person.user.id %}">{{ person.user }}</a></td>
-            <td>{{ person.employee_id }}</td>
-            <td>{{ person.contact_no}}</td>
-            <td>{{ person.get_designation_display }}</td>
-            <td>{{ person.date_of_birth }}</td>
-            <td>{{ person.date_of_joining }}</td>
-            <td>{{ person.teamlead }}</td>
-          </tr>
-        {% empty %}  
-        {% endfor %}
-        </tbody>
-      </table>
+       <table class = "table" id="myTable1" border="2">
+          <thead>
+            <tr>
+              <th>Calendar</th>
+              <th>Username</th>
+              <th>Employee ID</th>
+              <th>Contact</th>
+              <th>Designation</th>
+              <th>Date Of Birth</th>
+              <th>Date Of joining</th>
+              <th>Teamlead</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for person in object_list %}
+            <tr>
+              <!-- <td><a href="">{{ person. }}</a></td> -->
+              <td><a href="{% url 'employee:employee_details' person.user.id %}">{{ person.user }}</a></td>
+              <td>{{ person.employee_id }}</td>
+              <td>{{ person.contact_no}}</td>
+              <td>{{ person.get_designation_display }}</td>
+              <td>{{ person.date_of_birth }}</td>
+              <td>{{ person.date_of_joining }}</td>
+              <td>{{ person.teamlead }}</td>
+            </tr>
+          {% empty %}  
+          {% endfor %}
+          </tbody>
+        </table>
     </div>
   
 {% endblock %}

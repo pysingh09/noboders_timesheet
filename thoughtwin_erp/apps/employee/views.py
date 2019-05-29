@@ -116,8 +116,8 @@ def profile(request):
     template_name = "profile.html"
     return render(request,template_name)
 
-def profile1(request):
-    template_name = "calender.html"
+def calendar(request):
+    template_name = "fullcalendar.html"
     return render(request,template_name) 
 
 
@@ -126,19 +126,20 @@ def date_time_attendence_view(request):
     date_dt1 = datetime.strptime(date_str1, '%B %d, %Y')
     employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1)
     template_name = "partial/date_time_popup.html"
+    # import pdb; pdb.set_trace()
     return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
 
 def employee_details(request,id):
-    # attendances_data = EmployeeAttendance.objects.get(id=id)
-    
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
-    # attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
-    # import pdb; pdb.set_trace()
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
             result.append(att)
 
     return render(request,'home.html', {'attendances_data' : result})
+
+def calendar1(request):
+    template_name = "demo.html"
+    return render(request,template_name)

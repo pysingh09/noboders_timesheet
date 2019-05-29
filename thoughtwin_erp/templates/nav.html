@@ -5,7 +5,7 @@
       <a class="navbar-brand">Thoughtwin</a>
     </div>
         <ul class="nav navbar-nav">
-          {% if user.is_superuser %}
+          {% if user.is_superuser  %}
             <li class="active"><a class="nav-link" href="{% url 'employee:home' %}">Home</a></li>
             <li><a href="{% url 'employee:file_upload' %}">CSV Upload</a></li>
             <li><a href="{% url 'employee:signup' %}">Create Employee</a></li>
@@ -19,23 +19,31 @@
         
       
         {% if user.is_authenticated %}
+      
           <div class="dropdown right_dropdown">
              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {{ user.username }}
               </a>
-            <!-- <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> --> <span class="caret"></span>
-            <!-- </button> -->
+                   <span class="caret"></span>
+            
                 <ul class="dropdown-menu dropdown_list">
                   <li><a class="dropdown-item" href="{% url 'employee:profile' %}">Profile</a></li>
                   <li> <a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
                 </ul>
-          </div>
-              
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="cal_btn"><a href="{% url 'employee:calendar' %}">Calendar</a></li>
+            </ul>
+          
         {% endif %} 
 
   </div>
 </nav> 
   <style>
+  .cal_btn a{
+    padding: 0 !important;
+    margin-top: -18px !important;
+  }
     .right_dropdown{
       text-align: right;
       margin-top:14px;

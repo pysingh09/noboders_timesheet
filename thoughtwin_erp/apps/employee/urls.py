@@ -11,8 +11,10 @@ urlpatterns = [
     path('emplist/', views.EmployeeListView.as_view(), name='employee_list'),
     path('edit/<int:id>/',views.edit, name='edit'),
     path('profile/',views.profile, name='profile'),
-    path('profile1/',views.profile1, name='profile1'),
+    path('calendar/',views.calendar, name='calendar'),
+    # path('profile1/',views.calendar1),
     path('update/<int:id>',views.update, name='update'),
     path('employee_details/<int:id>/',views.employee_details, name='employee_details'),
     path('attendence/date-time-attendence/diff',views.date_time_attendence_view, name='date-time-attendence-view'),
+    
 ]
