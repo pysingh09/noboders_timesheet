@@ -85,7 +85,7 @@ def file_upload(request):
         profile = Profile.objects.get(employee_id=column[0])
         in_time = datetime.strptime(column[1] ,'%I:%M%p')
         out_time = datetime.strptime(column[2] ,'%I:%M%p')
-        # total_working_time = (datetime.combine(date.today(), out_time.time()) - datetime.combine(date.today(), in_time.time())).seconds / 3600
+        total_working_time = (datetime.combine(date.today(), out_time.time()) - datetime.combine(date.today(), in_time.time())).seconds / 3600
         
         created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
@@ -93,7 +93,7 @@ def file_upload(request):
             in_time = in_time,
             out_time =out_time, #10 : 00 PM
             date = column[3],
-            # total_working_time = total_working_time
+            total_working_time = total_working_time
         )
 
     context={}
@@ -124,9 +124,9 @@ def calendar(request):
 def date_time_attendence_view(request):
     date_str1 = request.POST.get("dat")
     date_dt1 = datetime.strptime(date_str1, '%B %d, %Y')
+    # import pdb; pdb.set_trace()
     employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1)
     template_name = "partial/date_time_popup.html"
-    # import pdb; pdb.set_trace()
     return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
 
 def employee_details(request,id):
@@ -137,9 +137,14 @@ def employee_details(request,id):
         if not att.date in names:
             names.add(att.date)
             result.append(att)
-
     return render(request,'home.html', {'attendances_data' : result})
 
-def calendar1(request):
-    template_name = "demo.html"
-    return render(request,template_name)
+def show_calendar(request,id):
+    attendances_data = EmployeeAttendance.objects.filter(user_id=id)
+    names = set()
+    result = []
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
+    return render(request,'fullcalendar.html',{'result':result})

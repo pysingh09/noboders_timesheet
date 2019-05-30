@@ -31,31 +31,24 @@
     </tbody>
 </table>
 
-<!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
-      <!-- Modal content-->
       <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">View Selected date Time In Out</h4>
-        </div>
+        
         <div class="modal-body" id="attendence_model">
-          <p>Some text in the modal.</p>
+          
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-      
     </div>
-  </div>
+  </div>  
+
 
 <script>
 $(document).ready(function(){
   $(".attendence_datetime").click(function(e){
-    // debugger
     e.preventDefault();
     var dat = $(this).data("date");
     $.ajax({
@@ -65,7 +58,7 @@ $(document).ready(function(){
        'data': {
            'dat': dat,
            'csrfmiddlewaretoken': '{{ csrf_token }}',
-       },
+                },
 
        success: function( data, textStatus, jQxhr )
        {
@@ -76,7 +69,6 @@ $(document).ready(function(){
             console.log( errorThrown );
         }
     });
-    
   });
 });
 </script>

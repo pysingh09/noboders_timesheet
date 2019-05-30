@@ -2272,6 +2272,7 @@ function BasicView(element, calendar, viewName) {
 
 
 	function buildTableHTML() {
+		debugger
 		var html =
 			"<table class='fc-border-separate' style='width:100%' cellspacing='0'>" +
 			buildHeadHTML() +

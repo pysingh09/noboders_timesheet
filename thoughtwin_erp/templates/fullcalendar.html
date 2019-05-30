@@ -1,11 +1,12 @@
 
 {% extends 'base.html' %}
 {% load static %}
+{% load date_time_diff_tags %}
 {% block content %}
-
 	<script>
 
 	$(document).ready(function() {
+		
 	    var date = new Date();
 		var d = date.getDate();
 		var m = date.getMonth();
@@ -96,6 +97,9 @@
 </script>
 
 <body>
+	<!--   {% for attendance in result %}
+<p>{% get_date_time_diff_tag request attendance.date attendance.user %}</p>
+        {% endfor %} -->
 <div id='wrap'>
 
 <div id='calendar'></div>

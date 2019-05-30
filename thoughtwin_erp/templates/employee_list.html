@@ -4,6 +4,7 @@
 {% block content %} 
 
 
+
     <h2>Company Employee Details</h2>
     <div class="search-container">
        <table class = "table" id="myTable1" border="2">
@@ -22,7 +23,7 @@
           <tbody>
           {% for person in object_list %}
             <tr>
-              <!-- <td><a href="">{{ person. }}</a></td> -->
+              <td><a href="{% url 'employee:show_calendar' person.user.id %}">view</a></td>
               <td><a href="{% url 'employee:employee_details' person.user.id %}">{{ person.user }}</a></td>
               <td>{{ person.employee_id }}</td>
               <td>{{ person.contact_no}}</td>
