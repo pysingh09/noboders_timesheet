@@ -17,27 +17,25 @@
               </th>   
             </tr>
           </thead>
-          <tbody>
+          <tbody class="mychkboxs">
             {% for attendance in attendance_data %}
               <tr>
-                {# <td><a href="{% url 'employee:edit' person.pk %}">{{ person.user }}</a></td> #}
                 <td>{{ attendance.employee_id }}</td>
                 <td>{{ attendance.in_time}}</td>
                 <td>{{ attendance.out_time}}</td>
                 <td>{{ attendance.date }}</td>
                 <td class="action-checkbox">
-                  <input type="checkbox" name="record" onchange="checkClicked(this)" value="{{ attendance.pk }}" class="action-select"></td>
+                  <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select"></td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
-      <button class="delete-row" id="delrow">Delete row</button>
+      <button class="btn btn-success delete-row" id="delrow">Delete row</button>
     </div>
   {% block js %}
   {{block.super}}
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script>
   <script src="{% static 'js/data.js' %}"></script>
-
 {% endblock js %}
 {% endblock %}

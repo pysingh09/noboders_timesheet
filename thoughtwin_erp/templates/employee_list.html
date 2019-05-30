@@ -28,7 +28,7 @@
                 <td>{{ profile.date_of_birth }}</td>
                 <td>{{ profile.date_of_joining }}</td>
                 <td>{{ profile.teamlead }}</td>
-                <td><a href="{% url 'employee:EditUserProfileView' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span></td>
+                <td><a href="{% url 'employee:update' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span></td>
                 {% if profile.user.is_active %}
                     <td><button class="deactivateEmployee btn btn-danger" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
                 {% else %}

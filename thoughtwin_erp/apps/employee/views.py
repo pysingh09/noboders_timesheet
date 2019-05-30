@@ -1,14 +1,13 @@
 import json,csv,io
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from django.views.generic import View,ListView,TemplateView,UpdateView #DetailView,DeleteView
+from django.shortcuts import render,redirect,get_object_or_404
+from django.http import HttpResponse, JsonResponse
+from django.views.generic import View,ListView,TemplateView,UpdateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance
 from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 from datetime import datetime
 
 
@@ -43,6 +42,15 @@ class EmployeeListView(ListView):
     model = Profile
     template_name = "employee_list.html"
 
+class EditProfileView(UpdateView): 
+    model = Profile
+    form_class = ProfileForm
+    template_name = 'update.html'
+    success_url = "/emplist/"
+    def get_object(self, *args, **kwargs):
+        profile_obj = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return  profile_obj
+
 
 @csrf_exempt
 def deactivate_user(request,pk):
@@ -51,32 +59,6 @@ def deactivate_user(request,pk):
         profile.user.is_active = request.POST.get('is_active')
         profile.user.save()
     return JsonResponse({'status': 'success'})
-    
-
-class EditUserProfileView(UpdateView): 
-    model = Profile
-    form_class = ProfileForm
-    template_name = "update.html"
-
-    def get_object(self, *args, **kwargs):
-        user = get_object_or_404(User, pk=self.kwargs['pk'])
-        return user.profile
-    # def get_success_url(self, *args, **kwargs):
-    #     return redirect("/emplist/")
-
-# def update(request, id):
-#     employee = Profile.objects.get(id=id)
-#     if request.method=="POST":
-#         form = ProfileForm(request.POST, instance = employee)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("/emplist/")
-#         else:
-#             return render(request, 'edit.html', {'form': form})
-#     # teamleads = Profile.objects.get()
-#     # teamleads = Profile.objects.filter(designation = 5)
-#     return render(request, 'edit.html', {'employee': employee})
-
 
 
 @login_required(login_url='/accounts/login')
@@ -97,8 +79,9 @@ def file_upload(request):
     io_string =io.StringIO(file_data)
     next(io_string)
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-        
+
         profile = Profile.objects.get(employee_id=column[0])
+        # import pdb; pdb.set_trace()
         in_time1= datetime.strptime(column[1], "%I:%M%p")
         out_time1= datetime.strptime(column[2], "%I:%M%p")
         _, created= EmployeeAttendance.objects.update_or_create(
@@ -124,50 +107,6 @@ def home(request):
     else:
         return redirect('/')
 
-
-# def user_login(request):
-#     context={}
-#     if request.method == 'POST':
-#         username=request.POST['username']
-#         password=request.POST['password']
-#         user=authenticate(request,username=username,password=password)
-#         if user:
-#             login(request,user)
-#             if request.GET.get(next,None):
-#                 return HttpResponse(request.GET.)
-#             return HttpResponse(reverce'success')
-#         else:
-#             context['error']='envailid u p'
-#              return render(request,'home.html',context)
-#     else:
-#         return render(request,'home.html',context)
-
-
-# class SnippetListView(ListView):
-#     model = Profile
-#     template_name = "employee_list.html"
-#     def __init__(self, arg):
-#         super(ClassName, self).__init__()
-#         self.arg = arg
-        
-
-
-# class EmployeeListView(ListView):
-#     model = Profile
-#     template_name = "employee_list.html"
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['filter'] = SnippetFilter(self.request.GET, queryset=self.get_queryset())
-#         return context
-
-
-# def delete_profile(request,id):        
-#     user = Profile.objects.get(id=id)
-#     user.is_active = False
-#     user.save()
-#     logout(request)
-#     messages.success(request, 'Profile successfully disabled.')
-#     return redirect('employee_list')
 
 @csrf_exempt
 def delete_record(request):
