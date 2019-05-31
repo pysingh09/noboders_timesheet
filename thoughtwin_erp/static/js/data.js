@@ -18,6 +18,7 @@ $(document).ready(function(){
                 },
                 success: function(response) {
                     if(response.status=="success")
+                        
                          // $(".deactivateEmployee").attr("disabled", false);
                         location.reload();
                 }
@@ -29,43 +30,19 @@ $(document).ready(function(){
 
 
 
-
 let valueArr =[];
-// Case 1 : When Header Checkbox ticked
+// Case 1 : When Header Checkbox is ticked
 $(document).on("click","#checkall",function(){ 
-    $('.mychkboxs').find(':checkbox').each(function(){
-        valueArr.push($(this).val());
-        $(this).prop("checked",true);
-    })
-
+    var checked = $(this).prop('checked');
+    $('.mychkboxs').find('input:checkbox').prop('checked', checked);
+    
 });
 
-// Case 2 : When Multiple Checkbox is ticked
-// $(document).on("click",".action-select",function(){    
-//     //push the value only if it is checked
-//     //Check if this is checked or not
-    
-//     var is_checked = $(this).is(':checked');
-//     if (is_checked === true){
-//         valueArr.push($(this).val());
-//         console.log(valueArr);
-//     }
-//     else{
-//         valueArr.pop($(this).val());
-//         console.log(valueArr);
-//     }
-
-// });
-
-// Case 3 : When Header Checkbox is unticked
-
-
-
+// Case 2 : When Multiple Checkbox is ticked/unticked
 
 $(document).on("click","#delrow",function(){  
 
      $(".mychkboxs input[type=checkbox]:checked").each(function () {
-                debugger
                 valueArr.push(this.value);
             });
 
@@ -80,9 +57,11 @@ $(document).on("click","#delrow",function(){
         },
         success: function(response) {
             if(response.status=="success"){
-                alert("All record is Successfully Deleted!")
+                // alert("All record is Successfully Deleted!")
+                alert("Are you sure you want to Deleted selected records?")
                 location.reload();
-                }                                   
+                }
+
             }         
         })           
     });     

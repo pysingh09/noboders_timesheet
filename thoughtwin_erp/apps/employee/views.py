@@ -26,7 +26,7 @@ def signup(request):
             profile = profile_form.save(commit=False)
             profile.user = new_user
             profile.save()
-            return redirect("/emplist/")
+            return redirect("/employeelist/")
             # return redirect("login.html")
     else:
         user_form = SignUpForm()
@@ -46,7 +46,7 @@ class EditProfileView(UpdateView):
     model = Profile
     form_class = ProfileForm
     template_name = 'update.html'
-    success_url = "/emplist/"
+    success_url = "/employeelist/"
     def get_object(self, *args, **kwargs):
         profile_obj = get_object_or_404(Profile, pk=self.kwargs['pk'])
         return  profile_obj
