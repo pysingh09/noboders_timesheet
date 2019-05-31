@@ -121,7 +121,7 @@ var fcViews = fc.views = {};
 
 $.fn.fullCalendar = function(options) {
 
-
+	
 	// method calling
 	if (typeof options == 'string') {
 		var args = Array.prototype.slice.call(arguments, 1);
@@ -2272,7 +2272,7 @@ function BasicView(element, calendar, viewName) {
 
 
 	function buildTableHTML() {
-		debugger
+		// debugger
 		var html =
 			"<table class='fc-border-separate' style='width:100%' cellspacing='0'>" +
 			buildHeadHTML() +
@@ -6109,6 +6109,4 @@ function HorizontalPositionCache(getElement) {
 ;;
 
 })(jQuery);
-
-
 
