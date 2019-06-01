@@ -13,7 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
+# from employee.views import EmailLoginForm
+# from django.contrib.auth import views
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -31,6 +34,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('accounts/', include('django.contrib.auth.urls')),
+    
+    # path('login/', views.login, name="login", kwargs={"authentication_form": EmailLoginForm}),
     # path('accounts/login/', login_forbidden(login), name="login"),
     # path('accounts/login/', login_forbidden(login), name="login"),
 

@@ -4,8 +4,9 @@ $(document).ready( function () {
     
 $(document).ready(function(){
     $('.deactivateEmployee').click(function (event) {
+        console.log("event", event)
              $(this).toggleClass('pressed');
-        if (confirm('Are you sure you want to deactivate this?')) {
+        if (confirm(`Are you sure you want to ${event.target.id} this?`)) {
             var pk = parseInt($(this).val());
             $.ajax({
                 'url': '/deactivate/'+pk+'/',

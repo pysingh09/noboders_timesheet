@@ -38,7 +38,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTHENTICATION_BACKENDS = ('employee.backends.EmailAuthBackend',)
 
 # Application definition
 

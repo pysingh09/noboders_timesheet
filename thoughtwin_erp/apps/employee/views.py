@@ -1,4 +1,5 @@
 import json,csv,io
+from django.contrib.auth.backends import ModelBackend
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View,ListView,TemplateView,UpdateView
@@ -14,6 +15,46 @@ from datetime import datetime
 # @login_required
 # def home(request):
 #     return render(request,'home.html')
+
+# def get_user(email):
+#     try:
+#         return User.objects.get(email=email.lower())
+#     except User.DoesNotExist:
+#         return None
+
+# # create a view that authenticate user with email
+# def email_login_view(request):
+#     email = request.POST['email']
+#     password = request.POST['password']
+#     username = get_user(email)
+#     user = authenticate(username=username, password=password)
+#     if user is not None:
+#         if user.is_active:
+#             login(request, user)
+#             return redirect("/home/")
+#         else:
+#             return('disabled account')
+#             # Return a 'disabled account' error message
+#     else:
+#         return('invalid login')
+#         # Return an 'invalid login' error message.
+
+# def auth_view(request):
+#     username = request.POST.get('username','')
+#     password = request.POST.get('password','')
+#     user = auth.authenticate(username=username, password=password)
+
+#     if user is not None:
+#         auth.login(request, user)
+#         return HttpResponseRedirect('/')
+#     else
+#         if (user = auth.authenticate(email=username, password=password)):
+#         if user is not None:
+#             auth.login(request, user)
+#             return HttpResponseRedirect('/')
+#     else:
+#         return HttpResponseRedirect('/accounts/invalid_login')
+
 @login_required(login_url='/accounts/login')
 def signup(request):
     if request.method == 'POST':    
@@ -33,6 +74,7 @@ def signup(request):
         profile_form = ProfileForm()
     return render(request, 'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form}) 
 
+
 def employee_profile(request):
     template_name = "profile.html"
     return render(request,template_name)
@@ -47,11 +89,20 @@ class EditProfileView(UpdateView):
     form_class = ProfileForm
     template_name = 'update.html'
     success_url = "/employeelist/"
-    def get_object(self, *args, **kwargs):
-        profile_obj = get_object_or_404(Profile, pk=self.kwargs['pk'])
-        return  profile_obj
 
 
+@csrf_exempt
+def delete_record(request):
+    try:    
+        for pk in request.POST.getlist('pk[]'):
+            obj = EmployeeAttendance.objects.get(pk=pk)
+            obj.delete()
+        return JsonResponse({'status' :'success'})
+    except Exception as e:
+        print("Uh Oh!, we met some error:", str(e))
+        return JsonResponse({'status' :'false'})
+
+        
 @csrf_exempt
 def deactivate_user(request,pk):
     profile = Profile.objects.get(pk=pk)
@@ -94,6 +145,7 @@ def file_upload(request):
     context={}
     return render(request,template,context)
 
+
 @login_required(login_url='/accounts/login')
 def home(request):
     context = {}
@@ -108,13 +160,3 @@ def home(request):
         return redirect('/')
 
 
-@csrf_exempt
-def delete_record(request):
-    try:    
-        for pk in request.POST.getlist('pk[]'):
-            obj = EmployeeAttendance.objects.get(pk=pk)
-            obj.delete()
-        return JsonResponse({'status' :'success'})
-    except Exception as e:
-        print("Uh Oh!, we met some error:", str(e))
-        return JsonResponse({'status' :'false'})
