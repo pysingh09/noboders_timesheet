@@ -1,16 +1,21 @@
 {% extends 'base.html' %}
+
 {% load staticfiles %}    
-{% block title %}{% endblock %}
+{% load date_time_diff_tags %}
+
 {% block content %} 
     <div class="search-container">
-      <div>      
+      <div> 
         <table class = "table" id="myTable1" border="2">
           <thead>
             <tr>
+              <th>Time details</th>
+              <th>User</th>
               <th>Employee ID</th>
               <th>IN Time</th>
               <th>Out Time</th>
               <th>Date</th>
+              <th>Calculation</th>
               <th scope="col" class="action-checkbox-column">
               <div class="text"><span><input type="checkbox" id="checkall"></span></div>
               <div class="clear"></div>
@@ -20,12 +25,15 @@
           <tbody class="mychkboxs">
             {% for attendance in attendance_data %}
               <tr>
+                <td><a class="attendence_datetime" href="" data-date="{{ attendance.date }}">View</a></td>
+                <td><p>{{ attendance.user }}</p></td>
                 <td>{{ attendance.employee_id }}</td>
                 <td>{{ attendance.in_time}}</td>
                 <td>{{ attendance.out_time}}</td>
                 <td>{{ attendance.date }}</td>
                 <td class="action-checkbox">
                   <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select"></td>
+                <td><p>{% get_date_time_diff_tag request attendance.date attendance.user %}</p></td> 
               </tr>
             {% endfor %}
           </tbody>
@@ -33,9 +41,60 @@
       </div>
       <button class="btn btn-success delete-row" id="delrow">Delete row</button>
     </div>
-  {% block js %}
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">View Selected date Time In Out</h4>
+        </div>
+        <div class="modal-body" id="attendence_model">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
   {{block.super}}
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script>
   <script src="{% static 'js/data.js' %}"></script>
-{% endblock js %}
+
+  <script>
+    $(document).ready(function(){
+      $(".attendence_datetime").click(function(e){
+        e.preventDefault();
+        var dat = $(this).data("date");
+        $.ajax({
+           'url': "{% url "employee:date-time-attendence-view" %}",
+           'type': "POST",
+           // 'dataType': 'json',
+           'data': {
+               'dat': dat,
+               'csrfmiddlewaretoken': '{{ csrf_token }}',
+           },
+
+           success: function( data, textStatus, jQxhr )
+           {
+                $("#attendence_model").html(data);
+                $("#myModal").modal();
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        });
+        
+      });
+    });
+  </script>
+
 {% endblock %}

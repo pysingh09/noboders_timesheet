@@ -38,8 +38,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTHENTICATION_BACKENDS = ('employee.backends.EmailAuthBackend',)
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -52,7 +50,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_filters',
     'django_extensions',
-    'employee'
+    'employee',
+
 ]
 
 MIDDLEWARE = [
@@ -141,4 +140,4 @@ LOGIN_URL = '/account/login/'
 AUTH_USER_MODEL = 'auth.User'
 AUTH_USER_EMAIL_UNIQUE = True
 
-    
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

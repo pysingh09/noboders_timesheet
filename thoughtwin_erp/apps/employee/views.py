@@ -1,8 +1,9 @@
 import json,csv,io
-from django.contrib.auth.backends import ModelBackend
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View,ListView,TemplateView,UpdateView
+from django.shortcuts import render,get_list_or_404, get_object_or_404
+from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance
@@ -11,10 +12,13 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 
-
-# @login_required
-# def home(request):
-#     return render(request,'home.html')
+from django.http import JsonResponse
+from datetime import datetime, date
+from django.db.models import Count
+from time import sleep
+from django.db.models import Sum
+from django.shortcuts import redirect
+# from date_time_diff_tags import get_date_time_diff_tag
 
 # def get_user(email):
 #     try:
@@ -132,31 +136,62 @@ def file_upload(request):
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
 
         profile = Profile.objects.get(employee_id=column[0])
-        # import pdb; pdb.set_trace()
-        in_time1= datetime.strptime(column[1], "%I:%M%p")
-        out_time1= datetime.strptime(column[2], "%I:%M%p")
-        _, created= EmployeeAttendance.objects.update_or_create(
+        in_time = datetime.strptime(column[1] ,'%I:%M%p')
+        out_time = datetime.strptime(column[2] ,'%I:%M%p')
+        # total_working_time = (datetime.combine(date.today(), out_time.time()) - datetime.combine(date.today(), in_time.time())).seconds / 3600
+        
+        created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],
-            in_time = in_time1,
-            out_time =out_time1,
-            date = column[3]
+            in_time = in_time,
+            out_time =out_time, #10 : 00 PM
+            date = column[3],
+            # total_working_time = total_working_time
         )
+
     context={}
     return render(request,template,context)
 
 
 @login_required(login_url='/accounts/login')
 def home(request):
-    context = {}
-    if request.user.is_active:
-        if request.user.is_superuser:
-            context['attendance_data'] = EmployeeAttendance.objects.all()
-        else:
-            usr = User.objects.get(id = request.user.id)
-            context['attendance_data'] = EmployeeAttendance.objects.filter(employee_id=usr.profile.employee_id)
-        return render(request,'home.html', context)
-    else:
-        return redirect('/')
+    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+    names = set()
+    result = []
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
+
+    return render(request,'home.html', {'attendances_data' : result})
 
 
+def profile(request):
+    template_name = "profile.html"
+    return render(request,template_name)
+
+def profile1(request):
+    template_name = "calender.html"
+    return render(request,template_name) 
+
+def date_time_attendence_view(request):
+    date_str1 = request.POST.get("dat")
+    date_dt1 = datetime.strptime(date_str1, '%B %d, %Y')
+    employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1)
+    template_name = "partial/date_time_popup.html"
+    return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
+
+def employee_details(request,id):
+    # attendances_data = EmployeeAttendance.objects.get(id=id)
+    
+    attendances_data = EmployeeAttendance.objects.filter(user_id=id)
+    # attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+    names = set()
+    result = []
+    # import pdb; pdb.set_trace()
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
+
+    return render(request,'home.html', {'attendances_data' : result})

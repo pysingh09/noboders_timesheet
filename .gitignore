@@ -3,3 +3,4 @@ media/
 subl/
 collected_static/
 thoughtwin_erp/settings/local.py
+**/migrations

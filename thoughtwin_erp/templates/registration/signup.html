@@ -6,7 +6,7 @@
 <h2>Signup form</h2>
 <form class="form-horizontal" method="POST" action="{% url 'employee:signup' %}" enctype="multipart/form-data" class="form-horizontal"> 
 
-   {% csrf_token %}
+  {% csrf_token %}
       
   <p>Username  :{{ user_form.username }}</p>{{user_form.errors}}
   <p>Password  :{{ user_form.password1 }}</p>

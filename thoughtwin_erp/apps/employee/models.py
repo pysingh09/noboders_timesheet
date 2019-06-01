@@ -4,20 +4,21 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
-
+from datetime import datetime, date
+import datetime
 
 
 ROLE_CHOICES = (
-        (1, ('MD')),
-        (2, ('Project manager')),
-        (3, ('BDE')),
-        (4 , ('HR')),
-        (5 , ('TeamLead')),
-        (6 , ('Senior developer')),
-        (7 , ('Junior developer')),
-        (8 , ('Trainee')),
-        (9 , ('QA')),
-    )
+    (1, ('MD')),
+    (2, ('Project manager')),
+    (3, ('BDE')),
+    (4 , ('HR')),
+    (5 , ('TeamLead')),
+    (6 , ('Senior developer')),
+    (7 , ('Junior developer')),
+    (8 , ('Trainee')),
+    (9 , ('QA')),
+)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -31,35 +32,31 @@ class Profile(models.Model):
     def __str__(self):  
         return self.user.username
 
-# def create_profile(sender , **kwargs):
-#     user= kwargs['instance']
-#     if kwargs['created']:
-#         user_profile = Profile(user=user)
-#         user_profile.save()
-#         post_save.connect(create_profile, sender=User) 
 
 class EmployeeAttendance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     in_time = models.TimeField(blank=True, verbose_name=_('Time In'))      
-    out_time = models.TimeField(blank=True, verbose_name=_('Time out'))
+    out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
-    # total_working_hours = models.TimeField(blank=True)
+    total_working_time = models.FloatField(default=0)
+    
     def __str__(self):
         return str(self.employee_id)
 
 
+    def emp_hour(self):
+        return (datetime.datetime.combine(date.today(), self.out_time) - datetime.datetime.combine(date.today(), self.in_time)).seconds / 3600
+
+    def time_diff(self,dt):
+        intime = self.in_time
+        outtime = self.out_time
+        dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
+        dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
+        dateTimeDifference = dateTimeOut - dateTimeIn
+        return dateTimeDifference
 
 
 
-
-
-    # def to_dict_json(self):
-    #     return {
-    #         'user': self.user,
-    #         'employee_id': self.employee_id,
-    #         'contact_no': self.contact_no,
-    #         'designation': self.designation,
-        
 
 
