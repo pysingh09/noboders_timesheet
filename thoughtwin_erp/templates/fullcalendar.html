@@ -149,7 +149,7 @@
         {% endfor %} -->
 
 <script>
-		var calendar  = $(document).ready(function() {
+		 $(document).ready(function() {
 				
 				$('#calendar').fullCalendar({
 					
@@ -195,52 +195,42 @@
 							start: '2014-06-28'
 						}
 					]
+					
 
 		});
 		
 	});
-		var event = calendar.getEventById('id') // an event object!
-		var start = event.start // a property (a Date object)
-		console.log(start.toISOString())
 
-  // $('#external-events .fc-event').each(function() {
+	
 
-  //   // store data so the calendar knows to render an event upon drop
-  //   $(this).data('event', {
-  //     title: $.trim($(this).text()), // use the element's text as the event title
-  //     stick: true, // maintain when user navigates (see docs on the renderEven$('#external-events .fc-event').each(function() {
 
-  //   // store data so the calendar knows to render an event upon drop
-  //   $(this).data('event', {
-  //     title: $.trim($(this).text()), // use the element's text as the event title
-  //     stick: true, // maintain when user navigates (see docs on the renderEvent method)
-  //     color: $(this).data('color')
-  //   });
-
-  //   // make the event draggable using jQuery UI
-  //   $(this).draggable({
-  //     zIndex: 999,
-  //     revert: true,      // will cause the event to go back to its
-  //     revertDuration: 0  //  original position after the drag
-  //   });
-
-  // });t method)
-  //     color: $(this).data('color')
-  //   });
-
-  //   // make the event draggable using jQuery UI
-  //   $(this).draggable({
-  //     zIndex: 999,
-  //     revert: true,      // will cause the event to go back to its
-  //     revertDuration: 0  //  original position after the drag
-  //   });
-
-  // });
 
 
 </script>
 
+<script>
+		$('#calendar').fullCalendar({
+			 eventAfterRender: function(event, element, view) { 
+			 	debugger
 
+				// element.append(event.title);
+				var demo = event.title();
+			// eventAfterRender: function (event, element, view) {
+		 //        var dataHoje = new Date();
+		        if (demo == 'hello') {
+		            //event.color = "#FFB347"; //Em andamento
+		            element.css('background-color', '#ff4636');
+		        } else {
+		            //event.color = "#77DD77"; //Concluído OK
+		            element.css('background-color', '#008000');
+		        }
+		        // } else if (event.start > dataHoje && event.end > dataHoje) {
+		        //     //event.color = "#AEC6CF"; //Não iniciado
+		        //     element.css('background-color', '#AEC6CF');
+		        // } 
+		} 
+	});
+</script>
 
 <div id='wrap'>
 
