@@ -1,88 +1,46 @@
-/* CSS Document */
-.btn-rounded-dark{
-  position: relative;
-  transition: all .5s;
-}
-.btn-rounded-dark:after{
-  content: '';
-  position: absolute;
-  width: 0;
-  top: 50%;
-  height: 0;
-  border-radius: 50%;
-  transition: all .5s;
-  opacity: 0;
-  background: #343a40;
-  border: 1px solid transparent;
-}
-.btn-rounded-dark:hover:after{
-  content: '';/*attr(data-date);*/
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 15%;
-  opacity: 1;
-  background: transparent;
-  color: #fff;
-  border-radius: 50%;
-  border: 1px solid #343a40;
-}
-.btn-rounded-success{
-  position: relative;
-  transition: all .5s;
-}
-.btn-rounded-success:after{
-  content: '';
-  position: absolute;
-  width: 0;
-  top: 50%;
-  height: 0;
-  border-radius: 50%;
-  transition: all .5s;
-  opacity: 0;
-  background: #28a745;
-  border: 1px solid transparent;
-}
-.btn-rounded-success:hover:after{
-  content: '';/*attr(data-date);*/
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 15%;
-  opacity: 1;
-  background: transparent;
-  color: #fff;
-  border-radius: 50%;
-  border: 1px solid #28a745;
-}
-.current-date-selected{
-  color: #dc3545;
-  font-weight: bold;
-}
-.current-date-selected:after{
-  content: '';/*attr(data-date);*/
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 15%;
-  opacity: 1;
-  background: transparent;
-  color: #fff;
-  border-radius: 50%;
-  border: 1px solid #dc3545;
-}
-.current-date-selected:hover:after{
-  content: '';/*attr(data-date);*/
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 15%;
-  opacity: 1;
-  background: #dc354533;
-  color: #fff;
-  border-radius: 50%;
-  border: 1px solid #dc3545;
-}
-.cont_margin{
-  margin:0 !important;
-}
+#wrap {
+    width: 1100px;
+    margin: 0 auto;
+    }
+
+  #external-events {
+    float: left;
+    width: 150px;
+    padding: 0 10px;
+    text-align: left;
+    }
+
+  #external-events h4 {
+    font-size: 16px;
+    margin-top: 0;
+    padding-top: 1em;
+    }
+
+  .external-event { /* try to mimick the look of a real event */
+    margin: 10px 0;
+    padding: 2px 4px;
+    background: #3366CC;
+    color: #fff;
+    font-size: .85em;
+    cursor: pointer;
+    }
+
+  #external-events p {
+    margin: 1.5em 0;
+    font-size: 11px;
+    color: #666;
+    }
+
+  #external-events p input {
+    margin: 0;
+    vertical-align: middle;
+    }
+
+  #calendar {
+/*    float: right; */
+        margin: 0 auto;
+    width: 900px;
+    background-color: #FFFFFF;
+      border-radius: 6px;
+        box-shadow: 0 1px 2px #C3C3C3;
+    }

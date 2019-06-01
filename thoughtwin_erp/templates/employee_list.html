@@ -9,6 +9,7 @@
      <table class = "table" id="myTable2" border="2">
         <thead>
           <tr>
+            <th>Calendar</th>
             <th>Username</th>
             <th>Employee ID</th>
             <th>Contact</th>
@@ -23,7 +24,8 @@
         <tbody>
             {% for profile in object_list %}
               <tr>    
-                <td>{{ profile.user }}</td>
+                <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a></td>
+                <td><a href="{% url 'employee:employee_details' profile.user.id %}">{{ profile.user }}</a></td>
                 <td>{{ profile.employee_id }}</td>
                 <td>{{ profile.contact_no}}</td>
                 <td>{{ profile.get_designation_display }}</td>

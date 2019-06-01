@@ -13,10 +13,7 @@
            <li><a href="{% url 'employee:home' %}">Home</a></li>
          {% endif %}
        </ul>
-
-
        {% if user.is_authenticated %}
-
          <div class="dropdown right_dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                      {{ user.username }}

@@ -12,8 +12,6 @@
               <th>Time details</th>
               <th>User</th>
               <th>Employee ID</th>
-              <th>IN Time</th>
-              <th>Out Time</th>
               <th>Date</th>
               <th>Calculation</th>
               <th scope="col" class="action-checkbox-column">
@@ -23,17 +21,15 @@
             </tr>
           </thead>
           <tbody class="mychkboxs">
-            {% for attendance in attendance_data %}
+            {% for attendance in attendances_data %}
               <tr>
                 <td><a class="attendence_datetime" href="" data-date="{{ attendance.date }}">View</a></td>
                 <td><p>{{ attendance.user }}</p></td>
                 <td>{{ attendance.employee_id }}</td>
-                <td>{{ attendance.in_time}}</td>
-                <td>{{ attendance.out_time}}</td>
                 <td>{{ attendance.date }}</td>
+                <td><p>{% get_date_time_diff_tag request attendance.date attendance.user %}</p></td> 
                 <td class="action-checkbox">
                   <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select"></td>
-                <td><p>{% get_date_time_diff_tag request attendance.date attendance.user %}</p></td> 
               </tr>
             {% endfor %}
           </tbody>
@@ -48,12 +44,8 @@
     
       <!-- Modal content-->
       <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">View Selected date Time In Out</h4>
-        </div>
+      
         <div class="modal-body" id="attendence_model">
-          <p>Some text in the modal.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -62,12 +54,8 @@
       
     </div>
   </div>
-{% endblock %}
 
-{% block js %}
-  {{block.super}}
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script>
-  <script src="{% static 'js/data.js' %}"></script>
+
 
   <script>
     $(document).ready(function(){

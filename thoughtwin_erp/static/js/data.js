@@ -1,5 +1,5 @@
-$(document).ready( function () {
-  $('table').DataTable();
+$(document).ready( function (){
+  $('#myTable1').DataTable();
 });
     
 $(document).ready(function(){

@@ -9,7 +9,9 @@
     </tr>
   </thead>
   <tbody>
-    {% for emp_att in employee_attendence %}  
+
+    {% for emp_att in employee_attendence %}
+      
     <tr>
         <td data-toggle="modal" data-target="#myModal"><p>{{ emp_att.in_time }}</p></td>
         <td><p>{{ emp_att.out_time }}</p></td>
