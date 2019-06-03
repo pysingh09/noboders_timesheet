@@ -15,7 +15,7 @@ MEDIA_URL = '/media/'
 DATABASES = {
     'default': {
         'ENGINE':   'django.db.backends.postgresql',
-        'NAME':     'erp',
+        'NAME':     'erp_thoughtwin',
         'USER':     'postgres',
         'PASSWORD': 'psql',
         'HOST':     'localhost',

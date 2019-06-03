@@ -46,7 +46,7 @@ class Dashboard(View):
     def get(self, request):
         return render(request, 'dashboard/dashboard.html')
 
-@login_required(login_url='/accounts/login')
+# @login_required(login_url='/accounts/login')
 def signup(request):
     if request.method == 'POST':    
         user_form = SignUpForm(data=request.POST)
@@ -56,6 +56,7 @@ def signup(request):
             new_user.set_password(user_form.cleaned_data['password1'])
             new_user.save()
             profile = profile_form.save(commit=False)
+            profile.created_by = request.user
             profile.user = new_user
             profile.save()
             return redirect("/employeelist/")
@@ -103,7 +104,7 @@ def deactivate_user(request,pk):
     return JsonResponse({'status': 'success'})
 
 
-@login_required(login_url='/accounts/login')
+# @login_required(login_url='/accounts/login')
 @permission_required('admin.con_add_log_entry')
 def file_upload(request):
     template = 'file_upload.html'
@@ -140,28 +141,17 @@ def file_upload(request):
     return render(request,template,context)
 
 
-@login_required(login_url='/accounts/login')
+# @login_required(login_url='/accounts/login')
 def home(request):
-    if request.user.is_superuser:
-        attendances_data = EmployeeAttendance.objects.all()
-        names = set()
-        result = []
-        for att in attendances_data:
-            if not att.date in names:
-                names.add(att.date)
-                result.append(att)
+    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+    names = set()
+    result = []
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
 
-        return render(request,'home.html', {'attendances_data' : result})
-    else:
-        attendances_data = EmployeeAttendance.objects.filter(user=request.user)
-        names = set()
-        result = []
-        for att in attendances_data:
-            if not att.date in names:
-                names.add(att.date)
-                result.append(att)
-
-        return render(request,'home.html', {'attendances_data' : result})
+    return render(request,'home.html', {'attendances_data' : result})
 
 
 
@@ -171,10 +161,11 @@ def calendar(request):
 
 def date_time_attendence_view(request):
     date_str1 = request.POST.get("dat")
+    emp_id = request.POST.get("emp_id")
     # date_str1 = request.POST.get("id")
     date_dt1 = datetime.strptime(date_str1, '%B %d, %Y')
-    # import pdb; pdb.set_trace()
-    employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1)
+    employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1,employee_id=emp_id)
+    
     template_name = "partial/date_time_popup.html"
     return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
 

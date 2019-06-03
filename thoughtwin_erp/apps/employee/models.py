@@ -34,7 +34,7 @@ class Profile(models.Model):
     # designation = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name=_('Designation'))
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_created')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_created')
 
     def __str__(self):
 

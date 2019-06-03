@@ -4,7 +4,4 @@
 {% load i18n %}
 {% block content %}
 Dashboard
-{% if user.is_authenticated %}
-    <li><a href="{% url 'logout' %}">Log Out</a></li>
-{% endif %}
 {% endblock %}

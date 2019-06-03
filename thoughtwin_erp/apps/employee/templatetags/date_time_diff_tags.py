@@ -7,8 +7,6 @@ register = template.Library()
 
 @register.simple_tag()
 def get_date_time_diff_tag(request, att_date,user):
-	# import pdb; pdb.set_trace()
-	# user = User.objects.get(id = id)
 	attendances_data = EmployeeAttendance.objects.filter(user=user,date=att_date)
 	dateTimeDifference = datetime.timedelta(0, 0)
 	for attendance in attendances_data:

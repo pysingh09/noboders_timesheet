@@ -149,8 +149,4 @@ AUTH_USER_EMAIL_UNIQUE = True
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     '/admin',
     '/login',
-    # '/password_reset',
-    # '/reset',
-    # '/user/exist',
-    # '/create/user',
 )
