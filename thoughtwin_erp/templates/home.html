@@ -62,12 +62,15 @@
       $(".attendence_datetime").click(function(e){
         e.preventDefault();
         var dat = $(this).data("date");
+        var emp_id = $(this).data("employee_id");
         $.ajax({
            'url': "{% url "employee:date-time-attendence-view" %}",
            'type': "POST",
            // 'dataType': 'json',
            'data': {
+
                'dat': dat,
+               'emp_id':emp_id,
                'csrfmiddlewaretoken': '{{ csrf_token }}',
            },
 

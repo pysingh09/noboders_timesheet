@@ -155,15 +155,26 @@ def file_upload(request):
 
 @login_required(login_url='/accounts/login')
 def home(request):
-    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
-    names = set()
-    result = []
-    for att in attendances_data:
-        if not att.date in names:
-            names.add(att.date)
-            result.append(att)
+    if request.user.is_superuser:
+        attendances_data = EmployeeAttendance.objects.all()
+        names = set()
+        result = []
+        for att in attendances_data:
+            if not att.date in names:
+                names.add(att.date)
+                result.append(att)
 
-    return render(request,'home.html', {'attendances_data' : result})
+        return render(request,'home.html', {'attendances_data' : result})
+    else:
+        attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+        names = set()
+        result = []
+        for att in attendances_data:
+            if not att.date in names:
+                names.add(att.date)
+                result.append(att)
+
+        return render(request,'home.html', {'attendances_data' : result})
 
 
 
@@ -173,6 +184,7 @@ def calendar(request):
 
 def date_time_attendence_view(request):
     date_str1 = request.POST.get("dat")
+    # date_str1 = request.POST.get("id")
     date_dt1 = datetime.strptime(date_str1, '%B %d, %Y')
     # import pdb; pdb.set_trace()
     employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1)
@@ -198,3 +210,27 @@ def show_calendar(request,id):
             names.add(att.date)
             result.append(att)
     return render(request,'fullcalendar.html',{'result':result})
+
+
+ # in_out_time = []
+ #    if request.user.is_superuser:
+ #        attendances_data = EmployeeAttendance.objects.all()
+ #        names = set()
+ #        result = []
+ #        for att in attendances_data:
+ #            if not att.date in names:
+ #                names.add(att.date)
+ #                result.append(att)
+
+ #        return render(request,'home.html', {'attendances_data' : result})
+        
+ #    else:
+ #        attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+ #        names = set()
+ #        result = []
+ #        for att in attendances_data:
+ #            if not att.date in names:
+ #                names.add(att.date)
+ #                result.append(att)
+
+ #    return render(request,'home.html', {'attendances_data' : result })
