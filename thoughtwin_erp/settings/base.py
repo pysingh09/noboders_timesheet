@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'app.employee.middlewares.LoginRequiredMiddleware'
+    'employee.middleware.AuthRequiredMiddleware',#before login redirection
 ]
 
 ROOT_URLCONF = 'thoughtwin_erp.urls'
@@ -133,11 +133,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+LOGIN_REDIRECT_URL = '/'
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/home/'
-LOGOUT_REDIRECT_URL = '/accounts/login'
-LOGIN_URL = '/account/login/'
-AUTH_USER_MODEL = 'auth.User'
+# <<<<<<< HEAD
+# LOGIN_REDIRECT_URL = '/home/'
+# LOGOUT_REDIRECT_URL = '/accounts/login'
+# LOGIN_URL = '/account/login/'
+# AUTH_USER_MODEL = 'auth.User'
 AUTH_USER_EMAIL_UNIQUE = True
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# =======
+
+
+LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    '/admin',
+    '/login',
+    # '/password_reset',
+    # '/reset',
+    # '/user/exist',
+    # '/create/user',
+)

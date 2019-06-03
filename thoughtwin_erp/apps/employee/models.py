@@ -1,12 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.contrib.auth.models import User,Group
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime, date
 import datetime
-
 
 ROLE_CHOICES = (
     (1, ('MD')),
@@ -26,10 +26,18 @@ class Profile(models.Model):
     contact_no = models.CharField(max_length=10,default=0, blank=True, verbose_name=_('Contact No'))
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_('Date Of Birth'))
     date_of_joining = models.DateField(null=True, blank=True, verbose_name=_('Date Of Joining'))
+
     teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'), related_name='teamlead')
     designation = models.IntegerField(choices=ROLE_CHOICES, default=7, verbose_name=_('Designation'))
 
-    def __str__(self):  
+    # teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'))
+    # designation = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name=_('Designation'))
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_created')
+
+    def __str__(self):
+
         return self.user.username
 
 

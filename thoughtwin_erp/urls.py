@@ -30,17 +30,14 @@ from django.contrib.auth import views as auth_views
 # login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/')
 
 
+
+from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    path('accounts/', include('django.contrib.auth.urls')),
-    
-    # path('login/', views.login, name="login", kwargs={"authentication_form": EmailLoginForm}),
-    # path('accounts/login/', login_forbidden(login), name="login"),
-    # path('accounts/login/', login_forbidden(login), name="login"),
+    # path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('employee.urls', namespace='employee')),
+    # path('login/', auth_views.login, name='login'),
+    path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
 
-    # path('accounts/', 'django.contrib.auth.views.login', {'redirect_if_logged_in': 'home'})
-    path('', include('employee.urls', namespace='employee'))
-
-]
-# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

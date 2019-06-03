@@ -2,7 +2,7 @@ import json,csv,io
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View,ListView,TemplateView,UpdateView
-from django.shortcuts import render,get_list_or_404, get_object_or_404
+from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
@@ -10,54 +10,41 @@ from employee.models import Profile, EmployeeAttendance
 from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime
-
-from django.http import JsonResponse
 from datetime import datetime, date
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
-from django.shortcuts import redirect
-# from date_time_diff_tags import get_date_time_diff_tag
 
-# def get_user(email):
-#     try:
-#         return User.objects.get(email=email.lower())
-#     except User.DoesNotExist:
-#         return None
+from django.contrib.auth.forms import AuthenticationForm
+# Create your views here.
 
-# # create a view that authenticate user with email
-# def email_login_view(request):
-#     email = request.POST['email']
-#     password = request.POST['password']
-#     username = get_user(email)
-#     user = authenticate(username=username, password=password)
-#     if user is not None:
-#         if user.is_active:
-#             login(request, user)
-#             return redirect("/home/")
-#         else:
-#             return('disabled account')
-#             # Return a 'disabled account' error message
-#     else:
-#         return('invalid login')
-#         # Return an 'invalid login' error message.
 
-# def auth_view(request):
-#     username = request.POST.get('username','')
-#     password = request.POST.get('password','')
-#     user = auth.authenticate(username=username, password=password)
+def login_view(request):
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            form = AuthenticationForm(data=request.POST)
+            if form.is_valid():
+                user = form.get_user()
+                login(request,user)
+                return redirect('employee:dashboard')
+            else:
+                return render(request,'registration/login.html',{ 'form':form})
+        else:
+            form = AuthenticationForm()
+        return render(request,'registration/login.html',{ 'form':form})
+    else:
+        return redirect('employee:dashboard')
+            
 
-#     if user is not None:
-#         auth.login(request, user)
-#         return HttpResponseRedirect('/')
-#     else
-#         if (user = auth.authenticate(email=username, password=password)):
-#         if user is not None:
-#             auth.login(request, user)
-#             return HttpResponseRedirect('/')
-#     else:
-#         return HttpResponseRedirect('/accounts/invalid_login')
+def index(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        return redirect('employee:dashboard')
+
+class Dashboard(View):
+    def get(self, request):
+        return render(request, 'dashboard/dashboard.html')
 
 @login_required(login_url='/accounts/login')
 def signup(request):
