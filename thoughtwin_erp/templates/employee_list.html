@@ -12,6 +12,8 @@
             <th>Calendar</th>
             <th>Username</th>
             <th>Employee ID</th>
+            <th>First Name</th>
+            <th>last Name</th>
             <th>Contact</th>
             <th>Designation</th>
             <th>Date Of Birth</th>
@@ -27,6 +29,8 @@
                 <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a></td>
                 <td><a href="{% url 'employee:employee_details' profile.user.id %}">{{ profile.user }}</a></td>
                 <td>{{ profile.employee_id }}</td>
+                <td>{{ profile.user.first_name }}</td>
+                <td>{{ profile.user.last_name }}</td>
                 <td>{{ profile.contact_no}}</td>
                 <td>{{ profile.get_designation_display }}</td>
                 <td>{{ profile.date_of_birth }}</td>

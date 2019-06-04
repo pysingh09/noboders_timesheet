@@ -4,11 +4,14 @@
      <div class="col=8">
       <div class="card">
         <div class="card-body">
+          {{form2.errors}}
        <h2>Update Employee Details</h2>
        <form method="post" novalidate>
         {% csrf_token %}
         
         <p>Employee Id :{{ form.employee_id }}</p>
+        <p>First Name:{{ form2.first_name }}</p>
+        <p>Last Name :{{ form2.last_name }}</p>
         <p>Contact   :{{ form.contact_no }}</p>
         <p>Designation   :{{ form.designation }}</p>{{form.errors}}
 

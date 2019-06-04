@@ -1,19 +1,20 @@
 import json,csv,io
 from django.shortcuts import render,redirect,get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
 from django.views.generic import View,ListView,TemplateView,UpdateView
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance
-from employee.forms import SignUpForm,ProfileForm
+from employee.forms import SignUpForm,ProfileForm, CustomAuthForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
+from django.contrib import messages
 
 from django.contrib.auth.forms import AuthenticationForm
 # Create your views here.
@@ -74,15 +75,51 @@ def employee_profile(request):
 
 class EmployeeListView(ListView):
     model = Profile
+    # t=User.objects.first_name
+    # users = User.objects.all()
+    # user = User.objects.get(first_name, last_name)
     template_name = "employee_list.html"
+
 
 class EditProfileView(UpdateView): 
     model = Profile
     form_class = ProfileForm
+    second_form_class = CustomAuthForm
     template_name = 'update.html'
     success_url = "/employeelist/"
 
+    def get_context_data(self, **kwargs):
+        context = super(EditProfileView, self).get_context_data(**kwargs)
+        if 'form' not in context:
+            context['form'] = self.form_class(self.request.GET, instance=self.request.user)
 
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class(
+                initial={
+                'first_name': context['profile'].user.first_name,
+                'last_name' : context['profile'].user.last_name,
+                })   
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(request.POST) 
+        form2 = self.second_form_class(request.POST)
+        # form = self.form_class(request.POST, instance=self.request.user)
+        # form2 = self.second_form_class(request.POST, instance=self.request.user)
+
+        if form.is_valid() and form2.is_valid():
+            userdata = form.save(commit=False)
+            # used to set the password, but no longer necesarry
+            userdata.save()
+            employeedata = form2.save(commit=False)
+            employeedata.user = userdata
+            employeedata.save()
+            messages.success(self.request, 'Settings saved successfully')
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return render(request,'update.html',{'form':form,'form2':form2})
+ 
 @csrf_exempt
 def delete_record(request):
     try:    
@@ -126,19 +163,17 @@ def file_upload(request):
         profile = Profile.objects.get(employee_id=column[0])
         in_time = datetime.strptime(column[1] ,'%I:%M%p')
         out_time = datetime.strptime(column[2] ,'%I:%M%p')
-   
-        
+
         created= EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],
             in_time = in_time,
-            out_time =out_time, #10 : 00 PM
+            out_time =out_time,
             date = column[3],
-            
         )
-
-    context={}
-    return render(request,template,context)
+    messages.success(request, ' file Successfully Uploaded.')
+   
+    return render(request,template)
 
 
 # @login_required(login_url='/accounts/login')
@@ -189,26 +224,3 @@ def show_calendar(request,id):
             result.append(att)
     return render(request,'fullcalendar.html',{'result':result})
 
-
- # in_out_time = []
- #    if request.user.is_superuser:
- #        attendances_data = EmployeeAttendance.objects.all()
- #        names = set()
- #        result = []
- #        for att in attendances_data:
- #            if not att.date in names:
- #                names.add(att.date)
- #                result.append(att)
-
- #        return render(request,'home.html', {'attendances_data' : result})
-        
- #    else:
- #        attendances_data = EmployeeAttendance.objects.filter(user=request.user)
- #        names = set()
- #        result = []
- #        for att in attendances_data:
- #            if not att.date in names:
- #                names.add(att.date)
- #                result.append(att)
-
- #    return render(request,'home.html', {'attendances_data' : result })
