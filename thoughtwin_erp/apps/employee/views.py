@@ -14,8 +14,8 @@ from datetime import datetime, date
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
-
 from django.contrib.auth.forms import AuthenticationForm
+
 # Create your views here.
 
 
@@ -146,6 +146,7 @@ def home(request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
+    # import pdb; pdb.set_trace()
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
@@ -153,11 +154,22 @@ def home(request):
 
     return render(request,'home.html', {'attendances_data' : result})
 
-
-
 def calendar(request):
+    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+    names = set()
+    result = []
+    new_result = []
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
+            date = str(att.date.year)+"-"+str(att.date.month)+"-"+str(att.date.day)
+            # import pdb; pdb.set_trace()
+            new_result.append({"title":"7:00","date":date})
+    # new_result1 = JSON.stringify(new_result)
     template_name = "fullcalendar.html"
-    return render(request,template_name) 
+
+    return render(request,template_name, {'result' : new_result }) 
 
 def date_time_attendence_view(request):
     date_str1 = request.POST.get("dat")
