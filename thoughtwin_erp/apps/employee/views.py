@@ -88,6 +88,14 @@ class EditProfileView(UpdateView):
     template_name = 'update.html'
     success_url = "/employeelist/"
 
+    # def get_object(self, *args, **kwargs):
+    #     user = get_object_or_404(User, pk=self.kwargs['pk'])
+
+        # We can also get user object using self.request.user  but that doesnt work
+        # for other models.
+
+        # return user.profile
+
     def get_context_data(self, **kwargs):
         context = super(EditProfileView, self).get_context_data(**kwargs)
         if 'form' not in context:
@@ -108,6 +116,7 @@ class EditProfileView(UpdateView):
         # form = self.form_class(request.POST, instance=self.request.user)
         # form2 = self.second_form_class(request.POST, instance=self.request.user)
 
+        # import pdb; pdb.set_trace()
         if form.is_valid() and form2.is_valid():
             userdata = form.save(commit=False)
             # used to set the password, but no longer necesarry

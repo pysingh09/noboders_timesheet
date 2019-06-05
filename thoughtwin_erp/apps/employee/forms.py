@@ -37,12 +37,8 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead',)
-
-    # def clean_employee_id(self):
-    #     employee_id = self.cleaned_data.get('employee_id')
-    #     if employee_id and Profile.objects.filter(employee_id=employee_id).exists():
-    #         raise forms.ValidationError(u'This Employee_Id  allready exist.')
-    #     return employee_id
+        
+        # read_only_fields = ['employee_id']
 
 
 class CustomAuthForm(forms.ModelForm):
