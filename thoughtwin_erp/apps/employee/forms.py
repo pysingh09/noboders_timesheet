@@ -37,9 +37,11 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead',)
+        
+        # read_only_fields = ['employee_id']
 
 
-# class CustomAuthForm(AuthenticationForm):
-#     def __init__(self, *args, **kwargs):
-#         self.error_messages['invalid_login'] = 'Custom error'
-#         super().__init__(*args, **kwargs)
+class CustomAuthForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']

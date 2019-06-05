@@ -129,17 +129,23 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 LOGIN_REDIRECT_URL = '/'
+
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+# media files (Pdf, Images)
+MEDIA_ROOT = PROJECT_APPS.child('media')
+
+MEDIA_URL = '/media/'
+
+# Static files (CSS, JavaScript, Images, Pdf)
+STATIC_ROOT = PROJECT_APPS.child('staticfiles')
+
 STATIC_URL = '/static/'
-# <<<<<<< HEAD
-# LOGIN_REDIRECT_URL = '/home/'
-# LOGOUT_REDIRECT_URL = '/accounts/login'
-# LOGIN_URL = '/account/login/'
-# AUTH_USER_MODEL = 'auth.User'
+
+STATICFILES_DIRS = [
+   PROJECT_APPS.child("static"),
+]
+
 AUTH_USER_EMAIL_UNIQUE = True
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
