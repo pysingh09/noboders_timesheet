@@ -75,9 +75,6 @@ def employee_profile(request):
 
 class EmployeeListView(ListView):
     model = Profile
-    # t=User.objects.first_name
-    # users = User.objects.all()
-    # user = User.objects.get(first_name, last_name)
     template_name = "employee_list.html"
 
 

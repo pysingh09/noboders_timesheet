@@ -17,7 +17,7 @@ urlpatterns = [
     path('show/calendar1/<int:id>', show_calendar,name ='show_calendar'),
     path('employee_details/<int:id>/', employee_details, name='employee_details'),
     path('attendence/date-time-attendence/diff', date_time_attendence_view, name='date-time-attendence-view'),
-
+    
     path('login/', login_view, name='login'),
     path('', index, name='index'),
     path('dashboard', Dashboard.as_view(), name='dashboard' ),
