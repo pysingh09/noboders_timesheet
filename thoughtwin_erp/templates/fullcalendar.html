@@ -19,28 +19,57 @@ $(document).ready(function() {
                     
                     {  
                         'title' :"{{data.title}}",
-                        'date'  :"{{data.date}}"
+                        'date'  :"{{data.date}}",
+
                     }
                     {% if not forloop.last %},{% endif %}
                 {% endfor %}
+
                 ],
-               eventRender: function(event, element) {
-                    if (event.title == '9:00') {
-                        element.css({
-                            'background-color': '#25DC44',
-                            'border-color': '#25DC44'
-                        });
+                    eventRender: function (event, element, view) {
+                        var a = event.title
+                        var b = a.replace(':','.')
+                        var title = parseFloat(b)
+                        var calculation = parseFloat("9:00")
+                        if (title >=calculation ) {
+                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44');                        
+                                       
+                            }
+
+                        else {
+
+                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000'); 
+                        }
                     }
-                    else{
 
-                        element.css({
-                            'background-color': '#E81328',
-                            'border-color': '#E81328'
-                        });
+            //    eventRender: function(event, element) {
+            //         // debugger
+            //         var a = event.title
+            //         var b = a.replace(':','.')
+            //         var title = parseFloat(b)
+            //         var calculation = parseFloat("9:00")
 
-                    }
+            //         if (title >=calculation ) {
+            //             // debugger
+            //             element.css({
+            //                 'background-color':'#25DC44',
+            //                 'border-color': '#25DC44'
+            //             });
+            //         }
+            //         else {
 
-                } 
+            //             element.css({
+            //                 'background-color':'#ff0000',
+            //                 'border-color': '#ff0000'
+            //             });
+
+            //         }
+
+            //     } 
+         
+
 
         });
     });
@@ -49,19 +78,12 @@ $(document).ready(function() {
 
 <body>
       
-<!-- {% for attendance in result %}
-<tr><a class="calculation" href="" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date }}"data-title="{{ attendance.title }}"></a>    
-<td>{{ attendance.title }}</td>
-<td>{{ attendance.date }}</td>
-</tr>
-{% endfor %} -->
+
 
 <div id='wrap'>
 
 <div id='calendar'></div>
-<!-- <div id='external-events'> -->
-       
-<!-- <div class='fc-event' style="background-color: red;" data-color='red'></div></div> -->
+
 
 <div style='clear:both'></div>
 </div>

@@ -162,10 +162,10 @@ def calendar(request):
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
+            # import pdb; pdb.set_trace()
             result.append(att)
             date = str(att.date.year)+"-"+str(att.date.month)+"-"+str(att.date.day)
-            # import pdb; pdb.set_trace()
-            new_result.append({"title":"7:00","date":date})
+            new_result.append({"title":"8:70","date":date})
     # new_result1 = JSON.stringify(new_result)
     template_name = "fullcalendar.html"
 
@@ -199,28 +199,4 @@ def show_calendar(request,id):
         if not att.date in names:
             names.add(att.date)
             result.append(att)
-    return render(request,'fullcalendar.html',{'result':result})
-
-
- # in_out_time = []
- #    if request.user.is_superuser:
- #        attendances_data = EmployeeAttendance.objects.all()
- #        names = set()
- #        result = []
- #        for att in attendances_data:
- #            if not att.date in names:
- #                names.add(att.date)
- #                result.append(att)
-
- #        return render(request,'home.html', {'attendances_data' : result})
-        
- #    else:
- #        attendances_data = EmployeeAttendance.objects.filter(user=request.user)
- #        names = set()
- #        result = []
- #        for att in attendances_data:
- #            if not att.date in names:
- #                names.add(att.date)
- #                result.append(att)
-
- #    return render(request,'home.html', {'attendances_data' : result })
+    return render(request,'fullcalendar.html',{'result1':result1})
