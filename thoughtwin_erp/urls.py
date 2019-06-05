@@ -33,11 +33,11 @@ from django.contrib.auth import views as auth_views
 
 from django.contrib.auth import views as auth_views
 
-urlpatterns = [
+urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += [
     path('admin/', admin.site.urls),
     # path('accounts/', include('django.contrib.auth.urls')),
     path('', include('employee.urls', namespace='employee')),
     # path('login/', auth_views.login, name='login'),
     path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
-
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
