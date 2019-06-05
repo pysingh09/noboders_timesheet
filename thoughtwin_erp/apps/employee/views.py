@@ -7,7 +7,7 @@ from django.views.generic import View,ListView,TemplateView #CreateView,,DetailV
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance
-from employee.forms import SignUpForm,ProfileForm, CustomAuthForm
+from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date
@@ -81,51 +81,22 @@ class EmployeeListView(ListView):
 class EditProfileView(UpdateView): 
     model = Profile
     form_class = ProfileForm
-    second_form_class = CustomAuthForm
     template_name = 'update.html'
     success_url = "/employeelist/"
 
-    # def get_object(self, *args, **kwargs):
-    #     user = get_object_or_404(User, pk=self.kwargs['pk'])
-
-        # We can also get user object using self.request.user  but that doesnt work
-        # for other models.
-
-        # return user.profile
-
-    def get_context_data(self, **kwargs):
-        context = super(EditProfileView, self).get_context_data(**kwargs)
-        if 'form' not in context:
-            context['form'] = self.form_class(self.request.GET, instance=self.request.user)
-
-        if 'form2' not in context:
-            context['form2'] = self.second_form_class(
-                initial={
-                'first_name': context['profile'].user.first_name,
-                'last_name' : context['profile'].user.last_name,
-                })   
-        return context
-
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.form_class(request.POST) 
-        form2 = self.second_form_class(request.POST)
-        # form = self.form_class(request.POST, instance=self.request.user)
-        # form2 = self.second_form_class(request.POST, instance=self.request.user)
-
-        # import pdb; pdb.set_trace()
-        if form.is_valid() and form2.is_valid():
-            userdata = form.save(commit=False)
-            # used to set the password, but no longer necesarry
-            userdata.save()
-            employeedata = form2.save(commit=False)
-            employeedata.user = userdata
-            employeedata.save()
+        instance = Profile.objects.get(pk = kwargs['pk'])
+        form = self.form_class(data=request.POST, instance=instance)
+        if form.is_valid():
+            userdata = form.save()
+            userdata.user.first_name = form.data['first_name']
+            userdata.user.last_name = form.data['last_name']
+            userdata.user.save()
             messages.success(self.request, 'Settings saved successfully')
-            return HttpResponseRedirect(self.get_success_url())
+            return HttpResponseRedirect("/employeelist/")
         else:
-            return render(request,'update.html',{'form':form,'form2':form2})
- 
+            return render(request,'update.html',{'form':form})
+
 @csrf_exempt
 def delete_record(request):
     try:    

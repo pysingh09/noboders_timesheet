@@ -22,26 +22,20 @@ class SignUpForm(UserCreationForm):
 
 
 class ProfileForm(forms.ModelForm):
-    ROLE_CHOICES = (
-        (1, ('MD')),
-        (2, ('Project manager')),
-        (3, ('BDE')),
-        (4 , ('HR')),
-        (5 , ('TeamLead')),
-        (6 , ('Senior developer')),
-        (7 , ('Junior developer')),
-        (8 , ('Trainee')),
-        (9 , ('QA')),
-    )
-    designation = forms.IntegerField(widget=forms.Select(choices=ROLE_CHOICES))
+    first_name = forms.CharField(max_length=10)
+    last_name = forms.CharField(max_length=10)
     class Meta:
         model = Profile
-        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead',)
-        
-        # read_only_fields = ['employee_id']
+        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name')
 
+    def __init__(self, *args, **kwargs):
+        # first call parent's constructor
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        # there's a `fields` property now
+        self.fields['employee_id'].required = False
 
-class CustomAuthForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name']
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['employee_id'].widget.attrs['readonly'] = True
+            self.fields['first_name'].initial = instance.user.first_name
+            self.fields['last_name'].initial = instance.user.last_name

@@ -140,7 +140,7 @@ MEDIA_URL = '/media/'
 # Static files (CSS, JavaScript, Images, Pdf)
 STATIC_ROOT = PROJECT_APPS.child('staticfiles')
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 
 STATICFILES_DIRS = [
    PROJECT_APPS.child("static"),

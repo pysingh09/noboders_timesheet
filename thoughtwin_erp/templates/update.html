@@ -10,8 +10,8 @@
         {% csrf_token %}
         
         <p>Employee Id :{{ form.employee_id }}</p>
-        <p>First Name:{{ form2.first_name }}</p>
-        <p>Last Name :{{ form2.last_name }}</p>
+        <p>First Name:{{ form.first_name }}</p>
+        <p>Last Name :{{ form.last_name }}</p>
         <p>Contact   :{{ form.contact_no }}</p>
         <p>Designation   :{{ form.designation }}</p>{{form.errors}}
 
