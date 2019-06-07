@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load date_time_diff_tags %}
+{% block content %}
+
+
+
+
+<!--   <script>
+    $(document).ready(function(){
+      $(".attendence_datetime").click(function(e){
+        e.preventDefault();
+        var dat = $(this).data("date");
+        var emp_id = $(this).data("employee-id");
+        $.ajax({
+           'url': "{% url "employee:date-time-attendence-view" %}",
+           'type': "POST",
+           // 'dataType': 'json',
+           'data': {
+
+               'dat': dat,
+               'emp_id':emp_id,
+               'csrfmiddlewaretoken': '{{ csrf_token }}',
+           },
+
+           success: function( data, textStatus, jQxhr )
+           {
+                $("#attendence_model").html(data);
+                $("#myModal").modal();
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        });
+        
+debugger
+      });
+    });
+  </script>    -->
+
+<script>
+    
+$(document).ready(function() {
+ 
+
+
+    // var demo = '<a class="attendence_datetime" href="" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date }}">View</a>';
+    $('#calendar').fullCalendar({
+            defaultDate: '2019-06-12',
+            defaultView: 'month',
+            editable: true,
+            events: 
+            [
+
+                   {% for attendance in attendances_data %}
+                {
+              
+               'title':"{% get_date_time_diff_tag request attendance.date attendance.user %}",
+                  'date':"{{ attendance.date}}",
+              }
+                {% if not forloop.last %},{% endif %}
+                  {% endfor %}
+
+
+
+
+                ],
+
+                // eventAfterAllRender: function(view){
+                //   if(view.name == 'month')
+                //   {                       
+                //       $('.fc-day').each(function(){
+                //           $(this).css('position','relative');
+                //           $(this).append('<label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label>');
+                //         });      
+                //       }                   
+                //   }
+
+
+                    dayRender: function (date, cell) {
+                    cell.append('<input type="checkbox" class="mychkboxs">');
+                      }
+                     //                                   }
+    //               dayRender: function (date, element) {
+    //               debugger
+    //                 // var dateString = $.fullCalendar.formatDate('yyyy-MM-dd');
+    //               $('.fc-day-number[data-date='+dateString+']').append('<input type="checkbox">');
+    // }    
+                
+ });
+
+       
+   
+      });
+
+
+              // let valueArr =[];
+              // // Case 1 : When Header Checkbox is ticked
+              // $(document).on("click","#checkall",function(){
+              //    var checked = $(this).prop('checked');
+              //    $('.mychkboxs').find('input:checkbox').prop('checked', checked);
+
+              // });
+
+              // Case 2 : When Multiple Checkbox is ticked/unticked
+
+              $(document).on("click","#delrow",function(){
+              debugger
+
+                  $(".mychkboxs input[type=checkbox]:checked").each(function () {
+                             valueArr.push(this.value);
+                         });
+
+                     let pk = valueArr;
+                     $.ajax({
+                     'url': '/delete_record/',
+                     'type': "post",
+                     'dataType': 'json',
+                     'data': {
+                         'pk': pk,
+                         'csrfmiddlewaretoken': '{{ csrf_token }}',
+                     },
+                     success: function(response) {
+                         if(response.status=="success"){
+                             // alert("All record is Successfully Deleted!")
+                             alert("Are you sure you want to Deleted selected records?")
+                             location.reload();
+                             }
+
+                         }
+       })
+   });
+    
+</script>
+
+<body>
+      
+<!-- <label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label> -->
+
+<div id='wrap'>
+
+<div id='calendar'></div>
+
+
+<div style='clear:both'></div>
+</div>
+
+
+</body>
+{% endblock %}

@@ -8,6 +8,13 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime, date
 import datetime
 
+class BaseModel(models.Model):
+   created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+   modified_at = models.DateTimeField(auto_now=True, db_index=True)
+
+   class Meta:
+       abstract = True
+
 ROLE_CHOICES = (
     (1, ('MD')),
     (2, ('Project manager')),
@@ -20,7 +27,7 @@ ROLE_CHOICES = (
     (9 , ('QA')),
 )
 
-class Profile(models.Model):
+class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     employee_id = models.IntegerField(unique=True, verbose_name=_('Employee ID'))
     contact_no = models.CharField(max_length=10,default=0, blank=True, verbose_name=_('Contact No'))
@@ -32,8 +39,6 @@ class Profile(models.Model):
 
     # teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'))
     # designation = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name=_('Designation'))
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_created')
 
     def __str__(self):
@@ -41,7 +46,7 @@ class Profile(models.Model):
         return self.user.username
 
 
-class EmployeeAttendance(models.Model):
+class EmployeeAttendance(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     in_time = models.TimeField(blank=True, verbose_name=_('Time In'))      
@@ -64,7 +69,12 @@ class EmployeeAttendance(models.Model):
         dateTimeDifference = dateTimeOut - dateTimeIn
         return dateTimeDifference
 
+class LeaveRequest(BaseModel):
+        user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leave_request')
+        date = models.DateField(blank=True)
+        is_approved =models.BooleanField(default=False)
+        
 
-
+    
 
 
