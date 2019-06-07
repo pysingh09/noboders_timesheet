@@ -5,6 +5,16 @@
       <div class="card">
         <div class="card-body">
           {{form2.errors}}
+
+        onSuccess:function(files,data,xhr)
+    {
+        alert("Upload success");
+    },
+    onError: function(files,status,errMsg)
+    {       
+        alert("Upload Failed");
+    }
+}
        <h2>Update Employee Details</h2>
        <form method="post" novalidate>
         {% csrf_token %}
