@@ -3,27 +3,64 @@
 {% load date_time_diff_tags %}
 {% block content %}
 
-            
+
+
+
+<!--   <script>
+    $(document).ready(function(){
+      $(".attendence_datetime").click(function(e){
+        e.preventDefault();
+        var dat = $(this).data("date");
+        var emp_id = $(this).data("employee-id");
+        $.ajax({
+           'url': "{% url "employee:date-time-attendence-view" %}",
+           'type': "POST",
+           // 'dataType': 'json',
+           'data': {
+
+               'dat': dat,
+               'emp_id':emp_id,
+               'csrfmiddlewaretoken': '{{ csrf_token }}',
+           },
+
+           success: function( data, textStatus, jQxhr )
+           {
+                $("#attendence_model").html(data);
+                $("#myModal").modal();
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        });
+        
+debugger
+      });
+    });
+  </script>    -->
 
 <script>
     
 $(document).ready(function() {
-    var geodata = "{{ result | safe }}";
+    var geodata = "{{ attendances_data | safe }}";
+    // var demo = '<a class="attendence_datetime" href="" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date }}">View</a>';
     $('#calendar').fullCalendar({
             defaultDate: '2019-06-12',
             defaultView: 'month',
             editable: true,
             events: 
             [
-                {% for data in result %}
-                    
-                    {  
-                        'title' :"{{data.title}}",
-                        'date'  :"{{data.date}}",
 
-                    }
-                    {% if not forloop.last %},{% endif %}
-                {% endfor %}
+                   {% for attendance in attendances_data %}
+                {
+              
+               'title':"{% get_date_time_diff_tag request attendance.date attendance.user %}",
+                  'date':"{{ attendance.date}}",
+              }
+                {% if not forloop.last %},{% endif %}
+                  {% endfor %}
+
+
+
 
                 ],
                     eventRender: function (event, element, view) {
@@ -33,9 +70,8 @@ $(document).ready(function() {
                         var calculation = parseFloat("9:00")
                         if (title >=calculation ) {
                             var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44');                        
-                                       
-                            }
+                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44');                                                               
+                             }
 
                         else {
 
@@ -72,12 +108,107 @@ $(document).ready(function() {
 
 
         });
+    $(".attendence_datetime").click(function(e){
+        e.preventDefault();
+        var dat = $(this).data("date");
+        var emp_id = $(this).data("employee-id");
+        $.ajax({
+           'url': "{% url "employee:date-time-attendence-view" %}",
+           'type': "POST",
+           // 'dataType': 'json',
+           'data': {
+
+               'dat': dat,
+               'emp_id':emp_id,
+               'csrfmiddlewaretoken': '{{ csrf_token }}',
+           },
+
+           success: function( data, textStatus, jQxhr )
+           {
+                $("#attendence_model").html(data);
+                $("#myModal").modal();
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        });
+        
+      });
     });
+
+
+   // $(document).ready(function(){
+   //    $(".attendence_datetime").click(function(e){
+   //      e.preventDefault();
+   //      var dat = $(this).data("date");
+   //      var emp_id = $(this).data("employee-id");
+   //      $.ajax({
+   //         'url': "{% url "employee:date-time-attendence-view" %}",
+   //         'type': "POST",
+   //         // 'dataType': 'json',
+   //         'data': {
+
+   //             'dat': dat,
+   //             'emp_id':emp_id,
+   //             'csrfmiddlewaretoken': '{{ csrf_token }}',
+   //         },
+
+   //         success: function( data, textStatus, jQxhr )
+   //         {
+   //              $("#attendence_model").html(data);
+   //              $("#myModal").modal();
+   //          },
+   //          error: function( jqXhr, textStatus, errorThrown ){
+   //              console.log( errorThrown );
+   //          }
+   //      });
+        
+   //    });
+   //  });
 
 </script>
 
 <body>
       
+<!-- {% for data in attendances_data %}
+                    
+                    {  
+                        'title' :"{{data.title}}",
+                        'date'  :"{{data.date}}",
+                        'url': "{{data.view}}"
+
+                    }
+                    {% if not forloop.last %},{% endif %}
+                {% endfor %}       
+ -->
+<!-- 
+
+                {% for attendance in attendances_data %}
+                {
+              
+               'title':"{% get_date_time_diff_tag request attendance.date attendance.user %}",
+                  'date':"{{ attendance.date}}",
+                 'url':"<a class="attendence_datetime" href="" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date }}">View</a>"
+                }
+                {% if not forloop.last %},{% endif %}
+                  {% endfor %} -->
+                 
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+      
+        <div class="modal-body" id="attendence_model">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 
 <div id='wrap'>
