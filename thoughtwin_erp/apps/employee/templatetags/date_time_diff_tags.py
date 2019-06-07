@@ -17,5 +17,4 @@ def get_date_time_diff_tag(request, att_date,user):
 		# import pdb; pdb.set_trace()
 
 		dateTimeDifference += dateTimeOut - dateTimeIn
-		print(dateTimeDifference)
 	return dateTimeDifference

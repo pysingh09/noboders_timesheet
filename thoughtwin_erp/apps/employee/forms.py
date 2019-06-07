@@ -31,11 +31,11 @@ class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
         super(ProfileForm, self).__init__(*args, **kwargs)
-        # there's a `fields` property now
-        self.fields['employee_id'].required = False
+        # if you want to admin can not update employee_id so uncomment both lines which are commented
 
+        # self.fields['employee_id'].required = False 
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
-            self.fields['employee_id'].widget.attrs['readonly'] = True
+            # self.fields['employee_id'].widget.attrs['readonly'] = True
             self.fields['first_name'].initial = instance.user.first_name
             self.fields['last_name'].initial = instance.user.last_name

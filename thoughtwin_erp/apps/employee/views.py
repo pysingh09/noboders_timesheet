@@ -95,7 +95,7 @@ class EditProfileView(UpdateView):
             userdata.user.first_name = form.data['first_name']
             userdata.user.last_name = form.data['last_name']
             userdata.user.save()
-            messages.success(self.request, 'Settings saved successfully')
+            # messages.success(self.request, 'Settings saved successfully')
             return HttpResponseRedirect("/employeelist/")
         else:
             return render(request,'update.html',{'form':form})

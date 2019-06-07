@@ -29,11 +29,9 @@ $(document).ready(function(){
 });
 
 
-
-
 let valueArr =[];
 // Case 1 : When Header Checkbox is ticked
-$(document).on("click","#checkall",function(){ 
+$(document).on("click","#checkall",function(){
     var checked = $(this).prop('checked');
     $('.mychkboxs').find('input:checkbox').prop('checked', checked);
     
