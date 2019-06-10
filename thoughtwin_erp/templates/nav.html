@@ -9,6 +9,7 @@
       <li><a href="{% url 'employee:file_upload' %}">CSV Upload</a></li>
       <li><a href="{% url 'employee:signup' %}">Create Employee</a></li>
       <li><a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+      <li><a href="{% url 'employee:leaves' %}">Employee Leaves</a></li>
       {% else %}
        <li><a href="{% url 'employee:home' %}">Home</a></li>
       {% endif %}

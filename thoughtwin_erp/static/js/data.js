@@ -38,7 +38,7 @@ $(document).on("click","#checkall",function(){
 });
 
 // Case 2 : When Multiple Checkbox is ticked/unticked
-debugger 
+
 $(document).on("click","#delrow",function(){
     
      $(".mychkboxs input[type=checkbox]:checked").each(function () {

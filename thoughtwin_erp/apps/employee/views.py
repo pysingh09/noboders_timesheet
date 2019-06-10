@@ -3,21 +3,18 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
 from django.views.generic import View,ListView,TemplateView,UpdateView
 from django.shortcuts import get_list_or_404, get_object_or_404
-from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
+from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance
-from employee.forms import SignUpForm,ProfileForm
+from employee.models import Profile, EmployeeAttendance, AllottedLeave
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
-
 from django.contrib import messages
-
-
 from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
@@ -71,14 +68,39 @@ def signup(request):
     return render(request, 'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form}) 
 
 
-def employee_profile(request):
+class EmployeeProfile(TemplateView):
     template_name = "profile.html"
-    return render(request,template_name)
-
 
 class EmployeeListView(ListView):
     model = Profile
     template_name = "employee_list.html"
+
+# class EmployeeLeaves(ListView):
+#     model = AllottedLeaves
+#     form_class = AllottedLeavesForm
+#     template_name = "leave.html"
+#     success_url = "/employeelist/"
+
+class LeaveCreateView(CreateView):
+    model = AllottedLeave
+    form_class = AllottedLeavesForm
+    template_name = "leave.html"
+    success_url = "/leaves/"
+
+    def get_context_data(self, **kwargs):
+        return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list=AllottedLeave.objects.all() )
+
+
+# def employee_leaves(request):
+#     template = 'file_upload.html'
+#     if request.method == 'POST':   
+#         leave_form = AllottedLeavesForm(data=request.POST)
+#         if leave_form.is_valid():
+#             leave_form.save()
+#             return redirect("/employeelist/")
+#     else:
+#         leave_form = AllottedLeavesForm()
+#     return render(request, 'leave.html',{'form': leave_form})
 
 
 class EditProfileView(UpdateView): 
@@ -86,6 +108,7 @@ class EditProfileView(UpdateView):
     form_class = ProfileForm
     template_name = 'update.html'
     success_url = "/employeelist/"
+
 
     def post(self, request, *args, **kwargs):
         instance = Profile.objects.get(pk = kwargs['pk'])

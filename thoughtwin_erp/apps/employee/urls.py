@@ -6,13 +6,14 @@ urlpatterns = [
 
     path('signup/', signup, name='signup'),
     path('home/', home, name='home'),
-    path('profile/', employee_profile, name='profile'),
     path('file/', file_upload, name='file_upload'),
     path('employeelist/', EmployeeListView.as_view(), name='employee_list'),
-    path('profile/', employee_profile, name='profile'),
+    path('profile/', EmployeeProfile.as_view(), name='profile'),
     path('deactivate/<int:pk>/', deactivate_user,name='deactivate-user'),
     path('delete_record/', delete_record, name='delete_record'), 
     path('update/<int:pk>/', EditProfileView.as_view(), name="update"),
+
+    path('leaves/', LeaveCreateView.as_view(), name="leaves"),
     path('calendar/', calendar, name='calendar'),
     path('show/calendar1/<int:id>', show_calendar,name ='show_calendar'),
     # path('home/', home, name='home'),
