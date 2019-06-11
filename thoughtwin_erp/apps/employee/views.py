@@ -17,7 +17,7 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 
-# Create your views here.
+
 
 
 def login_view(request):
@@ -75,12 +75,12 @@ class EmployeeListView(ListView):
     model = Profile
     template_name = "employee_list.html"
 
-# class EmployeeLeaves(ListView):
-#     model = AllottedLeaves
-#     form_class = AllottedLeavesForm
-#     template_name = "leave.html"
-#     success_url = "/employeelist/"
-
+class ListOfProfile(View):
+    template_name = "profile.html"
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk = kwargs['pk'])
+        return render(request,'profile.html',{'user' : user})
+       
 class LeaveCreateView(CreateView):
     model = AllottedLeave
     form_class = AllottedLeavesForm
@@ -90,25 +90,17 @@ class LeaveCreateView(CreateView):
     def get_context_data(self, **kwargs):
         return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list=AllottedLeave.objects.all() )
 
-
-# def employee_leaves(request):
-#     template = 'file_upload.html'
-#     if request.method == 'POST':   
-#         leave_form = AllottedLeavesForm(data=request.POST)
-#         if leave_form.is_valid():
-#             leave_form.save()
-#             return redirect("/employeelist/")
-#     else:
-#         leave_form = AllottedLeavesForm()
-#     return render(request, 'leave.html',{'form': leave_form})
-
+class EditAllotedLeaveView(UpdateView): 
+    model = AllottedLeave
+    form_class = AllottedLeavesForm
+    template_name = 'update_leave.html'
+    success_url = "/leaves/"
 
 class EditProfileView(UpdateView): 
     model = Profile
     form_class = ProfileForm
     template_name = 'update.html'
     success_url = "/employeelist/"
-
 
     def post(self, request, *args, **kwargs):
         instance = Profile.objects.get(pk = kwargs['pk'])
@@ -184,7 +176,6 @@ def home(request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
-    # import pdb; pdb.set_trace()
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
@@ -256,5 +247,4 @@ def show (request):
             result.append(att)
 
     return render(request,'fullcalendar.html', {'attendances_data' : result})
-
 
