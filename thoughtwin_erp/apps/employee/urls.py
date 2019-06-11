@@ -12,8 +12,9 @@ urlpatterns = [
     path('deactivate/<int:pk>/', deactivate_user,name='deactivate-user'),
     path('delete_record/', delete_record, name='delete_record'), 
     path('update/<int:pk>/', EditProfileView.as_view(), name="update"),
-
+    path('profile/<int:pk>/', ListOfProfile.as_view(), name="profile_list"),
     path('leaves/', LeaveCreateView.as_view(), name="leaves"),
+    path('update_leave/<int:pk>/', EditAllotedLeaveView.as_view(), name="update_leave"),
     path('calendar/', calendar, name='calendar'),
     path('show/calendar1/<int:id>', show_calendar,name ='show_calendar'),
     # path('home/', home, name='home'),
@@ -24,5 +25,6 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('', index, name='index'),
     path('dashboard', Dashboard.as_view(), name='dashboard' ),
+   
 
 ]
