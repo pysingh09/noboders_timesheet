@@ -45,6 +45,11 @@ class Profile(BaseModel):
 
         return self.user.username
 
+    def get_leave(self):
+        return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
+        
+        
+
 
 class EmployeeAttendance(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
@@ -77,5 +82,19 @@ class LeaveRequest(BaseModel):
         class Meta:
             unique_together = ('date', 'user',)
     
+LEAVE_CHOICES = []
+for r in range(2019, (datetime.datetime.now().year+10)):
+   LEAVE_CHOICES.append((r,r))
+
+class AllottedLeave(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leaves')
+    year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
+    leave = models.IntegerField(verbose_name=_('Leaves'))
+    
+    class Meta:
+        unique_together = ('year', 'user',)
+
+    def __str__(self):
+        return self.user.username
 
 

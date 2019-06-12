@@ -3,11 +3,11 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
 from django.views.generic import View,ListView,TemplateView,UpdateView
 from django.shortcuts import get_list_or_404, get_object_or_404
-from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
+from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance,LeaveRequest
-from employee.forms import SignUpForm,ProfileForm
+from employee.models import Profile, EmployeeAttendance, AllottedLeave,LeaveRequest
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date
@@ -16,11 +16,9 @@ from time import sleep
 from django.db.models import Sum
 from datetime import datetime
 from django.contrib import messages
-
-
 from django.contrib.auth.forms import AuthenticationForm
 
-# Create your views here.
+
 
 
 def login_view(request):
@@ -71,15 +69,33 @@ def signup(request):
     return render(request, 'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form}) 
 
 
-def employee_profile(request):
+class EmployeeProfile(TemplateView):
     template_name = "profile.html"
-    return render(request,template_name)
-
 
 class EmployeeListView(ListView):
     model = Profile
     template_name = "employee_list.html"
 
+class ListOfProfile(View):
+    template_name = "profile.html"
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk = kwargs['pk'])
+        return render(request,'profile.html',{'user' : user})
+       
+class LeaveCreateView(CreateView):
+    model = AllottedLeave
+    form_class = AllottedLeavesForm
+    template_name = "leave.html"
+    success_url = "/leaves/"
+
+    def get_context_data(self, **kwargs):
+        return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list=AllottedLeave.objects.all() )
+
+class EditAllotedLeaveView(UpdateView): 
+    model = AllottedLeave
+    form_class = AllottedLeavesForm
+    template_name = 'update_leave.html'
+    success_url = "/leaves/"
 
 class EditProfileView(UpdateView): 
     model = Profile
@@ -161,7 +177,6 @@ def home(request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
-    # import pdb; pdb.set_trace()
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
@@ -245,22 +260,6 @@ def red_list(request):
             result.append(att)
 
     return render(request,'red_list.html', {'attendances_data' : result})
-
-# def red_list(request, att_date,user):
-#     import pdb; pdb.set_trace()
-#     attendances_data = EmployeeAttendance.objects.filter(user=user,date=att_date)
-#     dateTimeDifference = datetime.timedelta(0, 0)
-#     for attendance in attendances_data:
-#         intime = attendance.in_time
-#         outtime = attendance.out_time
-#         dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
-#         dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
-#         # import pdb; pdb.set_trace()
-
-#         dateTimeDifference += dateTimeOut - dateTimeIn
-#         print(dateTimeDifference)
-#     return dateTimeDifference   
-
 
 
 

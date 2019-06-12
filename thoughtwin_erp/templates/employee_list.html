@@ -24,7 +24,8 @@
         <tbody>
             {% for profile in object_list %}
               <tr>    
-                <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a></td>
+                <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a>
+                 <a href="{% url 'employee:profile_list' profile.user.id %}"><span class="glyphicon glyphicon-pencil" >Profile</span></td>
                 <td><a href="{% url 'employee:employee_details' profile.user.id %}">{{ profile.user }}</a></td>
                 <td>{{ profile.employee_id }}</td>
                 <td>{{ profile.user.first_name }}</td>
@@ -34,7 +35,8 @@
                 <td>{{ profile.date_of_birth }}</td>
                 <td>{{ profile.date_of_joining }}</td>
                 <td>{{ profile.teamlead }}</td>
-                <td><a href="{% url 'employee:update' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span></td>
+                <td><a href="{% url 'employee:update' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span>
+                </td>
                 {% if profile.user.is_active %}
                     <td><button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
                 {% else %}

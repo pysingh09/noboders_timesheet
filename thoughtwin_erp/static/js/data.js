@@ -29,23 +29,30 @@ $(document).ready(function(){
 });
 
 
-let valueArr =[];
+let csvRecoredArr =[];
 // Case 1 : When Header Checkbox is ticked
 $(document).on("click","#checkall",function(){
     var checked = $(this).prop('checked');
     $('.mychkboxs').find('input:checkbox').prop('checked', checked);
-    
-});
+    // $('.attendence_datetime').find(':checkbox').each(function(){
+    //     csvRecoredArr.push($(this).val());
+    //     csvRecoredArr = _.uniq(csvRecoredArr)
+    // })
+}); 
 
 // Case 2 : When Multiple Checkbox is ticked/unticked
 
-$(document).on("click","#delrow",function(){  
-
+$(document).on("click","#delrow",function(){
      $(".mychkboxs input[type=checkbox]:checked").each(function () {
-                valueArr.push(this.value);
-            });
+        // $(".attendence_datetime").on('click',function(){
+            
+                csvRecoredArr.push(this.value);
+                csvRecoredArr = _.uniq(csvRecoredArr)
+                // csvRecoredArr.push({"date":$(this).data("checkeddate")});
+            // })
+        });
 
-        let pk = valueArr;
+        let pk = csvRecoredArr;
         $.ajax({
         'url': '/delete_record/',
         'type': "post",
