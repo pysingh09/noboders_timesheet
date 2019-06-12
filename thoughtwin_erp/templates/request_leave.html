@@ -78,7 +78,11 @@ $(document).ready(function() {
 
 
                     dayRender: function (date, cell) {
-                    cell.append('<input type="checkbox" class="mychkboxs">');
+                      // debugger
+                      // date.getFullYear() # date formate
+                      var date = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+                      // var Date = demo.split(" ");
+                    cell.append('<input type="checkbox" data-checkeddate='+date+' class="chkboxs">');
                       }
                      //                                   }
     //               dayRender: function (date, element) {
@@ -94,7 +98,6 @@ $(document).ready(function() {
       });
 
 
-              // let valueArr =[];
               // // Case 1 : When Header Checkbox is ticked
               // $(document).on("click","#checkall",function(){
               //    var checked = $(this).prop('checked');
@@ -103,36 +106,43 @@ $(document).ready(function() {
               // });
 
               // Case 2 : When Multiple Checkbox is ticked/unticked
+              // debugger
+              var leaveRequestArr =[];
+              // var date = Date.parse(leaveRequestArr);
 
-              $(document).on("click","#delrow",function(){
-              debugger
-
-                  $(".mychkboxs input[type=checkbox]:checked").each(function () {
-                             valueArr.push(this.value);
-                         });
-
-                     let pk = valueArr;
+              $(document).on("click","#checkrow",function(){
+                 
+                  $(".chkboxs:checked").each(function () {
+                    // debugger
+                    leaveRequestArr.push($(this).data("checkeddate"));
+                    // leaveRequestArr.ToString("dd/MM/yyyy")
+                  });
+                    // debugger
+                 
                      $.ajax({
-                     'url': '/delete_record/',
-                     'type': "post",
+                     'url': '/request/leave/',
+                     'type': "POST",
                      'dataType': 'json',
                      'data': {
-                         'pk': pk,
+                         'leaveRequestArr': leaveRequestArr,
                          'csrfmiddlewaretoken': '{{ csrf_token }}',
                      },
                      success: function(response) {
-                         if(response.status=="success"){
-                             // alert("All record is Successfully Deleted!")
-                             alert("Are you sure you want to Deleted selected records?")
-                             location.reload();
-                             }
+                        if(response.status=="success"){
+                            // alert("All record is Successfully Deleted!")
+                            alert("Request leave successfull")
+                            location.reload();
+                            }
 
-                         }
+                        }
+                    
+                     
        })
    });
-    
+      
+              
 </script>
-
+<button class="btn btn-success delete-row" id="checkrow">submit</button>
 <body>
       
 <!-- <label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label> -->
@@ -147,4 +157,5 @@ $(document).ready(function() {
 
 
 </body>
+
 {% endblock %}

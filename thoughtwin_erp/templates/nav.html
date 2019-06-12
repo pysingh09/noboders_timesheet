@@ -9,6 +9,7 @@
       <li><a href="{% url 'employee:file_upload' %}">CSV Upload</a></li>
       <li><a href="{% url 'employee:signup' %}">Create Employee</a></li>
       <li><a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+      <li><a href="{% url 'employee:leave_list' %}">Response leave</a></li>
       {% else %}
        <li><a href="{% url 'employee:home' %}">Home</a></li>
       {% endif %}
@@ -24,7 +25,7 @@
         </div>
         <ul class="nav navbar-nav">
              <li class="cal_btn"><a href="{% url 'employee:calendar' %}">Calendar</a></li>
-             <li class="cal_btn"><a href="{% url 'employee:request_leave' %}">Request Leave</a></li>
+             <li class="cal_btn"><a href="{% url 'employee:red_list' %}">Request Leave</a></li>
         </ul>
         
 
@@ -37,6 +38,7 @@
  .cal_btn a{
    padding: 0 !important;
    margin-top: -18px !important;
+   margin-left: 20;
  }
    .right_dropdown{
      text-align: right;

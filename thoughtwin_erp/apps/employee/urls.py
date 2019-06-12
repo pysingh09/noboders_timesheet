@@ -13,6 +13,7 @@ urlpatterns = [
     path('deactivate/<int:pk>/', deactivate_user,name='deactivate-user'),
     path('delete_record/', delete_record, name='delete_record'), 
     path('update/<int:pk>/', EditProfileView.as_view(), name="update"),
+    path('leave/employeelist/', LeaveListView.as_view(), name='leave_list'),
     # path('calendar/', calendar, name='calendar'),
     path('show/calendar1/<int:id>', show_calendar,name ='show_calendar'),
     # path('home/', home, name='home'),
@@ -20,7 +21,7 @@ urlpatterns = [
     path('request/leave/', request_leave,name ='request_leave'),
     path('employee_details/<int:id>/', employee_details, name='employee_details'),
     path('attendence/date-time-attendence/diff', date_time_attendence_view, name='date-time-attendence-view'),
-    
+    path('red/list/', red_list, name='red_list'),
     path('login/', login_view, name='login'),
     path('', index, name='index'),
     path('dashboard', Dashboard.as_view(), name='dashboard' ),

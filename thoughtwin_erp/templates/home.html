@@ -29,7 +29,7 @@
                 <td><p>{{ attendance.user }}</p></td>
                 <td>{{ attendance.employee_id }}</td>
                 <td>{{ attendance.date }}</td>
-                <td><p>{% get_date_time_diff_tag request attendance.date attendance.user %}</p></td> 
+                <td><p>{% get_date_time_diff_tag  request attendance.date attendance.user %}</p></td> 
                 <td class="action-checkbox">
                   <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select">
                </td>
@@ -72,6 +72,8 @@
            'data': {
 
                'dat': dat,
+
+               
                'emp_id':emp_id,
                'csrfmiddlewaretoken': '{{ csrf_token }}',
            },

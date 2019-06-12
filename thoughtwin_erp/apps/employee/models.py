@@ -74,7 +74,8 @@ class LeaveRequest(BaseModel):
         date = models.DateField(blank=True)
         is_approved =models.BooleanField(default=False)
         
-
+        class Meta:
+            unique_together = ('date', 'user',)
     
 
 

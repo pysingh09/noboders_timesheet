@@ -6,7 +6,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView #CreateView,,DetailView,DeleteView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance
+from employee.models import Profile, EmployeeAttendance,LeaveRequest
 from employee.forms import SignUpForm,ProfileForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -14,7 +14,7 @@ from datetime import datetime, date
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
-
+from datetime import datetime
 from django.contrib import messages
 
 
@@ -169,24 +169,8 @@ def home(request):
 
     return render(request,'home.html', {'attendances_data' : result})
 
-# def calendar(request):
-#     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
-#     names = set()
-#     result = []
-#     new_result = []
-#     for att in attendances_data:
-#         if not att.date in names:
-#             names.add(att.date)
-#             # import pdb; pdb.set_trace()
-#             result.append(att)
-#             date = str(att.date.year)+"-"+str(att.date.month)+"-"+str(att.date.day)
-#             new_result.append({"title":"9:00","date":date})
-#     # new_result1 = JSON.stringify(new_result)
-#     template_name = "fullcalendar.html"
-
-    return render(request,template_name, {'result' : new_result }) 
-
 def date_time_attendence_view(request):
+    # import pdb; pdb.set_trace()
     date_str1 = request.POST.get("dat")
     emp_id = request.POST.get("emp_id")
     # date_str1 = request.POST.get("id")
@@ -210,7 +194,7 @@ def show_calendar(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
     names = set()
     result = []
-    # import pdb; pdb.set_trace()
+    
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
@@ -218,13 +202,13 @@ def show_calendar(request,id):
 
     return render(request,'fullcalendar.html', {'attendances_data' : result})
 
-    return render(request,template_name, {'result' : new_result }) 
+     
 
 def show (request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
-    # import pdb; pdb.set_trace()
+    
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
@@ -232,7 +216,25 @@ def show (request):
 
     return render(request,'fullcalendar.html', {'attendances_data' : result})
 
-def request_leave (request):
+
+@csrf_exempt
+def request_leave(request):
+    import datetime
+    if request.method == 'POST':
+        user = request.user.username
+        for date_str in request.POST.getlist('leaveRequestArr[]'):
+            date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+            LeaveRequest.objects.create(user=request.user,date=date_time_obj)
+        return JsonResponse({'status': 'success'})
+    else:
+        return render(request,'request_leave.html')
+
+
+class LeaveListView(ListView):
+    model = LeaveRequest
+    template_name = "leave_list.html"
+
+def red_list(request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
@@ -242,5 +244,29 @@ def request_leave (request):
             names.add(att.date)
             result.append(att)
 
-    return render(request,'request_leave.html', {'attendances_data' : result})
+    return render(request,'red_list.html', {'attendances_data' : result})
+
+# def red_list(request, att_date,user):
+#     import pdb; pdb.set_trace()
+#     attendances_data = EmployeeAttendance.objects.filter(user=user,date=att_date)
+#     dateTimeDifference = datetime.timedelta(0, 0)
+#     for attendance in attendances_data:
+#         intime = attendance.in_time
+#         outtime = attendance.out_time
+#         dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
+#         dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
+#         # import pdb; pdb.set_trace()
+
+#         dateTimeDifference += dateTimeOut - dateTimeIn
+#         print(dateTimeDifference)
+#     return dateTimeDifference   
+
+
+
+
+
+
+
+
+
 
