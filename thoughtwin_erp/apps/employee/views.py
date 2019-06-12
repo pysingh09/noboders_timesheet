@@ -10,15 +10,15 @@ from employee.models import Profile, EmployeeAttendance, AllottedLeave,LeaveRequ
 from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
-from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 
-
+import datetime as only_datetime
 
 
 def login_view(request):
@@ -48,7 +48,6 @@ class Dashboard(View):
     def get(self, request):
         return render(request, 'dashboard/dashboard.html')
 
-# @login_required(login_url='/accounts/login')
 def signup(request):
     if request.method == 'POST':    
         user_form = SignUpForm(data=request.POST)
@@ -62,7 +61,7 @@ def signup(request):
             profile.user = new_user
             profile.save()
             return redirect("/employeelist/")
-            # return redirect("login.html")
+            
     else:
         user_form = SignUpForm()
         profile_form = ProfileForm()
@@ -111,7 +110,6 @@ class EditProfileView(UpdateView):
             userdata.user.first_name = form.data['first_name']
             userdata.user.last_name = form.data['last_name']
             userdata.user.save()
-            # messages.success(self.request, 'Settings saved successfully')
             return HttpResponseRedirect("/employeelist/")
         else:
             return render(request,'update.html',{'form':form})
@@ -136,8 +134,6 @@ def deactivate_user(request,pk):
         profile.user.save()
     return JsonResponse({'status': 'success'})
 
-
-# @login_required(login_url='/accounts/login')
 @permission_required('admin.con_add_log_entry')
 def file_upload(request):
     template = 'file_upload.html'
@@ -172,7 +168,6 @@ def file_upload(request):
     return render(request,template)
 
 
-# @login_required(login_url='/accounts/login')
 def home(request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
@@ -185,11 +180,9 @@ def home(request):
     return render(request,'home.html', {'attendances_data' : result})
 
 def date_time_attendence_view(request):
-    # import pdb; pdb.set_trace()
     date_str1 = request.POST.get("dat")
     emp_id = request.POST.get("emp_id")
-    # date_str1 = request.POST.get("id")
-    date_dt1 = datetime.strptime(date_str1, '%B %d, %Y')
+    date_dt1 = datetime.strptime(date_str1, '%Y-%m-%d')
     employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1,employee_id=emp_id)
     
     template_name = "partial/date_time_popup.html"
@@ -242,7 +235,7 @@ def request_leave(request):
             LeaveRequest.objects.create(user=request.user,date=date_time_obj)
         return JsonResponse({'status': 'success'})
     else:
-        return render(request,'request_leave.html')
+        return render(request,'red_list.html')
 
 
 class LeaveListView(ListView):
@@ -250,16 +243,32 @@ class LeaveListView(ListView):
     template_name = "leave_list.html"
 
 def red_list(request):
-    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
+    queryset = EmployeeAttendance.objects.all()
     names = set()
     result = []
-    # import pdb; pdb.set_trace()
-    for att in attendances_data:
+    
+    for att in queryset.filter(user=request.user):
         if not att.date in names:
             names.add(att.date)
-            result.append(att)
+            attendances_data = queryset.filter(user=request.user, date=att.date)
+            dateTimeDifference = timedelta(0, 0)
+            if attendances_data.count() != 0:
+                date_data = date.today()
+                for attendance in attendances_data:
+                    intime = attendance.in_time
+                    outtime = attendance.out_time
+                    dateTimeIn = datetime.combine(date.today(), intime)
+                    dateTimeOut = datetime.combine(date.today(), outtime)
+                    dateTimeDifference += dateTimeOut - dateTimeIn
 
-    return render(request,'red_list.html', {'attendances_data' : result})
+                    date_data = attendance.date
+
+                another_year = timedelta(hours=9)
+
+                if dateTimeDifference <= another_year:
+                    result.append({'date' : date_data, 'hour' : dateTimeDifference})
+    return render(request,'red_list.html', {'attendance_data' : result})
+
 
 
 

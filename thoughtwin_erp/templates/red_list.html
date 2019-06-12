@@ -17,14 +17,14 @@
             </tr>
           </thead>
           <tbody>
-            {% for attendance in attendances_data %}
+            {% for attendance in attendance_data %}
               <tr>
-                <td>{{ attendance.date }}</td>
+                <td>{{ attendance.date}}</td>
                 
                 
-                <td><p>{% get_date_time_diff_tag request attendance.date attendance.user %}</p></td> 
-                
-                <td><input type="checkbox" data-checkeddate='{{ attendance.date }}' class="chkboxs"></td>
+                <td><p>{{ attendance.hour}}</p></td> 
+              
+                <td><input type="checkbox" data-checkeddate='{{ attendance.date }}' class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}"></td>
 
               </tr>
             {% endfor %}
@@ -33,16 +33,15 @@
 <script>
     
       var leaveRequestArr =[];
-              // var date = Date.parse(leaveRequestArr);
+       
 
               $(document).on("click","#checkrow",function(){
                  
                   $(".chkboxs:checked").each(function () {
-                    // debugger
-                    leaveRequestArr.push($(this).data("checkeddate"));
-                    // leaveRequestArr.ToString("dd/MM/yyyy")
+                    leaveRequestArr.push($(this).val());
+
                   });
-                    // debugger
+               
                  
                      $.ajax({
                      'url': '/request/leave/',
@@ -54,7 +53,6 @@
                      },
                      success: function(response) {
                         if(response.status=="success"){
-                            // alert("All record is Successfully Deleted!")
                             alert("Request leave successfull")
                             location.reload();
                             }

@@ -25,7 +25,7 @@
           <tbody class="mychkboxs">
             {% for attendance in attendances_data %}
               <tr>
-                <td><a class="attendence_datetime" href="" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date }}">View</a></td>
+                <td><a class="attendence_datetime" href="" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date|date:'Y-m-d' }}">View</a></td>
                 <td><p>{{ attendance.user }}</p></td>
                 <td>{{ attendance.employee_id }}</td>
                 <td>{{ attendance.date }}</td>
@@ -63,15 +63,16 @@
     $(document).ready(function(){
       $(".attendence_datetime").click(function(e){
         e.preventDefault();
-        var dat = $(this).data("date");
+        var date = $(this).data("date");
         var emp_id = $(this).data("employee-id");
+
         $.ajax({
            'url': "{% url "employee:date-time-attendence-view" %}",
            'type': "POST",
            // 'dataType': 'json',
            'data': {
 
-               'dat': dat,
+               'dat': date,
 
                
                'emp_id':emp_id,

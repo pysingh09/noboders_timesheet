@@ -37,8 +37,6 @@ class Profile(BaseModel):
     teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'), related_name='teamlead')
     designation = models.IntegerField(choices=ROLE_CHOICES, default=7, verbose_name=_('Designation'))
 
-    # teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'))
-    # designation = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name=_('Designation'))
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_created')
 
     def __str__(self):
@@ -57,7 +55,7 @@ class EmployeeAttendance(BaseModel):
     in_time = models.TimeField(blank=True, verbose_name=_('Time In'))      
     out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
-    total_working_time = models.FloatField(default=0)
+    
     
     def __str__(self):
         return str(self.employee_id)

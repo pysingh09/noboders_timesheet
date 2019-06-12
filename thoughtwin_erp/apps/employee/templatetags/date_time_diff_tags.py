@@ -2,6 +2,7 @@ from django import template
 import datetime
 from employee.models import EmployeeAttendance
 from django.contrib.auth.models import User
+from datetime import timedelta
 register = template.Library()
 
 
@@ -14,7 +15,7 @@ def get_date_time_diff_tag(request, att_date,user):
 		outtime = attendance.out_time
 		dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
 		dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
-		# import pdb; pdb.set_trace()
 		dateTimeDifference += dateTimeOut - dateTimeIn
 		
 	return dateTimeDifference
+

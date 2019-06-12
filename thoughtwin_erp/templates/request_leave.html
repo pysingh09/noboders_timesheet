@@ -80,9 +80,10 @@ $(document).ready(function() {
                     dayRender: function (date, cell) {
                       // debugger
                       // date.getFullYear() # date formate
-                      var date = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+                      var Date = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
                       // var Date = demo.split(" ");
-                    cell.append('<input type="checkbox" data-checkeddate='+date+' class="chkboxs">');
+                    // debugger 
+                    cell.append('<input type="checkbox" data-checkeddate='+Date+' class="chkboxs">');
                       }
                      //                                   }
     //               dayRender: function (date, element) {
