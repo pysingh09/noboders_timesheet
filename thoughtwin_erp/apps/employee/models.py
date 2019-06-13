@@ -55,7 +55,7 @@ class EmployeeAttendance(BaseModel):
     in_time = models.TimeField(blank=True, verbose_name=_('Time In'))      
     out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
-    
+    is_approved =models.BooleanField(default=False)
     
     def __str__(self):
         return str(self.employee_id)

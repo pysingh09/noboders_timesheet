@@ -4,47 +4,11 @@
 {% block content %}
 
 
-
-
-<!--   <script>
-    $(document).ready(function(){
-      $(".attendence_datetime").click(function(e){
-        e.preventDefault();
-        var dat = $(this).data("date");
-        var emp_id = $(this).data("employee-id");
-        $.ajax({
-           'url': "{% url "employee:date-time-attendence-view" %}",
-           'type': "POST",
-           // 'dataType': 'json',
-           'data': {
-
-               'dat': dat,
-               'emp_id':emp_id,
-               'csrfmiddlewaretoken': '{{ csrf_token }}',
-           },
-
-           success: function( data, textStatus, jQxhr )
-           {
-                $("#attendence_model").html(data);
-                $("#myModal").modal();
-            },
-            error: function( jqXhr, textStatus, errorThrown ){
-                console.log( errorThrown );
-            }
-        });
-        
-debugger
-      });
-    });
-  </script>    -->
-
 <script>
     
 $(document).ready(function() {
  
 
-
-    // var demo = '<a class="attendence_datetime" href="" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date }}">View</a>';
     $('#calendar').fullCalendar({
             defaultDate: '2019-06-12',
             defaultView: 'month',
@@ -145,8 +109,7 @@ $(document).ready(function() {
 </script>
 <button class="btn btn-success delete-row" id="checkrow">submit</button>
 <body>
-      
-<!-- <label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label> -->
+
 
 <div id='wrap'>
 

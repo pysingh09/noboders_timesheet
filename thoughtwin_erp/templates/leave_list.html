@@ -17,13 +17,70 @@
                   <tr>    
                     <td>{{ leave.user }}</td>
                     <td>{{ leave.date }}</td>
-                    <td><button type="button" class="btn btn-danger">Reject</button>
-                        <button type="button" class="btn btn-success">Accept</button>
-                    </td>
+                  
+                  
+                    <td><button class="approve-btn" data-user="{{ leave.user }}" data-date="{{ leave.date|date:'Y-m-d' }}" data-approve=True>Approve</button>
+                    <button class="reject-btn" data-user="{{ leave.user }}" data-date="{{ leave.date|date:'Y-m-d' }}" data-approve=False>Reject</button></td>
                   </tr>
                 {% endfor %}
             </tbody>
       </table>
     </div>
+
+
+<script>
+    $(".approve-btn").on('click', function (e) {
+      e.preventDefault();
+      var username = $(this).data("user");
+      var date = $(this).data("date");
+      var approve = $(this).data("approve"); 
+      $.ajax({
+        url: "{% url "employee:Approved_leave" %}",
+        'type': "POST",
+        data: {
+          
+          'user': username,
+          'date':date,
+          'is_approve': approve,
+          'csrfmiddlewaretoken': '{{ csrf_token }}',
+        },
+      success: function(response) {
+            if(response.status=="success"){
+                alert("Accept leave request")
+                location.reload();
+                }
+
+            }
+      });
+
+    });
+
+    $(".reject-btn").on('click', function (e) {
+      e.preventDefault();
+      var username = $(this).data("user");
+      var date = $(this).data("date");
+      var approve = $(this).data("approve"); 
+      $.ajax({
+        url: "{% url "employee:Reject_leave" %}",
+        'type': "POST",
+        data: {
+          
+          'user': username,
+          'date':date,
+          'is_approve': approve,
+          'csrfmiddlewaretoken': '{{ csrf_token }}',
+        },
+      success: function(response) {
+            if(response.status=="success"){
+                alert("Reject leave request")
+                location.reload();
+                }
+
+            }
+      });
+
+    });
+
+  </script>
 
 {% endblock %}

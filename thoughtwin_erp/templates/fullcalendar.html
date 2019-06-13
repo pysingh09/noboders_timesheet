@@ -31,6 +31,7 @@ $(document).ready(function() {
 
                 ],
                   eventRender: function (event, element, view) {
+                      
                        var a = event.title
                        var b = a.replace(':','.')
                        var title = parseFloat(b)
@@ -104,6 +105,9 @@ $(document).ready(function() {
     </div>
   </div>
 <!-- <label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label> -->
+
+
+
 
 <div id='wrap'>
 

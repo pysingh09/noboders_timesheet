@@ -180,6 +180,7 @@ def home(request):
     return render(request,'home.html', {'attendances_data' : result})
 
 def date_time_attendence_view(request):
+    # import pdb; pdb.set_trace()
     date_str1 = request.POST.get("dat")
     emp_id = request.POST.get("emp_id")
     date_dt1 = datetime.strptime(date_str1, '%Y-%m-%d')
@@ -268,9 +269,39 @@ def red_list(request):
                 if dateTimeDifference <= another_year:
                     result.append({'date' : date_data, 'hour' : dateTimeDifference})
     return render(request,'red_list.html', {'attendance_data' : result})
+    
+def Approved_leave(request):
+    demo=[]
+    username = request.POST.get("user")
+    # import pdb; pdb.set_trace()  
+    date = request.POST.get("date")
+    is_approve = request.POST.get("is_approve")
+    date = datetime.strptime(date, '%Y-%m-%d') 
+    user = User.objects.get(username = username)
+    leave = LeaveRequest.objects.get(user=user,date=date)
+    leave.is_approved=is_approve
+    leave.save()
+    demo.append(date)
+    demo.append(is_approve)
+    demo.append(username)
+    # import pdb; pdb.set_trace()
+    # return render(request,'fullcalendar.html', {'leaves' : demo })
+    return JsonResponse({'status': 'success'})
+    
+def Reject_leave(request):
+    username = request.POST.get("user")
+    date = request.POST.get("date")
+    is_approve = request.POST.get("is_approve")
+    date = datetime.strptime(date, '%Y-%m-%d')   
+    user = User.objects.get(username = username)
+    leave = LeaveRequest.objects.get(user=user,date=date)
+    leave.is_approved=is_approve
+    leave.save()
+    return JsonResponse({'status': 'success'})
 
 
-
+       
+       
 
 
 
