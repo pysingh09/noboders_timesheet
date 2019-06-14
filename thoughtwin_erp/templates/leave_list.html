@@ -47,7 +47,7 @@
       success: function(response) {
             if(response.status=="success"){
                 alert("Accept leave request")
-                location.reload();
+                window.location.href = "App/data";
                 }
 
             }
@@ -81,6 +81,8 @@
 
     });
 
+
   </script>
+
 
 {% endblock %}

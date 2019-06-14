@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
-
-{% load staticfiles %}    
+{% load static %}
 {% load date_time_diff_tags %}
-
 {% block content %} 
+
     <div class="search-container">
       <div> 
         <table class = "table" id="myTable1" border="2">
@@ -14,6 +13,7 @@
               <th>Employee ID</th>
               <th>Date</th>
               <th>Calculation</th>
+              <th>Delete</th>
               {% if user.is_superuser  %}
               <th scope="col" class="action-checkbox-column">
               <div class="text"><span><input type="checkbox" id="checkall"></span></div>
@@ -32,7 +32,7 @@
                 <td><p>{% get_date_time_diff_tag  request attendance.date attendance.user %}</p></td> 
                 <td class="action-checkbox">
                   <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select">
-               </td>
+                </td>
               </tr>
             {% endfor %}
           </tbody>

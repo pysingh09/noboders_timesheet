@@ -1,0 +1,47 @@
+nav.navbar.navbar-default {
+    background: #222;
+}
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+}
+.navbar-default .navbar-nav>li>a:hover{
+    color: #ccc;
+}
+.navbar-default .navbar-brand{
+	color: #fff;
+}
+.navbar-default .navbar-brand:hover{
+	color: #ccc;
+}
+.signup_form{
+	width: 600px;
+    background: #ccc;
+    padding: 2px 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+.signup_form input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background: #fff;
+    margin-top: 6px;
+}
+.signup_form h2 {
+    text-align: center;
+}
+.signup_form select{
+	width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background: #fff;
+    margin-top: 6px;
+}
+.sub_btn{
+	margin:20px 0;
+}
+div#myTable1_length {
+    float: left;
+}

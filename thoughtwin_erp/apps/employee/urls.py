@@ -17,7 +17,7 @@ urlpatterns = [
     path('leaves/', LeaveCreateView.as_view(), name="leaves"),
     path('update_leave/<int:pk>/', EditAllotedLeaveView.as_view(), name="update_leave"),
     path('show/calendar1/<int:id>', show_calendar,name ='show_calendar'),
-    path('show/', show,name ='calendar'),
+    path('show/', leave_calendar,name ='calendar'),
     path('request/leave/', request_leave,name ='request_leave'),
     path('employee_details/<int:id>/', employee_details, name='employee_details'),
     path('attendence/date-time-attendence/diff', date_time_attendence_view, name='date-time-attendence-view'),
@@ -27,6 +27,6 @@ urlpatterns = [
     path('dashboard', Dashboard.as_view(), name='dashboard' ),
     path('Approved/leave', Approved_leave, name='Approved_leave' ),
     path('Reject/leave', Reject_leave, name='Reject_leave' ),
-   
+    # path('App/data', leave_calendar, name='Approve_data' ),
 
 ]

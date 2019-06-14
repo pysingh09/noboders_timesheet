@@ -1,16 +1,15 @@
-
 {% extends 'base.html' %}
-
 {% load staticfiles %}    
 {% load date_time_diff_tags %}
-
 {% block content %} 
     <div class="search-container">
       <div> 
+        <h3> Employee Leave list </h3>
+        <br>
         <table class = "table" id="myTable1" border="2">
           <thead>
+            
             <tr>
-              
               <th>Date</th>
               <th>Calculation</th>
               <th>leave Request</th> 
@@ -65,4 +64,9 @@
       
 </script>
 <button class="btn btn-success delete-row" id="checkrow">submit</button>
+
+
+
+
+
 {% endblock %}
