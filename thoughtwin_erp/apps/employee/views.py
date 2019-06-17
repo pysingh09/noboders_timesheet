@@ -16,7 +16,7 @@ from time import sleep
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib.auth.views import login, logout
 import datetime as only_datetime
 
 
