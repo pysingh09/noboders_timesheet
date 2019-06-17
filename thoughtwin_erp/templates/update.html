@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+   <div class="row justify-content-center">
+     <div class="col=8">
+      <div class="card">
+        <div class="card-body">
+          {{form.errors}}
+
+       <h2>Update Employee Details</h2>
+       <form method="post" novalidate>
+        {% csrf_token %}
+        
+        <p>Employee Id :{{ form.employee_id }}</p>
+        <p>First Name:{{ form.first_name }}</p>
+        <p>Last Name :{{ form.last_name }}</p>
+        <p>Contact   :{{ form.contact_no }}</p>
+        <p>Designation   :{{ form.designation }}</p>{{form.errors}}
+
+        <p>NOTE : date format : YYYY-MM-DD</p>
+        <p>DOB       :{{ form.date_of_birth }}</p>
+        <p>DOJ       :{{ form.date_of_joining}}</p>
+        <p>Teamlead   :{{ form.teamlead }}</p>
+        
+        
+        <button class="btn btn-success" type="submit">Update</button>
+       </form>
+     </div>
+   </div>
+ </div>
+</div>
+{% endblock %}
+
+

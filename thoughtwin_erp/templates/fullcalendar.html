@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load date_time_diff_tags %}
+{% block content %}
+
+
+
+<script>
+    
+$(document).ready(function() {
+    var geodata = "{{ attendances_data | safe }}";
+    
+    $('#calendar').fullCalendar({
+            defaultDate: '2019-06-12',
+            defaultView: 'month',
+            editable: true,
+            events: 
+            [
+
+                   {% for attendance in attendances_data %}
+                {
+              
+               'title':"{% get_date_time_diff_tag request attendance.date attendance.user %}",
+                  'date':"{{ attendance.date}}",
+              }
+                {% if not forloop.last %},{% endif %}
+                  {% endfor %}
+
+
+
+
+                ],
+                  eventRender: function (event, element, view) {
+                      
+                       var a = event.title
+                       var b = a.replace(':','.')
+                       var title = parseFloat(b)
+                       var calculation = parseFloat("9:00")
+                       if (title >=calculation ) {
+                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append();
+                            }
+
+                       else {
+
+                          var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000');
+                       }
+                   }
+
+         
+           });
+
+       
+    $(".attendence_datetime").click(function(e){
+        e.preventDefault();
+        var dat = $(this).data("date");
+        var emp_id = $(this).data("employee-id");
+        $.ajax({
+           'url': "{% url "employee:date-time-attendence-view" %}",
+           'type': "POST",
+           // 'dataType': 'json',
+           
+           'data': {
+
+               'dat': dat,
+               'emp_id':emp_id,
+               'csrfmiddlewaretoken': '{{ csrf_token }}',
+           },
+
+           success: function( data, textStatus, jQxhr )
+           {
+                $("#attendence_model").html(data);
+                $("#myModal").modal();
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        });
+        
+      });
+
+
+    });
+
+
+
+</script>
+
+<body>
+      
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+      
+        <div class="modal-body" id="attendence_model">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<!-- <label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label> -->
+
+
+
+
+<div id='wrap'>
+
+<div id='calendar'></div>
+
+
+<div style='clear:both'></div>
+</div>
+
+<!-- [{'username': 'admin', 'date': datetime.datetime(2019, 8, 4, 0, 0), 'is_approve': 'True'}] -->
+
+</body>
+{% endblock %}

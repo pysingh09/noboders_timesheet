@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load staticfiles %}    
+{% load date_time_diff_tags %}
+{% block content %} 
+    <div class="search-container">
+      <div> 
+        <h3> Employee Leave list </h3>
+        <br>
+        <table class = "table" id="myTable1" border="2">
+          <thead>
+            
+            <tr>
+              <th>Date</th>
+              <th>Calculation</th>
+              <th>leave Request</th> 
+            </tr>
+          </thead>
+          <tbody>
+            {% for attendance in attendance_data %}
+              <tr>
+                <td>{{ attendance.date}}</td>
+                
+                
+                <td><p>{{ attendance.hour}}</p></td> 
+              
+                <td><input type="checkbox" data-checkeddate='{{ attendance.date }}' class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}"></td>
+
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+<script>
+    
+      var leaveRequestArr =[];
+       
+
+              $(document).on("click","#checkrow",function(){
+                 
+                  $(".chkboxs:checked").each(function () {
+                    leaveRequestArr.push($(this).val());
+
+                  });
+               
+                 
+                     $.ajax({
+                     'url': '/request/leave/',
+                     'type': "POST",
+                     'dataType': 'json',
+                     'data': {
+                         'leaveRequestArr': leaveRequestArr,
+                         'csrfmiddlewaretoken': '{{ csrf_token }}',
+                     },
+                     success: function(response) {
+                        if(response.status=="success"){
+                            alert("Request leave successfull")
+                            location.reload();
+                            }
+
+                        }
+                    
+                     
+       })
+   });
+      
+</script>
+<button class="btn btn-success delete-row" id="checkrow">submit</button>
+
+
+
+
+
+{% endblock %}

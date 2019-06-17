@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os,sys
-
+from decouple import config
+from dj_database_url import parse as dburl
 
 #setting ---------------------------------------------------------
 from unipath import Path
@@ -37,7 +38,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,8 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    
-    'employee'
+    'django_filters',
+    'django_extensions',
+    'employee',
+
 ]
 
 MIDDLEWARE = [
@@ -127,19 +129,30 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 LOGIN_REDIRECT_URL = '/'
-STATIC_URL = '/static/'
+
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+# media files (Pdf, Images)
+MEDIA_ROOT = PROJECT_APPS.child('media')
+
+MEDIA_URL = '/media/'
+
+# Static files (CSS, JavaScript, Images, Pdf)
+STATIC_ROOT = PROJECT_APPS.child('staticfiles')
+
+STATIC_URL = '/staticfiles/'
+
+STATICFILES_DIRS = [
+   PROJECT_APPS.child("static"),
+]
+
+AUTH_USER_EMAIL_UNIQUE = True
+
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# =======
 
 
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     '/admin',
     '/login',
-    # '/password_reset',
-    # '/reset',
-    # '/user/exist',
-    # '/create/user',
 )

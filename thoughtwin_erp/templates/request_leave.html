@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load date_time_diff_tags %}
+{% block content %}
+
+
+<script>
+    
+$(document).ready(function() {
+ 
+
+    $('#calendar').fullCalendar({
+            defaultDate: '2019-06-12',
+            defaultView: 'month',
+            editable: true,
+            events: 
+            [
+
+                   {% for attendance in attendances_data %}
+                {
+              
+               'title':"{% get_date_time_diff_tag request attendance.date attendance.user %}",
+                  'date':"{{ attendance.date}}",
+              }
+                {% if not forloop.last %},{% endif %}
+                  {% endfor %}
+
+
+
+
+                ],
+
+                // eventAfterAllRender: function(view){
+                //   if(view.name == 'month')
+                //   {                       
+                //       $('.fc-day').each(function(){
+                //           $(this).css('position','relative');
+                //           $(this).append('<label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label>');
+                //         });      
+                //       }                   
+                //   }
+
+
+                    dayRender: function (date, cell) {
+                      // debugger
+                      // date.getFullYear() # date formate
+                      var Date = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+                      // var Date = demo.split(" ");
+                    // debugger 
+                    cell.append('<input type="checkbox" data-checkeddate='+Date+' class="chkboxs">');
+                      }
+                     //                                   }
+    //               dayRender: function (date, element) {
+    //               debugger
+    //                 // var dateString = $.fullCalendar.formatDate('yyyy-MM-dd');
+    //               $('.fc-day-number[data-date='+dateString+']').append('<input type="checkbox">');
+    // }    
+                
+ });
+
+       
+   
+      });
+
+
+              // // Case 1 : When Header Checkbox is ticked
+              // $(document).on("click","#checkall",function(){
+              //    var checked = $(this).prop('checked');
+              //    $('.mychkboxs').find('input:checkbox').prop('checked', checked);
+
+              // });
+
+              // Case 2 : When Multiple Checkbox is ticked/unticked
+              // debugger
+              var leaveRequestArr =[];
+              // var date = Date.parse(leaveRequestArr);
+
+              $(document).on("click","#checkrow",function(){
+                 
+                  $(".chkboxs:checked").each(function () {
+                    // debugger
+                    leaveRequestArr.push($(this).data("checkeddate"));
+                    // leaveRequestArr.ToString("dd/MM/yyyy")
+                  });
+                    // debugger
+                 
+                     $.ajax({
+                     'url': '/request/leave/',
+                     'type': "POST",
+                     'dataType': 'json',
+                     'data': {
+                         'leaveRequestArr': leaveRequestArr,
+                         'csrfmiddlewaretoken': '{{ csrf_token }}',
+                     },
+                     success: function(response) {
+                        if(response.status=="success"){
+                            // alert("All record is Successfully Deleted!")
+                            alert("Request leave successfull")
+                            location.reload();
+                            }
+
+                        }
+                    
+                     
+       })
+   });
+      
+              
+</script>
+<button class="btn btn-success delete-row" id="checkrow">submit</button>
+<body>
+
+
+<div id='wrap'>
+
+<div id='calendar'></div>
+
+
+<div style='clear:both'></div>
+</div>
+
+
+</body>
+
+{% endblock %}

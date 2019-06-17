@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+    
+   <div class="row justify-content-center">
+     <div class="col=8">
+      <div class="card">
+        <div class="card-body">
+          {{leave_form.errors}}
+
+       <h2>Allot Leaves Of The Year</h2>
+       <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.errors %}
+            
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+            </div>
+        {% endfor %}
+      
+        <button class="btn btn-success" type="submit">Submit</button>
+       </form>
+        <table class = "table" id="myTable1" border="2">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Year</th>
+            <th>Leave</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for leave in leave_list %}
+              <tr>    
+                <td>{{ leave.user }}</td>
+                <td>{{ leave.year }}</td>
+                <td>{{ leave.leave }}</td>
+                <td><a href="{% url 'employee:update_leave' leave.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span></td>
+                    
+              </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+     </div>
+   </div>
+ </div>
+</div>
+{% endblock %}
+
+
+

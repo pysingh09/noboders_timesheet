@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block content %}
+
+<h2>Signup form</h2>
+<form class="form-horizontal" method="POST" action="{% url 'employee:signup' %}" enctype="multipart/form-data" class="form-horizontal"> 
+
+  {% csrf_token %}
+      
+  <p>Username  :{{ user_form.username }}</p>{{user_form.errors}}
+  <p>Password  :{{ user_form.password1 }}</p>
+  <p>Confirm Password  :{{ user_form.password2 }}</p>
+  <p>First Name:{{ user_form.first_name }}</p>
+  <p>Last Name :{{ user_form.last_name }}</p>
+  <p>Email     :{{ user_form.email }}</p>
+  <p>Employee Id :{{ profile_form.employee_id }}</p>
+  <p>Contact   :{{ profile_form.contact_no }}</p>
+  <p>Designation   :{{ profile_form.designation }}</p>{{profile_form.errors}}
+
+  <p>NOTE : Date Format : YYYY-MM-DD</p>
+  <p>DOB       :{{ profile_form.date_of_birth }}</p>
+  <p>DOJ       :{{ profile_form.date_of_joining}}</p>
+  <p>Teamlead   :{{ profile_form.teamlead }}</p>
+
+
+      <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+{% endblock %} 

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}    
+{% block title %}{% endblock %}
+{% block content %} 
+    <h2>Company Employee Details</h2>
+    <div class="search-container">
+     <table class = "table" id="myTable1" border="2">
+        <thead>
+          <tr>
+            <th>Calendar</th>
+            <th>Username</th>
+            <th>Employee ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Contact</th>
+            <th>Designation</th>
+            <th>Date Of Birth</th>
+            <th>Date Of joining</th>
+            <th>Teamlead</th>
+            <th>Edit</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for profile in object_list %}
+              <tr>    
+                <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a>
+                 <a href="{% url 'employee:profile_list' profile.user.id %}"><span class="glyphicon glyphicon-pencil" >Profile</span></td>
+                <td><a href="{% url 'employee:employee_details' profile.user.id %}">{{ profile.user }}</a></td>
+                <td>{{ profile.employee_id }}</td>
+                <td>{{ profile.user.first_name }}</td>
+                <td>{{ profile.user.last_name }}</td>
+                <td>{{ profile.contact_no}}</td>
+                <td>{{ profile.get_designation_display }}</td>
+                <td>{{ profile.date_of_birth }}</td>
+                <td>{{ profile.date_of_joining }}</td>
+                <td>{{ profile.teamlead }}</td>
+                <td><a href="{% url 'employee:update' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span>
+                </td>
+                {% if profile.user.is_active %}
+                    <td><button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
+                {% else %}
+                     <td><button class="deactivateEmployee btn btn-success" id="Activate" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button></td>
+                {% endif %}
+              </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% block js %}
+  {{block.super}}
+  <script src="{% static 'js/data.js' %}"></script>
+{% endblock js %}
+{% endblock %}

@@ -1,0 +1,18 @@
+<table class = "table" border="2"> 
+  <thead>
+    <tr>    
+      <th>Intime</th>
+      <th>Outtime</th>
+    </tr>
+  </thead>
+  <tbody class="my-popup">
+
+    {% for emp_att in employee_attendence %}
+      
+    <tr>
+        <td data-toggle="modal" data-target="#myModal"><p>{{ emp_att.in_time }}</p></td>
+        <td><p>{{ emp_att.out_time }}</p></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

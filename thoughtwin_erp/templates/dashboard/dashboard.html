@@ -5,10 +5,9 @@
 
 {% include "nav.html" %}
 {% block content %}
-    
-
 
 {% if user.is_authenticated %}
     <li><a href="{% url 'logout' %}">Log Out</a></li>
 {% endif %}
+Dashboard
 {% endblock %}
