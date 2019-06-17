@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.views.generic import View   #,ListView,CreateView,TemplateView,DetailView,DeleteView
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import login, logout
 # Create your views here.
 
 

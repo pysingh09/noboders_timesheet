@@ -14,12 +14,11 @@
 </head>
 
 <body>
+    {% include "layout/superadmin_menus.html" %}
     <div class="container">
-    {% block header %}{% endblock %}
+        {% block header %}{% endblock %}
 
-    {% block content %}{% endblock %}    
-        
-
+        {% block content %}{% endblock %}    
     </div>
 </body>
 </html>
