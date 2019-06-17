@@ -14,7 +14,6 @@ from datetime import datetime, date, timedelta
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
-
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -169,6 +168,7 @@ def file_upload(request):
 
 
 def home(request):
+    # import pdb; pdb.set_trace()
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
@@ -227,15 +227,23 @@ def show (request):
 
 @csrf_exempt
 def request_leave(request):
-    import datetime
-    if request.method == 'POST':
-        user = request.user.username
-        for date_str in request.POST.getlist('leaveRequestArr[]'):
-            date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
-            LeaveRequest.objects.create(user=request.user,date=date_time_obj)
-        return JsonResponse({'status': 'success'})
-    else:
-        return render(request,'red_list.html')
+    try:
+        import datetime
+        if request.method == 'POST':
+            user = request.user.username
+            for date_str in request.POST.getlist('leaveRequestArr[]'):
+                # import pdb; pdb.set_trace()
+                date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+                LeaveRequest.objects.create(user=request.user,date=date_time_obj)# model name change
+            return JsonResponse({'status': 'success'})
+    except Exception as e:
+       # storage = messages get_messages(request)
+       messages.error(request, 'Does not exist')
+       return render(request,'red_list.html',{'messages':storage}) 
+ # messages.success(request, ' file Successfully Uploaded.')
+   
+ #    return render(request,template)
+
 
 
 class LeaveListView(ListView):
@@ -265,7 +273,7 @@ def red_list(request):
                 another_year = timedelta(hours=9)
 
                 if dateTimeDifference <= another_year:
-                    result.append({'date' : date_data, 'hour' : dateTimeDifference})
+                    result.append({'date' : date_data, 'hour' : dateTimeDifference,'intime': attendance.in_time,'outtime': attendance.out_time, })
     return render(request,'red_list.html', {'attendance_data' : result})
     
 def Approved_leave(request):
@@ -276,7 +284,16 @@ def Approved_leave(request):
     user = User.objects.get(username = username)
     leave = LeaveRequest.objects.get(user=user,date=date)
     leave.is_approved=is_approve
-    leave.save() 
+    leave.save()
+     
+    # if user is not None:
+    #         if user.is_active:
+    #             auth_login(request, user)
+    #             return redirect('index')
+    #     else:
+    #         messages.error(request,'username or password not correct')
+    #         return redirect('login')
+
     return JsonResponse({'status': 'success'})
     
 def Reject_leave(request):
@@ -301,6 +318,19 @@ def leave_calendar (request):
         demo.append({'user':user,'date' : date, 'is_approve' : is_approve})
     return render(request,'leave_calendar.html', {'demos':demo})
 
-  
+@csrf_exempt
+def delete_record(request):
+   if request.method == 'POST':
+    # import pdb; pdb.set_trace()
+    for data in request.POST.getlist('data[]'):
+        # data
+        # data.datetime.strptime(data, '%Y-%m-%d')   
+        # data.emp_id
+    # import pdb; pdb.set_trace()
+        # date = request.POST.get('date')
+     
+        date = datetime.strptime(data, '%Y-%m-%d')
+        date.delete()
+    return JsonResponse({'status': 'success'})
 
 

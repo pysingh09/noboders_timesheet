@@ -27,6 +27,6 @@ urlpatterns = [
     path('dashboard', Dashboard.as_view(), name='dashboard' ),
     path('Approved/leave', Approved_leave, name='Approved_leave' ),
     path('Reject/leave', Reject_leave, name='Reject_leave' ),
-    # path('App/data', leave_calendar, name='Approve_data' ),
+
 
 ]

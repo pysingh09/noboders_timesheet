@@ -13,7 +13,7 @@
               <th>Employee ID</th>
               <th>Date</th>
               <th>Calculation</th>
-              <th>Delete</th>
+              
               {% if user.is_superuser  %}
               <th scope="col" class="action-checkbox-column">
               <div class="text"><span><input type="checkbox" id="checkall"></span></div>
@@ -30,8 +30,10 @@
                 <td>{{ attendance.employee_id }}</td>
                 <td>{{ attendance.date }}</td>
                 <td><p>{% get_date_time_diff_tag  request attendance.date attendance.user %}</p></td> 
+                 {% if user.is_superuser  %}
                 <td class="action-checkbox">
-                  <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select">
+                  <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date|date:'Y-m-d' }}">
+                  {% endif %}
                 </td>
               </tr>
             {% endfor %}

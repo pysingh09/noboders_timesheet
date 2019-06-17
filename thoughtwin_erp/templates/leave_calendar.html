@@ -4,7 +4,6 @@
 {% block content %}
 
 
-
 <script>
     
 $(document).ready(function() {
@@ -23,6 +22,7 @@ $(document).ready(function() {
               
                'title':"{{data.is_approve}}",
                   'date':"{{data.date|date:'Y-m-d'}}",
+
               }
                 {% if not forloop.last %},{% endif %}
                   {% endfor %}
@@ -54,6 +54,7 @@ $(document).ready(function() {
 
        
     $(".attendence_datetime").click(function(e){
+        // debugger
         e.preventDefault();
         var dat = $(this).data("date");
         var emp_id = $(this).data("employee-id");
@@ -113,6 +114,8 @@ $(document).ready(function() {
 
 <div style='clear:both'></div>
 </div>
-
+{% for attendance in attendances_data %}
+{% get_date_time_diff_tag request attendance.date attendance.user %}
+  {% endfor %}
 </body>
 {% endblock %}

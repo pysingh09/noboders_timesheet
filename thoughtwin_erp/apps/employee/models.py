@@ -15,7 +15,7 @@ class BaseModel(models.Model):
    class Meta:
        abstract = True
 
-ROLE_CHOICES = (
+ROLE_CHOICES = ( 
     (1, ('MD')),
     (2, ('Project manager')),
     (3, ('BDE')),
@@ -57,6 +57,9 @@ class EmployeeAttendance(BaseModel):
     date = models.DateField(blank=True, verbose_name=_('Date'))
     is_approved =models.BooleanField(default=False)
     
+    class Meta:
+        unique_together = ('date', 'user',)
+
     def __str__(self):
         return str(self.employee_id)
 

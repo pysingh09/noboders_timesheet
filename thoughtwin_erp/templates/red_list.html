@@ -2,10 +2,20 @@
 {% load staticfiles %}    
 {% load date_time_diff_tags %}
 {% block content %} 
+
+{% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
     <div class="search-container">
       <div> 
         <h3> Employee Leave list </h3>
         <br>
+
         <table class = "table" id="myTable1" border="2">
           <thead>
             
@@ -23,7 +33,7 @@
                 
                 <td><p>{{ attendance.hour}}</p></td> 
               
-                <td><input type="checkbox" data-checkeddate='{{ attendance.date }}' class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}"></td>
+                <td><input type="checkbox" data-intime='{{ attendance.intime }}' data-outtime='{{ attendance.outtime }}' class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}"></td>
 
               </tr>
             {% endfor %}
@@ -34,14 +44,17 @@
       var leaveRequestArr =[];
        
 
-              $(document).on("click","#checkrow",function(){
-                 
+              $(document).on("click","#checkrow",function(e){
+                  // debugger
+                  e.preventDefault();
                   $(".chkboxs:checked").each(function () {
                     leaveRequestArr.push($(this).val());
+                    // leaveRequestArr.push($(this).data("intime"));
+                    // leaveRequestArr.push($(this).data("outtime"));
 
                   });
                
-                 
+                     // debugger
                      $.ajax({
                      'url': '/request/leave/',
                      'type': "POST",

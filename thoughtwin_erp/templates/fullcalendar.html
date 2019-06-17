@@ -119,5 +119,14 @@ $(document).ready(function() {
 
 <!-- [{'username': 'admin', 'date': datetime.datetime(2019, 8, 4, 0, 0), 'is_approve': 'True'}] -->
 
+                   {% for data in demos %}
+                {
+              
+               'title':"{{data.is_approve}}",
+                  'date':"{{data.date|date:'Y-m-d'}}",
+
+              }
+                {% if not forloop.last %},{% endif %}
+                  {% endfor %}
 </body>
 {% endblock %}
