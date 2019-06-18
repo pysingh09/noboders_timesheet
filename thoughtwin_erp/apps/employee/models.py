@@ -33,7 +33,7 @@ ROLE_CHOICES = (
 class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     employee_id = models.IntegerField(unique=True, verbose_name=_('Employee ID'))
-    contact_no = models.CharField(max_length=10,default=0, blank=True, verbose_name=_('Contact No'))
+    contact_no = models.CharField(max_length=15,blank=True, verbose_name=_('Contact No'))
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_('Date Of Birth'))
     date_of_joining = models.DateField(null=True, blank=True, verbose_name=_('Date Of Joining'))
 

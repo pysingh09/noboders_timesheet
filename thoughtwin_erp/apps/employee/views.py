@@ -160,7 +160,7 @@ def file_upload(request):
         )
 
         if emp:
-            detail = EmployeeAttendanceDetail.objects.create(
+            detail = EmployeeAttendanceDetail.objects.update_or_create(
             employee_attendance=emp,
             in_time = in_time,
             out_time = out_time,
