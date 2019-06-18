@@ -42,7 +42,7 @@ class Profile(BaseModel):
     def __str__(self):
 
         return self.user.username
-
+    
     def get_leave(self):
         return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
         
@@ -52,14 +52,9 @@ class Profile(BaseModel):
 class EmployeeAttendance(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
-    in_time = models.TimeField(blank=True, verbose_name=_('Time In'))      
-    out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
     is_approved =models.BooleanField(default=False)
     
-    class Meta:
-        unique_together = ('date', 'user',)
-
     def __str__(self):
         return str(self.employee_id)
 
@@ -98,4 +93,7 @@ class AllottedLeave(models.Model):
     def __str__(self):
         return self.user.username
 
-
+class EmployeeAttendanceDetail(models.Model):
+    employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE)
+    in_time = models.TimeField(blank=True, verbose_name=_('Time In')) 
+    out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))

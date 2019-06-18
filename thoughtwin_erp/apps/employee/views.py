@@ -6,7 +6,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance, AllottedLeave,LeaveRequest
+from employee.models import Profile, EmployeeAttendance, AllottedLeave,LeaveRequest,EmployeeAttendanceDetail
 from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -141,7 +141,6 @@ def file_upload(request):
     }
     if request.method == 'GET':
         return render(request,template,prompt)
-
     csv_file = request.FILES["csv_file"]
     if not csv_file.name.endswith('.csv'):
         messages.error(request,'this is not csv file')
@@ -150,17 +149,21 @@ def file_upload(request):
     io_string =io.StringIO(file_data)
     next(io_string)
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-
-        profile = Profile.objects.get(employee_id=column[0])
+        profile = Profile.objects.get(employee_id=column[0])   
         in_time = datetime.strptime(column[1] ,'%I:%M%p')
         out_time = datetime.strptime(column[2] ,'%I:%M%p')
 
-        created= EmployeeAttendance.objects.update_or_create(
+        emp, created = EmployeeAttendance.objects.update_or_create(
             user=profile.user,
             employee_id = column[0],
-            in_time = in_time,
-            out_time =out_time,
             date = column[3],
+        )
+
+        if emp:
+            detail = EmployeeAttendanceDetail.objects.create(
+            employee_attendance=emp,
+            in_time = in_time,
+            out_time = out_time,
         )
     messages.success(request, ' file Successfully Uploaded.')
    
@@ -189,6 +192,7 @@ def date_time_attendence_view(request):
     return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
 
 def employee_details(request,id):
+    # import pdb; pdb.set_trace()
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
     names = set()
     result = []
@@ -230,16 +234,22 @@ def request_leave(request):
     try:
         import datetime
         if request.method == 'POST':
+            # import pdb; pdb.set_trace()
             user = request.user.username
-            for date_str in request.POST.getlist('leaveRequestArr[]'):
-                # import pdb; pdb.set_trace()
-                date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
-                LeaveRequest.objects.create(user=request.user,date=date_time_obj)# model name change
+            emp_id = request.user.id
+            data_list = request.POST.getlist('leaveRequestArr[]')
+            date = data_list[0]
+            intime = data_list[1]
+            outtime = data_list[2]
+            # import pdb; pdb.set_trace()
+            date_time_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+            EmployeeAttendance.objects.create(user=request.user,employee_id=emp_id,date=date_time_obj,in_time=intime,out_time=outtime)
+            # model name change
             return JsonResponse({'status': 'success'})
     except Exception as e:
        # storage = messages get_messages(request)
-       messages.error(request, 'Does not exist')
-       return render(request,'red_list.html',{'messages':storage}) 
+       demo = messages.error(request, 'Does not exist')
+       return render(request,'red_list.html',{'messages':demo}) 
  # messages.success(request, ' file Successfully Uploaded.')
    
  #    return render(request,template)
@@ -247,7 +257,7 @@ def request_leave(request):
 
 
 class LeaveListView(ListView):
-    model = LeaveRequest
+    model = EmployeeAttendance
     template_name = "leave_list.html"
 
 def red_list(request):

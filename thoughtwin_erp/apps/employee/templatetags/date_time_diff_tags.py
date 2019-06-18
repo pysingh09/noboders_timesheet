@@ -1,6 +1,6 @@
 from django import template
 import datetime
-from employee.models import EmployeeAttendance
+from employee.models import EmployeeAttendanceDetail
 from django.contrib.auth.models import User
 from datetime import timedelta
 register = template.Library()
@@ -8,7 +8,8 @@ register = template.Library()
 
 @register.simple_tag()
 def get_date_time_diff_tag(request, att_date,user):
-	attendances_data = EmployeeAttendance.objects.filter(user=user,date=att_date)
+	import pdb; pdb.set_trace()
+	attendances_data = EmployeeAttendanceDetail.objects.filter(user=user,date=att_date)
 	dateTimeDifference = datetime.timedelta(0, 0)
 	for attendance in attendances_data:
 		intime = attendance.in_time

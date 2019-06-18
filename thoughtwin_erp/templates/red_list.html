@@ -49,8 +49,8 @@
                   e.preventDefault();
                   $(".chkboxs:checked").each(function () {
                     leaveRequestArr.push($(this).val());
-                    // leaveRequestArr.push($(this).data("intime"));
-                    // leaveRequestArr.push($(this).data("outtime"));
+                    leaveRequestArr.push($(this).data("intime"));
+                    leaveRequestArr.push($(this).data("outtime"));
 
                   });
                
