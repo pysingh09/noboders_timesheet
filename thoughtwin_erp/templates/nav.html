@@ -30,10 +30,10 @@
           <li><a href="{% url 'employee:leave_list' %}">Response leave</a></li>
           <li><a href="{% url 'employee:leaves' %}">Employee Leaves</a></li>
           {% endif %}
-          <li><a href="{% url 'employee:red_list' %}">Request Leave</a></li>
+          <li><a href="{% url 'employee:attendence-request-list' %}">Request Leave</a></li>
         </ul>
         </li>
-        <li class="cal_btn"><a href="{% url 'employee:calendar' %}">Calendar</a></li>
+        <li class="cal_btn"><a href="{% url 'employee:show-hour-calender' %}">Calendar</a></li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">

@@ -190,32 +190,28 @@ def employee_details(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
     return render(request,'home.html', {'attendances_data' : attendances_data})
 
+
+def show_hour_calender(request):
+    attendances_data = EmployeeAttendance.objects.filter(user_id=request.user.id)
+    names = set()
+    result = []
+    for att in attendances_data:
+        if not att.date in names:
+            names.add(att.date)
+            result.append(att)
+
+    return render(request,'fullcalendar.html', {'attendances_data' : result})
+
 def show_calendar(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
     names = set()
     result = []
-    
     for att in attendances_data:
         if not att.date in names:
             names.add(att.date)
             result.append(att)
 
     return render(request,'fullcalendar.html', {'attendances_data' : result})
-
-     
-
-def show (request):
-    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
-    names = set()
-    result = []
-    
-    for att in attendances_data:
-        if not att.date in names:
-            names.add(att.date)
-            result.append(att)
-
-    return render(request,'fullcalendar.html', {'attendances_data' : result})
-
 
 @csrf_exempt
 def request_leave(request):
@@ -238,40 +234,18 @@ def request_leave(request):
        # storage = messages get_messages(request)
        demo = messages.error(request, 'Does not exist')
        return render(request,'red_list.html',{'messages':demo}) 
- # messages.success(request, ' file Successfully Uploaded.')
-   
- #    return render(request,template)
-
-
 
 class LeaveListView(ListView):
     model = EmployeeAttendance
     template_name = "leave_list.html"
 
-def red_list(request):
-    queryset = EmployeeAttendance.objects.all()
-    names = set()
+def attendence_request_list(request):
+    attendances = EmployeeAttendance.objects.filter(user=request.user)
     result = []
+    for attendance in attendances:
+        if attendance.date_time_diffrence() < timedelta(hours=9):
+            result.append(attendance)
     
-    for att in queryset.filter(user=request.user):
-        if not att.date in names:
-            names.add(att.date)
-            attendances_data = queryset.filter(user=request.user, date=att.date)
-            dateTimeDifference = timedelta(0, 0)
-            if attendances_data.count() != 0:
-                date_data = date.today()
-                for attendance in attendances_data:
-                    intime = attendance.in_time
-                    outtime = attendance.out_time
-                    dateTimeIn = datetime.combine(date.today(), intime)
-                    dateTimeOut = datetime.combine(date.today(), outtime)
-                    dateTimeDifference += dateTimeOut - dateTimeIn
-                    date_data = attendance.date
-
-                another_year = timedelta(hours=9)
-
-                if dateTimeDifference <= another_year:
-                    result.append({'date' : date_data, 'hour' : dateTimeDifference,'intime': attendance.in_time,'outtime': attendance.out_time, })
     return render(request,'red_list.html', {'attendance_data' : result})
     
 def Approved_leave(request):
@@ -283,15 +257,6 @@ def Approved_leave(request):
     leave = LeaveRequest.objects.get(user=user,date=date)
     leave.is_approved=is_approve
     leave.save()
-     
-    # if user is not None:
-    #         if user.is_active:
-    #             auth_login(request, user)
-    #             return redirect('index')
-    #     else:
-    #         messages.error(request,'username or password not correct')
-    #         return redirect('login')
-
     return JsonResponse({'status': 'success'})
     
 def Reject_leave(request):
