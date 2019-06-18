@@ -15,6 +15,9 @@ class BaseModel(models.Model):
    class Meta:
        abstract = True
 
+EMP_LEAVE_TYPE = (
+    (1, 'default'),(2, 'request by employee'),(3, 'accept'),(4, 'reject')
+    )
 ROLE_CHOICES = ( 
     (1, ('MD')),
     (2, ('Project manager')),
@@ -53,8 +56,10 @@ class EmployeeAttendance(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
-    is_approved =models.BooleanField(default=False)
     
+    # is_approved =models.BooleanField(default=False)
+    emp_leave_type = models.IntegerField(choices=EMP_LEAVE_TYPE, default=1)
+
     def __str__(self):
         return str(self.employee_id)
 

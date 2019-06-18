@@ -9,6 +9,7 @@
           
             <th>user</th>
             <th>Date</th>
+            <th>total working hour</th>
             <th>Leave Request</th>
           </tr>
         </thead>
@@ -17,10 +18,20 @@
                   <tr>    
                     <td>{{ leave.user }}</td>
                     <td>{{ leave.date }}</td>
+                    <td>{{ leave.date_time_diffrence }}</td>
                   
                   
-                    <td><button class="approve-btn" data-user="{{ leave.user }}" data-date="{{ leave.date|date:'Y-m-d' }}" data-approve=True>Approve</button>
-                    <button class="reject-btn" data-user="{{ leave.user }}" data-date="{{ leave.date|date:'Y-m-d' }}" data-approve=False>Reject</button></td>
+                    <td>
+                     {% if leave.emp_leave_type != 3  %}
+                      <button class="leave btn btn-success" data-leave-id="{{leave.id}}"data-leave_type="3">Approve</button>
+                     {% endif %}  
+                     {% if leave.emp_leave_type != 4  %} 
+                     <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave_type="4">Reject</button>
+                    {% endif %} 
+                      
+                       {{ leave.get_emp_leave_type_display }}
+
+                  </td>
                   </tr>
                 {% endfor %}
             </tbody>
@@ -29,60 +40,28 @@
 
 
 <script>
-    $(".approve-btn").on('click', function (e) {
+    $(".leave").on('click', function (e) {
       e.preventDefault();
-      var username = $(this).data("user");
-      var date = $(this).data("date");
-      var approve = $(this).data("approve"); 
+      var leave_id = $(this).data("leave-id");
+      var leave_type = $(this).data("leave_type");
+      
       $.ajax({
-        url: "{% url "employee:Approved_leave" %}",
+        url: "{% url "employee:approved_leave" %}",
         'type': "POST",
         data: {
-          
-          'user': username,
-          'date':date,
-          'is_approve': approve,
+          'leave_id': leave_id,
+          'leave_type':leave_type,
           'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
       success: function(response) {
             if(response.status=="success"){
                 alert("Accept leave request")
                 location.reload();
-                // window.location.href = "";   //redirect page
                 }
-              
             }
       });
 
     });
-
-    $(".reject-btn").on('click', function (e) {
-      e.preventDefault();
-      var username = $(this).data("user");
-      var date = $(this).data("date");
-      var approve = $(this).data("approve"); 
-      $.ajax({
-        url: "{% url "employee:Reject_leave" %}",
-        'type': "POST",
-        data: {
-          
-          'user': username,
-          'date':date,
-          'is_approve': approve,
-          'csrfmiddlewaretoken': '{{ csrf_token }}',
-        },
-      success: function(response) {
-            if(response.status=="success"){
-                alert("Reject leave request")
-                location.reload();
-                }
-
-            }
-      });
-
-    });
-
-
   </script>
 
 

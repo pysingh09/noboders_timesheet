@@ -33,7 +33,7 @@
                 
                 <td><p>{{ attendance.date_time_diffrence }}</p></td> 
               
-                <td><input type="checkbox" data-intime='{{ attendance.intime }}' data-outtime='{{ attendance.outtime }}' class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}"></td>
+                <td><input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}"></td>
 
               </tr>
             {% endfor %}
@@ -49,9 +49,6 @@
                   e.preventDefault();
                   $(".chkboxs:checked").each(function () {
                     leaveRequestArr.push($(this).val());
-                    leaveRequestArr.push($(this).data("intime"));
-                    leaveRequestArr.push($(this).data("outtime"));
-
                   });
                
                      // debugger

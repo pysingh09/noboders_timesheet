@@ -20,8 +20,9 @@ $(document).ready(function() {
                    {% for attendance in attendances_data %}
                 {
               
-               'title':"{{ attendance.date_time_diffrence }}",
-                  'date':"{{ attendance.date}}",
+                'title':"{{ attendance.date_time_diffrence }}",
+                'date':"{{ attendance.date}}",
+                'test':"{{ attendance.emp_leave_type }}",
               }
                 {% if not forloop.last %},{% endif %}
                   {% endfor %}
@@ -31,12 +32,11 @@ $(document).ready(function() {
 
                 ],
                   eventRender: function (event, element, view) {
-                      
-                       var a = event.title
-                       var b = a.replace(':','.')
-                       var title = parseFloat(b)
+                       var test = event.test;
+                       var title = event.title.split(":");
+                       var total_hour = parseFloat(title[0])
                        var calculation = parseFloat("9:00")
-                       if (title >=calculation ) {
+                       if (total_hour >=calculation || test==3) {
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append();
                             }

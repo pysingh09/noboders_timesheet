@@ -218,17 +218,11 @@ def request_leave(request):
     try:
         import datetime
         if request.method == 'POST':
-            # import pdb; pdb.set_trace()
-            user = request.user.username
-            emp_id = request.user.id
-            data_list = request.POST.getlist('leaveRequestArr[]')
-            date = data_list[0]
-            intime = data_list[1]
-            outtime = data_list[2]
-            # import pdb; pdb.set_trace()
-            date_time_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
-            EmployeeAttendance.objects.create(user=request.user,employee_id=emp_id,date=date_time_obj,in_time=intime,out_time=outtime)
-            # model name change
+            date_list = request.POST.getlist('leaveRequestArr[]')
+            attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list)
+            for attendance in attendance_request_list:
+                attendance.emp_leave_type = 2
+                attendance.save()
             return JsonResponse({'status': 'success'})
     except Exception as e:
        # storage = messages get_messages(request)
@@ -239,8 +233,13 @@ class LeaveListView(ListView):
     model = EmployeeAttendance
     template_name = "leave_list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(LeaveListView, self).get_context_data(**kwargs)
+        context['object_list'] = self.model.objects.filter(emp_leave_type__in=[2,3,4])
+        return context
+
 def attendence_request_list(request):
-    attendances = EmployeeAttendance.objects.filter(user=request.user)
+    attendances = EmployeeAttendance.objects.filter(user=request.user,emp_leave_type=1)
     result = []
     for attendance in attendances:
         if attendance.date_time_diffrence() < timedelta(hours=9):
@@ -248,28 +247,12 @@ def attendence_request_list(request):
     
     return render(request,'red_list.html', {'attendance_data' : result})
     
-def Approved_leave(request):
-    username = request.POST.get("user")
-    date = request.POST.get("date")
-    is_approve = request.POST.get("is_approve")
-    date = datetime.strptime(date, '%Y-%m-%d') 
-    user = User.objects.get(username = username)
-    leave = LeaveRequest.objects.get(user=user,date=date)
-    leave.is_approved=is_approve
-    leave.save()
+def approved_leave(request):
+    leave_id = request.POST.get("leave_id")
+    employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
+    employee_attendance.emp_leave_type = request.POST.get("leave_type")
+    employee_attendance.save()
     return JsonResponse({'status': 'success'})
-    
-def Reject_leave(request):
-    username = request.POST.get("user")
-    date = request.POST.get("date")
-    is_approve = request.POST.get("is_approve")
-    date = datetime.strptime(date, '%Y-%m-%d')   
-    user = User.objects.get(username = username)
-    leave = LeaveRequest.objects.get(user=user,date=date)
-    leave.is_approved=is_approve
-    leave.save()
-    return JsonResponse({'status': 'success'})
-
 
 def leave_calendar (request):
     demo=[]
