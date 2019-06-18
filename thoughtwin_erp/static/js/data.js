@@ -20,7 +20,6 @@ $(document).ready(function(){
                 success: function(response) {
                     if(response.status=="success")
                         
-                         // $(".deactivateEmployee").attr("disabled", false);
                         location.reload();
                 }
             });
@@ -29,7 +28,6 @@ $(document).ready(function(){
 });
 
 let csvRecoredArr =[];
-// Case 1 : When Header Checkbox is ticked
 $(document).on("click","#checkall",function(){
    var checked = $(this).prop('checked');
    $('.mychkboxs').find('input:checkbox').prop('checked', checked);

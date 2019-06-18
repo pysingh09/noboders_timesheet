@@ -39,7 +39,9 @@
           </tbody>
         </table>
       </div>
+      {% if user.is_superuser  %}
       <button class="btn btn-success delete-row" id="delrow">Delete row</button>
+       {% endif %}
     </div>
 
   <!-- Modal -->
