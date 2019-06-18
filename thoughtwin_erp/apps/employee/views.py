@@ -267,16 +267,9 @@ def leave_calendar (request):
 @csrf_exempt
 def delete_record(request):
    if request.method == 'POST':
-    # import pdb; pdb.set_trace()
-    for data in request.POST.getlist('data[]'):
-        # data
-        # data.datetime.strptime(data, '%Y-%m-%d')   
-        # data.emp_id
-    # import pdb; pdb.set_trace()
-        # date = request.POST.get('date')
-     
-        date = datetime.strptime(data, '%Y-%m-%d')
-        date.delete()
+    data = request.POST.getlist('data[]')
+    empatt = EmployeeAttendance.objects.filter(id__in=data)
+    empatt.delete()
     return JsonResponse({'status': 'success'})
 
 
