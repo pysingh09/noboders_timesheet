@@ -14,18 +14,28 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+        <li><a href="{% url 'employee:home' %}">Home</a></li>
+        
         {% if user.is_superuser  %}
-        <li><a href="{% url 'employee:home' %}">Home</a></li>
-        <li><a href="{% url 'employee:file_upload' %}">CSV Upload</a></li>
-        <li><a href="{% url 'employee:signup' %}">Create Employee</a></li>
-        <li><a href="{% url 'employee:employee_list' %}">Employee List</a></li>
-        <li><a href="{% url 'employee:leave_list' %}">Response leave</a></li>
-        <li><a href="{% url 'employee:leaves' %}">Employee Leaves</a></li>
-        {% else %}
-        <li><a href="{% url 'employee:home' %}">Home</a></li>
+          <li><a href="{% url 'employee:file_upload' %}">CSV Upload</a></li>
+          <li><a href="{% url 'employee:signup' %}">Create Employee</a></li>
+
+          <li><a href="{% url 'employee:employee_list' %}">Employee List</a></li>
         {% endif %}
+        
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Leave <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+          {% if user.is_superuser  %}
+          <li><a href="{% url 'employee:leave_list' %}">Response leave</a></li>
+          <li><a href="{% url 'employee:leaves' %}">Employee Leaves</a></li>
+          {% endif %}
+          <li><a href="{% url 'employee:red_list' %}">Request Leave</a></li>
+        </ul>
+        </li>
+        <li class="cal_btn"><a href="{% url 'employee:calendar' %}">Calendar</a></li>
       </ul>
-      {% if user.is_authenticated %}
+      
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
@@ -35,11 +45,7 @@
           </ul>
         </li>
       </ul>
-      <ul class="nav navbar-nav">
-        <li class="cal_btn"><a href="{% url 'employee:calendar' %}">Calendar</a></li>
-         <li class="cal_btn"><a href="{% url 'employee:red_list' %}">Request Leave</a></li>
-      </ul>
-      {% endif %}
+      
     </div>
   </div>
 </nav>
