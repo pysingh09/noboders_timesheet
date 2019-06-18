@@ -20,7 +20,7 @@ $(document).ready(function() {
                    {% for attendance in attendances_data %}
                 {
               
-               'title':"{% get_date_time_diff_tag request attendance.date attendance.user %}",
+               'title':"{{ attendance.date_time_diffrence }}",
                   'date':"{{ attendance.date}}",
               }
                 {% if not forloop.last %},{% endif %}

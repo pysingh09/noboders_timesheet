@@ -115,7 +115,7 @@ $(document).ready(function() {
 <div style='clear:both'></div>
 </div>
 {% for attendance in attendances_data %}
-{% get_date_time_diff_tag request attendance.date attendance.user %}
+{{ attendance.date_time_diffrence }}
   {% endfor %}
 </body>
 {% endblock %}
