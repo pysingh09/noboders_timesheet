@@ -70,6 +70,17 @@ class EmployeeAttendance(BaseModel):
         dateTimeDifference = dateTimeOut - dateTimeIn
         return dateTimeDifference
 
+    def date_time_diffrence(self):
+        dateTimeDifference = datetime.timedelta(0, 0)
+        for emp_detail in self.employee_attendance.all():
+            intime = emp_detail.in_time
+            outtime = emp_detail.out_time
+            dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
+            dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
+            dateTimeDifference += dateTimeOut - dateTimeIn
+        return dateTimeDifference
+
+
 class LeaveRequest(BaseModel):
         user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leave_request')
         date = models.DateField(blank=True)
@@ -94,6 +105,14 @@ class AllottedLeave(models.Model):
         return self.user.username
 
 class EmployeeAttendanceDetail(models.Model):
-    employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE)
+    employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE, related_name='employee_attendance')
     in_time = models.TimeField(blank=True, verbose_name=_('Time In')) 
     out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
+
+
+    def date_time_diffrence(self):
+        dateTimeDifference = datetime.timedelta(0, 0)
+        dateTimeIn = datetime.datetime.combine(datetime.date.today(), self.in_time)
+        dateTimeOut = datetime.datetime.combine(datetime.date.today(), self.out_time)
+        dateTimeDifference = dateTimeOut - dateTimeIn
+        return dateTimeDifference

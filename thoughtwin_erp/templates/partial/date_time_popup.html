@@ -3,15 +3,17 @@
     <tr>    
       <th>Intime</th>
       <th>Outtime</th>
+      <th>Login hours</th>
     </tr>
   </thead>
   <tbody class="my-popup">
 
-    {% for emp_att in employee_attendence %}
+    {% for emp_att in employee_attendence.employee_attendance.all %}
       
     <tr>
         <td data-toggle="modal" data-target="#myModal"><p>{{ emp_att.in_time }}</p></td>
         <td><p>{{ emp_att.out_time }}</p></td>
+        <td>{{ emp_att.date_time_diffrence }}</td>
     </tr>
     {% endfor %}
   </tbody>

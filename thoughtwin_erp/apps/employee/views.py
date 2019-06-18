@@ -171,7 +171,6 @@ def file_upload(request):
 
 
 def home(request):
-    # import pdb; pdb.set_trace()
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
@@ -183,24 +182,13 @@ def home(request):
     return render(request,'home.html', {'attendances_data' : result})
 
 def date_time_attendence_view(request):
-    date_str1 = request.POST.get("dat")
-    emp_id = request.POST.get("emp_id")
-    date_dt1 = datetime.strptime(date_str1, '%Y-%m-%d')
-    employee_attendence_date = EmployeeAttendance.objects.filter(date=date_dt1,employee_id=emp_id)
-    
+    attendance = EmployeeAttendance.objects.get(id = request.POST.get("attendance_id"))
     template_name = "partial/date_time_popup.html"
-    return render(request,template_name,{ "employee_attendence":employee_attendence_date }) 
+    return render(request,template_name,{ "employee_attendence":attendance }) 
 
 def employee_details(request,id):
-    # import pdb; pdb.set_trace()
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
-    names = set()
-    result = []
-    for att in attendances_data:
-        if not att.date in names:
-            names.add(att.date)
-            result.append(att)
-    return render(request,'home.html', {'attendances_data' : result})
+    return render(request,'home.html', {'attendances_data' : attendances_data})
 
 def show_calendar(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
