@@ -2,6 +2,12 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% load i18n %}
+
+{% include "nav.html" %}
 {% block content %}
+
+{% if user.is_authenticated %}
+    <li><a href="{% url 'logout' %}">Log Out</a></li>
+{% endif %}
 Dashboard
 {% endblock %}
