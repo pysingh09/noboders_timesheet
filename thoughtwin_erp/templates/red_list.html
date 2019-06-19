@@ -23,6 +23,7 @@
               <th>Date</th>
               <th>Calculation</th>
               <th>leave Request</th> 
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -33,8 +34,14 @@
                 
                 <td><p>{{ attendance.date_time_diffrence }}</p></td> 
               
-                <td><input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}"></td>
-
+                <td>
+                  {% if attendance.emp_leave_type == 1 %}
+                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}">
+                  {% endif %}
+                </td>
+                <td>
+                 {{ attendance.get_emp_leave_type_display }}
+                </td>
               </tr>
             {% endfor %}
           </tbody>

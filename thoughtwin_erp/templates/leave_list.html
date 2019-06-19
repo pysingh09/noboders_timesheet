@@ -29,9 +29,9 @@
                      <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Reject</button>
                     {% endif %} 
                       
-                       {{ leave.get_emp_leave_type_display }}
 
                   </td>
+                       {{ leave.get_emp_leave_type_display }}
                   </tr>
                 {% endfor %}
             </tbody>
@@ -43,6 +43,7 @@
     $(".leave").on('click', function (e) {
       e.preventDefault();
       var leave_id = $(this).data("leave-id");
+      // debugger
       var leave_type = $(this).data("leave_type");
       var leave_user = $(this).data("leave-user");
       $.ajax({

@@ -13,6 +13,7 @@
               <th>Date</th>
               <th>Calculation</th>
               
+              
               {% if user.is_superuser  %}
               <th scope="col" class="action-checkbox-column">
               <div class="text"><span><input type="checkbox" id="checkall"></span></div>
@@ -34,6 +35,7 @@
                   <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date|date:'Y-m-d' }}">
                   {% endif %}
                 </td>
+                
               </tr>
             {% endfor %}
           </tbody>

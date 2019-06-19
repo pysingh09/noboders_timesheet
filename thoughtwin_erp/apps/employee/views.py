@@ -157,6 +157,7 @@ def file_upload(request):
             user=profile.user,
             employee_id = column[0],
             date = column[3],
+            created_by=request.user
         )
 
         if emp:
@@ -239,7 +240,7 @@ class LeaveListView(ListView):
         return context
 
 def attendence_request_list(request):
-    attendances = EmployeeAttendance.objects.filter(user=request.user,emp_leave_type=1)
+    attendances = EmployeeAttendance.objects.filter(user=request.user)
     result = []
     for attendance in attendances:
         if attendance.date_time_diffrence() < timedelta(hours=9):
