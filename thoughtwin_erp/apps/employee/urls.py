@@ -27,7 +27,7 @@ urlpatterns = [
     path('attendence/request/list/', attendence_request_list, name='attendence-request-list'),
     path('login/', login_view, name='login'),
     path('', index, name='index'),
-    path('dashboard', Dashboard.as_view(), name='dashboard' ),
+    path('dashboard', EmployeeProfile.as_view(), name='profile'),
     path('approved/leave', approved_leave, name='approved_leave' ),
     
 
