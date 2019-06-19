@@ -6,7 +6,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance, AllottedLeave,LeaveRequest,EmployeeAttendanceDetail
+from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail
 from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -247,22 +247,12 @@ def attendence_request_list(request):
     
     return render(request,'red_list.html', {'attendance_data' : result})
     
-def approved_leave(request):
+def leave_status(request): # reject/accept leave hour
     leave_id = request.POST.get("leave_id")
     employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
     employee_attendance.emp_leave_type = request.POST.get("leave_type")
     employee_attendance.save()
     return JsonResponse({'status': 'success'})
-
-def leave_calendar (request):
-    demo=[]
-    Approved = LeaveRequest.objects.filter(user=request.user)
-    for Approve in Approved:
-        user = Approve.user
-        date = Approve.date  
-        is_approve = Approve.is_approved
-        demo.append({'user':user,'date' : date, 'is_approve' : is_approve})
-    return render(request,'leave_calendar.html', {'demos':demo})
 
 @csrf_exempt
 def delete_record(request):

@@ -8,16 +8,17 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime, date
 import datetime
 
-class BaseModel(models.Model):
-   created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-   modified_at = models.DateTimeField(auto_now=True, db_index=True)
-
-   class Meta:
-       abstract = True
+LEAVE_CHOICES = []
+for r in range(2019, (datetime.datetime.now().year+10)):
+   LEAVE_CHOICES.append((r,r))
 
 EMP_LEAVE_TYPE = (
-    (1, 'default'),(2, 'request by employee'),(3, 'accept'),(4, 'reject')
+    (1, 'default'),
+    (2, 'request by employee'),
+    (3, 'accept'),
+    (4, 'reject')
     )
+
 ROLE_CHOICES = ( 
     (1, ('MD')),
     (2, ('Project manager')),
@@ -30,6 +31,14 @@ ROLE_CHOICES = (
     (9 , ('QA')),
 )
 
+class BaseModel(models.Model):
+   created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+   modified_at = models.DateTimeField(auto_now=True, db_index=True)
+
+   class Meta:
+       abstract = True
+
+
 class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     employee_id = models.IntegerField(unique=True, verbose_name=_('Employee ID'))
@@ -40,7 +49,7 @@ class Profile(BaseModel):
     teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'), related_name='teamlead')
     designation = models.IntegerField(choices=ROLE_CHOICES, default=7, verbose_name=_('Designation'))
 
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_created')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile_created_by')
 
     def __str__(self):
 
@@ -49,31 +58,27 @@ class Profile(BaseModel):
     def get_leave(self):
         return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
         
-        
-
-
 class EmployeeAttendance(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
-    
-    # is_approved =models.BooleanField(default=False)
     emp_leave_type = models.IntegerField(choices=EMP_LEAVE_TYPE, default=1)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attendance_created_by')
 
     def __str__(self):
         return str(self.employee_id)
 
 
-    def emp_hour(self):
-        return (datetime.datetime.combine(date.today(), self.out_time) - datetime.datetime.combine(date.today(), self.in_time)).seconds / 3600
+    # def emp_hour(self):
+    #     return (datetime.datetime.combine(date.today(), self.out_time) - datetime.datetime.combine(date.today(), self.in_time)).seconds / 3600
 
-    def time_diff(self,dt):
-        intime = self.in_time
-        outtime = self.out_time
-        dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
-        dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
-        dateTimeDifference = dateTimeOut - dateTimeIn
-        return dateTimeDifference
+    # def time_diff(self,dt):
+    #     intime = self.in_time
+    #     outtime = self.out_time
+    #     dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
+    #     dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
+    #     dateTimeDifference = dateTimeOut - dateTimeIn
+    #     return dateTimeDifference
 
     def date_time_diffrence(self):
         dateTimeDifference = datetime.timedelta(0, 0)
@@ -86,22 +91,11 @@ class EmployeeAttendance(BaseModel):
         return dateTimeDifference
 
 
-class LeaveRequest(BaseModel):
-        user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leave_request')
-        date = models.DateField(blank=True)
-        is_approved =models.BooleanField(default=False)
-        
-        class Meta:
-            unique_together = ('date', 'user',)
-    
-LEAVE_CHOICES = []
-for r in range(2019, (datetime.datetime.now().year+10)):
-   LEAVE_CHOICES.append((r,r))
-
 class AllottedLeave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leaves')
     year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
     leave = models.IntegerField(verbose_name=_('Leaves'))
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leave_created_by')
     
     class Meta:
         unique_together = ('year', 'user',)

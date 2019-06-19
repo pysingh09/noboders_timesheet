@@ -28,7 +28,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('', index, name='index'),
     path('dashboard', Dashboard.as_view(), name='dashboard' ),
-    path('approved/leave', approved_leave, name='approved_leave' ),
+    path('leave/status', leave_status, name='approved_leave' ),
     
 
 
