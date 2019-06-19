@@ -4,6 +4,21 @@
 {% block content %}
 
 
+<!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body" id="attendence_model">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 <script>
     
@@ -17,54 +32,51 @@ $(document).ready(function() {
             events: 
             [
 
-                   {% for attendance in attendances_data %}
+              {% for attendance in attendances_data %}
                 {
               
                 'title':"{{ attendance.date_time_diffrence }}",
                 'date':"{{ attendance.date}}",
                 'test':"{{ attendance.emp_leave_type }}",
+                'id':"{{ attendance.id }}",
               }
                 {% if not forloop.last %},{% endif %}
-                  {% endfor %}
-
-
-
-
-                ],
+                {% endfor %}
+            ],
                   eventRender: function (event, element, view) {
                        var test = event.test;
                        var title = event.title.split(":");
-                       var total_hour = parseFloat(title[0])
-                       var calculation = parseFloat("9:00")
+                       var total_hour = parseFloat(title[0]);
+                       var calculation = parseFloat("9:00");
+                       var id = event.id;
                        if (total_hour >=calculation || test==3) {
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append();
+                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
                             }
 
                        else {
 
                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000');
+                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
                        }
                    }
 
          
            });
+    });
 
-       
-    $(".attendence_datetime").click(function(e){
-        e.preventDefault();
-        var dat = $(this).data("date");
-        var emp_id = $(this).data("employee-id");
+</script>
+<script>
+    $(document).ready(function(){
+      $(".timedetail").click(function(e){
+        // e.preventDefault();
+        // debugger
+        var attendance_id = $(this).attr('id');
         $.ajax({
            'url': "{% url "employee:date-time-attendence-view" %}",
            'type': "POST",
-           // 'dataType': 'json',
-           
            'data': {
-
-               'dat': dat,
-               'emp_id':emp_id,
+               'attendance_id':attendance_id,
                'csrfmiddlewaretoken': '{{ csrf_token }}',
            },
 
@@ -79,36 +91,12 @@ $(document).ready(function() {
         });
         
       });
-
-
     });
-
-
-
-</script>
+    
+  </script>
 
 <body>
       
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-      
-        <div class="modal-body" id="attendence_model">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-<!-- <label ng-repeat="day in days"> <input type="checkbox" checklist-model="days" checklist-value="day" ng-click="addEvent(day, exercise)">{{ day.text }} </label> -->
-
-
-
-
 <div id='wrap'>
 
 <div id='calendar'></div>
@@ -117,16 +105,6 @@ $(document).ready(function() {
 <div style='clear:both'></div>
 </div>
 
-<!-- [{'username': 'admin', 'date': datetime.datetime(2019, 8, 4, 0, 0), 'is_approve': 'True'}] -->
 
-                   {% for data in demos %}
-                {
-              
-               'title':"{{data.is_approve}}",
-                  'date':"{{data.date|date:'Y-m-d'}}",
-
-              }
-                {% if not forloop.last %},{% endif %}
-                  {% endfor %}
 </body>
 {% endblock %}
