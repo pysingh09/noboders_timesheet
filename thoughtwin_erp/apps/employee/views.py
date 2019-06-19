@@ -27,25 +27,25 @@ def login_view(request):
             if form.is_valid():
                 user = form.get_user()
                 login(request,user)
-                return redirect('employee:dashboard')
+                return redirect('employee:profile')
             else:
                 return render(request,'registration/login.html',{ 'form':form})
         else:
             form = AuthenticationForm()
         return render(request,'registration/login.html',{ 'form':form})
     else:
-        return redirect('employee:dashboard')
+        return redirect('employee:profile')
             
 
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-        return redirect('employee:dashboard')
+        return redirect('employee:profile')
 
-class Dashboard(View):
-    def get(self, request):
-        return render(request, 'dashboard/dashboard.html')
+# class Dashboard(View):
+#     def get(self, request):
+#         return render(request, 'dashboard/dashboard.html')
 
 def signup(request):
     if request.method == 'POST':    
@@ -257,7 +257,6 @@ def leave_status(request): # reject/accept leave hour
 @csrf_exempt
 def delete_record(request):
    if request.method == 'POST':
-    import pdb; pdb.set_trace()
     data = request.POST.getlist('data[]')
     empatt = EmployeeAttendance.objects.filter(id__in=data)
     empatt.delete()
