@@ -23,10 +23,10 @@
                   
                     <td>
                      {% if leave.emp_leave_type != 3  %}
-                      <button class="leave btn btn-success" data-leave-id="{{leave.id}}"data-leave_type="3">Approve</button>
+                      <button class="leave btn btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}"data-leave_type="3">Approve</button>
                      {% endif %}  
                      {% if leave.emp_leave_type != 4  %} 
-                     <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave_type="4">Reject</button>
+                     <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Reject</button>
                     {% endif %} 
                       
                        {{ leave.get_emp_leave_type_display }}
@@ -44,7 +44,7 @@
       e.preventDefault();
       var leave_id = $(this).data("leave-id");
       var leave_type = $(this).data("leave_type");
-      
+      var leave_user = $(this).data("leave-user");
       $.ajax({
         url: "{% url "employee:approved_leave" %}",
         'type': "POST",
@@ -54,10 +54,19 @@
           'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
       success: function(response) {
+           
             if(response.status=="success"){
-                alert("Accept leave request")
+              if(leave_type==3){
+                alert("Accept leave request for "+leave_user)
                 location.reload();
                 }
+              else{
+                alert("Reject leave request for "+leave_user)
+                location.reload();
+                  }
+                
+              }
+
             }
       });
 
