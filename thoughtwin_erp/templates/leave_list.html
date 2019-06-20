@@ -29,9 +29,10 @@
                      <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Reject</button>
                     {% endif %} 
                       
+                       {{ leave.get_emp_leave_type_display }}
 
                   </td>
-                       {{ leave.get_emp_leave_type_display }}
+              
                   </tr>
                 {% endfor %}
             </tbody>

@@ -17,8 +17,10 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import login, logout
+from django.core.mail import EmailMessage,send_mail
 import datetime as only_datetime
-
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 def login_view(request):
     if not request.user.is_authenticated:
@@ -216,19 +218,23 @@ def show_calendar(request,id):
 
 @csrf_exempt
 def request_leave(request):
-    try:
-        import datetime
-        if request.method == 'POST':
-            date_list = request.POST.getlist('leaveRequestArr[]')
-            attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list)
-            for attendance in attendance_request_list:
-                attendance.emp_leave_type = 2
-                attendance.save()
-            return JsonResponse({'status': 'success'})
-    except Exception as e:
-       # storage = messages get_messages(request)
-       demo = messages.error(request, 'Does not exist')
-       return render(request,'red_list.html',{'messages':demo}) 
+
+    import datetime
+    if request.method == 'POST':
+        date_list = request.POST.getlist('leaveRequestArr[]')
+        attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list)
+        for attendance in attendance_request_list:
+            attendance.emp_leave_type = 2
+            attendance.save()
+            frm = 'ankita@thoughtwin.com'
+            content = render_to_string('email_content.html',{'email_user':attendance.user,'date':attendance.date})
+            text_content = strip_tags(content)
+
+            email = EmailMessage("Leave Request",text_content,frm,to=["ankita@thoughtwin.com"])
+            
+            email.send()   
+        return JsonResponse({'status': 'success'})
+   
 
 class LeaveListView(ListView):
     model = EmployeeAttendance
@@ -237,6 +243,8 @@ class LeaveListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(LeaveListView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.filter(emp_leave_type__in=[2,3,4])
+       
+
         return context
 
 def attendence_request_list(request):
@@ -245,7 +253,7 @@ def attendence_request_list(request):
     for attendance in attendances:
         if attendance.date_time_diffrence() < timedelta(hours=9):
             result.append(attendance)
-    
+        
     return render(request,'red_list.html', {'attendance_data' : result})
     
 def leave_status(request): # reject/accept leave hour
@@ -253,6 +261,15 @@ def leave_status(request): # reject/accept leave hour
     employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
     employee_attendance.emp_leave_type = request.POST.get("leave_type")
     employee_attendance.save()
+    if employee_attendance.emp_leave_type == '3':
+        message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
+    if employee_attendance.emp_leave_type == '4':
+        message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
+
+    frm = 'ankita@thoughtwin.com'
+    email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com","arpit@thoughtwin.com"])
+    email.send()
+    
     return JsonResponse({'status': 'success'})
 
 @csrf_exempt
