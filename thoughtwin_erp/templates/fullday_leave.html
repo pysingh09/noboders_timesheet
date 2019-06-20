@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+   <head>
+   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet" type="text/css" />
+</head> 
+   <body>
+      
+
+<p>Start Date:<input class="form-control0" data-provide="datepicker" name="order_delivery_date" data-date-format="yyyy-mm-dd" id="order_delivery_date"  required /></p>
+<p>End Date:<input class="form-control0" data-provide="datepicker" name="order_delivery_date" data-date-format="yyyy-mm-dd" id="order_delivery_date"  required /></p>  
+</body>
+
+
+<script>
+$('#order_delivery_date').datepicker({
+   daysOfWeekDisabled: "0"
+}); 
+$('#order_delivery_date').datepicker({
+   dateFormat: 'yy-mm-dd'
+}); 
+</script>
+
+
+
+{% endblock %}
