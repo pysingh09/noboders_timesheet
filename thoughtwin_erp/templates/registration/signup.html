@@ -27,18 +27,19 @@
       <button type="submit" class="btn btn-success sub_btn">Submit</button>
 </form>
 
+
 <script>
-  $(function () {
-    $("#id_date_of_birth").datepicker({
-      dateFormat: 'yy-mm-dd',
+    $(document).ready(function () {
+        $('#id_date_of_birth ').datepicker({
+
+          dateFormat: 'yy-mm-dd'
+        });
     });
-  });
-</script>
-<script>
- $(function () {
-    $("#id_date_of_joining").datepicker({
-      dateFormat: 'yy-mm-dd',
+    $(document).ready(function () {
+        $('#id_date_of_joining').datepicker({
+
+          dateFormat: 'yy-mm-dd'
+        });
     });
-  });
 </script>
 {% endblock %} 
