@@ -5,8 +5,9 @@
 <body>
     
     <div>
-        Start Date: <input type="text" class='datepicker' />
-        End Date: <input type="text" class='datepicker' />
+        <p>From <input type="text" id="startleave" />
+        To <input type="text"  id="endleave" /></p>
+
    
     </div>
 </body>
@@ -20,11 +21,79 @@
             return [(day != unavailableDay), ""];
         }
  
-        $('.datepicker').datepicker({
+        $('#startleave').datepicker({
             beforeShowDay: disableDays,
             dateFormat: 'yy-mm-dd'
         });
- 
+         $('#endleave').datepicker({
+            beforeShowDay: disableDays,
+            dateFormat: 'yy-mm-dd'
+        });
+     
     });
 </script>
+<!-- for time -->
+<p id="datetime">
+   
+   <input type="text" class="time start" /> to
+   <input type="text" class="time end" />
+</p>
+
+<script>
+   $('#datetime .time').timepicker({
+      'showDuration': true,
+      'timeFormat': 'hh:mm:ss a'
+   });
+</script>
+
+<div id="results"></div>
+<button type="button" id="getBetween" class="btn btn-success">Success</button>
+
+<script>
+$('#getBetween').on('click', function () {
+    debugger
+    var start = $("#startleave").datepicker("getDate"),
+        end = $("#endleave").datepicker("getDate"),
+        currentDate = new Date(start),
+        between = [];
+
+    while (currentDate <= end) {
+        between.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    $('#results').html(between.join('<br> '));
+
+});
+</script>
 {% endblock %}
+
+<!-- aa.getFullYear()  for year-->
+<!-- aa.getMonth()  for month-->
+<!-- aa.getDate()  for day-->
+<!-- 
+<script>
+$('#getBetween').on('click', function () {
+    debugger
+    var start = $("#startleave").datepicker("getDate"),
+        enddate = $("#endleave").datepicker("getDate"),
+        end = enddate.getFullYear() + "-" + (enddate.getMonth()+1) + "-" + enddate.getDate()
+        current = new Date(start),
+        currentDate = current.getFullYear() + "-" + (current.getMonth()+1) + "-" + current.getDate()
+        between = []
+    ;
+
+    while (currentDate <= end) {
+        between.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    $('#results').html(between.join('<br> '));
+});
+   const test1 = between.map(a => { 
+   a= new Date(a);
+   var c = a.getFullYear()+" "+months[a.getMonth()+1]+" "+a.getDate();
+   return c;
+});
+   console.log(test1)
+</script>
+-->

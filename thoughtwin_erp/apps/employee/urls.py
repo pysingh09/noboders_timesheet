@@ -29,7 +29,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('dashboard', EmployeeProfile.as_view(), name='profile'),
     path('leave/status', leave_status, name='approved_leave' ),
-    path('fullday/leave', fullcalendar.as_view() ),
+    path('fullday/leave', fullcalendar,name = 'fullcalendar' ),
 
     
 

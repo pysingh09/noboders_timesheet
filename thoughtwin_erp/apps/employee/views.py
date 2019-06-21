@@ -280,5 +280,9 @@ def delete_record(request):
     empatt.delete()
     return JsonResponse({'status': 'success'})
 
-class fullcalendar(TemplateView):
+
+def fullcalendar(request):
+    attendance = EmployeeAttendance.objects.all()
     template_name = "fullday_leave.html"
+    return render(request,template_name,{ "employee_attendence":attendance })
+ 
