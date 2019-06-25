@@ -30,7 +30,8 @@ urlpatterns = [
     path('dashboard', EmployeeProfile.as_view(), name='profile'),
     path('leave/status', leave_status, name='approved_leave' ),
     path('fullday/leave', fullcalendar,name = 'fullcalendar' ),
-
+    path('full/leave/', full_leave),
+    path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday_list') 
     
 
 

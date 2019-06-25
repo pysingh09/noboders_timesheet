@@ -28,6 +28,7 @@
           <ul class="dropdown-menu">
           {% if user.is_superuser  %}
           <li><a href="{% url 'employee:leave_list' %}">Leave List</a></li>
+          <li><a href="{% url 'employee:fullday_list' %}">Fullday Leave List</a></li>
           <li><a href="{% url 'employee:leaves' %}">Add Leave bank</a></li>
           {% endif %}
           <li><a href="{% url 'employee:attendence-request-list' %}">Request for Leave</a></li>

@@ -115,3 +115,16 @@ class EmployeeAttendanceDetail(models.Model):
         dateTimeOut = datetime.datetime.combine(datetime.date.today(), self.out_time)
         dateTimeDifference = dateTimeOut - dateTimeIn
         return dateTimeDifference
+
+class FulldayLeave(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fullday_leave_user')
+    employee_id = models.IntegerField(verbose_name=_('Employee ID'))
+    date = models.DateField(blank=True, verbose_name=_('Date'))   
+    # fullday_leave_type = models.ForeignKey('emp_leave_type', on_delete=models.CASCADE, null=True)
+    # class Meta:
+    #     unique_together = ('user', 'date',)
+
+    def __str__(self):
+        return self.user.username
+
+    

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="search-container">
+     <table class = "table" id="myTable1" border="2">
+        <thead>
+          <tr>
+          
+            <th>user</th>
+            <th>Date</th>
+            <th>Leave Request</th>
+          </tr>
+        </thead>
+            <tbody>
+                {% for leave in object_list %}
+                  <tr>    
+                    <td>{{ leave.user }}</td>
+                    <td>{{ leave.date }}</td>
+                    
+                    <td>
+                     
+                      <button class="leave btn btn-success">Approve</button>
+              
+                     <button class="leave btn btn-danger">Reject</button>
+  
+
+                  </td>
+              
+                  </tr>
+                {% endfor %}
+            </tbody>
+      </table>
+    </div>
+
+
+{% endblock %}

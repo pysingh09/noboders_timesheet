@@ -6,7 +6,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail
+from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,FulldayLeave
 from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -21,6 +21,7 @@ from django.core.mail import EmailMessage,send_mail
 import datetime as only_datetime
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.utils.dateparse import parse_date
 
 def login_view(request):
     if not request.user.is_authenticated:
@@ -61,8 +62,7 @@ def signup(request):
             profile.created_by = request.user
             profile.user = new_user
             profile.save()
-            return redirect("/employeelist/")
-            
+            return redirect("/employeelist/")        
     else:
         user_form = SignUpForm()
         profile_form = ProfileForm()
@@ -286,3 +286,25 @@ def fullcalendar(request):
     template_name = "fullday_leave.html"
     return render(request,template_name,{ "employee_attendence":attendance })
  
+def full_leave(request):
+    if request.method == 'POST':
+        dateleave=[]
+        user = request.user
+        emp_id = request.user.id
+        start = request.POST.get('start_date')
+        end = request.POST.get('end_date')
+        start_date = parse_date(start)
+        end_date = parse_date(end)
+        delta = end_date - start_date
+        for i in range(delta.days + 1):
+            date = start_date + timedelta(days=i)
+            FulldayLeave.objects.create(user = user,employee_id = emp_id,date = date)                       
+    return JsonResponse({'status': 'success'})
+
+class FullLeaveListView(ListView):
+    model = FulldayLeave
+    template_name = "fullday_leave_list.html"
+    # def get_context_data(self, **kwargs):
+    #     context = super(FullLeaveListView, self).get_context_data(**kwargs)
+    #     context['object_list'] = self.model.objects.filter(emp_leave_type__in=[2,3,4])
+    #     return context

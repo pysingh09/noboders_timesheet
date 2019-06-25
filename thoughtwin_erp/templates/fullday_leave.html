@@ -51,17 +51,40 @@
 
 <script>
 $('#getBetween').on('click', function () {
-    debugger
-    var start = $("#startleave").datepicker("getDate"),
-        end = $("#endleave").datepicker("getDate"),
-        currentDate = new Date(start),
-        between = [];
+    // debugger
+    var start = $("#startleave").datepicker("getDate");
+        start_date = start.getFullYear() + "-" + (start.getMonth()+1) + "-" + start.getDate()
+        end = $("#endleave").datepicker("getDate");
+        end_date = end.getFullYear() + "-" + (end.getMonth()+1) + "-" + end.getDate()
+        // currentDate = new Date(start),
+        // dateleave = [];
 
-    while (currentDate <= end) {
-        between.push(new Date(currentDate));
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
-    $('#results').html(between.join('<br> '));
+    // while (currentDate <= end) {
+    //     dateleave.push(new Date(currentDate));
+    //     currentDate.setDate(currentDate.getDate() + 1);
+    // }
+
+    // $('#results').html(between.join('<br> '));
+               // debugger
+               $.ajax({
+                     'url': '/full/leave/',
+                     'type': "POST",
+                     'dataType': 'json',
+                     'data': {
+                         'start_date': start_date,
+                         'end_date': end_date,
+                         'csrfmiddlewaretoken': '{{ csrf_token }}',
+                     },
+                     success: function(response) {
+                        if(response.status=="success"){
+                            alert("Request leave successfull")
+                            location.reload();
+                            }
+
+                        }
+                    
+                     
+       })
 
 });
 </script>

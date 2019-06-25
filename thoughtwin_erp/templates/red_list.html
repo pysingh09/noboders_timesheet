@@ -52,13 +52,10 @@
        
 
               $(document).on("click","#checkrow",function(e){
-                  // debugger
                   e.preventDefault();
                   $(".chkboxs:checked").each(function () {
                     leaveRequestArr.push($(this).val());
                   });
-               
-                     // debugger
                      $.ajax({
                      'url': '/request/leave/',
                      'type': "POST",
