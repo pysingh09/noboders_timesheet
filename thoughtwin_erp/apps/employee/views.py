@@ -267,7 +267,7 @@ def leave_status(request): # reject/accept leave hour
         message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
 
     frm = 'ankita@thoughtwin.com'
-    email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com","arpit@thoughtwin.com"])
+    email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com"])
     email.send()
     
     return JsonResponse({'status': 'success'})
@@ -287,24 +287,38 @@ def fullcalendar(request):
     return render(request,template_name,{ "employee_attendence":attendance })
  
 def full_leave(request):
-    if request.method == 'POST':
-        dateleave=[]
-        user = request.user
-        emp_id = request.user.id
-        start = request.POST.get('start_date')
-        end = request.POST.get('end_date')
-        start_date = parse_date(start)
-        end_date = parse_date(end)
-        delta = end_date - start_date
-        for i in range(delta.days + 1):
-            date = start_date + timedelta(days=i)
-            FulldayLeave.objects.create(user = user,employee_id = emp_id,date = date)                       
-    return JsonResponse({'status': 'success'})
+    try:
+        if request.method == 'POST':
+            dateleave=[]
+            user = request.user
+            emp_id = request.user.id
+            start = request.POST.get('start_date')
+            end = request.POST.get('end_date')
+            emp_type = request.POST.get('emp_type')
+            start_date = parse_date(start)
+            end_date = parse_date(end)
+            delta = end_date - start_date
+            for i in range(delta.days + 1):
+                date = start_date + timedelta(days=i)
+                EmployeeAttendance.objects.update_or_create(user = user,employee_id = emp_id,date = date,emp_leave_type=emp_type)                       
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+            messages.error(request, 'Already exist')
+            return render(request,'fullday_leave_list.html',)
 
-class FullLeaveListView(ListView):
-    model = FulldayLeave
-    template_name = "fullday_leave_list.html"
+# class FullLeaveListView(ListView):
+#     model = FulldayLeave
+#     template_name = "fullday_leave_list.html"
     # def get_context_data(self, **kwargs):
     #     context = super(FullLeaveListView, self).get_context_data(**kwargs)
     #     context['object_list'] = self.model.objects.filter(emp_leave_type__in=[2,3,4])
     #     return context
+class FullLeaveListView(ListView):
+    model = EmployeeAttendance
+    template_name = "fullday_leave_list.html"
+    def get_context_data(self, **kwargs):
+        context = super(FullLeaveListView, self).get_context_data(**kwargs)
+        context['object_list'] = self.model.objects.filter(emp_leave_type__in=[3,4,5])
+        return context
+
+    

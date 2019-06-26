@@ -16,7 +16,8 @@ EMP_LEAVE_TYPE = (
     (1, 'default'),
     (2, 'request by employee'),
     (3, 'accept'),
-    (4, 'reject')
+    (4, 'reject'),
+    (5,'request for fullday leave')
     )
 
 ROLE_CHOICES = ( 
@@ -63,7 +64,7 @@ class EmployeeAttendance(BaseModel):
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
     emp_leave_type = models.IntegerField(choices=EMP_LEAVE_TYPE, default=1)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attendance_created_by')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True , related_name='attendance_created_by')
 
     def __str__(self):
         return str(self.employee_id)
@@ -95,7 +96,7 @@ class AllottedLeave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leaves')
     year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
     leave = models.IntegerField(verbose_name=_('Leaves'))
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leave_created_by')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='leave_created_by')
     
     class Meta:
         unique_together = ('year', 'user',)
@@ -120,9 +121,10 @@ class FulldayLeave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fullday_leave_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     date = models.DateField(blank=True, verbose_name=_('Date'))   
+    is_approved = models.BooleanField(default=False)
     # fullday_leave_type = models.ForeignKey('emp_leave_type', on_delete=models.CASCADE, null=True)
-    # class Meta:
-    #     unique_together = ('user', 'date',)
+    class Meta:
+        unique_together = ('user', 'date',)
 
     def __str__(self):
         return self.user.username

@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">{{ message|escape }}</div>
+        {% elif message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">{{ message|escape }}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 <body>
     
     <div>
@@ -35,7 +43,7 @@
 <!-- for time -->
 <p id="datetime">
    
-   <input type="text" class="time start" /> to
+   Time <input type="text" class="time start" /> to
    <input type="text" class="time end" />
 </p>
 
@@ -47,25 +55,17 @@
 </script>
 
 <div id="results"></div>
-<button type="button" id="getBetween" class="btn btn-success">Success</button>
+<button type="button" id="getBetween" data-leave_type="5" class="btn btn-success">Success</button>
 
 <script>
-$('#getBetween').on('click', function () {
-    // debugger
+$('#getBetween').on('click', function (e) {
+    e.preventDefault();
     var start = $("#startleave").datepicker("getDate");
         start_date = start.getFullYear() + "-" + (start.getMonth()+1) + "-" + start.getDate()
         end = $("#endleave").datepicker("getDate");
         end_date = end.getFullYear() + "-" + (end.getMonth()+1) + "-" + end.getDate()
-        // currentDate = new Date(start),
-        // dateleave = [];
+    var emp_type = $(this).data("leave_type");    
 
-    // while (currentDate <= end) {
-    //     dateleave.push(new Date(currentDate));
-    //     currentDate.setDate(currentDate.getDate() + 1);
-    // }
-
-    // $('#results').html(between.join('<br> '));
-               // debugger
                $.ajax({
                      'url': '/full/leave/',
                      'type': "POST",
@@ -73,6 +73,7 @@ $('#getBetween').on('click', function () {
                      'data': {
                          'start_date': start_date,
                          'end_date': end_date,
+                         'emp_type':emp_type,
                          'csrfmiddlewaretoken': '{{ csrf_token }}',
                      },
                      success: function(response) {
@@ -80,7 +81,7 @@ $('#getBetween').on('click', function () {
                             alert("Request leave successfull")
                             location.reload();
                             }
-
+                        
                         }
                     
                      
@@ -88,35 +89,5 @@ $('#getBetween').on('click', function () {
 
 });
 </script>
+
 {% endblock %}
-
-<!-- aa.getFullYear()  for year-->
-<!-- aa.getMonth()  for month-->
-<!-- aa.getDate()  for day-->
-<!-- 
-<script>
-$('#getBetween').on('click', function () {
-    debugger
-    var start = $("#startleave").datepicker("getDate"),
-        enddate = $("#endleave").datepicker("getDate"),
-        end = enddate.getFullYear() + "-" + (enddate.getMonth()+1) + "-" + enddate.getDate()
-        current = new Date(start),
-        currentDate = current.getFullYear() + "-" + (current.getMonth()+1) + "-" + current.getDate()
-        between = []
-    ;
-
-    while (currentDate <= end) {
-        between.push(new Date(currentDate));
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
-    
-    $('#results').html(between.join('<br> '));
-});
-   const test1 = between.map(a => { 
-   a= new Date(a);
-   var c = a.getFullYear()+" "+months[a.getMonth()+1]+" "+a.getDate();
-   return c;
-});
-   console.log(test1)
-</script>
--->
