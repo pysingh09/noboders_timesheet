@@ -281,10 +281,10 @@ def delete_record(request):
     return JsonResponse({'status': 'success'})
 
 
-def fullcalendar(request):
-    attendance = EmployeeAttendance.objects.all()
-    template_name = "fullday_leave.html"
-    return render(request,template_name,{ "employee_attendence":attendance })
+def request_leave(request):
+    # attendance = EmployeeAttendance.objects.all()
+    template_name = "request_leave.html"
+    return render(request,template_name)
  
 def full_leave(request):
     try:

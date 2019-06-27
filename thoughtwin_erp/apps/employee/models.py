@@ -17,7 +17,6 @@ EMP_LEAVE_TYPE = (
     (2, 'request by employee'),
     (3, 'accept'),
     (4, 'reject'),
-    (5,'request for fullday leave')
     )
 
 ROLE_CHOICES = ( 
@@ -69,17 +68,6 @@ class EmployeeAttendance(BaseModel):
     def __str__(self):
         return str(self.employee_id)
 
-
-    # def emp_hour(self):
-    #     return (datetime.datetime.combine(date.today(), self.out_time) - datetime.datetime.combine(date.today(), self.in_time)).seconds / 3600
-
-    # def time_diff(self,dt):
-    #     intime = self.in_time
-    #     outtime = self.out_time
-    #     dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
-    #     dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
-    #     dateTimeDifference = dateTimeOut - dateTimeIn
-    #     return dateTimeDifference
 
     def date_time_diffrence(self):
         dateTimeDifference = datetime.timedelta(0, 0)
