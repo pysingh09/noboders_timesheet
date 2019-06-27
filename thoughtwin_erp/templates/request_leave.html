@@ -35,12 +35,9 @@
       <label for="sel1">Time:</label>
       <input type="text" class="form-control" id="endtime">
     </div>
-
-
-    
-    </div> <!--end of col sm 6-->
+  <button class="btn btn-success" id="">submit</button>
+ </div> <!--end of col sm 6-->
     </form>
-
 {% endblock %}
 
 <!--java script -->
@@ -50,26 +47,39 @@
       $( function() {
         $( "#startdate" ).datepicker({ 
             dateFormat: 'yy-mm-dd',
+              beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
+
             minDate: 0, 
             onSelect: function(date) {
                $("#enddate").datepicker('option', 'minDate', date);
              }
+
         });
 
         $( "#enddate" ).datepicker({ 
             dateFormat: 'yy-mm-dd',
+              beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
             // minDate: 0,
         });
 
         $( "#starttime" ).timepicker({ 
             timeFormat: 'h:mm p',
+       
+    
         });
 
         $( "#endtime" ).timepicker({ 
             timeFormat: 'h:mm p',
+          
         });
         
       } );
+
+
+
+//       $("#dp").datepicker({
+//   beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]}
+// });
     </script>
 
 {% endblock %}
