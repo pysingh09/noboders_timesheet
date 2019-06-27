@@ -281,7 +281,7 @@ def delete_record(request):
     return JsonResponse({'status': 'success'})
 
 
-def request_leave(request):
+def request_full_leave(request):
     # attendance = EmployeeAttendance.objects.all()
     template_name = "request_leave.html"
     return render(request,template_name)
