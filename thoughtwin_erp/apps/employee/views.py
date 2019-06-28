@@ -281,10 +281,24 @@ def delete_record(request):
     return JsonResponse({'status': 'success'})
 
 
-def request_full_leave(request):
-    # attendance = EmployeeAttendance.objects.all()
-    template_name = "request_leave.html"
-    return render(request,template_name)
+class RequestLeaveView(View):
+    def get(self, request):
+        try:
+            template_name = "request_leave.html"
+            return render(request,template_name)
+        except Exception as e:
+            pass    
+    
+    def post(self, request):
+        try:
+            import pdb; pdb.set_trace()
+        except Exception as e:
+            pass
+
+# def request_full_leave(request):
+#     # attendance = EmployeeAttendance.objects.all()
+#     template_name = "request_leave.html"
+#     return render(request,template_name)
  
 def full_leave(request):
     try:
