@@ -6,7 +6,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,FulldayLeave
+from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail
 from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -320,13 +320,6 @@ def full_leave(request):
             messages.error(request, 'Already exist')
             return render(request,'fullday_leave_list.html',)
 
-# class FullLeaveListView(ListView):
-#     model = FulldayLeave
-#     template_name = "fullday_leave_list.html"
-    # def get_context_data(self, **kwargs):
-    #     context = super(FullLeaveListView, self).get_context_data(**kwargs)
-    #     context['object_list'] = self.model.objects.filter(emp_leave_type__in=[2,3,4])
-    #     return context
 class FullLeaveListView(ListView):
     model = EmployeeAttendance
     template_name = "fullday_leave_list.html"

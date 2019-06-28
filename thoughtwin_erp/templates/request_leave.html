@@ -3,7 +3,8 @@
 
 <h2>leave</h2>
 
-    <form>
+    <form action="" method="POST">
+    {% csrf_token %}
     <div class="col-sm-6">
 
     <div class="form-group col-sm-12">
@@ -18,22 +19,22 @@
 
     <div class="form-group col-sm-3">
       <label for="sel1">Start Date:</label>
-      <input type="text" class="form-control" id="startdate">
+      <input type="text" name="startdate" class="form-control" id="startdate">
     </div>
     <div class="form-group col-sm-3">
       <label for="sel1">Time:</label>
-      <input type="text" class="form-control" id="starttime">
+      <input type="text" name="starttime" class="form-control" id="starttime">
     </div>
 
     <div class="form-group col-sm-3">
       <label for="sel1">End Date:</label>
-      <input type="text" class="form-control" id="enddate">
+      <input type="text" name="enddate" class="form-control" id="enddate">
     </div>
 
 
     <div class="form-group col-sm-3">
       <label for="sel1">Time:</label>
-      <input type="text" class="form-control" id="endtime">
+      <input type="text" name="endtime" class="form-control" id="endtime">
     </div>
   <button class="btn btn-success" id="">submit</button>
  </div> <!--end of col sm 6-->

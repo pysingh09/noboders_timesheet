@@ -12,6 +12,18 @@ LEAVE_CHOICES = []
 for r in range(2019, (datetime.datetime.now().year+10)):
    LEAVE_CHOICES.append((r,r))
 
+LEAVE_STATUS = (
+    (1, 'pending'),
+    (2, 'reject'),
+    (3, 'accept'),
+    )
+
+LEAVE_TYPE = (
+    (1, 'default'),
+    (2, 'half day'),
+    (3, 'full day'),
+    )
+
 EMP_LEAVE_TYPE = (
     (1, 'default'),
     (2, 'request by employee'),
@@ -62,8 +74,12 @@ class EmployeeAttendance(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
+    leave_type = models.IntegerField(choices=LEAVE_TYPE, default=1)
     emp_leave_type = models.IntegerField(choices=EMP_LEAVE_TYPE, default=1)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True , related_name='attendance_created_by')
+
+    class Meta:
+        unique_together = ('user', 'date',)
 
     def __str__(self):
         return str(self.employee_id)
@@ -105,16 +121,22 @@ class EmployeeAttendanceDetail(models.Model):
         dateTimeDifference = dateTimeOut - dateTimeIn
         return dateTimeDifference
 
-class FulldayLeave(models.Model):
+class Leave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fullday_leave_user')
-    employee_id = models.IntegerField(verbose_name=_('Employee ID'))
-    date = models.DateField(blank=True, verbose_name=_('Date'))   
-    is_approved = models.BooleanField(default=False)
-    # fullday_leave_type = models.ForeignKey('emp_leave_type', on_delete=models.CASCADE, null=True)
-    class Meta:
-        unique_together = ('user', 'date',)
-
+    startdate = models.DateField(blank=True, verbose_name=_('Start Date'))
+    enddate = models.DateField(blank=True, verbose_name=_('End Date'))
+    in_time = models.TimeField(blank=True, verbose_name=_('Time In')) 
+    out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
+    leave_type = models.IntegerField(choices=LEAVE_TYPE)
+    status = models.IntegerField(choices=LEAVE_STATUS, default=1)
+    
     def __str__(self):
         return self.user.username
+
+class LeaveDetails(models.Model):
+    leave = models.ForeignKey(Leave, on_delete=models.CASCADE, related_name='leavedetails')
+    reason = models.TextField(null=True)
+    status = models.IntegerField(choices=LEAVE_STATUS, default=1)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='leave_detail_created_by')
 
     
