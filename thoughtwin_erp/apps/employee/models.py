@@ -13,10 +13,10 @@ for r in range(2019, (datetime.datetime.now().year+10)):
    LEAVE_CHOICES.append((r,r))
 
 EMP_LEAVE_TYPE = (
-    (1, 'default'),
-    (2, 'request by employee'),
-    (3, 'accept'),
-    (4, 'reject'),
+    (1, 'Default'),
+    (2, 'Request By Employee'),
+    (3, 'Accepted'),
+    (4, 'Rejected'),
     )
 
 ROLE_CHOICES = ( 

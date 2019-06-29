@@ -5,7 +5,7 @@
     
     <h2>Welcome : {{ user.username }}</h2> 
 
-    <p>username  :{{ user.username }}</p>
+    <p>Username  :{{ user.username }}</p>
     <p>First name:{{ user.first_name }}</p>
     <p>Last name :{{ user.last_name }}</p>
     <p>Email     :{{ user.email }}</p>
@@ -14,5 +14,5 @@
     <p>Contact :{{ user.profile.contact_no }}</p>
     <p>DOB :{{ user.profile.date_of_birth }}</p>
     <p>DOJ :{{ user.profile.date_of_joining}}</p>
-    <p>Alloted Leaves :{{ user.profile.get_leave }}</p>
+    <p>Alloted Leaves : {% if user.profile.get_leave %} {{ user.profile.get_leave }}{% else %}N/A{% endif %}</p>
 {% endblock %}

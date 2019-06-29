@@ -17,7 +17,7 @@ class SignUpForm(UserCreationForm):
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
         if email and User.objects.filter(email=email).exclude(username=username).exists():
-            raise forms.ValidationError(u'This Email address allready exist.')
+            raise forms.ValidationError('Email address already exist.')
         return email
 
 
@@ -25,7 +25,7 @@ class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(max_length=10)
     last_name = forms.CharField(max_length=10)
     date_of_birth = forms.DateField(input_formats=['%Y-%m-%d'])
-    date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])
+    date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])    
     class Meta:
         model = Profile
         fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name')
@@ -41,6 +41,7 @@ class ProfileForm(forms.ModelForm):
             # self.fields['employee_id'].widget.attrs['readonly'] = True
             self.fields['first_name'].initial = instance.user.first_name
             self.fields['last_name'].initial = instance.user.last_name
+
 
 class AllottedLeavesForm(forms.ModelForm):
 
