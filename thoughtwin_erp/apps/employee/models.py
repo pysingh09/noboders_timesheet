@@ -24,11 +24,16 @@ LEAVE_TYPE = (
     (3, 'full day'),
     )
 
-EMP_LEAVE_TYPE = (
+EMPATT_LEAVE_STATUS = (
     (1, 'default'),
     (2, 'request by employee'),
     (3, 'accept'),
     (4, 'reject'),
+
+    (5, 'pending'),
+    (6, 'accept'),
+    (7, 'reject'),
+
     )
 
 ROLE_CHOICES = ( 
@@ -75,7 +80,7 @@ class EmployeeAttendance(BaseModel):
     employee_id = models.IntegerField(verbose_name=_('Employee ID'))
     date = models.DateField(blank=True, verbose_name=_('Date'))
     leave_type = models.IntegerField(choices=LEAVE_TYPE, default=1)
-    emp_leave_type = models.IntegerField(choices=EMP_LEAVE_TYPE, default=1)
+    empatt_leave_status = models.IntegerField(choices=EMPATT_LEAVE_STATUS, default=1)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True , related_name='attendance_created_by')
 
     class Meta:
@@ -123,10 +128,10 @@ class EmployeeAttendanceDetail(models.Model):
 
 class Leave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fullday_leave_user')
-    startdate = models.DateField(blank=True, verbose_name=_('Start Date'))
-    enddate = models.DateField(blank=True, verbose_name=_('End Date'))
-    in_time = models.TimeField(blank=True, verbose_name=_('Time In')) 
-    out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
+    startdate = models.DateField(verbose_name=_('Start Date'))
+    enddate = models.DateField(verbose_name=_('End Date'))
+    starttime = models.TimeField(null=True,blank=True, verbose_name=_('Time In')) 
+    endtime = models.TimeField(null=True,blank=True, verbose_name=_('Time Out'))
     leave_type = models.IntegerField(choices=LEAVE_TYPE)
     status = models.IntegerField(choices=LEAVE_STATUS, default=1)
     

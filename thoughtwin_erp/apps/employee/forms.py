@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile,AllottedLeave
+from .models import Profile,AllottedLeave,Leave
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -47,3 +47,29 @@ class AllottedLeavesForm(forms.ModelForm):
     class Meta:
         model = AllottedLeave
         fields = ['user','year','leave']
+
+import datetime as dt
+
+HOUR_CHOICES = []
+for x in range(1,24):
+    y=x
+    fmt = 'AM'
+    if x == 12:
+        fmt = 'PM' 
+    if x >= 13:
+       y = x-12
+       fmt = 'PM' 
+    x = str(x)
+    y = str(y)
+    # import pdb; pdb.set_trace()
+    HOUR_CHOICES.append((x+':00',y+':00 '+fmt))
+    HOUR_CHOICES.append((x+':30',y+':30 '+fmt))
+
+class LeaveCreateForm(forms.ModelForm):
+    leave_type = forms.ChoiceField(choices=[('', '----'),(2, 'half day'),(3, 'full day'),])
+    reason = forms.CharField(required=False,widget=forms.Textarea(attrs={'rows':4}))
+    starttime = forms.ChoiceField(required=False,choices=HOUR_CHOICES)
+    endtime = forms.ChoiceField(required=False,choices=HOUR_CHOICES)
+    class Meta:
+        model = Leave
+        fields = ('startdate','enddate')

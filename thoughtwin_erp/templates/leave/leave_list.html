@@ -1,44 +1,47 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <h2>Company Employee Details</h2>
+    <h3>Leaves</h3>
     <div class="search-container">
      <table class = "table" id="myTable1" border="2">
         <thead>
           <tr>
-          
-            <th>user</th>
-            <th>Date</th>
-            <th>total working hour</th>
-            <th>Leave Request</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>cc</th>
           </tr>
         </thead>
             <tbody>
                 {% for leave in object_list %}
                   <tr>    
-                    <td>{{ leave.user }}</td>
-                    <td>{{ leave.date }}</td>
-                    <td>{{ leave.date_time_diffrence }}</td>
-                  
-                  
+                    <td>{{ leave.startdate }}</td>
+                    <td>{{ leave.enddate }}</td>
+                    <td>{{ leave.starttime }}</td>
+                    <td>{{ leave.endtime }}</td>
+                    <td>{{ leave.get_leave_type_display }}</td>
+                    <td>{{ leave.get_status_display }}</td>
                     <td>
-                     {% if leave.empatt_leave_status != 3  %}
-                      <button class="leave btn btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}"data-leave_type="3">Approve</button>
+                        {{ leave.get_status_display }}
+                        {% if leave.status == 5  %}
+                      <button class="leave btn btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="6">Approve</button>
+                      <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="7">Reject</button>
                      {% endif %}  
-                     {% if leave.empatt_leave_status != 4  %} 
-                     <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Reject</button>
-                    {% endif %} 
-                      
-                       {{ leave.get_empatt_leave_status_display }}
-
-                  </td>
-              
-                  </tr>
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
       </table>
     </div>
 
+{% endblock %}
+
+<!--java script -->
+{% block script %}
+{{ block.super }}
 
 <script>
     $(".leave").on('click', function (e) {
@@ -73,7 +76,5 @@
       });
 
     });
-  </script>
-
-
+  </script>    
 {% endblock %}

@@ -1,77 +1,141 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block content %}
-
-<h2>leave</h2>
-
-    <form action="" method="POST">
+<style type="text/css">
+  .errorlist{
+    color:red;
+    list-style: none;
+  }
+</style>
+    <h2>leave</h2>
+    {% if message %}
+    <div class="alert alert-danger">
+      {{ message }}
+    </div> 
+    {% endif %}
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ field.label }} : {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <form action="" method="POST"  novalidate="">
     {% csrf_token %}
     <div class="col-sm-6">
 
     <div class="form-group col-sm-12">
       <label for="sel1">Select leave type :</label>
-      <select class="form-control">
-        <option value="0">----</option>
-        <option value="fullday">Full day</option>
-        <option value="halfday">Half day</option>
-      </select>
+      {{ form.leave_type|add_class:"form-control" }}
     </div>
 
-
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-3" id="startdate">
       <label for="sel1">Start Date:</label>
-      <input type="text" name="startdate" class="form-control" id="startdate">
+      {{ form.startdate|add_class:"form-control" }}
+      
     </div>
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-3" id="starttime">
       <label for="sel1">Time:</label>
-      <input type="text" name="starttime" class="form-control" id="starttime">
+      {{ form.starttime|add_class:"form-control" }}
     </div>
 
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-3" id="enddate">
       <label for="sel1">End Date:</label>
-      <input type="text" name="enddate" class="form-control" id="enddate">
+      {{ form.enddate|add_class:"form-control" }}
     </div>
 
-
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-3" id="endtime">
       <label for="sel1">Time:</label>
-      <input type="text" name="endtime" class="form-control" id="endtime">
+      {{ form.endtime|add_class:"form-control" }}
     </div>
-  <button class="btn btn-success" id="">submit</button>
- </div> <!--end of col sm 6-->
-    </form>
+
+    <div class="form-group col-sm-12" id="reason">
+      <label for="sel1">Reason:</label>
+      {{ form.reason|add_class:"form-control" }}
+    </div>
+    <div class="form-group col-sm-12">
+      <button class="btn btn-success" id="">submit</button>
+    </div>  
+  </div> <!--end of col sm 6-->
+  </form>
 {% endblock %}
 
 <!--java script -->
 {% block script %}
 {{ block.super }}
+  <script type="text/javascript">
+    $(function(){
+      // $('#startdate').hide();
+      // $('#enddate').hide();
+      // $('#starttime').hide();
+      // $('#endtime').hide();
+      $('#reason').show();
+    $(document).on('change', '#id_leave_type', function(){
+      
+      $('#id_startdate').val("");
+      $('#id_enddate').val("");
+      $('#id_starttime').val("");
+      $('#id_endtime').val("");
+
+      $('#startdate').hide();
+      $('#enddate').hide();
+      $('#starttime').hide();
+      $('#endtime').hide();
+      $('#reason').show();
+
+      if (this.value == "3")
+      {
+        $('#startdate').show();
+        $('#enddate').show();
+      }else if (this.value == "2")
+      {
+        $('#startdate').show();
+        $('#enddate').show();
+        $('#starttime').show();
+        $('#endtime').show();
+      }
+    })
+  });
+
+  </script>
     <script type="text/javascript">
       $( function() {
-        $( "#startdate" ).datepicker({ 
+        $( "#id_startdate" ).datepicker({ 
             dateFormat: 'yy-mm-dd',
               beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
 
             minDate: 0, 
             onSelect: function(date) {
-               $("#enddate").datepicker('option', 'minDate', date);
+               $("#id_enddate").datepicker('option', 'minDate', date);
+               if($('#id_leave_type').val() == '2')
+                 {
+                  $("#id_enddate").val($("#id_startdate").val());
+                 }
              }
 
         });
 
-        $( "#enddate" ).datepicker({ 
+        $( "#id_enddate" ).datepicker({ 
             dateFormat: 'yy-mm-dd',
               beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
-            // minDate: 0,
+            minDate: 0,
+            onSelect: function(date) {
+               if($('#id_leave_type').val() == '2')
+                 {
+                  $("#id_startdate").val($("#id_enddate").val());
+                 }
+             }
+
         });
 
-        $( "#starttime" ).timepicker({ 
-            timeFormat: 'h:mm p',
-        });
-
-        $( "#endtime" ).timepicker({ 
-            timeFormat: 'h:mm p',
-        });
-        
-      } );
+      });
     </script>
 
 {% endblock %}

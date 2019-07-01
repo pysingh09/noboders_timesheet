@@ -6,8 +6,8 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm
+from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -22,6 +22,9 @@ import datetime as only_datetime
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.dateparse import parse_date
+from django.urls import reverse, reverse_lazy
+# permission
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 def login_view(request):
     if not request.user.is_authenticated:
@@ -261,6 +264,7 @@ def leave_status(request): # reject/accept leave hour
     employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
     employee_attendance.emp_leave_type = request.POST.get("leave_type")
     employee_attendance.save()
+    message = "dummy"
     if employee_attendance.emp_leave_type == '3':
         message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
     if employee_attendance.emp_leave_type == '4':
@@ -281,25 +285,76 @@ def delete_record(request):
     return JsonResponse({'status': 'success'})
 
 
-class RequestLeaveView(View):
-    def get(self, request):
-        try:
-            template_name = "request_leave.html"
-            return render(request,template_name)
-        except Exception as e:
-            pass    
+# class RequestLeaveView(View):
+#     def get(self, request):
+#         try:
+#             template_name = "request_leave.html"
+#             return render(request,template_name)
+#         except Exception as e:
+#             pass    
     
-    def post(self, request):
+#     def post(self, request):
+#         try:
+#             import pdb; pdb.set_trace()
+#         except Exception as e:
+#             pass
+
+# class RequestLeaveView(PermissionRequiredMixin,CreateView):
+class RequestLeaveView(CreateView):
+    # permission_required = ('quotes.add_quote', )
+    # raise_exception = True
+    model = Leave
+    form_class = LeaveCreateForm
+    template_name = 'request_leave.html'
+    success_url = '/leave'
+
+    def form_valid(self, form):
         try:
-            import pdb; pdb.set_trace()
-        except Exception as e:
+            form = self.form_class(data=form.data)
+            leave = form.save(commit=False)
+            if 'starttime' in form.data:
+                starttime = form.data['starttime']
+                starttime = datetime.strptime(starttime ,'%H:%M')
+
+                endtime = form.data['endtime']
+                endtime = datetime.strptime(endtime ,'%H:%M')
+                if starttime >= endtime:
+                    messages.error(self.request, 'End Time not valid')
+                    return render(self.request,"request_leave.html",{'message':'End Time not valid','form':form})
+                
+
+                starttime = starttime.strftime('%I:%M %p')
+                endtime = endtime.strftime('%I:%M %p')
+                
+
+                leave.starttime = form.data['starttime']
+                leave.endtime = form.data['endtime']
+            
+            startdate = form.data['startdate'].split('-')
+            enddate = form.data['enddate'].split('-')
+            d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2]))  # start date
+            d2 = date(int(enddate[0]),int(enddate[1]),int(enddate[2]))  # start date
+            delta = d2 - d1
+            for i in range(delta.days + 1):
+                emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5)
+
+            leave.leave_type = form.data['leave_type']
+            leave.user = self.request.user
+            leave.save()
+            leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
+            return HttpResponseRedirect('/leave/list')
+        except Exception as e: 
             pass
 
-# def request_full_leave(request):
-#     # attendance = EmployeeAttendance.objects.all()
-#     template_name = "request_leave.html"
-#     return render(request,template_name)
- 
+class LeaveListView(ListView):
+    model = Leave
+    template_name = "leave/leave_list.html"
+    # def get_context_data(self, **kwargs):
+    #     context = super(FullLeaveListView, self).get_context_data(**kwargs)
+    #     context['object_list'] = self.model.objects.filter(emp_leave_type__in=[3,4,5])
+    #     return context
+
+
 def full_leave(request):
     try:
         if request.method == 'POST':
@@ -314,7 +369,7 @@ def full_leave(request):
             delta = end_date - start_date
             for i in range(delta.days + 1):
                 date = start_date + timedelta(days=i)
-                EmployeeAttendance.objects.update_or_create(user = user,employee_id = emp_id,date = date,emp_leave_type=emp_type)                       
+                EmployeeAttendance.objects.update_or_create(user = user,employee_id = emp_id,date = date,empatt_leave_status=emp_type)                       
         return JsonResponse({'status': 'success'})
     except Exception as e:
             messages.error(request, 'Already exist')
@@ -325,7 +380,8 @@ class FullLeaveListView(ListView):
     template_name = "fullday_leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(emp_leave_type__in=[3,4,5])
+        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[3,4,5])
         return context
+
 
     

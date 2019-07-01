@@ -2,6 +2,7 @@ import re
 from django.conf import settings
 from django.shortcuts import HttpResponseRedirect
 from django.http import HttpResponseForbidden
+from employee.models import Profile
 
 class AuthRequiredMiddleware(object):
     def __init__(self, get_response):
@@ -13,6 +14,9 @@ class AuthRequiredMiddleware(object):
     def __call__(self, request):
 
         auth_url_run = True
+
+        if request.user.is_authenticated:
+            request.profile = Profile.objects.get(user=request.user)
 
         for url in self.exceptions:
             if url.match(request.path):
