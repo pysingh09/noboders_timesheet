@@ -42,7 +42,7 @@
         </table>
       </div>
       {% if user.is_superuser  %}
-      <button class="btn btn-success delete-row" id="delrow">Delete row</button>
+      <button class="btn btn-success delete-row" id="delrow" onclick="return delrow();">Delete row</button>
        {% endif %}
     </div>
 
@@ -89,7 +89,7 @@
         
       });
     });
-    
+  
   </script>
 
 {% endblock %}

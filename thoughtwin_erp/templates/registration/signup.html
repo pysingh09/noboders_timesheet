@@ -5,26 +5,55 @@
 
 
 <form class="form-horizontal signup_form" method="POST" action="{% url 'employee:signup' %}" enctype="multipart/form-data" class="form-horizontal"> 
-<h2>Signup form</h2>
+<h2>Signup Form</h2>
   {% csrf_token %}
-      
-  <p>Username  :<br>{{ user_form.username }}</p>{{user_form.errors}}
-  <p>Password  :<br>{{ user_form.password1 }}</p>
-  <p>Confirm Password  :<br>{{ user_form.password2 }}</p>
-  <p>First Name:<br>{{ user_form.first_name }}</p>
-  <p>Last Name :<br>{{ user_form.last_name }}</p>
-  <p>Email     :<br>{{ user_form.email }}</p>
-  <p>Employee Id :<br>{{ profile_form.employee_id }}</p>
-  <p>Contact   :<br>{{ profile_form.contact_no }}</p>
-  <p>Designation   :<br>{{ profile_form.designation }}</p>{{profile_form.errors}}
 
-  <p>NOTE : Date Format :YYYY-MM-DD</p>
-  <p>DOB       :<br>{{ profile_form.date_of_birth }}</p>
-  <p>DOJ       :<br>{{ profile_form.date_of_joining}}</p>
-  <p>Teamlead   :<br>{{ profile_form.teamlead }}</p>
+{% if user_form.errors %}
+       {% for field in user_form %}
+           {% for error in field.errors %}
+               <div class="alert alert-danger">
+                   <strong>{{ field.label }} : {{ error|escape }}</strong>
+               </div>
+           {% endfor %}
+       {% endfor %}
+       {% for error in user_form.non_field_errors %}
+           <div class="alert alert-danger">
+               <strong>{{ error|escape }}</strong>
+           </div>
+       {% endfor %}
+   {% endif %}
+
+{% if profile_form.errors %}
+       {% for field in profile_form %}
+           {% for error in field.errors %}
+               <div class="alert alert-danger">
+                   <strong>{{ field.label }} : {{ error|escape }}</strong>
+               </div>
+           {% endfor %}
+       {% endfor %}
+       {% for error in profile_form.non_field_errors %}
+           <div class="alert alert-danger">
+               <strong>{{ error|escape }}</strong>
+           </div>
+       {% endfor %}
+   {% endif %}
+
+    <p>Username  :<br>{{ user_form.username }}</p>
+    <p>Password  :<br>{{ user_form.password1 }}</p>
+    <p>Confirm Password  :<br>{{ user_form.password2 }}</p>
+    <p>First Name:<br>{{ user_form.first_name }}</p>
+    <p>Last Name :<br>{{ user_form.last_name }}</p>
+    <p>Email     :<br>{{ user_form.email }}</p>
+    <p>Employee Id :<br>{{ profile_form.employee_id }}</p>
+    <p>Contact   :<br>{{ profile_form.contact_no }}</p>
+    <p>Designation   :<br>{{ profile_form.designation }}</p>
+    <p>NOTE : Date Format :YYYY-MM-DD</p>
+    <p>DOB       :<br>{{ profile_form.date_of_birth }}</p>
+    <p>DOJ       :<br>{{ profile_form.date_of_joining}}</p>
+    <p>Team Lead   :<br>{{ profile_form.teamlead }}</p>
 
 
-      <button type="submit" class="btn btn-success sub_btn">Submit</button>
+      <button type="submit" class="btn btn-success sub_btn" id = "phonenumber">Submit</button>
 </form>
 
 
@@ -41,5 +70,30 @@
           dateFormat: 'yy-mm-dd'
         });
     });
+
 </script>
+<script>
+
+$(document).ready(function(){
+    $("#phonenumber").click(function(e){
+    
+   
+    phone = $('#id_contact_no').val();
+    // phone = phone.replace(/[^0-9]/g,'');
+    if (isNaN(phone))
+    {
+        alert('Invalid Phone Number');
+        location.reload();
+        $('#phonenumber').val('');
+        $('#phonenumber').focus();
+    }
+    });
+    });
+
+ 
+
+
+ </script> 
+
+
 {% endblock %} 

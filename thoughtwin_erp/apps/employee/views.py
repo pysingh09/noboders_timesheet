@@ -78,6 +78,11 @@ class EmployeeProfile(TemplateView):
 class EmployeeListView(ListView):
     model = Profile
     template_name = "employee_list.html"
+    ordering = ['-id']
+    # def get_context_data(self, **kwargs):
+    #    context = super(EmployeeListView, self).get_context_data(**kwargs)
+    #    context['object_list'] = self.model.objects.all().order_by('-id')
+    #    return context
 
 class ListOfProfile(View):
     template_name = "profile.html"
@@ -140,41 +145,46 @@ def deactivate_user(request,pk):
 
 @permission_required('admin.con_add_log_entry')
 def file_upload(request):
-    template = 'file_upload.html'
-    prompt= {
-             'order' : 'order of csv should be employee_no, in_time, out_time, date'
-    }
-    if request.method == 'GET':
-        return render(request,template,prompt)
-    csv_file = request.FILES["csv_file"]
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request,'this is not csv file')
+    try:
+            template = 'file_upload.html'
+            prompt= {
+                     'order' : 'order of csv should be employee_no, in_time, out_time, date'
+            }
+            if request.method == 'GET':
+                return render(request,template,prompt)
+            csv_file = request.FILES["csv_file"]
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request,'This is not csv file')
 
-    file_data = csv_file.read().decode("utf-8")
-    io_string =io.StringIO(file_data)
-    next(io_string)
-    for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-        profile = Profile.objects.get(employee_id=column[0])   
-        in_time = datetime.strptime(column[1] ,'%I:%M%p')
-        out_time = datetime.strptime(column[2] ,'%I:%M%p')
+            file_data = csv_file.read().decode("utf-8")
+            io_string =io.StringIO(file_data)
+            next(io_string)
+            import pdb; pdb.set_trace()
+            for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+                profile = Profile.objects.get(employee_id=column[0])   
+                in_time = datetime.strptime(column[1] ,'%I:%M%p')
+                out_time = datetime.strptime(column[2] ,'%I:%M%p')
 
-        emp, created = EmployeeAttendance.objects.update_or_create(
-            user=profile.user,
-            employee_id = column[0],
-            date = column[3],
-            created_by=request.user
-        )
+                emp, created = EmployeeAttendance.objects.update_or_create(
+                    user=profile.user,
+                    employee_id = column[0],
+                    date = column[3],
+                    created_by=request.user
+                )
 
-        if emp:
-            detail = EmployeeAttendanceDetail.objects.update_or_create(
-            employee_attendance=emp,
-            in_time = in_time,
-            out_time = out_time,
-        )
-    messages.success(request, ' file Successfully Uploaded.')
-   
-    return render(request,template)
+                if emp:
+                    detail = EmployeeAttendanceDetail.objects.update_or_create(
+                    employee_attendance=emp,
+                    in_time = in_time,
+                    out_time = out_time,
+                )
+            messages.success(request, ' file Successfully Uploaded.')
+           
+            return render(request,template)
+    except:
 
+            messages.success(request, ' File Upload Failed')
+            return render(request,template)
 
 def home(request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)

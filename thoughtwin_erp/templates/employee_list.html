@@ -6,6 +6,7 @@
     <div class="search-container">
      <table class = "table" id="myTable1" border="2">
         <thead>
+         
           <tr>
             <th>Calendar</th>
             <th>Username</th>
@@ -15,11 +16,12 @@
             <th>Contact</th>
             <th>Designation</th>
             <th>Date Of Birth</th>
-            <th>Date Of joining</th>
-            <th>Teamlead</th>
+            <th>Date Of Joining</th>
+            <th>Team Lead</th>
             <th>Edit</th>
             <th>Action</th>
           </tr>
+      
         </thead>
         <tbody>
             {% for profile in object_list %}
@@ -52,3 +54,4 @@
   <script src="{% static 'js/data.js' %}"></script>
 {% endblock js %}
 {% endblock %}
+

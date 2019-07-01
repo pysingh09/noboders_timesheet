@@ -13,28 +13,26 @@ for r in range(2019, (datetime.datetime.now().year+10)):
    LEAVE_CHOICES.append((r,r))
 
 LEAVE_STATUS = (
-    (1, 'pending'),
-    (2, 'reject'),
-    (3, 'accept'),
+    (1, 'Pending'),
+    (2, 'Peject'),
+    (3, 'Accept'),
     )
 
 LEAVE_TYPE = (
-    (1, 'default'),
-    (2, 'half day'),
-    (3, 'full day'),
+    (1, 'Default'),
+    (2, 'Half day'),
+    (3, 'Full day'),
     )
 
 EMPATT_LEAVE_STATUS = (
-    (1, 'default'),
-    (2, 'request by employee'),
-    (3, 'accept'),
-    (4, 'reject'),
+    (1, 'Default'),
+    (2, 'Request by employee'),
+    (3, 'Accept'),
+    (4, 'Reject'),
 
-    (5, 'pending'),
-    (6, 'accept'),
-    (7, 'reject'),
-
-    )
+    (5, 'Pending'),
+    (6, 'Accept'),
+    (7, 'Reject'),
 
 ROLE_CHOICES = ( 
     (1, ('MD')),

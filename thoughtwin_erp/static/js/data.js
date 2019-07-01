@@ -1,5 +1,11 @@
-$(document).ready( function (){
-  $('#myTable1').DataTable();
+$(document).ready(function(){
+  $('#myTable1').DataTable({
+    // "paging": false,
+    //  "lengthChange": true, // for show length change
+    // "paging": false,  // for paging length
+
+    
+  });
 });
     
 $(document).ready(function(){
@@ -29,29 +35,51 @@ $(document).ready(function(){
 
 let csvRecoredArr =[];
 $(document).on("click","#checkall",function(){
+
    var checked = $(this).prop('checked');
-   $('.mychkboxs').find('input:checkbox').prop('checked', checked);
+
+   if( checked == true){
+     $('.mychkboxs').find('input:checkbox').prop('checked', checked);
+   }
+     else if(checked == false){
+              
+                alert("Checkbox is unchecked.");
+              }
+
 });
 
-$(document).on("click","#delrow",function(){
-    $(".mychkboxs input[type=checkbox]:checked").each(function () {
-        csvRecoredArr.push($(this).val())
-      });
-      let pk = csvRecoredArr;
-      $.ajax({
-      'url': '/delete_record/',
-      'type': "post",
-      'dataType': 'json',
-      'data': {
-          'data': pk,
-          'csrfmiddlewaretoken': '{{ csrf_token }}',
-       },
-       success: function(response) {
-           if(response.status=="success"){
-               alert("Are you sure you want to Deleted selected records?")
-               location.reload();
-               }
 
-           }
-       })
-   });
+    function delrow() {
+     
+        if (!$("input:checkbox").is(":checked"))  {
+            alert("Please tick checkbox if you want to delete");
+            location.reload();
+            return false;
+        }
+        else($(".mychkboxs input[type=checkbox]:checked")).each(function () {
+            csvRecoredArr.push($(this).val())
+          });
+      
+           var confirmbox = confirm("Are you sure you want to Deleted selected records?")
+           if (confirmbox == true)// confirm box
+           {
+              let pk = csvRecoredArr;
+              $.ajax({
+              'url': '/delete_record/',
+              'type': "post",
+              'dataType': 'json',
+              'data': {
+                  'data': pk,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+               },
+               success: function(response) {
+                   if(response.status=="success"){
+                       location.reload();
+                      }
+
+                   }
+               })
+            }//end of conform box
+            
+    }
+

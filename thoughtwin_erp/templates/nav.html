@@ -29,9 +29,9 @@
           {% if user.is_superuser  %}
           <li><a href="{% url 'employee:leave_list' %}">Leave List</a></li>
           <li><a href="{% url 'employee:fullday_list' %}">Fullday Leave List</a></li>
-          <li><a href="{% url 'employee:leaves' %}">Add Leave bank</a></li>
+          <li><a href="{% url 'employee:leaves' %}">Add Leave Bank</a></li>
           {% endif %}
-          <li><a href="{% url 'employee:attendence-request-list' %}">Request for Leave</a></li>
+          <li><a href="{% url 'employee:attendence-request-list' %}">Request For Leave</a></li>
            <li><a href="{% url 'employee:request-full-leave' %}">Leave Request</a></li>
         </ul>
         </li>
@@ -43,7 +43,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'employee:profile' %}">Profile</a></li>
-            <li> <a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+            <li> <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
           </ul>
         </li>
       </ul>

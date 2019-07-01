@@ -46,11 +46,21 @@
           </tbody>
         </table>
 <script>
-    
-      var leaveRequestArr =[];
-       
 
-              $(document).on("click","#checkrow",function(e){
+
+
+            var leaveRequestArr =[];
+
+    function checkrow() {
+     if (!$("input:checkbox").is(":checked"))  {
+            debugger
+            alert("Please tick checkbox if you want to send leave request");
+            location.reload();
+            return false;
+              }
+             
+              else($(document)).on("click","#checkrow",function(e){
+                  debugger
                   e.preventDefault();
                   $(".chkboxs:checked").each(function () {
                     leaveRequestArr.push($(this).val());
@@ -70,11 +80,14 @@
                             }
 
                         }                    
-                     
-       })
-   });
-      
+                                                       
+                       
+                    });
+
+                  }) 
+          } 
+
 </script>
-<button class="btn btn-success delete-row" id="checkrow">submit</button>
+<button class="btn btn-success delete-row" id="checkrow" onclick="return checkrow();">submit</button>
 
 {% endblock %}
