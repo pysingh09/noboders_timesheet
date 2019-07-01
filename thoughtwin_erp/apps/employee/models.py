@@ -14,8 +14,8 @@ for r in range(2019, (datetime.datetime.now().year+10)):
 
 LEAVE_STATUS = (
     (1, 'Pending'),
-    (2, 'Peject'),
-    (3, 'Accept'),
+    (2, 'Accept'),
+    (3, 'Reject'),
     )
 
 LEAVE_TYPE = (
@@ -33,6 +33,7 @@ EMPATT_LEAVE_STATUS = (
     (5, 'Pending'),
     (6, 'Accept'),
     (7, 'Reject'),
+    )
 
 ROLE_CHOICES = ( 
     (1, ('MD')),

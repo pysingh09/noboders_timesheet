@@ -352,9 +352,28 @@ class RequestLeaveView(CreateView):
             leave.user = self.request.user
             leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
+            
+            import pdb; pdb.set_trace()
+            # send mail code
+            emails = self.request.POST.get('emails')
+            user_name =  self.request.user.email
+
+            frm = 'ankita@thoughtwin.com'
+            message = "dummy"
+            email = EmailMessage("Leave Response",message,frm,to=["emails"])
+            email.send()
             return HttpResponseRedirect('/leave/list')
         except Exception as e: 
             pass
+
+    def get_context_data(self, **kwargs):
+        context = super(RequestLeaveView, self).get_context_data(**kwargs)
+        context['object_list'] = self.model.objects.all()
+        email_data = []
+        for user in User.objects.all():
+            email_data.append(user.email)
+        context['emails'] = email_data
+        return context
 
 class LeaveListView(ListView):
     model = Leave

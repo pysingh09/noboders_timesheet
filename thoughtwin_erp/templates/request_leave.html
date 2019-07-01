@@ -60,17 +60,65 @@
       <label for="sel1">Reason:</label>
       {{ form.reason|add_class:"form-control" }}
     </div>
-    <div class="form-group col-sm-12">
-      <button class="btn btn-success" id="">submit</button>
+    
+    <input type="hidden" id="emails" value="" name="emails">
+    <div class="form-group col-sm-12" id="selectemail">
+      
+    </div> <!-- get email id-->
+
+    <div >
+      <button class="btn btn-success" data-id="selectemail">submit</button>
     </div>  
+  
+
+
   </div> <!--end of col sm 6-->
+  
+
+  
   </form>
+  
+  {% for em in emails %}
+  <button class="emailtext btn btn-primary">{{ em }}</button>
+  {% endfor %}
+  
+
 {% endblock %}
 
 <!--java script -->
 {% block script %}
 {{ block.super }}
   <script type="text/javascript">
+    function add_email(){
+      $("#emails").val("");
+      var emails = $('#selectemail').children();
+      var email = ""; 
+       for(i=0;i<emails.length;i++)
+       {
+          
+          if (i != (emails.length-1)){
+            email+= $(emails[i]).text()+",";
+          }
+          else
+          {
+            email+= $(emails[i]).text();
+          }
+
+          
+       }
+       $("#emails").val(email);
+
+    }
+
+    $(document).on('click', '.removeemailtext', function(){
+      $(this).remove();
+      add_email();
+    });
+
+    $(document).on('click', '.emailtext', function(){
+      $("#selectemail").append('<div class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
+      add_email();
+    });
     $(function(){
       // $('#startdate').hide();
       // $('#enddate').hide();
@@ -137,5 +185,6 @@
 
       });
     </script>
+
 
 {% endblock %}
