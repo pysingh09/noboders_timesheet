@@ -159,7 +159,7 @@ def file_upload(request):
             file_data = csv_file.read().decode("utf-8")
             io_string =io.StringIO(file_data)
             next(io_string)
-            import pdb; pdb.set_trace()
+          
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
                 profile = Profile.objects.get(employee_id=column[0])   
                 in_time = datetime.strptime(column[1] ,'%I:%M%p')
@@ -255,7 +255,7 @@ class LeaveListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(LeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(emp_leave_type__in=[2,3,4])
+        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4])
        
 
         return context
@@ -352,15 +352,17 @@ class RequestLeaveView(CreateView):
             leave.user = self.request.user
             leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
-            
-            import pdb; pdb.set_trace()
-            # send mail code
-            emails = self.request.POST.get('emails')
-            user_name =  self.request.user.email
 
+
+            content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
+            text_content = strip_tags(content)
+            
+
+            emails = self.request.POST.get('emails').split(',')
             frm = 'ankita@thoughtwin.com'
-            message = "dummy"
-            email = EmailMessage("Leave Response",message,frm,to=["emails"])
+            user_name =  self.request.user.email
+        
+            email = EmailMessage("Leave Request",text_content,frm,to=emails)
             email.send()
             return HttpResponseRedirect('/leave/list')
         except Exception as e: 
@@ -375,7 +377,7 @@ class RequestLeaveView(CreateView):
         context['emails'] = email_data
         return context
 
-class LeaveListView(ListView):
+class EmpLeaveListView(ListView):
     model = Leave
     template_name = "leave/leave_list.html"
     # def get_context_data(self, **kwargs):
@@ -403,6 +405,25 @@ def full_leave(request):
     except Exception as e:
             messages.error(request, 'Already exist')
             return render(request,'fullday_leave_list.html',)
+
+def full_leave_status(request):
+    if request.method == 'POST':
+        leave_id =request.POST.get("leave_id")
+        leave_status = request.POST.get("leave_status")
+
+        employee_attendance = Leave.objects.get(id=leave_id)
+        employee_attendance.status = request.POST.get("leave_status")
+        employee_attendance.save()
+        if employee_attendance.status == '2':
+            message = employee_attendance.user.username +",Leave accept by "+request.user.username
+        if employee_attendance.status == '3':
+            message = employee_attendance.user.username +",Leave reject by "+request.user.username
+
+        frm = 'ankita@thoughtwin.com'
+        email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com"])
+        email.send()
+    return JsonResponse({'status': 'success'})
+
 
 class FullLeaveListView(ListView):
     model = EmployeeAttendance

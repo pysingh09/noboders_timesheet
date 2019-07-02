@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
     <h3>Leaves</h3>
     <div class="search-container">
      <table class = "table" id="myTable1" border="2">
@@ -12,7 +13,7 @@
             <th>End Time</th>
             <th>Type</th>
             <th>Status</th>
-            <th>cc</th>
+            <th>Leave Request</th>
           </tr>
         </thead>
             <tbody>
@@ -25,11 +26,12 @@
                     <td>{{ leave.get_leave_type_display }}</td>
                     <td>{{ leave.get_status_display }}</td>
                     <td>
-                        {{ leave.get_status_display }}
-                        {% if leave.status == 5  %}
-                      <button class="leave btn btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="6">Approve</button>
-                      <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="7">Reject</button>
-                     {% endif %}  
+                    {% if leave.status != 2  %}  
+                    <button type="button btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="2" class="leave btn btn-success">Approve</button>
+                    {% endif %}  
+                     {% if leave.status != 3  %} 
+                    <button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="3" class="leave btn btn-danger">Reject</button>
+                    {% endif %} 
                     </td>
                 </tr>
                 {% endfor %}
@@ -47,21 +49,20 @@
     $(".leave").on('click', function (e) {
       e.preventDefault();
       var leave_id = $(this).data("leave-id");
-      // debugger
-      var leave_type = $(this).data("leave_type");
+      var leave_status = $(this).data("leave_status");
       var leave_user = $(this).data("leave-user");
       $.ajax({
-        url: "{% url "employee:approved_leave" %}",
+        url: "{% url "employee:full-leave-status" %}",
         'type': "POST",
         data: {
           'leave_id': leave_id,
-          'leave_type':leave_type,
+          'leave_status':leave_status,
           'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
       success: function(response) {
            
             if(response.status=="success"){
-              if(leave_type==3){
+              if(status==2){
                 alert("Accept leave request for "+leave_user)
                 location.reload();
                 }

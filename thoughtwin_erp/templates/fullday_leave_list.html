@@ -20,14 +20,14 @@
                     
                   
                     <td>
-                     {% if leave.emp_leave_type != 3  %}
+                     {% if leave.empatt_leave_status != 3  %}
                       <button class="leave btn btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}"data-leave_type="3">Approve</button>
                      {% endif %}  
-                     {% if leave.emp_leave_type != 4  %} 
+                     {% if leave.empatt_leave_status != 4  %} 
                      <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Reject</button>
                     {% endif %} 
                       
-                       {{ leave.get_emp_leave_type_display }}
+                       {{ leave.get_empatt_leave_status_display }}
 
                   </td>
               
@@ -41,12 +41,12 @@
 <script>
     $(".leave").on('click', function (e) {
       e.preventDefault();
+      debugger
       var leave_id = $(this).data("leave-id");
-      // debugger
       var leave_type = $(this).data("leave_type");
       var leave_user = $(this).data("leave-user");
       $.ajax({
-        url: "{% url "employee:approved_leave" %}",
+        url: "{% url "employee:fullday-list" %}",
         'type': "POST",
         data: {
           'leave_id': leave_id,

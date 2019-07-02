@@ -29,10 +29,10 @@ urlpatterns = [
     path('', index, name='index'),
     path('dashboard', EmployeeProfile.as_view(), name='profile'),
     path('leave/status', leave_status, name='approved_leave' ),
-    
+    path('full/leave/status', full_leave_status , name='full-leave-status' ),
     path('leave', RequestLeaveView.as_view(), name='request-full-leave' ),
-    path('leave/list',LeaveListView.as_view(), name = 'leave-list'),
+    path('leave/list',EmpLeaveListView.as_view(), name = 'leave-list'),
     # path('fullday/leave', fullcalendar,name = 'fullcalendar' ),
     # path('full/leave/', full_leave),
-    path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday_list'),
+    path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
 ]

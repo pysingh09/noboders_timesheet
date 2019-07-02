@@ -62,17 +62,15 @@
     </div>
     
     <input type="hidden" id="emails" value="" name="emails">
-    <div class="form-group col-sm-12" id="selectemail">
-      
-    </div> <!-- get email id-->
+    <div class="form-group col-sm-12" id="selectemail"></div> <!-- get email id-->
 
     <div >
       <button class="btn btn-success" data-id="selectemail">submit</button>
     </div>  
   
-
-
   </div> <!--end of col sm 6-->
+
+
   
 
   
@@ -90,23 +88,19 @@
 {{ block.super }}
   <script type="text/javascript">
     function add_email(){
-      $("#emails").val("");
+      $("#emails").val();
       var emails = $('#selectemail').children();
-      var email = ""; 
+      var email = [] ;
+
        for(i=0;i<emails.length;i++)
-       {
-          
-          if (i != (emails.length-1)){
-            email+= $(emails[i]).text()+",";
-          }
-          else
           {
-            email+= $(emails[i]).text();
+
+            email.push($(emails[i]).text()+'');
+   
           }
 
-          
-       }
-       $("#emails").val(email);
+
+        $("#emails").val(email);
 
     }
 

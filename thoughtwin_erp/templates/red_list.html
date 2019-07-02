@@ -33,13 +33,15 @@
                 
                 <td><p>{{ attendance.date_time_diffrence }}</p></td> 
               
-                <td>
-                  {% if attendance.emp_leave_type == 1 %}
+                
+                 <td> 
+                  {% if attendance.empatt_leave_status == 1 %}
                   <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}">
                   {% endif %}
-                </td>
+                 </td>
+                
                 <td>
-                 {{ attendance.get_emp_leave_type_display }}
+                 {{ attendance.get_empatt_leave_status_display }}
                 </td>
               </tr>
             {% endfor %}
@@ -49,18 +51,18 @@
 
 
 
-            var leaveRequestArr =[];
 
     function checkrow() {
+    var leaveRequestArr =[];
      if (!$("input:checkbox").is(":checked"))  {
-            debugger
+        
             alert("Please tick checkbox if you want to send leave request");
             location.reload();
             return false;
               }
              
               else($(document)).on("click","#checkrow",function(e){
-                  debugger
+                 
                   e.preventDefault();
                   $(".chkboxs:checked").each(function () {
                     leaveRequestArr.push($(this).val());
