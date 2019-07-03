@@ -153,13 +153,12 @@ def file_upload(request):
             if request.method == 'GET':
                 return render(request,template,prompt)
             csv_file = request.FILES["csv_file"]
-            if not csv_file.name.endswith('.csv'):
-                messages.error(request,'This is not csv file')
+            # if not csv_file.name.endswith('.csv'):
+            #     messages.error(request,'This is not csv file')
 
             file_data = csv_file.read().decode("utf-8")
             io_string =io.StringIO(file_data)
             next(io_string)
-          
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
                 profile = Profile.objects.get(employee_id=column[0])   
                 in_time = datetime.strptime(column[1] ,'%I:%M%p')
@@ -178,7 +177,8 @@ def file_upload(request):
                     in_time = in_time,
                     out_time = out_time,
                 )
-            messages.success(request, ' file Successfully Uploaded.')
+            messages.success(request, ' File Successfully Uploaded.')
+         
            
             return render(request,template)
     except:
@@ -237,7 +237,7 @@ def request_leave(request):
         date_list = request.POST.getlist('leaveRequestArr[]')
         attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list)
         for attendance in attendance_request_list:
-            attendance.emp_leave_type = 2
+            attendance.empatt_leave_status = 2
             attendance.save()
             frm = 'ankita@thoughtwin.com'
             content = render_to_string('email_content.html',{'email_user':attendance.user,'date':attendance.date})
@@ -272,12 +272,12 @@ def attendence_request_list(request):
 def leave_status(request): # reject/accept leave hour
     leave_id = request.POST.get("leave_id")
     employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
-    employee_attendance.emp_leave_type = request.POST.get("leave_type")
+    employee_attendance. empatt_leave_status = request.POST.get("leave_type")
     employee_attendance.save()
     message = "dummy"
-    if employee_attendance.emp_leave_type == '3':
+    if employee_attendance. empatt_leave_status == '3':
         message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
-    if employee_attendance.emp_leave_type == '4':
+    if employee_attendance. empatt_leave_status == '4':
         message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
 
     frm = 'ankita@thoughtwin.com'
@@ -347,7 +347,7 @@ class RequestLeaveView(CreateView):
             delta = d2 - d1
             for i in range(delta.days + 1):
                 emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5)
-
+            
             leave.leave_type = form.data['leave_type']
             leave.user = self.request.user
             leave.save()
@@ -430,7 +430,7 @@ class FullLeaveListView(ListView):
     template_name = "fullday_leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[3,4,5])
+        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4,5])
         return context
 
 

@@ -46,7 +46,7 @@
       var leave_type = $(this).data("leave_type");
       var leave_user = $(this).data("leave-user");
       $.ajax({
-        url: "{% url "employee:fullday-list" %}",
+        url: "{% url "employee:approved_leave" %}",
         'type': "POST",
         data: {
           'leave_id': leave_id,

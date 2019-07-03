@@ -7,6 +7,7 @@
      <table class = "table" id="myTable1" border="2">
         <thead>
           <tr>
+            <th>user</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Start Time</th>
@@ -18,7 +19,8 @@
         </thead>
             <tbody>
                 {% for leave in object_list %}
-                  <tr>    
+                  <tr> 
+                    <td>{{ leave.user }}</td>   
                     <td>{{ leave.startdate }}</td>
                     <td>{{ leave.enddate }}</td>
                     <td>{{ leave.starttime }}</td>
@@ -62,7 +64,7 @@
       success: function(response) {
            
             if(response.status=="success"){
-              if(status==2){
+              if(leave_status == 2){
                 alert("Accept leave request for "+leave_user)
                 location.reload();
                 }
