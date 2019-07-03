@@ -316,7 +316,7 @@ class RequestLeaveView(CreateView):
     model = Leave
     form_class = LeaveCreateForm
     template_name = 'request_leave.html'
-    success_url = '/leave'
+    success_url = '/leave/'
 
     def form_valid(self, form):
         try:
@@ -340,6 +340,7 @@ class RequestLeaveView(CreateView):
                 leave.starttime = form.data['starttime']
                 leave.endtime = form.data['endtime']
             
+            
             startdate = form.data['startdate'].split('-')
             enddate = form.data['enddate'].split('-')
             d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2]))  # start date
@@ -347,7 +348,7 @@ class RequestLeaveView(CreateView):
             delta = d2 - d1
             for i in range(delta.days + 1):
                 emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5)
-            
+
             leave.leave_type = form.data['leave_type']
             leave.user = self.request.user
             leave.save()
@@ -364,6 +365,7 @@ class RequestLeaveView(CreateView):
         
             email = EmailMessage("Leave Request",text_content,frm,to=emails)
             email.send()
+            
             return HttpResponseRedirect('/leave/list')
         except Exception as e: 
             pass
@@ -410,10 +412,14 @@ def full_leave_status(request):
     if request.method == 'POST':
         leave_id =request.POST.get("leave_id")
         leave_status = request.POST.get("leave_status")
-
+        import pdb; pdb.set_trace()
         employee_attendance = Leave.objects.get(id=leave_id)
+        employee = LeaveDetails.objects.get(id=leave_id)
         employee_attendance.status = request.POST.get("leave_status")
         employee_attendance.save()
+        employee.status = request.POST.get("leave_status")
+        employee.save()
+
         if employee_attendance.status == '2':
             message = employee_attendance.user.username +",Leave accept by "+request.user.username
         if employee_attendance.status == '3':
@@ -434,4 +440,20 @@ class FullLeaveListView(ListView):
         return context
 
 
-    
+# class RequestLeaveUpdateView(UpdateView):
+#     model = EmployeeAttendance
+#     template_name = 'request_leave.html'
+#     success_url = '/leave/'
+
+#     # import pdb; pdb.set_trace()
+#     def post(self, request, *args, **kwargs):
+#             form = self.form_class(request.POST)
+#             userdata = form.save(commit=False)
+#             if form.is_valid():
+#                 # used to set the password, but no longer necesarry
+#                 userdata.save()
+#                 employeedata = form2.save(commit=False)
+#                 employeedata.user = userdata
+#                 employeedata.save()
+#                 messages.success(self.request, 'Settings saved successfully')
+#                 return HttpResponseRedirect(self.get_success_url())
