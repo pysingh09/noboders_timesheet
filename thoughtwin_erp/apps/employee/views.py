@@ -318,7 +318,7 @@ class RequestLeaveView(CreateView):
     template_name = 'request_leave.html'
     success_url = '/leave/'
 
-    def form_valid(self, form):
+    def form_valid(self,form):
         try:
             form = self.form_class(data=form.data)
             leave = form.save(commit=False)
@@ -340,7 +340,6 @@ class RequestLeaveView(CreateView):
                 leave.starttime = form.data['starttime']
                 leave.endtime = form.data['endtime']
             
-            
             startdate = form.data['startdate'].split('-')
             enddate = form.data['enddate'].split('-')
             d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2]))  # start date
@@ -348,7 +347,6 @@ class RequestLeaveView(CreateView):
             delta = d2 - d1
             for i in range(delta.days + 1):
                 emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5)
-
             leave.leave_type = form.data['leave_type']
             leave.user = self.request.user
             leave.save()
@@ -366,9 +364,14 @@ class RequestLeaveView(CreateView):
             email = EmailMessage("Leave Request",text_content,frm,to=emails)
             email.send()
             
+           
+            # messages.success(self.request, 'successfully Leave Request Send')
             return HttpResponseRedirect('/leave/list')
-        except Exception as e: 
-            pass
+        except:
+            # pass 
+            messages.error(self.request,'Leave Request Already Send')
+            return HttpResponseRedirect('/leave')
+                
 
     def get_context_data(self, **kwargs):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
@@ -411,19 +414,32 @@ def full_leave(request):
 def full_leave_status(request):
     if request.method == 'POST':
         leave_id =request.POST.get("leave_id")
+        leave_user =request.POST.get("leave_user")
         leave_status = request.POST.get("leave_status")
-        import pdb; pdb.set_trace()
-        employee_attendance = Leave.objects.get(id=leave_id)
-        employee = LeaveDetails.objects.get(id=leave_id)
-        employee_attendance.status = request.POST.get("leave_status")
-        employee_attendance.save()
-        employee.status = request.POST.get("leave_status")
-        employee.save()
+        leave = Leave.objects.get(id=leave_id)
+        leave.status = request.POST.get("leave_status")
+        leave.save()
+        leavedetails = LeaveDetails.objects.filter(leave=leave)
+        for leavedetail in leavedetails:
+            
+            LeaveDetails.objects.create(leave=leave, status = request.POST.get("leave_status") ,reason = leavedetail.reason ,created_by=request.user)
+            
+        startdate = leave.startdate
+        enddate = leave.enddate
+        delta = enddate - startdate
+        for i in range(delta.days + 1):
+            employee_attendence = EmployeeAttendance.objects.get(user = leave.user,date = startdate + timedelta(days=i))
+            
+            if leave_status == '2':    
+                employee_attendence.empatt_leave_status = 6
+            if leave_status == '3':
+                employee_attendence.empatt_leave_status = 7
+            employee_attendence.save()
 
-        if employee_attendance.status == '2':
-            message = employee_attendance.user.username +",Leave accept by "+request.user.username
-        if employee_attendance.status == '3':
-            message = employee_attendance.user.username +",Leave reject by "+request.user.username
+        if leave.status == '2':
+            message = leave.user.username +",Leave accept by "+request.user.username
+        if leave.status == '3':
+            message = leave.user.username +",Leave reject by "+request.user.username
 
         frm = 'ankita@thoughtwin.com'
         email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com"])

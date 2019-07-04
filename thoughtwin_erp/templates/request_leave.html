@@ -7,6 +7,17 @@
     list-style: none;
   }
 </style>
+
+{% if messages %}
+    {% for error in messages %}
+               <div class="alert alert-danger">
+                   <strong>{{ error|escape }}</strong>
+               </div>
+    {% endfor %}
+{% endif %}
+
+
+
     <h2>leave</h2>
     {% if message %}
     <div class="alert alert-danger">
