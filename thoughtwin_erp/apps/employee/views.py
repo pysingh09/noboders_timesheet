@@ -26,6 +26,14 @@ from django.urls import reverse, reverse_lazy
 # permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
+
+# this is for file upload
+import xlrd
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+fs = FileSystemStorage()
+
+
 def login_view(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -146,45 +154,63 @@ def deactivate_user(request,pk):
 @permission_required('admin.con_add_log_entry')
 def file_upload(request):
     try:
-            template = 'file_upload.html'
-            prompt= {
-                     'order' : 'order of csv should be employee_no, in_time, out_time, date'
-            }
-            if request.method == 'GET':
-                return render(request,template,prompt)
-            csv_file = request.FILES["csv_file"]
-            # if not csv_file.name.endswith('.csv'):
-            #     messages.error(request,'This is not csv file')
+        template = 'file_upload.html'
+        prompt= {
+                 'order' : 'order of csv should be employee_no, in_time, out_time, date'
+        }
+        if request.method == 'GET':
+            return render(request,template,prompt)
+        
+        excel_file = request.FILES["excel_file"]
+        filename = fs.save(excel_file.name,excel_file)
+        file_url = settings.PROJECT_APPS + fs.url(filename) # project app url + filename
+        wb = xlrd.open_workbook(file_url)
+        sheet = wb.sheet_by_index(0) 
+        
+        for i in range(sheet.nrows):
+            if i == sheet.nrows-1: # row-1 
+                break
+            import pdb; pdb.set_trace()
+            name = sheet.cell_value(i+1,1)
+            
+            employee_id = sheet.cell_value(i+1,0)
+            in_time = sheet.cell_value(i+1,2)    
+            out_time = sheet.cell_value(i+1,3)
+            dat = sheet.cell_value(i+1,4).split('/')
+            # import pdb; pdb.set_trace()
 
-            file_data = csv_file.read().decode("utf-8")
-            io_string =io.StringIO(file_data)
-            next(io_string)
-            for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                profile = Profile.objects.get(employee_id=column[0])   
-                in_time = datetime.strptime(column[1] ,'%I:%M%p')
-                out_time = datetime.strptime(column[2] ,'%I:%M%p')
+            in_time = datetime.strptime(in_time ,'%H:%M')
+            out_time = datetime.strptime(out_time ,'%H:%M')
+            # if out_time !='--:--':
+            #     out_time = datetime.strptime('00:00' ,'%H:%M')
+            # else:
+            #     out_time = datetime.strptime(out_time ,'%H:%M')
 
-                emp, created = EmployeeAttendance.objects.update_or_create(
-                    user=profile.user,
-                    employee_id = column[0],
-                    date = column[3],
-                    created_by=request.user
-                )
+            profile = Profile.objects.get(employee_id=employee_id)   
+            
+            emp, created = EmployeeAttendance.objects.update_or_create(
+                user=profile.user,
+                employee_id = employee_id,
+                date = dat[2]+'-'+dat[1]+'-'+dat[0],
+                created_by=request.user
+            )
 
-                if emp:
-                    detail = EmployeeAttendanceDetail.objects.update_or_create(
-                    employee_attendance=emp,
-                    in_time = in_time,
-                    out_time = out_time,
-                )
-            messages.success(request, ' File Successfully Uploaded.')
-         
-           
-            return render(request,template)
+            if emp:
+                detail = EmployeeAttendanceDetail.objects.update_or_create(
+                employee_attendance=emp,
+                in_time = in_time,
+                out_time = out_time,
+            )
+
+
+        messages.success(request, ' File Successfully Uploaded.')
+     
+       
+        return render(request,template)
     except:
 
-            messages.success(request, ' File Upload Failed')
-            return render(request,template)
+        messages.error(request, ' File Upload Failed')
+        return render(request,template)
 
 def home(request):
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
@@ -294,21 +320,6 @@ def delete_record(request):
     empatt.delete()
     return JsonResponse({'status': 'success'})
 
-
-# class RequestLeaveView(View):
-#     def get(self, request):
-#         try:
-#             template_name = "request_leave.html"
-#             return render(request,template_name)
-#         except Exception as e:
-#             pass    
-    
-#     def post(self, request):
-#         try:
-#             import pdb; pdb.set_trace()
-#         except Exception as e:
-#             pass
-
 # class RequestLeaveView(PermissionRequiredMixin,CreateView):
 class RequestLeaveView(CreateView):
     # permission_required = ('quotes.add_quote', )
@@ -365,8 +376,8 @@ class RequestLeaveView(CreateView):
             email.send()
             
            
-            # messages.success(self.request, 'successfully Leave Request Send')
-            return HttpResponseRedirect('/leave/list')
+            messages.success(self.request, 'successfully Leave Request Send')
+            return HttpResponseRedirect('/leave')
         except:
             # pass 
             messages.error(self.request,'Leave Request Already Send')
@@ -422,8 +433,7 @@ def full_leave_status(request):
         leavedetails = LeaveDetails.objects.filter(leave=leave)
         for leavedetail in leavedetails:
             
-            LeaveDetails.objects.create(leave=leave, status = request.POST.get("leave_status") ,reason = leavedetail.reason ,created_by=request.user)
-            
+            LeaveDetails.objects.create(leave=leave, status = request.POST.get("leave_status") ,reason = leavedetail.reason ,created_by=request.user)    
         startdate = leave.startdate
         enddate = leave.enddate
         delta = enddate - startdate
@@ -454,22 +464,3 @@ class FullLeaveListView(ListView):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4,5])
         return context
-
-
-# class RequestLeaveUpdateView(UpdateView):
-#     model = EmployeeAttendance
-#     template_name = 'request_leave.html'
-#     success_url = '/leave/'
-
-#     # import pdb; pdb.set_trace()
-#     def post(self, request, *args, **kwargs):
-#             form = self.form_class(request.POST)
-#             userdata = form.save(commit=False)
-#             if form.is_valid():
-#                 # used to set the password, but no longer necesarry
-#                 userdata.save()
-#                 employeedata = form2.save(commit=False)
-#                 employeedata.user = userdata
-#                 employeedata.save()
-#                 messages.success(self.request, 'Settings saved successfully')
-#                 return HttpResponseRedirect(self.get_success_url())

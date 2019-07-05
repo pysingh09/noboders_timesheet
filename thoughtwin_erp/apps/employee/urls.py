@@ -35,5 +35,5 @@ urlpatterns = [
     # path('fullday/leave', fullcalendar,name = 'fullcalendar' ),
     # path('full/leave/', full_leave),
     path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
-    # path('fullday/list', RequestLeaveUpdateView.as_view(),),
+    # path('list', Arm.as_view()),
 ]
