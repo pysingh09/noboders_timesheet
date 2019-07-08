@@ -91,6 +91,11 @@ class EmployeeListView(ListView):
     #    context = super(EmployeeListView, self).get_context_data(**kwargs)
     #    context['object_list'] = self.model.objects.all().order_by('-id')
     #    return context
+class AllEmployeeProfile(TemplateView):
+    template_name = "employee_profile.html"
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk = kwargs['pk'])
+        return render(request,'employee_profile.html',{'employee' : user})
 
 class ListOfProfile(View):
     template_name = "profile.html"
@@ -166,25 +171,28 @@ def file_upload(request):
         file_url = settings.PROJECT_APPS + fs.url(filename) # project app url + filename
         wb = xlrd.open_workbook(file_url)
         sheet = wb.sheet_by_index(0) 
-        
         for i in range(sheet.nrows):
             if i == sheet.nrows-1: # row-1 
                 break
-            import pdb; pdb.set_trace()
             name = sheet.cell_value(i+1,1)
             
             employee_id = sheet.cell_value(i+1,0)
             in_time = sheet.cell_value(i+1,2)    
             out_time = sheet.cell_value(i+1,3)
             dat = sheet.cell_value(i+1,4).split('/')
-            # import pdb; pdb.set_trace()
+       
 
-            in_time = datetime.strptime(in_time ,'%H:%M')
-            out_time = datetime.strptime(out_time ,'%H:%M')
-            # if out_time !='--:--':
-            #     out_time = datetime.strptime('00:00' ,'%H:%M')
-            # else:
-            #     out_time = datetime.strptime(out_time ,'%H:%M')
+            # in_time = datetime.strptime(in_time ,'%H:%M')
+            # out_time = datetime.strptime(out_time ,'%H:%M')
+            if in_time =='--:--' and out_time =='--:--':
+                in_time = datetime.strptime('00:00' ,'%H:%M')
+                out_time = datetime.strptime('00:00' ,'%H:%M')
+            elif out_time =='--:--':
+                in_time = datetime.strptime(in_time ,'%H:%M')
+                out_time = datetime.strptime('23:59' ,'%H:%M')
+            else:
+                in_time = datetime.strptime(in_time ,'%H:%M')
+                out_time = datetime.strptime(out_time ,'%H:%M')
 
             profile = Profile.objects.get(employee_id=employee_id)   
             
@@ -261,15 +269,13 @@ def request_leave(request):
     import datetime
     if request.method == 'POST':
         date_list = request.POST.getlist('leaveRequestArr[]')
-        attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list)
+        attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list ,user=request.user)
         for attendance in attendance_request_list:
             attendance.empatt_leave_status = 2
             attendance.save()
             frm = 'ankita@thoughtwin.com'
-            content = render_to_string('email_content.html',{'email_user':attendance.user,'date':attendance.date})
-            text_content = strip_tags(content)
-
-            email = EmailMessage("Leave Request",text_content,frm,to=["ankita@thoughtwin.com"])
+            text_content = request.user.username+ ',Leave request send for less hours'   
+            email = EmailMessage("Leave request for less hours",text_content,frm,to=["ankita@thoughtwin.com"])
             
             email.send()   
         return JsonResponse({'status': 'success'})
@@ -307,7 +313,7 @@ def leave_status(request): # reject/accept leave hour
         message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
 
     frm = 'ankita@thoughtwin.com'
-    email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com"])
+    email = EmailMessage("Leave response for less hour",message,frm,to=["ankita@thoughtwin.com"])
     email.send()
     
     return JsonResponse({'status': 'success'})
@@ -430,6 +436,7 @@ def full_leave_status(request):
         leave = Leave.objects.get(id=leave_id)
         leave.status = request.POST.get("leave_status")
         leave.save()
+
         leavedetails = LeaveDetails.objects.filter(leave=leave)
         for leavedetail in leavedetails:
             

@@ -83,7 +83,7 @@ $(document).ready(function() {
     $(document).ready(function(){
       $(".timedetail").click(function(e){
         // e.preventDefault();
-        debugger
+      
         var attendance_id = $(this).attr('id');
         $.ajax({
            'url': "{% url "employee:date-time-attendence-view" %}",

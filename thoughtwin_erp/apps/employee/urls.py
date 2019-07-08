@@ -13,7 +13,7 @@ urlpatterns = [
     path('delete_record/', delete_record, name='delete_record'), 
     path('update/<int:pk>/', EditProfileView.as_view(), name="update"),
     path('leave/employeelist/', LeaveListView.as_view(), name='leave_list'),
-    path('profile/<int:pk>/', ListOfProfile.as_view(), name="profile_list"),
+    path('profile/<int:pk>/', AllEmployeeProfile.as_view(), name="profile_list"),
     
     path('leaves/', LeaveCreateView.as_view(), name="leaves"),
     path('update_leave/<int:pk>/', EditAllotedLeaveView.as_view(), name="update_leave"),
