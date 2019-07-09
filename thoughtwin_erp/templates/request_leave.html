@@ -75,21 +75,27 @@
     <input type="hidden" id="emails" value="" name="emails">
     <div class="form-group col-sm-12" id="selectemail"></div> <!-- get email id-->
 
-    <div >
-      <button class="btn btn-success" data-id="selectemail">Submit</button>
-    </div>  
+  <div class="col-md-12"><button class="btn btn-success" data-id="selectemail">Submit</button></div>
   
   </div> <!--end of col sm 6-->
-
-
-  
-
   
   </form>
+    
+      
   
-  {% for em in emails %}
-  <button class="emailtext btn btn-primary">{{ em }}</button>
-  {% endfor %}
+<div class = "btn-group">
+   
+   <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown"><span class = "caret"></span>Select Email Option</button>
+     
+      <ul class = "dropdown-menu" role = "menu">
+          {% for em in emails %}    
+          <li><a class="emailtext" id="demo">{{ em }}</a></li>
+          {% endfor %}
+      
+      </ul>
+</div>
+
+
   
 
 {% endblock %}
@@ -116,11 +122,13 @@
     }
 
     $(document).on('click', '.removeemailtext', function(){
+      $('.dropdown-menu').append('<li><a class="emailtext" id="demo">'+$(this).text()+'</a></li>');
       $(this).remove();
       add_email();
     });
 
     $(document).on('click', '.emailtext', function(){
+      $(this).remove();
       $("#selectemail").append('<div class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
       add_email();
     });
@@ -191,5 +199,23 @@
       });
     </script>
 
+<script>
+
+// $(document).on("click","#demo",function(){
+//    debugger  
+//    var checked = $(this).prop('click');
+
+//    if( checked == true){
+ 
+//      $('.mychkboxs').find('input:click').prop('checked', checked);
+//    }
+//      else if(checked == false){
+              
+//                 alert("Checkbox is unchecked.");
+//               }
+
+// });
+
+</script>
 
 {% endblock %}

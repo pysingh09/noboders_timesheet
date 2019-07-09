@@ -34,11 +34,12 @@ $(document).ready(function(){
 });
 
 let csvRecoredArr =[];
-$(document).on("click","#checkall",function(){
 
+$(document).on("click","#checkall",function(){
    var checked = $(this).prop('checked');
 
    if( checked == true){
+ 
      $('.mychkboxs').find('input:checkbox').prop('checked', checked);
    }
      else if(checked == false){

@@ -382,7 +382,7 @@ class RequestLeaveView(CreateView):
             email.send()
             
            
-            messages.success(self.request, 'successfully Leave Request Send')
+            messages.success(self.request, 'Successfully Leave Request Send')
             return HttpResponseRedirect('/leave')
         except:
             # pass 
@@ -425,7 +425,7 @@ def full_leave(request):
                 EmployeeAttendance.objects.update_or_create(user = user,employee_id = emp_id,date = date,empatt_leave_status=emp_type)                       
         return JsonResponse({'status': 'success'})
     except Exception as e:
-            messages.error(request, 'Already exist')
+            messages.error(request, 'Already Exist')
             return render(request,'fullday_leave_list.html',)
 
 def full_leave_status(request):
