@@ -50,39 +50,42 @@ $(document).ready(function() {
                        var calculation = parseFloat("9:00");
                        var id = event.id;
                        if (test==5) {
+
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                           
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#5d5d5d').append().attr("id",id).attr("class","timedetail");
                             }
                         if (test==6) {
+                           
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff6e00').append().attr("id",id).attr("class","timedetail");
                             }
                         if (test==7) {
+                           
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
                             }        
 
                        else if (total_hour >=calculation || test==3) {
+                           
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
                             }
-
+                          
                        else {
-
                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
-                       }
+                            }  
                    }
 
          
            });
     });
 
-</script>
-<script>
+
     $(document).ready(function(){
-      $(".timedetail").click(function(e){
-        // e.preventDefault();
+      $(document).on('click', '.timedetail', function(e){
+        e.preventDefault();
       
         var attendance_id = $(this).attr('id');
         $.ajax({

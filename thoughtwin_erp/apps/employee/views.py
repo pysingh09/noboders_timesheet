@@ -232,6 +232,7 @@ def home(request):
     return render(request,'home.html', {'attendances_data' : result})
 
 def date_time_attendence_view(request):
+    # import pdb; pdb.set_trace()
     attendance = EmployeeAttendance.objects.get(id = request.POST.get("attendance_id"))
     template_name = "partial/date_time_popup.html"
     return render(request,template_name,{ "employee_attendence":attendance }) 
@@ -453,6 +454,7 @@ def full_leave_status(request):
                 employee_attendence.empatt_leave_status = 7
             employee_attendence.save()
 
+
         if leave.status == '2':
             message = leave.user.username +",Leave accept by "+request.user.username
         if leave.status == '3':
@@ -471,3 +473,7 @@ class FullLeaveListView(ListView):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4,5])
         return context
+
+
+    
+        

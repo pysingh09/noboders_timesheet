@@ -7,7 +7,7 @@
 <script>
     
 $(document).ready(function() {
-    // debugger
+  
     var geodata = "{{ attendances_data | safe }}";
     
     $('#calendar').fullCalendar({
@@ -54,14 +54,14 @@ $(document).ready(function() {
 
        
     $(".attendence_datetime").click(function(e){
-        // debugger
+        
         e.preventDefault();
         var dat = $(this).data("date");
         var emp_id = $(this).data("employee-id");
         $.ajax({
            'url': "{% url "employee:date-time-attendence-view" %}",
            'type': "POST",
-           // 'dataType': 'json',
+           
            
            'data': {
 
