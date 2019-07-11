@@ -4,53 +4,53 @@
 {% block content %}
 
 
-<form class="form-horizontal signup_form" method="POST" action="{% url 'employee:signup' %}" enctype="multipart/form-data" class="form-horizontal"> 
+<form class="form-horizontal signup_form" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
 <h2>Signup Form</h2>
   {% csrf_token %}
 
-{% if user_form.errors %}
-       {% for field in user_form %}
+{% if form.errors %}
+       {% for field in form %}
            {% for error in field.errors %}
                <div class="alert alert-danger">
                    <strong>{{ field.label }} : {{ error|escape }}</strong>
                </div>
            {% endfor %}
        {% endfor %}
-       {% for error in user_form.non_field_errors %}
+       {% for error in form.non_field_errors %}
            <div class="alert alert-danger">
                <strong>{{ error|escape }}</strong>
            </div>
        {% endfor %}
    {% endif %}
 
-{% if profile_form.errors %}
-       {% for field in profile_form %}
+{% if form2.errors %}
+       {% for field in form2 %}
            {% for error in field.errors %}
                <div class="alert alert-danger">
                    <strong>{{ field.label }} : {{ error|escape }}</strong>
                </div>
            {% endfor %}
        {% endfor %}
-       {% for error in profile_form.non_field_errors %}
+       {% for error in form2.non_field_errors %}
            <div class="alert alert-danger">
                <strong>{{ error|escape }}</strong>
            </div>
        {% endfor %}
    {% endif %}
 
-    <p>Username  :<br>{{ user_form.username }}</p>
-    <p>Password  :<br>{{ user_form.password1 }}</p>
-    <p>Confirm Password  :<br>{{ user_form.password2 }}</p>
-    <p>First Name:<br>{{ user_form.first_name }}</p>
-    <p>Last Name :<br>{{ user_form.last_name }}</p>
-    <p>Email     :<br>{{ user_form.email }}</p>
-    <p>Employee Id :<br>{{ profile_form.employee_id }}</p>
-    <p>Contact   :<br>{{ profile_form.contact_no }}</p>
-    <p>Designation   :<br>{{ profile_form.designation }}</p>
+    <p>Username  :<br>{{ form.username }}</p>
+    <p>Password  :<br>{{ form.password1 }}</p>
+    <p>Confirm Password  :<br>{{ form.password2 }}</p>
+    <p>First Name:<br>{{ form.first_name }}</p>
+    <p>Last Name :<br>{{ form.last_name }}</p>
+    <p>Email     :<br>{{ form.email }}</p>
+    <p>Employee Id :<br>{{ form2.employee_id }}</p>
+    <p>Contact   :<br>{{ form2.contact_no }}</p>
+    <p>Designation   :<br>{{ form2.designation }}</p>
     <p>NOTE : Date Format :YYYY-MM-DD</p>
-    <p>DOB       :<br>{{ profile_form.date_of_birth }}</p>
-    <p>DOJ       :<br>{{ profile_form.date_of_joining}}</p>
-    <p>Team Lead   :<br>{{ profile_form.teamlead }}</p>
+    <p>DOB       :<br>{{ form2.date_of_birth }}</p>
+    <p>DOJ       :<br>{{ form2.date_of_joining}}</p>
+    <p>Team Lead   :<br>{{ form2.teamlead }}</p>
 
 
       <button type="submit" class="btn btn-success sub_btn" id = "phonenumber">Submit</button>
@@ -74,21 +74,21 @@
 </script>
 <script>
 
-$(document).ready(function(){
-    $("#phonenumber").click(function(e){
-    phone = $('#id_contact_no').val();
-    if(phone.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/))
-    {  
-      location.reload();
-      return true;
-    } 
+// $(document).ready(function(){
+//     $("#phonenumber").click(function(e){
+//     phone = $('#id_contact_no').val();
+//     if(phone.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/))
+//     {  
+//       location.reload();
+//       return true;
+//     } 
 
-    {
-        alert('Invalid Phone Number');
-        return false;
-    }
-    });
-    });
+//     {
+//         alert('Invalid Phone Number');
+//         return false;
+//     }
+//     });
+//     });
 
 
  </script> 

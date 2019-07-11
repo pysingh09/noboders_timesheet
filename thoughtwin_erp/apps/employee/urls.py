@@ -4,7 +4,7 @@ app_name = 'employee'
 
 urlpatterns = [
 
-    path('signup/', signup, name='signup'),
+    path('signup/', UserCreateView.as_view(), name='signup'),
     path('home/', home, name='home'),
     path('file/', file_upload, name='file_upload'),
     path('employeelist/', EmployeeListView.as_view(), name='employee_list'),
