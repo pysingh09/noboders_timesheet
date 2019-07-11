@@ -133,7 +133,7 @@ class Leave(models.Model):
     endtime = models.TimeField(null=True,blank=True, verbose_name=_('Time Out'))
     leave_type = models.IntegerField(choices=LEAVE_TYPE)
     status = models.IntegerField(choices=LEAVE_STATUS, default=1)
-    
+ 
     def __str__(self):
         return self.user.username
 

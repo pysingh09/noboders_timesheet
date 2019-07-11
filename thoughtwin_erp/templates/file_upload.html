@@ -1,15 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-  {% if messages %}
-            <!-- <ul class="messages alert-success"> -->
-                {% for message in messages %}
-                <div class="alert alert-danger">
-                   <strong>{{ message }}</strong>
 
-               </div>
-                {% endfor %}
-            <!-- </ul> -->
-            {% endif %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} 
+                <div class="alert alert-danger">
+                    <strong>{{ message }}</strong>
+
+                </div>
+                    {% else %}
+                     
+                        <div class="alert alert-success">
+                            <strong>{{ message }}</strong>
+
+                        </div>   
+                {% endif %}
+          
+        {% endfor %}
+    </ul>
+{% endif %}
+
 
 <form action="{% url 'employee:file_upload' %}" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
     {% csrf_token %}

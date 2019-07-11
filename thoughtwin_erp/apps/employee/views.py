@@ -97,11 +97,11 @@ class AllEmployeeProfile(TemplateView):
         user = User.objects.get(pk = kwargs['pk'])
         return render(request,'employee_profile.html',{'employee' : user})
 
-class ListOfProfile(View):
-    template_name = "profile.html"
-    def get(self, request, *args, **kwargs):
-        user = User.objects.get(pk = kwargs['pk'])
-        return render(request,'profile.html',{'user' : user})
+# class ListOfProfile(View):
+#     template_name = "profile.html"
+#     def get(self, request, *args, **kwargs):
+#         user = User.objects.get(pk = kwargs['pk'])
+#         return render(request,'profile.html',{'user' : user})
        
 class LeaveCreateView(CreateView):
     model = AllottedLeave
@@ -337,6 +337,7 @@ class RequestLeaveView(CreateView):
     success_url = '/leave/'
 
     def form_valid(self,form):
+            
         try:
             form = self.form_class(data=form.data)
             leave = form.save(commit=False)
@@ -389,7 +390,7 @@ class RequestLeaveView(CreateView):
             # pass 
             messages.error(self.request,'Leave Request Already Send')
             return HttpResponseRedirect('/leave')
-                
+     
 
     def get_context_data(self, **kwargs):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
@@ -453,8 +454,7 @@ def full_leave_status(request):
             if leave_status == '3':
                 employee_attendence.empatt_leave_status = 7
             employee_attendence.save()
-
-
+        
         if leave.status == '2':
             message = leave.user.username +",Leave accept by "+request.user.username
         if leave.status == '3':
@@ -474,6 +474,5 @@ class FullLeaveListView(ListView):
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4,5])
         return context
 
-
-    
-        
+   
+       
