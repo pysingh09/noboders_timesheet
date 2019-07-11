@@ -71,6 +71,11 @@ class Profile(BaseModel):
 
         return self.user.username
     
+    class Meta:
+        permissions = (
+            ("can_view_user_profile_list", "Can View User Profile List"),
+        )
+        
     def get_leave(self):
         return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
         

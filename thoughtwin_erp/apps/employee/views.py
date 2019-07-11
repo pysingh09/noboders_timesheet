@@ -1,13 +1,13 @@
 import json,csv,io
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
-from django.views.generic import View,ListView,TemplateView,UpdateView
+from django.views.generic import View,ListView,TemplateView,UpdateView,DetailView
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -57,68 +57,81 @@ def index(request):
     else:
         return redirect('employee:profile')
 
-# class Dashboard(View):
-#     def get(self, request):
-#         return render(request, 'dashboard/dashboard.html')
+class UserCreateView(PermissionRequiredMixin,CreateView):
+    permission_required = ('employee.add_profile', )
+    raise_exception = True
+    form_class = SignUpForm
+    second_form_class = UserProfileForm
+    template_name = "registration/signup.html"
+    success_url = "/employeelist/"
 
-def signup(request):
-    if request.method == 'POST':    
-        user_form = SignUpForm(data=request.POST)
-        profile_form = ProfileForm(data=request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
-            new_user = user_form.save(commit=False)
-            new_user.set_password(user_form.cleaned_data['password1'])
-            new_user.save()
-            profile = profile_form.save(commit=False)
-            profile.created_by = request.user
-            profile.user = new_user
-            profile.save()
-            return redirect("/employeelist/")        
-    else:
-        user_form = SignUpForm()
-        profile_form = ProfileForm()
-    return render(request, 'registration/signup.html',{'user_form': user_form, 'profile_form': profile_form}) 
+    def get_context_data(self, **kwargs):
+        context = super(UserCreateView, self).get_context_data(**kwargs)
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class()
+        return context
 
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        return response
+
+    def form_valid(self,form):
+        try:
+            user_form = SignUpForm(data=self.request.POST)
+            profile_form = ProfileForm(data=self.request.POST)
+            
+            if user_form.is_valid() and profile_form.is_valid():
+                new_user = user_form.save(commit=False)
+                new_user.set_password(user_form.cleaned_data['password1'])
+                new_user.save()
+                profile = profile_form.save(commit=False)
+                profile.created_by = self.request.user
+                profile.user = new_user
+                profile.save()
+            return redirect("/employeelist/")
+        except Exception as e:
+            raise e
 
 class EmployeeProfile(TemplateView):
     template_name = "profile.html"
 
-class EmployeeListView(ListView):
+class EmployeeListView(PermissionRequiredMixin,ListView):
+    permission_required = ('employee.can_view_profile_list', )
+    raise_exception = True
     model = Profile
     template_name = "employee_list.html"
     ordering = ['-id']
-    # def get_context_data(self, **kwargs):
-    #    context = super(EmployeeListView, self).get_context_data(**kwargs)
-    #    context['object_list'] = self.model.objects.all().order_by('-id')
-    #    return context
-class AllEmployeeProfile(TemplateView):
-    template_name = "employee_profile.html"
-    def get(self, request, *args, **kwargs):
-        user = User.objects.get(pk = kwargs['pk'])
-        return render(request,'employee_profile.html',{'employee' : user})
 
-# class ListOfProfile(View):
-#     template_name = "profile.html"
-#     def get(self, request, *args, **kwargs):
-#         user = User.objects.get(pk = kwargs['pk'])
-#         return render(request,'profile.html',{'user' : user})
+
+class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
+    permission_required = ('employee.can_view_profile_list', )
+    raise_exception = True
+    template_name = "employee_profile.html"
+    model = Profile
+    
        
-class LeaveCreateView(CreateView):
+class LeaveCreateView(PermissionRequiredMixin,CreateView):
+    permission_required = ('employee.add_allottedleave', )
+    raise_exception = True
     model = AllottedLeave
     form_class = AllottedLeavesForm
     template_name = "leave.html"
     success_url = "/leaves/"
 
     def get_context_data(self, **kwargs):
-        return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list=AllottedLeave.objects.all() )
+        return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list=AllottedLeave.objects.all())
 
-class EditAllotedLeaveView(UpdateView): 
+class EditAllotedLeaveView(PermissionRequiredMixin,UpdateView): 
+    permission_required = ('employee.change_allottedleave', )
+    raise_exception = True
     model = AllottedLeave
     form_class = AllottedLeavesForm
     template_name = 'update_leave.html'
     success_url = "/leaves/"
 
-class EditProfileView(UpdateView): 
+class EditProfileView(PermissionRequiredMixin,UpdateView):
+    permission_required = ('employee.change_profile', )
+    raise_exception = True 
     model = Profile
     form_class = ProfileForm
     template_name = 'update.html'
@@ -156,7 +169,7 @@ def deactivate_user(request,pk):
         profile.user.save()
     return JsonResponse({'status': 'success'})
 
-@permission_required('admin.con_add_log_entry')
+@permission_required('employee.add_employeeattendance', raise_exception=True)
 def file_upload(request):
     try:
         template = 'file_upload.html'
@@ -237,6 +250,7 @@ def date_time_attendence_view(request):
     template_name = "partial/date_time_popup.html"
     return render(request,template_name,{ "employee_attendence":attendance }) 
 
+@permission_required('employee.can_view_employeeattendance_list', raise_exception=True)
 def employee_details(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
     return render(request,'home.html', {'attendances_data' : attendances_data})
@@ -282,7 +296,9 @@ def request_leave(request):
         return JsonResponse({'status': 'success'})
    
 
-class LeaveListView(ListView):
+class LeaveListView(PermissionRequiredMixin,ListView):
+    permission_required = ('employee.can_view_employeeattendance_list',)
+    raise_exception = True 
     model = EmployeeAttendance
     template_name = "leave_list.html"
 
@@ -401,7 +417,9 @@ class RequestLeaveView(CreateView):
         context['emails'] = email_data
         return context
 
-class EmpLeaveListView(ListView):
+class EmpLeaveListView(PermissionRequiredMixin,ListView):
+    permission_required = ('employee.can_view_leave_list',)
+    raise_exception = True
     model = Leave
     template_name = "leave/leave_list.html"
     # def get_context_data(self, **kwargs):
@@ -466,7 +484,9 @@ def full_leave_status(request):
     return JsonResponse({'status': 'success'})
 
 
-class FullLeaveListView(ListView):
+class FullLeaveListView(PermissionRequiredMixin,ListView):
+    permission_required = ('employee.can_view_employeeattendance_list',)
+    raise_exception = True
     model = EmployeeAttendance
     template_name = "fullday_leave_list.html"
     def get_context_data(self, **kwargs):

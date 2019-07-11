@@ -2,17 +2,17 @@
 
 {% block content %}
 
-<h2>Welcome : {{ employee.username }}</h2> 
+<h2>Welcome : {{ object.user.username }}</h2> 
 
-    <p>Username  :{{ employee.username }}</p>
-    <p>First name:{{ employee.first_name }}</p>
-    <p>Last name :{{ employee.last_name }}</p>
-    <p>Email     :{{ employee.email }}</p>
+    <p>Username  :{{ object.user.username }}</p>
+    <p>First name:{{ object.user.first_name }}</p>
+    <p>Last name :{{ object.user.last_name }}</p>
+    <p>Email     :{{ object.user.email }}</p>
     
-    <p>ID :{{ employee.profile.employee_id }}</p>
-    <p>Contact :{{ employee.profile.contact_no }}</p>
-    <p>DOB :{{ employee.profile.date_of_birth }}</p>
-    <p>DOJ :{{ employee.profile.date_of_joining}}</p>
-    <p>Alloted Leaves : {% if employee.profile.get_leave %} {{ employee.profile.get_leave }}{% else %}N/A{% endif %}</p>
+    <p>ID :{{ object.employee_id }}</p>
+    <p>Contact :{{ object.contact_no }}</p>
+    <p>DOB :{{ object.date_of_birth }}</p>
+    <p>DOJ :{{ object.date_of_joining}}</p>
+    <p>Alloted Leaves : {% if object.get_leave %} {{ object.get_leave }}{% else %}N/A{% endif %}</p>
 
 {% endblock %}
