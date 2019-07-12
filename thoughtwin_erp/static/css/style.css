@@ -52,6 +52,11 @@ div#myTable1_length {
   overflow: hidden;
 }
 
+.cross{
+    font-weight: 700;
+    margin-left: 10px;
+}
+
 /*.selectParent select {
   text-indent: 1px;
   text-overflow: '';

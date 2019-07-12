@@ -403,7 +403,7 @@ class RequestLeaveView(CreateView):
             messages.success(self.request, 'Successfully Leave Request Send')
             return HttpResponseRedirect('/leave')
         except:
-            # pass 
+    
             messages.error(self.request,'Leave Request Already Send')
             return HttpResponseRedirect('/leave')
      
