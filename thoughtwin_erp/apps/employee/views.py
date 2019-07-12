@@ -77,18 +77,22 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
 
     def form_valid(self,form):
         try:
-            user_form = SignUpForm(data=self.request.POST)
-            profile_form = ProfileForm(data=self.request.POST)
-            
-            if user_form.is_valid() and profile_form.is_valid():
-                new_user = user_form.save(commit=False)
-                new_user.set_password(user_form.cleaned_data['password1'])
-                new_user.save()
-                profile = profile_form.save(commit=False)
-                profile.created_by = self.request.user
-                profile.user = new_user
-                profile.save()
-            return redirect("/employeelist/")
+            if self.request.method == 'POST':    
+                user_form = SignUpForm(data=self.request.POST)
+                profile_form = ProfileForm(data=self.request.POST)
+                if user_form.is_valid() and profile_form.is_valid():
+                    new_user = user_form.save(commit=False)
+                    new_user.set_password(user_form.cleaned_data['password1'])
+                    new_user.save()
+                    profile = profile_form.save(commit=False)
+                    profile.created_by = self.request.user
+                    profile.user = new_user
+                    profile.save()
+                    return redirect("/employeelist/")        
+            else:
+                user_form = SignUpForm()
+                profile_form = ProfileForm()
+            return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
         except Exception as e:
             raise e
 
@@ -105,9 +109,10 @@ class EmployeeListView(PermissionRequiredMixin,ListView):
 
 class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
     permission_required = ('employee.can_view_profile_list', )
-    raise_exception = True
-    template_name = "employee_profile.html"
-    model = Profile
+    raise_exception = True 
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk = kwargs['pk'])
+        return render(request,'employee_profile.html',{'employee' : user})
     
        
 class LeaveCreateView(PermissionRequiredMixin,CreateView):
@@ -245,7 +250,6 @@ def home(request):
     return render(request,'home.html', {'attendances_data' : result})
 
 def date_time_attendence_view(request):
-    # import pdb; pdb.set_trace()
     attendance = EmployeeAttendance.objects.get(id = request.POST.get("attendance_id"))
     template_name = "partial/date_time_popup.html"
     return render(request,template_name,{ "employee_attendence":attendance }) 
@@ -319,6 +323,7 @@ def attendence_request_list(request):
     return render(request,'red_list.html', {'attendance_data' : result})
     
 def leave_status(request): # reject/accept leave hour
+    email_data = []
     leave_id = request.POST.get("leave_id")
     employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
     employee_attendance. empatt_leave_status = request.POST.get("leave_type")
@@ -390,8 +395,7 @@ class RequestLeaveView(CreateView):
 
             content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
             text_content = strip_tags(content)
-            
-
+    
             emails = self.request.POST.get('emails').split(',')
             frm = 'ankita@thoughtwin.com'
             user_name =  self.request.user.email

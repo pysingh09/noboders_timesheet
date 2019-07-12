@@ -20,6 +20,7 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError('Email address already exist.')
         return email
 
+
 class UserProfileForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=10)
     class Meta:
@@ -31,7 +32,8 @@ class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(max_length=10)
     last_name = forms.CharField(max_length=10)
     date_of_birth = forms.DateField(input_formats=['%Y-%m-%d'])
-    date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])    
+    date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])
+    contact_no = forms.IntegerField()    
     class Meta:
         model = Profile
         fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name')
