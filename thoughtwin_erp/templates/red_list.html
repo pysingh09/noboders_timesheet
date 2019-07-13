@@ -38,7 +38,7 @@
                 
                  <td> 
                   {% if attendance.empatt_leave_status == 1 %}
-                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}">
+                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-email="{{emails}}" data-id="selectemail">
                   {% endif %}
                  </td>
                 
@@ -49,32 +49,47 @@
             {% endfor %}
           </tbody>
         </table>
+  <input type="hidden" id="emails" value="" name="emails">
+  <div class="form-group col-sm-12" id="selectemail"></div>
+  <div class = "btn-group">
+   
+      <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown"><span class = "caret"></span>Select Email Option</button>
+     
+        <ul class = "dropdown-menu drop" role = "menu">
+          {% for em in emails %}    
+          <li><a class="emailtext" id="demo">{{ em }}</a></li>
+          {% endfor %}
+      
+        </ul>
+  </div>
+  <!-- <div class="col-md-12"><button class="btn btn-success" data-id="selectemail">Submit</button></div> -->
+  <button class="btn btn-success delete-row" id="checkrow"  onclick="return checkrow();">submit</button>          
+
 <script>
-
-
-
-
-    function checkrow() {
+  function checkrow() {
     var leaveRequestArr =[];
      if (!$("input:checkbox").is(":checked"))  {
         
             alert("Please tick checkbox if you want to send leave request");
             location.reload();
             return false;
-              }
+            }
              
               else($(document)).on("click","#checkrow",function(e){
                  
                   e.preventDefault();
                   $(".chkboxs:checked").each(function () {
                     leaveRequestArr.push($(this).val());
-                  });
+
+                       });
+                
                      $.ajax({
                      'url': '/request/leave/',
                      'type': "POST",
                      'dataType': 'json',
                      'data': {
                          'leaveRequestArr': leaveRequestArr,
+
                          'csrfmiddlewaretoken': '{{ csrf_token }}',
                      },
                      success: function(response) {
@@ -92,6 +107,36 @@
           } 
 
 </script>
-emails
-<button class="btn btn-success delete-row" id="checkrow" onclick="return checkrow();">submit</button>
+ <script type="text/javascript">
+    function add_email(){
+      $("#emails").val();
+      var emails = $('#selectemail').children();
+      var email = [] ;
+
+       for(i=0;i<emails.length;i++)
+          {
+
+            email.push($(emails[i]).text()+'');
+   
+          }
+
+
+        $("#emails").val(email);
+
+    }
+
+    $(document).on('click', '.removeemailtext', function(){
+      $('.drop').append('<li><a class="emailtext" id="demo">'+$(this).text()+'</a></li>');
+      $(this).remove();
+      add_email();
+    });
+
+    $(document).on('click', '.emailtext', function(){
+      $(this).remove();
+      $("#selectemail").append('<div class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
+      add_email();
+    });
+    </script>
+
+
 {% endblock %}

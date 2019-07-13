@@ -282,23 +282,43 @@ def show_calendar(request,id):
 
     return render(request,'fullcalendar.html', {'attendances_data' : result})
 
-@csrf_exempt
-def request_leave(request):
+# @csrf_exempt
+# def request_leave(request):
 
-    import datetime
-    if request.method == 'POST':
-        date_list = request.POST.getlist('leaveRequestArr[]')
-        attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list ,user=request.user)
-        for attendance in attendance_request_list:
-            attendance.empatt_leave_status = 2
-            attendance.save()
-            frm = 'ankita@thoughtwin.com'
-            text_content = request.user.username+ ',Leave request send for less hours'   
-            email = EmailMessage("Leave request for less hours",text_content,frm,to=["ankita@thoughtwin.com"])
+#     import datetime
+#     if request.method == 'POST':
+#         date_list = request.POST.getlist('leaveRequestArr[]')
+#         attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list ,user=request.user)
+#         for attendance in attendance_request_list:
+#             attendance.empatt_leave_status = 2
+#             attendance.save()
+#             frm = 'ankita@thoughtwin.com'
+#             text_content = request.user.username+ ',Leave request send for less hours'   
+#             email = EmailMessage("Leave request for less hours",text_content,frm,to=["ankita@thoughtwin.com"])
             
-            email.send()   
-        return JsonResponse({'status': 'success'})
-   
+#             email.send()   
+#         return JsonResponse({'status': 'success'})
+ 
+class LeaveRequestView(View):
+    model = EmployeeAttendance
+
+    def post(self,request):
+        import datetime
+        if request.method == 'POST':
+            date_list = request.POST.getlist('leaveRequestArr[]')
+            attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list ,user=request.user)
+            for attendance in attendance_request_list:
+                attendance.empatt_leave_status = 2
+                attendance.save()
+                # emails = request.POST.get('emails').split(',')
+                frm = 'ankita@thoughtwin.com'
+                text_content = request.user.username+ ',Leave request send for less hours'   
+                email = EmailMessage("Leave request for less hours",text_content,frm,to=['ankita@thoughtwin.com'])
+                
+                email.send()   
+            return JsonResponse({'status': 'success'})
+
+     
 
 class LeaveListView(PermissionRequiredMixin,ListView):
     permission_required = ('employee.can_view_employeeattendance_list',)
@@ -309,36 +329,62 @@ class LeaveListView(PermissionRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super(LeaveListView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4])
-       
-
         return context
+
 
 def attendence_request_list(request):
     attendances = EmployeeAttendance.objects.filter(user=request.user)
     result = []
+    email_data = []
     for attendance in attendances:
         if attendance.date_time_diffrence() < timedelta(hours=9):
             result.append(attendance)
-        
-    return render(request,'red_list.html', {'attendance_data' : result})
-    
-def leave_status(request): # reject/accept leave hour
-    email_data = []
-    leave_id = request.POST.get("leave_id")
-    employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
-    employee_attendance. empatt_leave_status = request.POST.get("leave_type")
-    employee_attendance.save()
-    message = "dummy"
-    if employee_attendance. empatt_leave_status == '3':
-        message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
-    if employee_attendance. empatt_leave_status == '4':
-        message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
+    # import pdb; pdb.set_trace()
+    for user in User.objects.all():
+            email_data.append(user.email)   
+    return render(request,'red_list.html', {'attendance_data' : result,'emails':email_data})
 
-    frm = 'ankita@thoughtwin.com'
-    email = EmailMessage("Leave response for less hour",message,frm,to=["ankita@thoughtwin.com"])
-    email.send()
+
+
+
     
-    return JsonResponse({'status': 'success'})
+# def leave_status(request): # reject/accept leave hour
+#     email_data = []
+#     leave_id = request.POST.get("leave_id")
+#     employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
+#     employee_attendance. empatt_leave_status = request.POST.get("leave_type")
+#     employee_attendance.save()
+#     message = "dummy"
+#     if employee_attendance. empatt_leave_status == '3':
+#         message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
+#     if employee_attendance. empatt_leave_status == '4':
+#         message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
+
+#     frm = 'ankita@thoughtwin.com'
+#     email = EmailMessage("Leave response for less hour",message,frm,to=["ankita@thoughtwin.com"])
+#     email.send()
+    
+#     return JsonResponse({'status': 'success'})
+
+class LeaveStatusView(View):
+
+    model = EmployeeAttendance
+
+    def post(self,request):
+        leave_id = request.POST.get("leave_id")
+        employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
+        employee_attendance. empatt_leave_status = request.POST.get("leave_type")
+        employee_attendance.save()
+        message = "dummy"
+        if employee_attendance. empatt_leave_status == '3':
+            message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
+        if employee_attendance. empatt_leave_status == '4':
+            message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
+        frm = 'ankita@thoughtwin.com'
+        email = EmailMessage("Leave response for less hour",message,frm,to=["ankita@thoughtwin.com"])
+        email.send()
+        
+        return JsonResponse({'status': 'success'}) 
 
 @csrf_exempt
 def delete_record(request):
