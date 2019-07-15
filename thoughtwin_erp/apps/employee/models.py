@@ -5,6 +5,7 @@ from django.contrib.auth.models import User,Group
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
+from django.db.models import Sum
 from datetime import datetime, date
 import datetime
 
@@ -75,9 +76,15 @@ class Profile(BaseModel):
         permissions = (
             ("can_view_user_profile_list", "Can View User Profile List"),
         )
-        
+     
+
+    # def get_leave(self):
+    #     return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
+
     def get_leave(self):
-        return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
+        # import pdb; pdb.set_trace()
+        return self.user.user_leaves.filter().aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status ='6').count()
+
         
 class EmployeeAttendance(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_user')

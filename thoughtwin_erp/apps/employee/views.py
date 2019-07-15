@@ -307,13 +307,13 @@ class LeaveRequestView(View):
             date_list = request.POST.getlist('leaveRequestArr[]')
             attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list ,user=request.user)
             for attendance in attendance_request_list:
+                
+                emails = request.POST.getlist('emails[]')
                 attendance.empatt_leave_status = 2
-                import pdb; pdb.set_trace()
                 attendance.save()
-                emails = request.POST.get('emails').split(',')
                 frm = 'ankita@thoughtwin.com'
                 text_content = request.user.username+ ',Leave request send for less hours'   
-                email = EmailMessage("Leave request for less hours",text_content,frm,to=['ankita@thoughtwin.com'])
+                email = EmailMessage("Leave request for less hours",text_content,frm,to=emails)
                 
                 email.send()   
             return JsonResponse({'status': 'success'})
@@ -339,7 +339,6 @@ def attendence_request_list(request):
     for attendance in attendances:
         if attendance.date_time_diffrence() < timedelta(hours=9):
             result.append(attendance)
-    # import pdb; pdb.set_trace()
     for user in User.objects.all():
             email_data.append(user.email)   
     return render(request,'red_list.html', {'attendance_data' : result,'emails':email_data})
@@ -515,6 +514,7 @@ def full_leave_status(request):
         enddate = leave.enddate
         delta = enddate - startdate
         for i in range(delta.days + 1):
+            # import pdb; pdb.set_trace()
             employee_attendence = EmployeeAttendance.objects.get(user = leave.user,date = startdate + timedelta(days=i))
             
             if leave_status == '2':    
