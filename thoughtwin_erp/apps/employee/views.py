@@ -233,9 +233,8 @@ def file_upload(request):
      
        
         return render(request,template)
-    except:
-
-        messages.error(request, ' File Upload Failed')
+    except Exception as e:
+        messages.error(request, ' File Upload Failed. Error Description :',str(e))
         return render(request,template)
 
 def home(request):
@@ -309,8 +308,9 @@ class LeaveRequestView(View):
             attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list ,user=request.user)
             for attendance in attendance_request_list:
                 attendance.empatt_leave_status = 2
+                import pdb; pdb.set_trace()
                 attendance.save()
-                # emails = request.POST.get('emails').split(',')
+                emails = request.POST.get('emails').split(',')
                 frm = 'ankita@thoughtwin.com'
                 text_content = request.user.username+ ',Leave request send for less hours'   
                 email = EmailMessage("Leave request for less hours",text_content,frm,to=['ankita@thoughtwin.com'])
