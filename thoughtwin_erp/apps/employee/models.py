@@ -78,12 +78,15 @@ class Profile(BaseModel):
         )
      
 
-    # def get_leave(self):
-    #     return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
+    def get_leave(self):
+          import pdb; pdb.set_trace()
+          return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
 
     def get_leave(self):
-        # import pdb; pdb.set_trace()
-        return self.user.user_leaves.filter().aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status ='6').count()
+        try:
+            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
+        except Exception as e:
+             return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
         
 class EmployeeAttendance(BaseModel):
@@ -93,6 +96,8 @@ class EmployeeAttendance(BaseModel):
     leave_type = models.IntegerField(choices=LEAVE_TYPE, default=1)
     empatt_leave_status = models.IntegerField(choices=EMPATT_LEAVE_STATUS, default=1)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True , related_name='attendance_created_by')
+    leave_day_time = models.FloatField(default=0)
+ 
 
     class Meta:
         unique_together = ('user', 'date',)
@@ -115,7 +120,7 @@ class EmployeeAttendance(BaseModel):
 class AllottedLeave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leaves')
     year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
-    leave = models.IntegerField(verbose_name=_('Leaves'))
+    leave = models.FloatField(default=0,verbose_name=_('Leaves'))
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='leave_created_by')
     
     class Meta:
@@ -123,6 +128,13 @@ class AllottedLeave(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+    def get_full_leave(self):
+        try:
+            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
+        except Exception as e:
+             return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
 class EmployeeAttendanceDetail(models.Model):
     employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE, related_name='employee_attendance')

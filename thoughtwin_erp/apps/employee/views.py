@@ -125,6 +125,15 @@ class LeaveCreateView(PermissionRequiredMixin,CreateView):
 
     def get_context_data(self, **kwargs):
         return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list=AllottedLeave.objects.all())
+    # def post(self,request):
+    #     if request.method=='POST':
+    #         total_alloated_leave = request.POST.get('total_leave')
+    #         leave_user = request.POST.get('leave')
+    #         alloated_leave_user = AllottedLeave.objects.get(user__username=leave_user)
+    #         alloated_leave_user.leave = total_alloated_leave
+    #         alloated_leave_user.save()
+
+
 
 class EditAllotedLeaveView(PermissionRequiredMixin,UpdateView): 
     permission_required = ('employee.change_allottedleave', )
@@ -234,7 +243,7 @@ def file_upload(request):
        
         return render(request,template)
     except Exception as e:
-        messages.error(request, ' File Upload Failed. Error Description :',str(e))
+        messages.error(request, ' File Upload Failed')
         return render(request,template)
 
 def home(request):
@@ -370,9 +379,15 @@ class LeaveStatusView(View):
     model = EmployeeAttendance
 
     def post(self,request):
+        
         leave_id = request.POST.get("leave_id")
         employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
-        employee_attendance. empatt_leave_status = request.POST.get("leave_type")
+        empatt_leave_status = request.POST.get("leave_type")
+        if empatt_leave_status == '4':
+            employee_attendance.leave_day_time = '0.5'
+        if empatt_leave_status == '3':
+            employee_attendance.leave_day_time = '1.0'
+        employee_attendance.empatt_leave_status = request.POST.get("leave_type")
         employee_attendance.save()
         message = "dummy"
         if employee_attendance. empatt_leave_status == '3':
@@ -407,50 +422,62 @@ class RequestLeaveView(CreateView):
         try:
             form = self.form_class(data=form.data)
             leave = form.save(commit=False)
-            if 'starttime' in form.data:
-                starttime = form.data['starttime']
-                starttime = datetime.strptime(starttime ,'%H:%M')
+            leave_date = form.data['startdate'].split('-')
+            year = int(leave_date[0])
+            alloated_leave = AllottedLeave.objects.get(user = self.request.user)
+            leave_year =  alloated_leave.year
+            if year == leave_year:
+                if 'starttime' in form.data:
+                    starttime = form.data['starttime']
+                    starttime = datetime.strptime(starttime ,'%H:%M')
 
-                endtime = form.data['endtime']
-                endtime = datetime.strptime(endtime ,'%H:%M')
-                if starttime >= endtime:
-                    messages.error(self.request, 'End Time not valid')
-                    return render(self.request,"request_leave.html",{'message':'End Time not valid','form':form})
+                    endtime = form.data['endtime']
+                    endtime = datetime.strptime(endtime ,'%H:%M')
+                    if starttime >= endtime:
+                        messages.error(self.request, 'End Time not valid')
+                        return render(self.request,"request_leave.html",{'message':'End Time not valid','form':form})
+                    
+                    starttime = starttime.strftime('%I:%M %p')
+                    endtime = endtime.strftime('%I:%M %p')
+                    
+
+                    leave.starttime = form.data['starttime']
+                    leave.endtime = form.data['endtime']
                 
-
-                starttime = starttime.strftime('%I:%M %p')
-                endtime = endtime.strftime('%I:%M %p')
-                
-
-                leave.starttime = form.data['starttime']
-                leave.endtime = form.data['endtime']
             
-            startdate = form.data['startdate'].split('-')
-            enddate = form.data['enddate'].split('-')
-            d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2]))  # start date
-            d2 = date(int(enddate[0]),int(enddate[1]),int(enddate[2]))  # start date
-            delta = d2 - d1
-            for i in range(delta.days + 1):
-                emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5)
-            leave.leave_type = form.data['leave_type']
-            leave.user = self.request.user
-            leave.save()
-            leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
+                startdate = form.data['startdate'].split('-')
+                enddate = form.data['enddate'].split('-')
+                d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2])) #startdate
+                d2 = date(int(enddate[0]),int(enddate[1]),int(enddate[2]))  #startdate
+                delta = d2 - d1
+                leave_type = form.data['leave_type']
+                for i in range(delta.days + 1):
+                    if leave_type == '2':   
+                        emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
+                    if leave_type == '3':
+                        emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
+                leave.leave_type = form.data['leave_type']
+                leave.user = self.request.user
+                leave.save()
+                leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
 
 
-            content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
-            text_content = strip_tags(content)
-    
-            emails = self.request.POST.get('emails').split(',')
-            frm = 'ankita@thoughtwin.com'
-            user_name =  self.request.user.email
+                content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
+                text_content = strip_tags(content)
         
-            email = EmailMessage("Leave Request",text_content,frm,to=emails)
-            email.send()
+                emails = self.request.POST.get('emails').split(',')
+                frm = 'ankita@thoughtwin.com'
+                user_name =  self.request.user.email
             
-           
-            messages.success(self.request, 'Successfully Leave Request Send')
-            return HttpResponseRedirect('/leave')
+                email = EmailMessage("Leave Request",text_content,frm,to=emails)
+                email.send()
+                
+               
+                messages.success(self.request, 'Successfully Leave Request Send')
+                return HttpResponseRedirect('/leave')
+            else:
+                messages.error(self.request, 'Leave Are Not Alloted In This Year') 
+                return HttpResponseRedirect('/leave')  
         except:
     
             messages.error(self.request,'Leave Request Already Send')
@@ -499,35 +526,32 @@ def full_leave(request):
 
 def full_leave_status(request):
     if request.method == 'POST':
+
         leave_id =request.POST.get("leave_id")
         leave_user =request.POST.get("leave_user")
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
         leave.status = request.POST.get("leave_status")
         leave.save()
-
         leavedetails = LeaveDetails.objects.filter(leave=leave)
         for leavedetail in leavedetails:
-            
+        
             LeaveDetails.objects.create(leave=leave, status = request.POST.get("leave_status") ,reason = leavedetail.reason ,created_by=request.user)    
         startdate = leave.startdate
         enddate = leave.enddate
         delta = enddate - startdate
         for i in range(delta.days + 1):
-            # import pdb; pdb.set_trace()
             employee_attendence = EmployeeAttendance.objects.get(user = leave.user,date = startdate + timedelta(days=i))
-            
+             
             if leave_status == '2':    
                 employee_attendence.empatt_leave_status = 6
             if leave_status == '3':
                 employee_attendence.empatt_leave_status = 7
             employee_attendence.save()
-        
         if leave.status == '2':
             message = leave.user.username +",Leave accept by "+request.user.username
         if leave.status == '3':
             message = leave.user.username +",Leave reject by "+request.user.username
-
         frm = 'ankita@thoughtwin.com'
         email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com"])
         email.send()

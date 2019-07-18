@@ -13,11 +13,12 @@
         {% for message in messages %}
             
                 {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} 
-                <div class="alert alert-danger">
-                    <strong>{{ message }}</strong>
+                  <div class="alert alert-danger">
+                      <strong>{{ message }}</strong>
 
-                </div>
-                    {% else %}
+                  </div>
+
+                {% else %}
                      
                         <div class="alert alert-success">
                             <strong>{{ message }}</strong>
@@ -31,7 +32,7 @@
 
 
 
-    <h2>leave</h2>
+    <h2>Leave</h2>
     {% if message %}
     <div class="alert alert-danger">
       {{ message }}
@@ -107,9 +108,6 @@
       
       </ul>
 </div>
-
-
-  
 
 {% endblock %}
 

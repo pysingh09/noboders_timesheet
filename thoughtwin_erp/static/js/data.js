@@ -1,3 +1,17 @@
+// $(document).ready(function(){ 
+//   $("#no_record_in_table").hide();
+//     $('#myTable1').DataTable({
+//        pagingType: "simple",
+//        fnInitComplete : function() {
+//        if ($(this).find('tbody tr').length<=1) {
+//          $(this).parent().hide();
+//          $(".no_record_in_table").text("No records available").show();
+//       }
+//    }
+//   });
+// });
+
+
 $(document).ready(function(){
   $('#myTable1').DataTable({
     // "paging": false,
@@ -38,15 +52,7 @@ let csvRecoredArr =[];
 $(document).on("click","#checkall",function(){
    var checked = $(this).prop('checked');
 
-   if( checked == true){
- 
      $('.mychkboxs').find('input:checkbox').prop('checked', checked);
-   }
-     else if(checked == false){
-              
-                alert("Checkbox is unchecked.");
-              }
-
 });
 
 

@@ -10,11 +10,10 @@
     {% endfor %}
   </ul>
 {% endif %}
-
-
     <div class="search-container">
       <div> 
         <h3> Employee Leave List </h3>
+          <!-- <p class = "no_record_in_table"></p> -->
         <br>
 
         <table class = "table" id="myTable1" border="2">
@@ -53,7 +52,7 @@
   <div class="form-group col-sm-12" id="selectemail"></div>
   <div class = "btn-group">
    
-      <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown"><span class = "caret" ></span>Select Email Option</button>
+      <button type = "button" class = "btn btn-default dropdown-toggle" id="email-button" data-toggle = "dropdown"><span class = "caret" ></span>Select Email Option</button>
      
         <ul class = "dropdown-menu drop" role = "menu">
           {% for em in emails %}    
@@ -62,7 +61,7 @@
       
         </ul>
   </div>
-  <!-- <div class="col-md-12"><button class="btn btn-success" data-id="selectemail">Submit</button></div> -->
+
   <button class="btn btn-success submit-email-btn" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>          
 
 <script>
@@ -83,8 +82,6 @@
                     leaveRequestArr.push($(this).val());
 
                        });
-                
-                     // debugger
                      $.ajax({
                      'url': '/request/leave/',
                      'type': "POST",
@@ -139,6 +136,33 @@
       $("#selectemail").append('<div class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
       add_email();
     });
+
+  $(document).ready(function() {
+    $('#checkrow').hide();
+      $('.chkboxs').mouseup(function() {
+          $('input[type="checkbox"]').click(function(){
+          if($('input[type="checkbox"]:checked').length > 0)
+            $('#checkrow').show();
+          else
+            $('#checkrow').hide();
+
+      });
+  });
+});
+ $(document).ready(function() {
+    $('#email-button').hide();
+      $('.chkboxs').mouseup(function() {
+          $('input[type="checkbox"]').click(function(){
+          if($('input[type="checkbox"]:checked').length > 0)
+            $('#email-button').show();
+          else
+            $('#email-button').hide();
+
+      });
+  });
+})
+
+
     // $(document).on('click', '.submit-email-btn', function(){
     //     var emails = Array.from( new Set(email))  
     //     $.ajax({
