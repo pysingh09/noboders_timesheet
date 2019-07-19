@@ -1,12 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-   <div class="row justify-content-center">
-     <div class="col=8">
-      <div class="card">
-        <div class="card-body">
-          {{form.errors}}
 
-       <h2>Update Employee Details</h2>
+<div class="row justify-content-center">
+ <div class="col=8">
+  <div class="card">
+    <div class="card-body">
+     <h2>Update Employee Details</h2>
+    {% if form.errors %}
+           {% for field in form %}
+               {% for error in field.errors %}
+                   <div class="alert alert-danger">
+                       <strong>{{ field.label }} : {{ error|escape }}</strong>
+                   </div>
+               {% endfor %}
+           {% endfor %}
+           {% for error in form.non_field_errors %}
+               <div class="alert alert-danger">
+                   <strong>{{ error|escape }}</strong>
+               </div>
+           {% endfor %}
+       {% endif %}
+
        <form method="post" novalidate>
         {% csrf_token %}
         
@@ -14,7 +28,7 @@
         <p>First Name:{{ form.first_name }}</p>
         <p>Last Name :{{ form.last_name }}</p>
         <p>Contact   :{{ form.contact_no }}</p>
-        <p>Designation   :{{ form.designation }}</p>{{form.errors}}
+        <p>Designation   :{{ form.designation }}</p>
 
         <p>NOTE : date format : YYYY-MM-DD</p>
         <p>DOB       :{{ form.date_of_birth }}</p>

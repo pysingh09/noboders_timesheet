@@ -152,16 +152,19 @@ class EditProfileView(PermissionRequiredMixin,UpdateView):
     success_url = "/employeelist/"
 
     def post(self, request, *args, **kwargs):
-        instance = Profile.objects.get(pk = kwargs['pk'])
-        form = self.form_class(data=request.POST, instance=instance)
-        if form.is_valid():
-            userdata = form.save()
-            userdata.user.first_name = form.data['first_name']
-            userdata.user.last_name = form.data['last_name']
-            userdata.user.save()
-            return HttpResponseRedirect("/employeelist/")
-        else:
-            return render(request,'update.html',{'form':form})
+        try:
+            instance = Profile.objects.get(pk = kwargs['pk'])
+            form = self.form_class(data=request.POST, instance=instance)
+            if form.is_valid():
+                userdata = form.save()
+                userdata.user.first_name = form.data['first_name']
+                userdata.user.last_name = form.data['last_name']
+                userdata.user.save()
+                return HttpResponseRedirect("/employeelist/")
+            else:
+                return render(request,'update.html',{'form':form})
+        except Exception as e:
+            raise
 
 @csrf_exempt
 def delete_record(request):
@@ -434,8 +437,8 @@ class RequestLeaveView(CreateView):
                     endtime = form.data['endtime']
                     endtime = datetime.strptime(endtime ,'%H:%M')
                     if starttime >= endtime:
-                        messages.error(self.request, 'End Time not valid')
-                        return render(self.request,"request_leave.html",{'message':'End Time not valid','form':form})
+                        messages.error(self.request, 'End Time Not Valid')
+                        return render(self.request,"request_leave.html",{'message':'End Time Not Valid','form':form})
                     
                     starttime = starttime.strftime('%I:%M %p')
                     endtime = endtime.strftime('%I:%M %p')

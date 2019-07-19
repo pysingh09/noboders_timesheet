@@ -6,7 +6,7 @@
       <div class="card">
         <div class="card-body">
           {{leave_form.errors}}
-
+    
        <h2>Allot Leaves Of The Year</h2>
        <form method="post" novalidate>
         {% csrf_token %}
@@ -22,7 +22,7 @@
         {% for field in form %}
             <div class="fieldWrapper">
                 {{ field.errors }}
-                {{ field.label_tag }} {{ field }}
+                {{ field.label_tag }} {{ field }} 
             </div>
         {% endfor %}
       

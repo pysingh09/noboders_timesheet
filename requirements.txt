@@ -11,3 +11,5 @@ pytz==2019.1
 six==1.12.0
 Unipath==1.1
 xlrd
+django-phonenumber-field
+phonenumbers
