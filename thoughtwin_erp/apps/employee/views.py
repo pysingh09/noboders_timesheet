@@ -65,7 +65,7 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
     template_name = "registration/signup.html"
     success_url = "/employeelist/"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs): 
         context = super(UserCreateView, self).get_context_data(**kwargs)
         if 'form2' not in context:
             context['form2'] = self.second_form_class()
@@ -77,7 +77,8 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
 
     def form_valid(self,form):
         try:
-            if self.request.method == 'POST':    
+            if self.request.method == 'POST':
+
                 user_form = SignUpForm(data=self.request.POST)
                 profile_form = ProfileForm(data=self.request.POST)
                 if user_form.is_valid() and profile_form.is_valid():
@@ -195,9 +196,8 @@ def file_upload(request):
         }
         if request.method == 'GET':
             return render(request,template,prompt)
-        
         excel_file = request.FILES["excel_file"]
-        filename = fs.save(excel_file.name,excel_file)
+        filename = fs.save(excel_file.name,excel_file)        
         file_url = settings.PROJECT_APPS + fs.url(filename) # project app url + filename
         wb = xlrd.open_workbook(file_url)
         sheet = wb.sheet_by_index(0) 
@@ -246,7 +246,7 @@ def file_upload(request):
        
         return render(request,template)
     except Exception as e:
-        messages.error(request, ' File Upload Failed')
+        messages.error(request, e)
         return render(request,template)
 
 def home(request):
