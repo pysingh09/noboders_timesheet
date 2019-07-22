@@ -425,70 +425,70 @@ class RequestLeaveView(CreateView):
         try:
             form = self.form_class(data=form.data)
             leave = form.save(commit=False)
-            leave_date = form.data['startdate'].split('-')
-            year = int(leave_date[0])
-            alloated_leave = AllottedLeave.objects.get(user = self.request.user)
-            leave_year =  alloated_leave.year
-            if year == leave_year:
-                if 'starttime' in form.data:
-                    starttime = form.data['starttime']
-                    starttime = datetime.strptime(starttime ,'%H:%M')
+            # leave_date = form.data['startdate'].split('-')
+            # year = int(leave_date[0])
+            # alloated_leave = AllottedLeave.objects.get(user = self.request.user)
+            # leave_year =  alloated_leave.year
+            # if year == leave_year:
+            if 'starttime' in form.data:
+                starttime = form.data['starttime']
+                starttime = datetime.strptime(starttime ,'%H:%M')
 
-                    endtime = form.data['endtime']
-                    endtime = datetime.strptime(endtime ,'%H:%M')
-                    if starttime >= endtime:
-                        messages.error(self.request, 'End Time Not Valid')
-                        return render(self.request,"request_leave.html",{'message':'End Time Not Valid','form':form})
-                    
-                    starttime = starttime.strftime('%I:%M %p')
-                    endtime = endtime.strftime('%I:%M %p')
-                    
-
-                    leave.starttime = form.data['starttime']
-                    leave.endtime = form.data['endtime']
+                endtime = form.data['endtime']
+                endtime = datetime.strptime(endtime ,'%H:%M')
+                if starttime >= endtime:
+                    messages.error(self.request, 'End Time Not Valid')
+                    return render(self.request,"request_leave.html",{'message':'End Time Not Valid','form':form})
                 
+                starttime = starttime.strftime('%I:%M %p')
+                endtime = endtime.strftime('%I:%M %p')
+                
+
+                leave.starttime = form.data['starttime']
+                leave.endtime = form.data['endtime']
             
-                startdate = form.data['startdate'].split('-')
-                enddate = form.data['enddate'].split('-')
-                d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2])) #startdate
-                d2 = date(int(enddate[0]),int(enddate[1]),int(enddate[2]))  #startdate
-                delta = d2 - d1
-                leave_type = form.data['leave_type']
-                for i in range(delta.days + 1):
-                    if leave_type == '2':   
-                        emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
-                    if leave_type == '3':
-                        emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
-                leave.leave_type = form.data['leave_type']
-                leave.user = self.request.user
-                leave.save()
-                leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
-
-
-                content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
-                text_content = strip_tags(content)
         
-                emails = self.request.POST.get('emails').split(',')
-                frm = 'ankita@thoughtwin.com'
-                user_name =  self.request.user.email
+            startdate = form.data['startdate'].split('-')
+            enddate = form.data['enddate'].split('-')
+            d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2])) #startdate
+            d2 = date(int(enddate[0]),int(enddate[1]),int(enddate[2]))  #startdate
+            delta = d2 - d1
+            leave_type = form.data['leave_type']
+            for i in range(delta.days + 1):
+                if leave_type == '2':   
+                    emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
+                if leave_type == '3':
+                    emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
+            leave.leave_type = form.data['leave_type']
+            leave.user = self.request.user
+            leave.save()
+            leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
+
+
+            content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
+            text_content = strip_tags(content)
+    
+            emails = self.request.POST.get('emails').split(',')
+            frm = 'ankita@thoughtwin.com'
+            user_name =  self.request.user.email
+        
+            email = EmailMessage("Leave Request",text_content,frm,to=emails)
+            email.send()
             
-                email = EmailMessage("Leave Request",text_content,frm,to=emails)
-                email.send()
-                
-               
-                messages.success(self.request, 'Successfully Leave Request Send')
-                return HttpResponseRedirect('/leave')
-            else:
-                messages.error(self.request, 'Leave Are Not Alloted In This Year') 
-                return HttpResponseRedirect('/leave')  
+           
+            messages.success(self.request, 'Successfully Leave Request Send')
+            return HttpResponseRedirect('/leave')
+            # else:
+            #     messages.error(self.request, 'Leave Are Not Alloted In This Year') 
+            #     return HttpResponseRedirect('/leave')  
         except IntegrityError:
             messages.error(self.request, 'Leave Request Already Send') 
             return HttpResponseRedirect('/leave')  
 
-        except Exception as alloated_leave :
+        # except Exception as alloated_leave :
     
-            messages.error(self.request,'Leave Are Not Alloted')
-            return HttpResponseRedirect('/leave')
+        #     messages.error(self.request,'Leave Are Not Alloted')
+        #     return HttpResponseRedirect('/leave')
 
     def get_context_data(self, **kwargs):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
