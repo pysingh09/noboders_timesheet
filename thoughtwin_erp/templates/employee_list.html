@@ -4,7 +4,10 @@
 {% block content %} 
     <h2>Company Employee Details</h2>  
     <div class="search-container">
-     <table class = "table" id="myTable1" border="2">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class = "table" id="myTable1" border="2">
         <thead>
          
           <tr>
@@ -47,7 +50,10 @@
               </tr>
           {% endfor %}
         </tbody>
-      </table>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   {% block js %}
   {{block.super}}
