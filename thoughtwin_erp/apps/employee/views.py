@@ -23,9 +23,9 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.dateparse import parse_date
 from django.urls import reverse, reverse_lazy
+from django.db import IntegrityError
 # permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
-
 
 # this is for file upload
 import xlrd
@@ -481,11 +481,14 @@ class RequestLeaveView(CreateView):
             else:
                 messages.error(self.request, 'Leave Are Not Alloted In This Year') 
                 return HttpResponseRedirect('/leave')  
-        except:
+        except IntegrityError:
+            messages.error(self.request, 'Leave Request Already Send') 
+            return HttpResponseRedirect('/leave')  
+
+        except Exception as alloated_leave :
     
-            messages.error(self.request,'Leave Request Already Send')
+            messages.error(self.request,'Leave Are Not Alloted')
             return HttpResponseRedirect('/leave')
-     
 
     def get_context_data(self, **kwargs):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
