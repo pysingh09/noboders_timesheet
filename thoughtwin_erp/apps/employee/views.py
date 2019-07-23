@@ -398,7 +398,8 @@ class LeaveStatusView(View):
         if employee_attendance. empatt_leave_status == '4':
             message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
         frm = 'ankita@thoughtwin.com'
-        email = EmailMessage("Leave response for less hour",message,frm,to=["ankita@thoughtwin.com"])
+        email = EmailMessage("Leave response for less hour",message,frm,to=[employee_attendance.user.email
+])
         email.send()
         
         return JsonResponse({'status': 'success'}) 
@@ -563,7 +564,7 @@ def full_leave_status(request):
         if leave.status == '3':
             message = leave.user.username +",Leave reject by "+request.user.username
         frm = 'ankita@thoughtwin.com'
-        email = EmailMessage("Leave Response",message,frm,to=["ankita@thoughtwin.com"])
+        email = EmailMessage("Leave Response",message,frm,to=[leave.user.email])
         email.send()
     return JsonResponse({'status': 'success'})
 
