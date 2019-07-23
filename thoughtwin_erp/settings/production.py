@@ -1,7 +1,7 @@
 from .base import *
 import os,sys
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -10,7 +10,7 @@ DATABASES = {
         'ENGINE':   'django.db.backends.postgresql',
         'NAME':     'erpthoughtwin',
         'USER':     'postgres',
-        'PASSWORD': 'thoughtwin@#$123',
+        'PASSWORD': 'admin@#$123',
         'HOST':     'localhost',
         'PORT':     5432,
     }
