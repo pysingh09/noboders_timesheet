@@ -140,7 +140,8 @@
 
     $(document).on('click', '.emailtext', function(){
       $(this).remove();
-      $("#selectemail").append('<div class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
+      $("#selectemail").append('<div style="margin: 2px;" class="removeemailtext btn btn-primary">'+$(this).text()+'</div>')
+      
       add_email();
     });
     $(function(){

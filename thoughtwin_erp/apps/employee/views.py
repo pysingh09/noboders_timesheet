@@ -26,7 +26,7 @@ from django.urls import reverse, reverse_lazy
 from django.db import IntegrityError
 # permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
-
+from django.template import loader
 # this is for file upload
 import xlrd
 from django.conf import settings
@@ -246,7 +246,7 @@ def file_upload(request):
        
         return render(request,template)
     except Exception as e:
-        messages.error(request, e)
+        messages.error(request,'File Upload Failed')
         return render(request,template)
 
 def home(request):
@@ -420,9 +420,10 @@ class RequestLeaveView(CreateView):
     template_name = 'request_leave.html'
     success_url = '/leave/'
 
-    def form_valid(self,form):
+    def form_valid(self,form,**kwargs):
             
         try:
+            # import pdb; pdb.set_trace()
             form = self.form_class(data=form.data)
             leave = form.save(commit=False)
             # leave_date = form.data['startdate'].split('-')
@@ -438,8 +439,11 @@ class RequestLeaveView(CreateView):
                 endtime = datetime.strptime(endtime ,'%H:%M')
                 if starttime >= endtime:
                     messages.error(self.request, 'End Time Not Valid')
-                    return render(self.request,"request_leave.html",{'message':'End Time Not Valid','form':form})
-                
+                    email_data = []
+                    for user in User.objects.all():
+                        email_data.append(user.email)
+                    return render(self.request,'request_leave.html',{'form':form ,'emails':email_data})
+
                 starttime = starttime.strftime('%I:%M %p')
                 endtime = endtime.strftime('%I:%M %p')
                 
