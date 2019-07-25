@@ -49,13 +49,6 @@ $(document).ready(function(){
 
 let csvRecoredArr =[];
 
-$(document).on("click","#checkall",function(){
-   var checked = $(this).prop('checked');
-
-     $('.mychkboxs').find('input:checkbox').prop('checked', checked);
-});
-
-
     function delrow() {
      
         if (!$("input:checkbox").is(":checked"))  {

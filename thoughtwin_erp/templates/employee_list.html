@@ -6,9 +6,6 @@
 
     <br>
     <div class="search-container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="table-responsive">
             <table class = "table" id="myTable1" border="2">
         <thead>
          
@@ -43,7 +40,7 @@
                 <td>{{ profile.date_of_joining }}</td>
                 <td>{{ profile.teamlead }}</td>
                 <td><a href="{% url 'employee:update' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span>
-                </td>
+                </a></td>
                 {% if profile.user.is_active %}
                     <td><button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
                 {% else %}
@@ -54,9 +51,7 @@
         </tbody>
             </table>
           </div>
-        </div>
-      </div>
-    </div>
+        
   {% block js %}
   {{block.super}}
   <script src="{% static 'js/data.js' %}"></script>

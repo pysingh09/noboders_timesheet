@@ -27,6 +27,7 @@ from django.db import IntegrityError
 # permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.template import loader
+# import datetime 
 # this is for file upload
 import xlrd
 from django.conf import settings
@@ -78,7 +79,6 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
     def form_valid(self,form):
         try:
             if self.request.method == 'POST':
-
                 user_form = SignUpForm(data=self.request.POST)
                 profile_form = ProfileForm(data=self.request.POST)
                 if user_form.is_valid() and profile_form.is_valid():
@@ -125,7 +125,12 @@ class LeaveCreateView(PermissionRequiredMixin,CreateView):
     success_url = "/leaves/"
 
     def get_context_data(self, **kwargs):
-        return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list=AllottedLeave.objects.all())
+        return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list= AllottedLeave.objects.all())
+
+    
+    
+
+
     # def post(self,request):
     #     if request.method=='POST':
     #         total_alloated_leave = request.POST.get('total_leave')
@@ -422,22 +427,22 @@ class RequestLeaveView(CreateView):
     success_url = '/leave/'
 
     def form_valid(self,form,**kwargs):
-            
+          
         try:
-            # import pdb; pdb.set_trace()
             form = self.form_class(data=form.data)
             leave = form.save(commit=False)
-            # leave_date = form.data['startdate'].split('-')
-            # year = int(leave_date[0])
+            leave_date = form.data['startdate'].split('-')
+            year = int(leave_date[0])
             # alloated_leave = AllottedLeave.objects.get(user = self.request.user)
             # leave_year =  alloated_leave.year
-            # if year == leave_year:
+        
+            # if year == datetime.datetime.now().year:
             if 'starttime' in form.data:
                 starttime = form.data['starttime']
-                starttime = datetime.strptime(starttime ,'%H:%M')
+                starttime = datetime.datetime.strptime(starttime ,'%H:%M')
 
                 endtime = form.data['endtime']
-                endtime = datetime.strptime(endtime ,'%H:%M')
+                endtime = datetime.datetime.strptime(endtime ,'%H:%M')
                 if starttime >= endtime:
                     messages.error(self.request, 'End Time Not Valid')
                     email_data = []

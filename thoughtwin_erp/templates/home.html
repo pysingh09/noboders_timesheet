@@ -90,20 +90,21 @@
     });
   
   </script>
-<!-- <script>
-  $(document).ready(function() {
-    $('#delrow').hide();
-      $('.mychkboxs').mouseup(function() {
-          $('input[type="checkbox"]').click(function(){
-          if($('input[type="checkbox"]:checked').length > 0)
-            $('#delrow').show();
-          else
-            $('#delrow').hide();
 
-      });
-  });
-});      
-</script> -->
+<script>
+$("#checkall").change(function(){ 
+    $(".action-select").prop('checked', $(this).prop("checked")); 
+});
+
+$('.action-select').change(function(){ 
+    if(false == $(this).prop("checked")){ 
+        $("#checkall").prop('checked', false); 
+    }
+  if ($('.action-select:checked').length == $('.action-select').length ){
+    $("#checkall").prop('checked', true);
+  }
+});
+</script>
 
 {% endblock %}
 

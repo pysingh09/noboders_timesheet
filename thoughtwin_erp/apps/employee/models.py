@@ -80,7 +80,6 @@ class Profile(BaseModel):
      
 
     def get_leave(self):
-          import pdb; pdb.set_trace()
           return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
 
     def get_leave(self):
@@ -133,7 +132,7 @@ class AllottedLeave(models.Model):
 
     def get_full_leave(self):
         try:
-            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
+            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum'] - self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
         except Exception as e:
              return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
