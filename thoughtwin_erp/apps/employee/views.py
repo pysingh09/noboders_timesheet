@@ -439,10 +439,10 @@ class RequestLeaveView(CreateView):
             # if year == datetime.datetime.now().year:
             if 'starttime' in form.data:
                 starttime = form.data['starttime']
-                starttime = datetime.datetime.strptime(starttime ,'%H:%M')
+                starttime = datetime.strptime(starttime ,'%H:%M')
 
                 endtime = form.data['endtime']
-                endtime = datetime.datetime.strptime(endtime ,'%H:%M')
+                endtime = datetime.strptime(endtime ,'%H:%M')
                 if starttime >= endtime:
                     messages.error(self.request, 'End Time Not Valid')
                     email_data = []
