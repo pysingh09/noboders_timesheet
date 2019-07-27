@@ -1,27 +1,37 @@
-// $(document).ready(function(){ 
-//   $("#no_record_in_table").hide();
-//     $('#myTable1').DataTable({
-//        pagingType: "simple",
-//        fnInitComplete : function() {
-//        if ($(this).find('tbody tr').length<=1) {
-//          $(this).parent().hide();
-//          $(".no_record_in_table").text("No records available").show();
-//       }
-//    }
-//   });
-// });
-
-
 $(document).ready(function(){
   $('#myTable1').DataTable({
-    // "paging": false,
-    //  "lengthChange": true, // for show length change
-    // "paging": false,  // for paging length
-
-    
   });
 });
     
+$(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    $('#myTable2 thead tr').clone(true).appendTo( '#myTable2 thead ' );
+    $('#myTable2 thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text();
+        
+        if (i==2||i==4 || i==5 || i==6)
+
+          $(this).html( '<input type="text" placeholder="Search" />' );
+        if (i==12||i==7||i==8||i==9||i==10||i==11||i==0||i==1||i==3)
+          $(this).html( '<th</th> ' );   
+
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+ 
+    var table = $('#myTable2').DataTable( {
+        orderCellsTop: true,
+        fixedHeader: true
+    } );
+} );
+ 
 $(document).ready(function(){
     $('.deactivateEmployee').click(function (event) {
         console.log("event", event)

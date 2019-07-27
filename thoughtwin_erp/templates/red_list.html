@@ -20,6 +20,7 @@
           <thead>
             
             <tr>
+              <th>Sno.</th>
               <th>Date</th>
               <th>Calculation</th>
               <th>Leave Request</th> 
@@ -29,6 +30,7 @@
           <tbody>
             {% for attendance in attendance_data %}
               <tr>
+                <td></td>
                 <td>{{ attendance.date}}</td>
                 
                 
@@ -50,17 +52,17 @@
         </table>
   <input type="hidden" id="emails" value="" name="emails">
   <div class="form-group col-sm-12" id="selectemail"></div>
-  <div class = "btn-group">
+<div class = "dropdown">
    
-      <button type = "button" class = "btn btn-default dropdown-toggle" id="email-button" data-toggle = "dropdown"><span class = "caret" ></span>Select Email Option</button>
-     
-        <ul class = "dropdown-menu drop" role = "menu">
+   <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" id="email-button" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
+      <div id="myDropdown" class = "dropdown-menu drop" role = "menu">
+     <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
           {% for em in emails %}    
           <li><a class="emailtext" id="demo">{{ em }}</a></li>
           {% endfor %}
       
-        </ul>
-  </div>
+      </div>
+    </div>
 
   <button class="btn btn-success submit-email-btn" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>          
 
@@ -177,6 +179,99 @@
         // $.post("{% url 'employee:request_leave' %}", data:{email:emails, csrfmiddlewaretoken:'{{ csrf_token }}'})
         // }) ;
     </script>
+<style>
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
 
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #3e8e41;
+}
+
+#myInput {
+  box-sizing: border-box;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+</style>
+
+<script>
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function filterFunction() {
+  var input, filter, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+</script>    
+<style type="text/css">
+  body
+{
+    counter-reset: Serial;           
+}
+
+table
+{
+    border-collapse: separate;
+}
+
+tr td:first-child:before
+{
+  counter-increment: Serial;     
+  content: counter(Serial); 
+}
+</style>
 
 {% endblock %}

@@ -7,6 +7,7 @@
      <table class = "table" id="myTable1" border="2">
         <thead>
           <tr>
+            <th>Sno.</th>
             <th>Employee</th>
             <th>Start Date</th>
             <th>End Date</th>
@@ -19,7 +20,8 @@
         </thead>
             <tbody>
                 {% for leave in object_list %}
-                  <tr> 
+                  <tr>
+                    <td></td> 
                     <td>{{ leave.user }}</td>   
                     <td>{{ leave.startdate }}</td>
                     <td>{{ leave.enddate }}</td>
@@ -80,5 +82,22 @@
       });
 
     });
-  </script>    
+  </script>   
+  <style type="text/css">
+  body
+{
+    counter-reset: Serial;           
+}
+
+table
+{
+    border-collapse: separate;
+}
+
+tr td:first-child:before
+{
+  counter-increment: Serial;     
+  content: counter(Serial); 
+}
+</style> 
 {% endblock %}

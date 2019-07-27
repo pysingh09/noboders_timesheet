@@ -45,7 +45,6 @@
     <p>Last Name :<br>{{ form.last_name }}</p>
     <p>Email     :<br>{{ form.email }}</p>
     <p>Employee Id :<br>{{ form2.employee_id }}</p>
-    <p>NOTE: Contact No.Start With +91</p>
     <p>Contact   :<br>{{ form2.contact_no }}</p>
     <p>Designation   :<br>{{ form2.designation }}</p>
     <p>NOTE : Date Format :YYYY-MM-DD</p>
@@ -73,6 +72,22 @@
     });
 
 </script>
+<script>
+  $(document).ready(function(){
+    $("#phonenumber").click(function(e){
+    phone = $('#id_contact_no').val();
+    if(phone.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/))
+    {  
+      location.reload();
+      return true;
+    } 
 
+    {
+        alert('Invalid Phone Number');
+        return false;
+    }
+    });
+    });
+</script>
 
 {% endblock %} 

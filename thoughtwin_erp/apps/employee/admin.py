@@ -8,7 +8,7 @@ class EmployeeAttendanceModelAdmin(admin.ModelAdmin):
 
     def user_obj(request, obj):
         return obj.user.username
-
+# admin.site.register(SignUp)
 admin.site.register(Profile)
 admin.site.register(EmployeeAttendance, EmployeeAttendanceModelAdmin)
 admin.site.register(AllottedLeave)

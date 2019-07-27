@@ -8,7 +8,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import Sum
 from datetime import datetime, date
 import datetime
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
 
 LEAVE_CHOICES = []
 for r in range(2019, (datetime.datetime.now().year+10)):
@@ -54,13 +54,12 @@ class BaseModel(models.Model):
    modified_at = models.DateTimeField(auto_now=True, db_index=True)
 
    class Meta:
-       abstract = True
-
+       abstract = True        
 
 class Profile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     employee_id = models.IntegerField(unique=True, verbose_name=_('Employee ID'))
-    contact_no = PhoneNumberField()   
+    contact_no = models.CharField(max_length=10)
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_('Date Of Birth'))
     date_of_joining = models.DateField(null=True, blank=True, verbose_name=_('Date Of Joining'))
 

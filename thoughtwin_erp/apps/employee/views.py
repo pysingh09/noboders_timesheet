@@ -79,21 +79,26 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
     def form_valid(self,form):
         try:
             if self.request.method == 'POST':
-                user_form = SignUpForm(data=self.request.POST)
-                profile_form = ProfileForm(data=self.request.POST)
-                if user_form.is_valid() and profile_form.is_valid():
+                 user_form = SignUpForm(data=self.request.POST)
+                 profile_form = ProfileForm(data=self.request.POST)
+                 if user_form.is_valid() and profile_form.is_valid():
+
                     new_user = user_form.save(commit=False)
+                    profile = profile_form.save(commit=False)
                     new_user.set_password(user_form.cleaned_data['password1'])
                     new_user.save()
-                    profile = profile_form.save(commit=False)
+
                     profile.created_by = self.request.user
                     profile.user = new_user
                     profile.save()
-                    return redirect("/employeelist/")        
+        
+
+                    return redirect("/employeelist/")                     
             else:
                 user_form = SignUpForm()
                 profile_form = ProfileForm()
-            return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
+
+                return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
         except Exception as e:
             raise e
 
@@ -585,4 +590,7 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
         return context
 
    
-       
+ # from django.contrib.auth.views import password_reset
+
+ # def my_password_reset(request, template_name='path/to/my/template'):
+ #    return password_reset(request, template_name)      

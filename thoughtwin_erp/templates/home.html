@@ -6,6 +6,7 @@
         <table class = "table" id="myTable1" border="2">
           <thead>
             <tr>
+              <th>Sno.</th>
               <th>Time Details</th>
               <th>User</th>
               <th>Employee ID</th>
@@ -24,6 +25,7 @@
           <tbody class="mychkboxs">
             {% for attendance in attendances_data %}
               <tr>
+                <td></td>
                 <td><a class="attendence_datetime" href="" data-id="{{ attendance.id }}">View</a></td>
                 <td><p>{{ attendance.user }}</p></td>
                 <td>{{ attendance.employee_id }}</td>
@@ -105,6 +107,22 @@ $('.action-select').change(function(){
   }
 });
 </script>
+<style type="text/css">
+  body
+{
+    counter-reset: Serial;           
+}
 
+table
+{
+    border-collapse: separate;
+}
+
+tr td:first-child:before
+{
+  counter-increment: Serial;     
+  content: counter(Serial); 
+}
+</style>
 {% endblock %}
 

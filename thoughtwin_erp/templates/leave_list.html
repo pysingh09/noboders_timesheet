@@ -8,7 +8,7 @@
      <table class = "table" id="myTable1" border="2">
         <thead>
           <tr>
-          
+            <th>Sno.</th>
             <th>User</th>
             <th>Date</th>
             <th>Total Working Hour</th>
@@ -17,7 +17,8 @@
         </thead>
             <tbody>
                 {% for leave in object_list %}
-                  <tr>    
+                  <tr>
+                    <td></td>    
                     <td>{{ leave.user }}</td>
                     <td>{{ leave.date }}</td>
                     <td>{{ leave.date_time_diffrence }}</td>
@@ -47,7 +48,6 @@
     $(".leave").on('click', function (e) {
       e.preventDefault();
       var leave_id = $(this).data("leave-id");
-      // debugger
       var leave_type = $(this).data("leave_type");
       var leave_user = $(this).data("leave-user");
       $.ajax({
@@ -78,5 +78,21 @@
     });
   </script>
 
+<style type="text/css">
+  body
+{
+    counter-reset: Serial;           
+}
 
+table
+{
+    border-collapse: separate;
+}
+
+tr td:first-child:before
+{
+  counter-increment: Serial;     
+  content: counter(Serial); 
+}
+</style>
 {% endblock %}

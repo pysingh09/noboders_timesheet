@@ -5,10 +5,25 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile,AllottedLeave,Leave
 from django.utils.translation import ugettext_lazy as _
-from phonenumber_field.formfields import PhoneNumberField
+# from phonenumber_field.formfields import PhoneNumberField
+
+# class SignUpForm(forms.ModelForm):
+#     username = forms.CharField(max_length=30)
+#     first_name = forms.CharField(max_length=30)
+#     last_name = forms.CharField(max_length=30)
+#     email = forms.EmailField(max_length=254)
+#     class Meta:
+#         model = SignUp
+#         fields = ('username','password1','password2','first_name', 'last_name', 'email')
+
+#     def clean_email(self):
+#         email = self.cleaned_data.get('email')
+#         username = self.cleaned_data.get('username')
+#         if email and SignUp.objects.filter(email=email).exclude(username=username).exists():
+#             raise forms.ValidationError('Email address already exist.')
+#         return email
 
 class SignUpForm(UserCreationForm):
-
     class Meta:
         model = User
         fields = ('username','password1','password2','first_name', 'last_name', 'email')
@@ -20,9 +35,12 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError('Email address already exist.')
         return email
 
-
 class UserProfileForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=10)
+
+    # contact_no = PhoneNumberField(widget=forms.TextInput(attrs={'value': _('+91')}), 
+
+    #                    label=_("Phone number"), required=True)
     class Meta:
         model = Profile
         fields = ('contact_no','designation','date_of_birth','date_of_joining','teamlead',)    
@@ -33,7 +51,7 @@ class ProfileForm(forms.ModelForm):
     last_name = forms.CharField(max_length=10)
     date_of_birth = forms.DateField(input_formats=['%Y-%m-%d'])
     date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])
-    contact_no = PhoneNumberField() 
+    contact_no = forms.IntegerField()
     class Meta:
         model = Profile
         fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name')
