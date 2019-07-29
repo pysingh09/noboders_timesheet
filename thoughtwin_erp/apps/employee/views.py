@@ -7,7 +7,7 @@ from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,ValidatingPasswordChangeForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -28,6 +28,8 @@ from django.db import IntegrityError
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.template import loader
 # import datetime 
+from django.contrib.auth.forms import UserChangeForm,PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 # this is for file upload
 import xlrd
 from django.conf import settings
@@ -72,16 +74,18 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
             context['form2'] = self.second_form_class()
         return context
 
-    def form_invalid(self, form):
+    def form_invalid(self, form):  
         response = super().form_invalid(form)
+        # response = super().form_invalid(self.second_form_class)
+        # self.second_form_class
         return response
-
+        
     def form_valid(self,form):
         try:
             if self.request.method == 'POST':
-                 user_form = SignUpForm(data=self.request.POST)
-                 profile_form = ProfileForm(data=self.request.POST)
-                 if user_form.is_valid() and profile_form.is_valid():
+                profile_form = ProfileForm(data=self.request.POST)
+                user_form = SignUpForm(data=self.request.POST)
+                if user_form.is_valid() and profile_form.is_valid():
 
                     new_user = user_form.save(commit=False)
                     profile = profile_form.save(commit=False)
@@ -91,16 +95,19 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     profile.created_by = self.request.user
                     profile.user = new_user
                     profile.save()
-        
-
-                    return redirect("/employeelist/")                     
+    
+                    return redirect("/employeelist/")    
+                else:
+                    import pdb; pdb.set_trace()                 
             else:
-                user_form = SignUpForm()
-                profile_form = ProfileForm()
-
+                import pdb; pdb.set_trace()
+                user_form = SignUpForm(self.request.POST)
+                profile_form = ProfileForm(self.request.POST)
                 return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
         except Exception as e:
+            print("Uh,oh...We met some error:",str(e))
             raise e
+ 
 
 class EmployeeProfile(TemplateView):
     template_name = "profile.html"
@@ -547,7 +554,6 @@ def full_leave(request):
 
 def full_leave_status(request):
     if request.method == 'POST':
-
         leave_id =request.POST.get("leave_id")
         leave_user =request.POST.get("leave_user")
         leave_status = request.POST.get("leave_status")
@@ -573,8 +579,11 @@ def full_leave_status(request):
             message = leave.user.username +",Leave accept by "+request.user.username
         if leave.status == '3':
             message = leave.user.username +",Leave reject by "+request.user.username
+        email_data = []
+        for user in User.objects.all():
+            email_data.append(user.email)    
         frm = 'ankita@thoughtwin.com'
-        email = EmailMessage("Leave Response",message,frm,to=[leave.user.email])
+        email = EmailMessage("Leave Response",message,frm,to=email_data)
         email.send()
     return JsonResponse({'status': 'success'})
 
@@ -589,8 +598,25 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4,5])
         return context
 
-   
- # from django.contrib.auth.views import password_reset
+def change_password(request):
+    try:
+    
+        if request.method == 'POST':
+            form = ValidatingPasswordChangeForm(data=request.POST, user=request.user)
+            if form.is_valid():
+                form.save()
+                update_session_auth_hash(request, form.user)
+                messages.success(request, 'Your password was successfully updated!')
+                return HttpResponseRedirect('/login/')
+            else:
+                messages.error(request, 'Please correct the error below.')
+                return HttpResponseRedirect('/change-password/')
+        else:
+            form = ValidatingPasswordChangeForm(user=request.user)
 
- # def my_password_reset(request, template_name='path/to/my/template'):
- #    return password_reset(request, template_name)      
+            args = {'form': form}
+            return render(request, 'change_password.html', args)   
+
+    except Exception as e:
+        raise        
+

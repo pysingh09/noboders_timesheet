@@ -1,17 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %} 
+<style type="text/css">
+  body
+{
+    counter-reset: Serial;           
+}
+
+table
+{
+    border-collapse: separate;
+}
+
+tr td:first-child:before
+{
+  counter-increment: Serial;     
+  content: counter(Serial); 
+}
+</style>
+
+
+
+
+
     <div class="search-container">
       <div> 
         <table class = "table" id="myTable1" border="2">
           <thead>
             <tr>
               <th>Sno.</th>
-              <th>Time Details</th>
-              <th>User</th>
-              <th>Employee ID</th>
-              <th>Date</th>
-              <th>Calculation</th>
+              <th>In/Out Details</th>
+              <!-- <th>User</th> -->
+              <!-- <th>Employee ID</th> -->
+              <th>Today's Date</th>
+              <th>Today Timing</th>
               
               
               {% if user.is_superuser  %}
@@ -27,8 +49,8 @@
               <tr>
                 <td></td>
                 <td><a class="attendence_datetime" href="" data-id="{{ attendance.id }}">View</a></td>
-                <td><p>{{ attendance.user }}</p></td>
-                <td>{{ attendance.employee_id }}</td>
+                <!-- <td><p>{{ attendance.user }}</p></td> -->
+                <!-- <td>{{ attendance.employee_id }}</td> -->
                 <td>{{ attendance.date }}</td>
                 <td><p>{{ attendance.date_time_diffrence }}</p></td> 
                  {% if user.is_superuser  %}
@@ -107,22 +129,6 @@ $('.action-select').change(function(){
   }
 });
 </script>
-<style type="text/css">
-  body
-{
-    counter-reset: Serial;           
-}
 
-table
-{
-    border-collapse: separate;
-}
-
-tr td:first-child:before
-{
-  counter-increment: Serial;     
-  content: counter(Serial); 
-}
-</style>
 {% endblock %}
 

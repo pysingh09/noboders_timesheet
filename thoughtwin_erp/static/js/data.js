@@ -12,8 +12,8 @@ $(document).ready(function() {
         if (i==2||i==4 || i==5 || i==6)
 
           $(this).html( '<input type="text" placeholder="Search" />' );
-        if (i==12||i==7||i==8||i==9||i==10||i==11||i==0||i==1||i==3)
-          $(this).html( '<th</th> ' );   
+        if (i==12||i==7||i==8||i==9||i==10||i==11||i==0||i==1||i==3||i==13)
+          $(this).html('<td</td>');   
 
         $( 'input', this ).on( 'keyup change', function () {
             if ( table.column(i).search() !== this.value ) {
@@ -27,8 +27,8 @@ $(document).ready(function() {
     } );
  
     var table = $('#myTable2').DataTable( {
-        orderCellsTop: true,
-        fixedHeader: true
+        // orderCellsTop: true,
+        // fixedHeader: true
     } );
 } );
  
