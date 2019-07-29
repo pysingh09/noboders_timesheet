@@ -34,6 +34,8 @@ tr td:first-child:before
             <th>Last Name</th>
             <th>Contact</th>
             <th>Designation</th>
+            <th>Employee Home</th>
+            <!-- <th>Profile</th> -->
             <th>Date Of Birth</th>
             <th>Date Of Joining</th>
             <th>Team Lead</th>
@@ -45,15 +47,17 @@ tr td:first-child:before
         <tbody>
             {% for profile in object_list %}
               <tr>
-                <td></td>    
+                <td></td>  
                 <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a>
-                 <a href="{% url 'employee:profile_list' profile.user.id %}"><span class="glyphicon glyphicon-pencil" >Profile</span></td>
-                <td><a href="{% url 'employee:employee_details' profile.user.id %}">{{ profile.user }}</a></td>
+                 </td>
+                <td><a href="{% url 'employee:profile_list' profile.user.id %}"><span class="glyphicon glyphicon-pencil" >{{ profile.user }}</span></a></td>  
+                 <!-- <td><a href="{% url 'employee:update' profile.pk %}">{{ profile.user }}</a></td> -->
                 <td>{{ profile.employee_id }}</td>
                 <td>{{ profile.user.first_name }}</td>
                 <td>{{ profile.user.last_name }}</td>
                 <td>{{ profile.contact_no}}</td>
                 <td>{{ profile.get_designation_display }}</td>
+                <td><a href="{% url 'employee:employee_details' profile.user.id %}">In/Out Detail</a></td>
                 <td>{{ profile.date_of_birth }}</td>
                 <td>{{ profile.date_of_joining }}</td>
                 <td>{{ profile.teamlead }}</td>

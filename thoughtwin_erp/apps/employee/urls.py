@@ -1,5 +1,8 @@
 from django.urls import path
 from employee.views import *
+from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm,    password_reset_complete
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
 app_name = 'employee'
 
 urlpatterns = [
@@ -32,8 +35,16 @@ urlpatterns = [
     path('full/leave/status', full_leave_status , name='full-leave-status' ),
     path('leave', RequestLeaveView.as_view(), name='request-full-leave' ),
     path('leave/list',EmpLeaveListView.as_view(), name = 'leave-list'),
+    # path('change_password/', 'django.contrib.auth.views.password_change',
+     # {'password_change_form': ValidatingPasswordChangeForm}),
     # path('fullday/leave', fullcalendar,name = 'fullcalendar' ),
     # path('full/leave/', full_leave),
     path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
     # path('list', Arm.as_view()),
+    path('change-password/', change_password, name='change_password'),
+    
+    # path('reset-password/done/', auth_views.password_reset_done, {'template_name': 'reset_password_done.html'}, name='password_reset_done'),
+   
+
+     
 ]

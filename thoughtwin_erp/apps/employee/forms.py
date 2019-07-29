@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile,AllottedLeave,Leave
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import auth
 # from phonenumber_field.formfields import PhoneNumberField
 
 # class SignUpForm(forms.ModelForm):
@@ -99,3 +100,30 @@ class LeaveCreateForm(forms.ModelForm):
     class Meta:
         model = Leave
         fields = ('startdate','enddate')
+
+
+class ValidatingPasswordChangeForm(auth.forms.PasswordChangeForm):
+    MIN_LENGTH = 8
+    def clean_new_password1(self):
+        import pdb; pdb.set_trace()
+        password1 = self.cleaned_data.get('new_password1')
+
+        # At least MIN_LENGTH long
+        if len(password1) < self.MIN_LENGTH:
+            raise forms.ValidationError("The new password must be at least %d characters long." % self.MIN_LENGTH)
+
+        # At least one letter and one non-letter
+        first_isalpha = password1[0].isalpha()
+        if all(c.isalpha() == first_isalpha for c in password1):
+            raise forms.ValidationError("The new password must contain at least one letter and at least one digit or" \
+                                        " punctuation character.")
+
+        # ... any other validation you want ...
+
+        return password1
+        class Meta:
+            model = User
+            help_texts = {
+                'password1': None,
+            }
+        
