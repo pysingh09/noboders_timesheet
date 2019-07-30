@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <h3>Leaves</h3><br>
+    <div class="search-container">
+     <table class = "table" id="myTable1" border="2">
+        <thead>
+          <tr>
+            <th>Sno.</th>
+            <th>Employee</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Leave Request</th>
+          </tr>
+        </thead>
+            <tbody>
+                {% for leave in object_list %}
+                  <tr>
+                    <td></td> 
+                    <td>{{ leave.user }}</td>   
+                    <td>{{ leave.startdate }}</td>
+                    <td>{{ leave.enddate }}</td>
+                    <td>{{ leave.starttime }}</td>
+                    <td>{{ leave.endtime }}</td>
+                    <td>{{ leave.get_leave_type_display }}</td>
+                    <td>{{ leave.get_status_display }}</td>
+                    <td><button class="btn" id="leave" data-leave-id="{{leave.id}}" data-leave_status="{{ leave.get_status_display }}" data-start_date="{{leave.startdate|date:'Y-m-d'}}" data-end_date="{{leave.enddate|date:'Y-m-d'}}">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+      </table>
+    </div>
+
+<!-- {% endblock %} -->
+
+<!--java script -->
+<!-- {% block script %}
+{{ block.super }} -->
+
+<script>
+$(document).ready(function(){
+    $("#leave").on('click', function (e) {
+      e.preventDefault();
+      var leave_id = $(this).data("leave-id");
+      var leave_status = $(this).data("leave_status");
+      var start_date = $(this).data("start_date");
+      var end_date = $(this).data("end_date");
+      $.ajax({
+        url: "{% url "employee:del-leave-list" %}",
+        'type': "POST",
+        data: {
+          'leave_id': leave_id,
+          'leave_status':leave_status,
+          'start_date':start_date,
+          'end_date':end_date,
+          'csrfmiddlewaretoken': '{{ csrf_token }}',
+        },
+      success: function(response) {
+           
+            if(response.status=="success"){
+             
+                alert("Delete Leave Successfully")
+                location.reload();
+                
+             
+                
+              }
+
+            }
+      });
+
+    });
+    });
+  </script>   
+  <style type="text/css">
+  body
+{
+    counter-reset: Serial;           
+}
+
+table
+{
+    border-collapse: separate;
+}
+
+tr td:first-child:before
+{
+  counter-increment: Serial;     
+  content: counter(Serial); 
+}
+</style> 
+{% endblock %}

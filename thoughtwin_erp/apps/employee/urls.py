@@ -35,14 +35,11 @@ urlpatterns = [
     path('full/leave/status', full_leave_status , name='full-leave-status' ),
     path('leave', RequestLeaveView.as_view(), name='request-full-leave' ),
     path('leave/list',EmpLeaveListView.as_view(), name = 'leave-list'),
-    # path('change_password/', 'django.contrib.auth.views.password_change',
-     # {'password_change_form': ValidatingPasswordChangeForm}),
-    # path('fullday/leave', fullcalendar,name = 'fullcalendar' ),
-    # path('full/leave/', full_leave),
     path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
-    # path('list', Arm.as_view()),
     path('change-password/', change_password, name='change_password'),
     path('forgot-password/', ForgotPassword.as_view(), name='forgot_password'),
+    path('show-leave-list/',ShowLeaveListView.as_view(),name='show-leave-list'),
+    path('delete-leave/',delete_leave,name='del-leave-list'),
   
    
 

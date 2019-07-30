@@ -360,7 +360,7 @@ class LeaveListView(PermissionRequiredMixin,ListView):
 
 
 def attendence_request_list(request):
-    attendances = EmployeeAttendance.objects.filter(user=request.user)
+    attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,])
     result = []
     email_data = []
     for attendance in attendances:
@@ -645,7 +645,7 @@ class ForgotPassword(View):
                 try:
                     user = User.objects.get(email=email)
                 except Exception as e:
-                    messages.add_message(self.request, messages.WARNING, "fgh")
+                    messages.error(self.request, "Invalid Email Id")
                     return HttpResponseRedirect('/forgot-password/')
                     
                 password = User.objects.make_random_password()
@@ -656,12 +656,36 @@ class ForgotPassword(View):
                 send_mail = EmailMessage("Forgot password",body,frm,to=[user.email])
                 send_mail.send() 
                 return JsonResponse({'status': 'success'})                      
-        except IntegrityError:
+        except:
             messages.error(self.request, 'Leave Request Already Send') 
             return HttpResponseRedirect('/forgot-password/')
 
+class ShowLeaveListView(ListView):
+    model = Leave
+    template_name = "leave/fullday_leave.html"    
+    def get_context_data(self, **kwargs):
+        context = super(ShowLeaveListView, self).get_context_data(**kwargs)
+        context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3,])
+        return context
 
+def delete_leave(request):
 
+    if request.method == 'POST':
+        leave_id =request.POST.get("leave_id")
+        leave_status = request.POST.get("leave_status") 
+        delete_leave = Leave.objects.filter(id = leave_id,status__in=[1])
+        delete_leave.delete()
+        start_date =request.POST.get("start_date")
+        end_date =request.POST.get("end_date")
+        emp_start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        emp_end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+        delta = emp_end_date - emp_start_date
+        for i in range(delta.days + 1):
+            delete_employee_leave = EmployeeAttendance.objects.filter(user=request.profile.user,employee_id = request.profile.employee_id,date =emp_start_date + timedelta(days=i),empatt_leave_status=5 )
+            delete_employee_leave.delete()
+    return JsonResponse({'status': 'success'})
+        
+    
 
 
 

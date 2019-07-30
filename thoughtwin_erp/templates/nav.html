@@ -22,8 +22,8 @@
 
           <li><a href="{% url 'employee:employee_list' %}">All Employee List</a></li>
           <li><a href="{% url 'employee:attendence-request-list' %}">In/Out Request</a></li>
-           <li><a href="{% url 'employee:request-full-leave' %}">Leave Request</a></li>
-
+          <li><a href="{% url 'employee:request-full-leave' %}">Leave Request</a></li>
+          <li><a href="{% url 'employee:show-leave-list' %}">Show All Leave</a></li>  
         {% endif %}
         
         <li class="dropdown">
@@ -35,6 +35,7 @@
           <li><a href="{% url 'employee:leaves' %}">Leave Status</a></li>
           <li><a href="{% url 'employee:leave-list' %}">Leave Requests</a></li>
           {% else %}
+          <li><a href="{% url 'employee:show-leave-list' %}">Show All Leave</a></li>
           <li><a href="{% url 'employee:attendence-request-list' %}">In/Out Request</a></li>
            <li><a href="{% url 'employee:request-full-leave' %}">Leave Request</a></li>
           {% endif %}
