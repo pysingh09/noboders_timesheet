@@ -15,8 +15,8 @@ class AuthRequiredMiddleware(object):
 
         auth_url_run = True
 
-        if request.user.is_authenticated:
-            request.profile = Profile.objects.get(user=request.user)
+        # if request.user.is_authenticated:
+        #     request.profile = Profile.objects.get(user=request.user)
 
         for url in self.exceptions:
             if url.match(request.path):

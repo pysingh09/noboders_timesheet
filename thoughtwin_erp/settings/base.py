@@ -156,4 +156,5 @@ AUTH_USER_EMAIL_UNIQUE = True
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     '/admin',
     '/login',
+    '/forgot-password',
 )

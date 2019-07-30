@@ -42,8 +42,8 @@ urlpatterns = [
     path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
     # path('list', Arm.as_view()),
     path('change-password/', change_password, name='change_password'),
-    
-    # path('reset-password/done/', auth_views.password_reset_done, {'template_name': 'reset_password_done.html'}, name='password_reset_done'),
+    path('forgot-password/', ForgotPassword.as_view(), name='forgot_password'),
+  
    
 
      

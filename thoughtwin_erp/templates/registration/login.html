@@ -13,11 +13,29 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% load i18n %}
-{% if messages %}
+<!-- {% if messages %}
     {% for message in messages %}
         {{ message }}
     {% endfor %}
-{% endif %}
+{% endif %} -->
+<ul class="messages">
+        {% for message in messages %}
+            
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} 
+                <div class="alert alert-danger">
+                    <strong>{{ message }}</strong>
+
+                </div>
+                    {% else %}
+                     
+                        <div class="alert alert-success">
+                            <strong>{{ message }}</strong>
+
+                        </div>   
+                {% endif %}
+          
+        {% endfor %}
+    </ul>
 
 {% if error %}
     <div class="alert alert-danger">
@@ -53,8 +71,8 @@
       {{ form.password|add_class:"form-control"|attr:"required:true"|attr:"placeholder:Password" }}
     </div>
     
-    
     <button type="submit" class="btn btn-success">Login</button>
+    <a href="{% url 'employee:forgot_password' %}">forgot password</a>
   </form>
 </div>
     

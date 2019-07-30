@@ -7,7 +7,7 @@ from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,ValidatingPasswordChangeForm
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -97,10 +97,8 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     profile.save()
     
                     return redirect("/employeelist/")    
-                else:
-                    import pdb; pdb.set_trace()                 
+                        
             else:
-                import pdb; pdb.set_trace()
                 user_form = SignUpForm(self.request.POST)
                 profile_form = ProfileForm(self.request.POST)
                 return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
@@ -598,25 +596,78 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4,5])
         return context
 
+
 def change_password(request):
     try:
-    
-        if request.method == 'POST':
-            form = ValidatingPasswordChangeForm(data=request.POST, user=request.user)
-            if form.is_valid():
-                form.save()
-                update_session_auth_hash(request, form.user)
-                messages.success(request, 'Your password was successfully updated!')
-                return HttpResponseRedirect('/login/')
-            else:
-                messages.error(request, 'Please correct the error below.')
-                return HttpResponseRedirect('/change-password/')
-        else:
-            form = ValidatingPasswordChangeForm(user=request.user)
+        if request.user.is_authenticated:
 
-            args = {'form': form}
-            return render(request, 'change_password.html', args)   
+            form = changePassForm(request.POST or None)
+
+            old_password = request.POST.get("old_password")
+            new_password = request.POST.get("new_password")
+            re_new_password = request.POST.get("re_new__password")
+
+            if request.POST.get("old_password"):
+
+                user = User.objects.get(username= request.user.username)
+                if user.check_password('{}'.format(old_password)) == False:
+                    form.set_old_password_flag()
+
+            if form.is_valid():
+
+                user.set_password('{}'.format(new_password))
+                user.save()
+                update_session_auth_hash(request, user)
+
+                return HttpResponseRedirect('/login/')
+
+            else:
+                return render(request, 'change_password.html', {"form": form})
+
+        else:
+            return HttpResponseRedirect('/login/')
 
     except Exception as e:
         raise        
 
+
+class ForgotPassword(View):
+    def get(self,request):
+        if request.user.is_authenticated:
+            return render(request,'home.html')
+        else:
+            return render(request,'forgot_password.html')
+    
+    def post(self,request):
+        try:
+            if request.method == 'POST':
+                email = request.POST['email']
+                try:
+                    user = User.objects.get(email=email)
+                except Exception as e:
+                    messages.add_message(self.request, messages.WARNING, "fgh")
+                    return HttpResponseRedirect('/forgot-password/')
+                    
+                password = User.objects.make_random_password()
+                user.set_password(password)
+                user.save()
+                frm = 'ankita@thoughtwin.com'
+                body = "Hi there. \n You have requested a new password for your account on Testing.\nYour temporary password is "+password+""
+                send_mail = EmailMessage("Forgot password",body,frm,to=[user.email])
+                send_mail.send() 
+                return JsonResponse({'status': 'success'})                      
+        except IntegrityError:
+            messages.error(self.request, 'Leave Request Already Send') 
+            return HttpResponseRedirect('/forgot-password/')
+
+
+
+
+
+
+
+
+
+
+
+     

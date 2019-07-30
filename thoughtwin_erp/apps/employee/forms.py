@@ -6,6 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Profile,AllottedLeave,Leave
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import auth
+from django.forms import ValidationError
+from django.contrib.auth.password_validation import CommonPasswordValidator
 # from phonenumber_field.formfields import PhoneNumberField
 
 # class SignUpForm(forms.ModelForm):
@@ -35,6 +37,20 @@ class SignUpForm(UserCreationForm):
         if email and User.objects.filter(email=email).exclude(username=username).exists():
             raise forms.ValidationError('Email address already exist.')
         return email
+    def clean(self):
+       
+        # super(SignUpForm, self).clean()
+       # This method will set the `cleaned_data` attribute
+        password1 = self.cleaned_data.get('password1')
+       # re_password = self.cleaned_data.get('password2')
+        if CommonPasswordValidator().validate(password1):
+            raise forms.ValidationError("Please choose another password")
+        return password1
+       # if not password == re_password:
+       #     raise ValidationError('Passwords must match')
+    # def clean_password1(self):
+    #     import pdb; pdb.set_trace()
+    #     validate_password(self.cleaned_data.get('password1'))
 
 class UserProfileForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=10)
@@ -88,7 +104,7 @@ for x in range(1,24):
        fmt = 'PM' 
     x = str(x)
     y = str(y)
-    # import pdb; pdb.set_trace()
+
     HOUR_CHOICES.append((x+':00',y+':00 '+fmt))
     HOUR_CHOICES.append((x+':30',y+':30 '+fmt))
 
@@ -102,28 +118,23 @@ class LeaveCreateForm(forms.ModelForm):
         fields = ('startdate','enddate')
 
 
-class ValidatingPasswordChangeForm(auth.forms.PasswordChangeForm):
-    MIN_LENGTH = 8
-    def clean_new_password1(self):
-        import pdb; pdb.set_trace()
-        password1 = self.cleaned_data.get('new_password1')
+class changePassForm(forms.Form):
+    old_password_flag = True #Used to raise the validation error when it is set to False
 
-        # At least MIN_LENGTH long
-        if len(password1) < self.MIN_LENGTH:
-            raise forms.ValidationError("The new password must be at least %d characters long." % self.MIN_LENGTH)
+    old_password = forms.CharField(label="Old Password", min_length=6, widget=forms.PasswordInput())
+    new_password = forms.CharField(label="New Password", min_length=6, widget=forms.PasswordInput())
+    re_new_password = forms.CharField(label="Re-type New Password", min_length=6, widget=forms.PasswordInput())
 
-        # At least one letter and one non-letter
-        first_isalpha = password1[0].isalpha()
-        if all(c.isalpha() == first_isalpha for c in password1):
-            raise forms.ValidationError("The new password must contain at least one letter and at least one digit or" \
-                                        " punctuation character.")
+    def set_old_password_flag(self): 
+        self.old_password_flag = False
+        return 0
 
-        # ... any other validation you want ...
+    def clean_old_password(self, *args, **kwargs):
+        old_password = self.cleaned_data.get('old_password')
+        if not old_password:
+            raise forms.ValidationError("You must enter your old password.")
 
-        return password1
-        class Meta:
-            model = User
-            help_texts = {
-                'password1': None,
-            }
-        
+        if self.old_password_flag == False:
+            raise forms.ValidationError("The old password that you have entered is wrong.")
+        return old_password
+
