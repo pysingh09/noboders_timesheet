@@ -15,8 +15,8 @@ class AuthRequiredMiddleware(object):
 
         auth_url_run = True
 
-        # if request.user.is_authenticated:
-        #     request.profile = Profile.objects.get(user=request.user)
+        if request.user.is_authenticated:
+            request.profile = Profile.objects.get(user=request.user)
 
         for url in self.exceptions:
             if url.match(request.path):
@@ -25,7 +25,7 @@ class AuthRequiredMiddleware(object):
         response = self.get_response(request)
         if not request.user.is_authenticated and auth_url_run :
             return HttpResponseRedirect('/login')    
-
+        
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
