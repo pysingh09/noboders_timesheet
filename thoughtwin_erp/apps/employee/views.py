@@ -338,9 +338,9 @@ class LeaveRequestView(View):
                 emails = request.POST.getlist('emails[]')
                 attendance.empatt_leave_status = 2
                 attendance.save()
-                frm = 'ankita@thoughtwin.com'
+                
                 text_content = request.user.username+ ',Leave request send for less hours'   
-                email = EmailMessage("Leave request for less hours",text_content,frm,to=emails)
+                email = EmailMessage("Leave request for less hours",text_content,settings.FROM_EMAIL,to=emails)
                 
                 email.send()   
             return JsonResponse({'status': 'success'})
@@ -412,8 +412,8 @@ class LeaveStatusView(View):
             message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
         if employee_attendance. empatt_leave_status == '4':
             message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
-        frm = 'ankita@thoughtwin.com'
-        email = EmailMessage("Leave response for less hour",message,frm,to=[employee_attendance.user.email
+        
+        email = EmailMessage("Leave response for less hour",message,settings.FROM_EMAIL,to=[employee_attendance.user.email
 ])
         email.send()
         
@@ -489,10 +489,10 @@ class RequestLeaveView(CreateView):
             text_content = strip_tags(content)
     
             emails = self.request.POST.get('emails').split(',')
-            frm = 'ankita@thoughtwin.com'
+            
             user_name =  self.request.user.email
         
-            email = EmailMessage("Leave Request",text_content,frm,to=emails)
+            email = EmailMessage("Leave Request",text_content,settings.FROM_EMAIL,to=emails)
             email.send()
             
            
@@ -580,8 +580,8 @@ def full_leave_status(request):
         email_data = []
         for user in User.objects.all():
             email_data.append(user.email)    
-        frm = 'ankita@thoughtwin.com'
-        email = EmailMessage("Leave Response",message,frm,to=email_data)
+        
+        email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=email_data)
         email.send()
     return JsonResponse({'status': 'success'})
 
@@ -636,7 +636,7 @@ class ForgotPassword(View):
         if request.user.is_authenticated:
             return render(request,'home.html')
         else:
-            return render(request,'forgot_password.html')
+            return render(request,'registration/forgot-password.html')
     
     def post(self,request):
         try:
@@ -645,17 +645,18 @@ class ForgotPassword(View):
                 try:
                     user = User.objects.get(email=email)
                 except Exception as e:
-                    messages.add_message(self.request, messages.WARNING, "fgh")
+                    messages.error(self.request, 'Email not exist')
                     return HttpResponseRedirect('/forgot-password/')
                     
                 password = User.objects.make_random_password()
                 user.set_password(password)
                 user.save()
-                frm = 'ankita@thoughtwin.com'
                 body = "Hi there. \n You have requested a new password for your account on Testing.\nYour temporary password is "+password+""
-                send_mail = EmailMessage("Forgot password",body,frm,to=[user.email])
+                send_mail = EmailMessage("Forgot password",body,settings.FROM_EMAIL,to=[user.email])
                 send_mail.send() 
-                return JsonResponse({'status': 'success'})                      
+
+                messages.success(self.request, 'Check your password in mail') 
+                return HttpResponseRedirect('/forgot-password/')
         except IntegrityError:
             messages.error(self.request, 'Leave Request Already Send') 
             return HttpResponseRedirect('/forgot-password/')
