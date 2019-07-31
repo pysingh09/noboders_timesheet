@@ -37,15 +37,15 @@ class SignUpForm(UserCreationForm):
         if email and User.objects.filter(email=email).exclude(username=username).exists():
             raise forms.ValidationError('Email address already exist.')
         return email
-    def clean(self):
+    # def clean(self):
        
-        # super(SignUpForm, self).clean()
-       # This method will set the `cleaned_data` attribute
-        password1 = self.cleaned_data.get('password1')
-       # re_password = self.cleaned_data.get('password2')
-        if CommonPasswordValidator().validate(password1):
-            raise forms.ValidationError("Please choose another password")
-        return password1
+    #     # super(SignUpForm, self).clean()
+    #    # This method will set the `cleaned_data` attribute
+    #     password1 = self.cleaned_data.get('password1')
+    #    # re_password = self.cleaned_data.get('password2')
+    #     if CommonPasswordValidator().validate(password1):
+    #         raise forms.ValidationError("Please choose another password")
+    #     return password1
        # if not password == re_password:
        #     raise ValidationError('Passwords must match')
     # def clean_password1(self):

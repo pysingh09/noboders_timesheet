@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-    <h3>Leaves</h3><br>
+    <h3>Show All Leave</h3><br>
     <div class="search-container">
      <table class = "table" id="myTable1" border="2">
         <thead>
@@ -29,22 +29,17 @@
                     <td>{{ leave.endtime }}</td>
                     <td>{{ leave.get_leave_type_display }}</td>
                     <td>{{ leave.get_status_display }}</td>
-                    <td><button class="btn" id="leave" data-leave-id="{{leave.id}}" data-leave_status="{{ leave.get_status_display }}" data-start_date="{{leave.startdate|date:'Y-m-d'}}" data-end_date="{{leave.enddate|date:'Y-m-d'}}">Delete</button></td>
+                    <td><button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave_status="{{ leave.get_status_display }}" data-start_date="{{leave.startdate|date:'Y-m-d'}}" data-end_date="{{leave.enddate|date:'Y-m-d'}}" id="leave">Delete</button></td>
                 </tr>
                 {% endfor %}
             </tbody>
       </table>
     </div>
 
-<!-- {% endblock %} -->
-
-<!--java script -->
-<!-- {% block script %}
-{{ block.super }} -->
 
 <script>
 $(document).ready(function(){
-    $("#leave").on('click', function (e) {
+    $(document).on('click', '#leave', function(e){
       e.preventDefault();
       var leave_id = $(this).data("leave-id");
       var leave_status = $(this).data("leave_status");
@@ -60,7 +55,7 @@ $(document).ready(function(){
           'end_date':end_date,
           'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
-      success: function(response) {
+        success: function(response) {
            
             if(response.status=="success"){
              

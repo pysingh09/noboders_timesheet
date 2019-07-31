@@ -72,13 +72,21 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
         context = super(UserCreateView, self).get_context_data(**kwargs)
         if 'form2' not in context:
             context['form2'] = self.second_form_class()
+        if 'form' in context:
+            context['form'] = self.form_class()
         return context
 
-    def form_invalid(self, form):  
-        response = super().form_invalid(form)
+    def form_invalid(self, form,**kwargs): 
+        # import pdb; pdb.set_trace()
+        # context['form'] = super().form_invalid(form)
+        context = self.get_context_data(**kwargs)
+        context['form2'] = self.second_form_class(self.request.POST)
+        # context['form'] = self.form_class(self.request.POST)
+        # response = super().form_invalid(form)
+        return self.render_to_response(context)
         # response = super().form_invalid(self.second_form_class)
         # self.second_form_class
-        return response
+        # return response
         
     def form_valid(self,form):
         try:
@@ -96,11 +104,13 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     profile.user = new_user
                     profile.save()
     
-                    return redirect("/employeelist/")    
+                    return redirect("/employeelist/") 
+                else:
+                    import pdb; pdb.set_trace()   
                         
             else:
-                user_form = SignUpForm(self.request.POST)
-                profile_form = ProfileForm(self.request.POST)
+                user_form = SignUpForm()
+                profile_form = ProfileForm()
                 return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
         except Exception as e:
             print("Uh,oh...We met some error:",str(e))
@@ -456,9 +466,11 @@ class RequestLeaveView(CreateView):
                 if starttime >= endtime:
                     messages.error(self.request, 'End Time Not Valid')
                     email_data = []
+                    email = email_data
                     for user in User.objects.all():
                         email_data.append(user.email)
-                    return render(self.request,'request_leave.html',{'form':form ,'emails':email_data})
+                        email_data.sort()
+                    return render(self.request,'request_leave.html',{'form':form ,'emails':email})
 
                 starttime = starttime.strftime('%I:%M %p')
                 endtime = endtime.strftime('%I:%M %p')
@@ -491,7 +503,6 @@ class RequestLeaveView(CreateView):
             emails = self.request.POST.get('emails').split(',')
             
             user_name =  self.request.user.email
-        
             email = EmailMessage("Leave Request",text_content,settings.FROM_EMAIL,to=emails)
             email.send()
             
@@ -516,6 +527,7 @@ class RequestLeaveView(CreateView):
         email_data = []
         for user in User.objects.all():
             email_data.append(user.email)
+            email_data.sort()
         context['emails'] = email_data
         return context
 
@@ -645,7 +657,7 @@ class ForgotPassword(View):
                 try:
                     user = User.objects.get(email=email)
                 except Exception as e:
-                    messages.error(self.request, 'Email not exist')
+                    messages.error(self.request, 'Email Not Exist')
                     return HttpResponseRedirect('/forgot-password/')
                     
                 password = User.objects.make_random_password()
@@ -656,7 +668,7 @@ class ForgotPassword(View):
                 send_mail.send() 
                 return JsonResponse({'status': 'success'})                      
         except:
-                messages.success(self.request, 'Check your password in mail') 
+                messages.success(self.request, 'Check Your Password In Mail') 
                 return HttpResponseRedirect('/forgot-password/')
         
 
@@ -673,7 +685,7 @@ def delete_leave(request):
     if request.method == 'POST':
         leave_id =request.POST.get("leave_id")
         leave_status = request.POST.get("leave_status") 
-        delete_leave = Leave.objects.filter(id = leave_id,status__in=[1])
+        delete_leave = Leave.objects.filter(id = leave_id,status__in=[1,2])
         delete_leave.delete()
         start_date =request.POST.get("start_date")
         end_date =request.POST.get("end_date")
@@ -681,7 +693,7 @@ def delete_leave(request):
         emp_end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
         delta = emp_end_date - emp_start_date
         for i in range(delta.days + 1):
-            delete_employee_leave = EmployeeAttendance.objects.filter(user=request.profile.user,employee_id = request.profile.employee_id,date =emp_start_date + timedelta(days=i),empatt_leave_status=5 )
+            delete_employee_leave = EmployeeAttendance.objects.filter(user=request.profile.user,employee_id = request.profile.employee_id,date =emp_start_date + timedelta(days=i),empatt_leave_status__in=[5,6] )
             delete_employee_leave.delete()
     return JsonResponse({'status': 'success'})
         
