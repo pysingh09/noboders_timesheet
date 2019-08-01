@@ -7,7 +7,7 @@ from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm,EmployeeRegistrationForm 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -63,49 +63,35 @@ def index(request):
 class UserCreateView(PermissionRequiredMixin,CreateView):
     permission_required = ('employee.add_profile', )
     raise_exception = True
-    form_class = SignUpForm
-    second_form_class = UserProfileForm
-    template_name = "registration/signup.html"
+    form_class = EmployeeRegistrationForm
+    template_name = "registration/employee-create.html"
     success_url = "/employeelist/"
 
-    def get_context_data(self, **kwargs): 
-        context = super(UserCreateView, self).get_context_data(**kwargs)
-        if 'form2' not in context:
-            context['form2'] = self.second_form_class()
-        return context
-
-    def form_invalid(self, form):  
-        response = super().form_invalid(form)
-        # response = super().form_invalid(self.second_form_class)
-        # self.second_form_class
-        return response
-        
-    def form_valid(self,form):
+    def form_valid(self,form,**kwargs):
         try:
-            if self.request.method == 'POST':
-                profile_form = ProfileForm(data=self.request.POST)
-                user_form = SignUpForm(data=self.request.POST)
-                if user_form.is_valid() and profile_form.is_valid():
+            form = self.form_class(data=form.data)
+            usr= form.save(commit=False)
+            usr.username = form.data['email']
+            usr.save()
 
-                    new_user = user_form.save(commit=False)
-                    profile = profile_form.save(commit=False)
-                    new_user.set_password(user_form.cleaned_data['password1'])
-                    new_user.save()
+            employee_id = form.data['employee_id']
+            teamlead = User.objects.get(id=form.data['teamlead'])
+            contact_no = form.data['contact_no']
+            designation = form.data['designation']
+            date_of_birth = form.data['date_of_birth']
+            date_of_joining = form.data['date_of_joining']
+            prof = Profile.objects.create(user=usr,employee_id=employee_id,teamlead=teamlead,contact_no=contact_no,designation=designation,created_by=self.request.user)
+            prof.date_of_birth = date_of_birth
+            prof.date_of_joining = date_of_joining
+            prof.save()
+            return HttpResponseRedirect('/employeelist')
 
-                    profile.created_by = self.request.user
-                    profile.user = new_user
-                    profile.save()
-    
-                    return redirect("/employeelist/")    
-                        
-            else:
-                user_form = SignUpForm(self.request.POST)
-                profile_form = ProfileForm(self.request.POST)
-                return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
         except Exception as e:
-            print("Uh,oh...We met some error:",str(e))
-            raise e
- 
+            messages.error(self.request,'File Upload Failed')
+            form = EmployeeRegistrationForm(self.request.POST)
+            return render(self.request,"registration/employee-create.html",{'form':form})
+
+
 
 class EmployeeProfile(TemplateView):
     template_name = "profile.html"
