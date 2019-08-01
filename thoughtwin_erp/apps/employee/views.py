@@ -373,7 +373,8 @@ def attendence_request_list(request):
         if attendance.date_time_diffrence() < timedelta(hours=9):
             result.append(attendance)
     for user in User.objects.all():
-            email_data.append(user.email)   
+            email_data.append(user.email)  
+            email_data.sort() 
     return render(request,'red_list.html', {'attendance_data' : result,'emails':email_data})
 
 
