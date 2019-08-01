@@ -97,7 +97,7 @@ class EmployeeProfile(TemplateView):
     template_name = "profile.html"
 
 class EmployeeListView(PermissionRequiredMixin,ListView):
-    permission_required = ('employee.can_view_profile_list', )
+    permission_required = ('employee.can_view_user_profile_list', )
     raise_exception = True
     model = Profile
     template_name = "employee_list.html"
@@ -105,7 +105,7 @@ class EmployeeListView(PermissionRequiredMixin,ListView):
 
 
 class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
-    permission_required = ('employee.can_view_profile_list', )
+    permission_required = ('employee.can_view_user_profile_list', )
     raise_exception = True 
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = kwargs['pk'])
@@ -505,15 +505,21 @@ class RequestLeaveView(CreateView):
         context['emails'] = email_data
         return context
 
-class EmpLeaveListView(PermissionRequiredMixin,ListView):
-    permission_required = ('employee.can_view_leave_list',)
-    raise_exception = True
+# class EmpLeaveListView(PermissionRequiredMixin,ListView):
+class EmpLeaveListView(ListView):    
+    # permission_required = ('employee.can_view_leave_list',)
+    # raise_exception = True
     model = Leave
     template_name = "leave/leave_list.html"
-    # def get_context_data(self, **kwargs):
-    #     context = super(FullLeaveListView, self).get_context_data(**kwargs)
-    #     context['object_list'] = self.model.objects.filter(emp_leave_type__in=[3,4,5])
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super(EmpLeaveListView, self).get_context_data(**kwargs)
+        usr = User.objects.filter(email=self.request.user.email)
+        profiles = Profile.objects.filter(teamlead=usr[0])
+        users =[]
+        for profile in profiles:
+            users.append(profile.user)
+        context['object_list'] = self.model.objects.filter(user__in=users)
+        return context
 
 
 def full_leave(request):
