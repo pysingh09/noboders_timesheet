@@ -58,7 +58,6 @@ tr td:first-child:before
                   <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date|date:'Y-m-d' }}">
                   {% endif %}
                 </td>
-                
               </tr>
             {% endfor %}
           </tbody>
@@ -68,7 +67,7 @@ tr td:first-child:before
       <button class="btn btn-success delete-row" id="delrow" onclick="return delrow();">Delete row</button>
        {% endif %}
     </div>
-
+    {{ attendance.intime }}
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
