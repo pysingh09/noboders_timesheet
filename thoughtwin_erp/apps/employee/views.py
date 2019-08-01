@@ -100,6 +100,9 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     profile.created_by = self.request.user
                     profile.user = new_user
                     profile.save()
+                    
+                    group = Group.objects.get(name=profile.get_designation_display()) 
+                    group.user_set.add(user)
     
                     return redirect("/employeelist/")                         
             else:
