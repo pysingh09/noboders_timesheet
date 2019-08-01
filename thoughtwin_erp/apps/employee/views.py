@@ -72,12 +72,11 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
         context = super(UserCreateView, self).get_context_data(**kwargs)
         if 'form2' not in context:
             context['form2'] = self.second_form_class()
-        if 'form' in context:
-            context['form'] = self.form_class()
+        # if 'form' in context:
+        #     context['form'] = self.form_class()
         return context
 
     def form_invalid(self, form,**kwargs): 
-        # import pdb; pdb.set_trace()
         # context['form'] = super().form_invalid(form)
         context = self.get_context_data(**kwargs)
         context['form2'] = self.second_form_class(self.request.POST)
@@ -88,7 +87,7 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
         # self.second_form_class
         # return response
         
-    def form_valid(self,form):
+    def signup(self,form):
         try:
             if self.request.method == 'POST':
                 profile_form = ProfileForm(data=self.request.POST)
@@ -104,10 +103,7 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     profile.user = new_user
                     profile.save()
     
-                    return redirect("/employeelist/") 
-                else:
-                    import pdb; pdb.set_trace()   
-                        
+                    return redirect("/employeelist/")                         
             else:
                 user_form = SignUpForm()
                 profile_form = ProfileForm()
