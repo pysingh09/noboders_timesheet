@@ -101,6 +101,11 @@ class EmployeeAttendance(BaseModel):
     class Meta:
         unique_together = ('user', 'date',)
 
+    class Meta:
+        permissions = (
+            ("can_view_employee_attendance_list", "Can View Employee Attendance List"),
+        )
+
     def __str__(self):
         return str(self.employee_id)
 

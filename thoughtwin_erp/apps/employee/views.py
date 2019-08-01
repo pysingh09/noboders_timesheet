@@ -287,7 +287,7 @@ def date_time_attendence_view(request):
     template_name = "partial/date_time_popup.html"
     return render(request,template_name,{ "employee_attendence":attendance }) 
 
-@permission_required('employee.can_view_employeeattendance_list', raise_exception=True)
+@permission_required('employee.can_view_employee_attendance_list', raise_exception=True)
 def employee_details(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
     return render(request,'home.html', {'attendances_data' : attendances_data})
@@ -355,7 +355,7 @@ class LeaveRequestView(View):
      
 
 class LeaveListView(PermissionRequiredMixin,ListView):
-    permission_required = ('employee.can_view_employeeattendance_list',)
+    permission_required = ('employee.can_view_employee_attendance_list',)
     raise_exception = True 
     model = EmployeeAttendance
     template_name = "leave_list.html"
@@ -537,6 +537,11 @@ class EmpLeaveListView(ListView):
     template_name = "leave/leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(EmpLeaveListView, self).get_context_data(**kwargs)
+        if self.request.user.groups.exists():
+            group_name = self.request.user.groups.first().name
+            if group_name == 'HR' or group_name == 'MD':
+                return context
+
         usr = User.objects.filter(email=self.request.user.email)
         profiles = Profile.objects.filter(teamlead=usr[0])
         users =[]
@@ -603,7 +608,7 @@ def full_leave_status(request):
 
 
 class FullLeaveListView(PermissionRequiredMixin,ListView):
-    permission_required = ('employee.can_view_employeeattendance_list',)
+    permission_required = ('employee.can_view_employee_attendance_list',)
     raise_exception = True
     model = EmployeeAttendance
     template_name = "fullday_leave_list.html"
