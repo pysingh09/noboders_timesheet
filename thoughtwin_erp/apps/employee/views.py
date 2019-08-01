@@ -497,8 +497,11 @@ class RequestLeaveView(CreateView):
 
             content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
             text_content = strip_tags(content)
-    
             emails = self.request.POST.get('emails').split(',')
+
+            default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+            for usr in default_mail_list:
+                emails.append(usr.email)
             
             user_name =  self.request.user.email
             email = EmailMessage("Leave Request",text_content,settings.FROM_EMAIL,to=emails)
@@ -575,6 +578,7 @@ def full_leave_status(request):
     if request.method == 'POST':
         leave_id =request.POST.get("leave_id")
         leave_user =request.POST.get("leave_user")
+        leave_type =request.POST.get("leave_type")
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
         leave.status = request.POST.get("leave_status")
@@ -599,11 +603,27 @@ def full_leave_status(request):
         if leave.status == '3':
             message = leave.user.username +",Leave reject by "+request.user.username
         email_data = []
+        aaccept_email_data = []
+        aaccept_email_data.append(leave.user.profile.teamlead.email)
+
+        default_mail_list = User.objects.filter(groups__name__in=['MD','HR']) 
+        for usr in default_mail_list:
+            aaccept_email_data.append(usr.email)
+
         for user in User.objects.all():
             email_data.append(user.email)    
-        
-        email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=email_data)
-        email.send()
+
+        content = render_to_string('ooo_email_content.html',{'startdate':leave.startdate, 'enddate':leave.enddate ,'leave_type':leave_type })
+        text_content = strip_tags(content)
+
+        accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=aaccept_email_data)
+        accept_email.send()
+        if leave.status == '2': 
+            email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)
+            email.send()
+        # if leave.status == '3':
+        #     email = EmailMessage("Leave",text_content,settings.FROM_EMAIL,to=aaccept_email_data)
+        #     email.send()                
     return JsonResponse({'status': 'success'})
 
 

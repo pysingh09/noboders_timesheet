@@ -31,10 +31,10 @@
                     <td>{{ leave.get_status_display }}</td>
                     <td>
                     {% if leave.status != 2  %}  
-                    <button type="button btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="2" class="leave btn btn-success">Approve</button>
+                    <button type="button btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="2" data-type="{{ leave.get_leave_type_display }}" class="leave btn btn-success">Approve</button>
                     {% endif %}  
                      {% if leave.status != 3  %} 
-                    <button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="3" class="leave btn btn-danger">Reject</button>
+                    <button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="3" data-type="{{ leave.get_leave_type_display }}" class="leave btn btn-danger">Reject</button>
                     {% endif %} 
                     </td>
                 </tr>
@@ -55,6 +55,7 @@
       var leave_id = $(this).data("leave-id");
       var leave_status = $(this).data("leave_status");
       var leave_user = $(this).data("leave-user");
+      var leave_type = $(this).data("type");
       $.ajax({
         url: "{% url "employee:full-leave-status" %}",
         'type': "POST",
@@ -62,6 +63,7 @@
           'leave_id': leave_id,
           'leave_status':leave_status,
           'leave_user':leave_user,
+          'leave_type':leave_type,
           'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
       success: function(response) {
