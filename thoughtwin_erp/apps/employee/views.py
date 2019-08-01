@@ -7,7 +7,7 @@ from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm,EmployeeRegistrationForm 
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -63,16 +63,15 @@ def index(request):
 class UserCreateView(PermissionRequiredMixin,CreateView):
     permission_required = ('employee.add_profile', )
     raise_exception = True
-    form_class = EmployeeRegistrationForm
-    template_name = "registration/employee-create.html"
+    form_class = SignUpForm
+    second_form_class = UserProfileForm
+    template_name = "registration/signup.html"
     success_url = "/employeelist/"
 
     def get_context_data(self, **kwargs): 
         context = super(UserCreateView, self).get_context_data(**kwargs)
         if 'form2' not in context:
             context['form2'] = self.second_form_class()
-        # if 'form' in context:
-        #     context['form'] = self.form_class()
         return context
 
     def form_invalid(self, form,**kwargs): 
@@ -86,7 +85,7 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
         # self.second_form_class
         # return response
         
-    def signup(self,form):
+    def form_valid(self,form):
         try:
             if self.request.method == 'POST':
                 profile_form = ProfileForm(data=self.request.POST)
