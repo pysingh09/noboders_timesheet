@@ -602,7 +602,7 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
     template_name = "fullday_leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4,5])
+        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4])
         return context
 
 
@@ -649,7 +649,7 @@ class ForgotPassword(View):
     
     def post(self,request):
         try:
-            if request.method == 'POST':
+            if request.method == 'POST':                
                 email = request.POST['email']
                 try:
                     user = User.objects.get(email=email)
@@ -663,10 +663,11 @@ class ForgotPassword(View):
                 body = "Hi there. \n You have requested a new password for your account on Testing.\nYour temporary password is "+password+""
                 send_mail = EmailMessage("Forgot password",body,settings.FROM_EMAIL,to=[user.email])
                 send_mail.send() 
-                return JsonResponse({'status': 'success'})                      
-        except:
                 messages.success(self.request, 'Check Your Password In Mail') 
                 return HttpResponseRedirect('/forgot-password/')
+        except Exception as e:
+                raise
+
         
 
 class ShowLeaveListView(ListView):
@@ -674,7 +675,7 @@ class ShowLeaveListView(ListView):
     template_name = "leave/fullday_leave.html"    
     def get_context_data(self, **kwargs):
         context = super(ShowLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3,])
+        context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3])
         return context
 
 def delete_leave(request):
