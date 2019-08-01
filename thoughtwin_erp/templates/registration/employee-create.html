@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block content %}
+
+
+<form class="form-horizontal signup_form" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
+<h2>Create New Employee</h2>
+  {% csrf_token %}
+
+<ul class="messages">
+        {% for message in messages %}
+            
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} 
+                <div class="alert alert-danger">
+                    <strong>{{ message }}</strong>
+
+                </div>
+                    {% else %}
+                     
+                        <div class="alert alert-success">
+                            <strong>{{ message }}</strong>
+
+                        </div>   
+                {% endif %}
+          
+        {% endfor %}
+    </ul>
+
+   
+
+    <p>First Name:<br>{{ form.first_name }}</p>
+    <p>Last Name :<br>{{ form.last_name }}</p>
+    <p>Email     :<br>{{ form.email }}</p>
+    <p>Password     :<br>{{ form.password1 }}</p>
+    <p>Confirm Password     :<br>{{ form.password2 }}</p>
+    <p>Employee Id :<br>{{ form.employee_id }}</p>
+    <p>Contact   :<br>{{ form.contact_no }}</p>
+    <p>Designation   :<br>{{ form.designation }}</p>
+    <p>DOB       :<br>{{ form.date_of_birth }}</p>
+    <p>DOJ       :<br>{{ form.date_of_joining}}</p>
+    <p>Team Lead   :<br>{{ form.teamlead }}</p>
+
+
+      <button type="submit" class="btn btn-success sub_btn" id = "phonenumber">Submit</button>
+</form>
+
+
+<script>
+    $(document).ready(function () {
+        $('#id_date_of_birth ').datepicker({
+
+          dateFormat: 'yy-mm-dd'
+        });
+    });
+    $(document).ready(function () {
+        $('#id_date_of_joining').datepicker({
+
+          dateFormat: 'yy-mm-dd'
+        });
+    });
+
+</script>
+{% endblock %} 

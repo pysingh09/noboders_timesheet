@@ -51,6 +51,27 @@ class SignUpForm(UserCreationForm):
     # def clean_password1(self):
     #     import pdb; pdb.set_trace()
     #     validate_password(self.cleaned_data.get('password1'))
+ROLE_CHOICES = ( 
+    (1, ('MD')),
+    (2, ('Project manager')),
+    (3, ('BDE')),
+    (4 , ('HR')),
+    (5 , ('TeamLead')),
+    (6 , ('Senior developer')),
+    (7 , ('Junior developer')),
+    (8 , ('Trainee')),
+    (9 , ('QA')),
+)
+class EmployeeRegistrationForm(UserCreationForm):
+    employee_id = forms.CharField(max_length=10)
+    contact_no = forms.CharField(max_length=10)        
+    date_of_birth = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
+    date_of_joining = forms.DateField(help_text='Required. Format: YYYY-MM-DD') 
+    designation = forms.ChoiceField(choices = ROLE_CHOICES)
+    teamlead = forms.ModelChoiceField(queryset=User.objects.all())
+    class Meta:
+        model = User
+        fields = ('first_name','last_name','email','password1','password2')   
 
 class UserProfileForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=10)

@@ -7,7 +7,7 @@ from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm,EmployeeRegistrationForm 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -63,9 +63,8 @@ def index(request):
 class UserCreateView(PermissionRequiredMixin,CreateView):
     permission_required = ('employee.add_profile', )
     raise_exception = True
-    form_class = SignUpForm
-    second_form_class = UserProfileForm
-    template_name = "registration/signup.html"
+    form_class = EmployeeRegistrationForm
+    template_name = "registration/employee-create.html"
     success_url = "/employeelist/"
 
     def get_context_data(self, **kwargs): 
@@ -108,16 +107,19 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                 user_form = SignUpForm()
                 profile_form = ProfileForm()
                 return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
+
         except Exception as e:
-            print("Uh,oh...We met some error:",str(e))
-            raise e
- 
+            messages.error(self.request,'File Upload Failed')
+            form = EmployeeRegistrationForm(self.request.POST)
+            return render(self.request,"registration/employee-create.html",{'form':form})
+
+
 
 class EmployeeProfile(TemplateView):
     template_name = "profile.html"
 
 class EmployeeListView(PermissionRequiredMixin,ListView):
-    permission_required = ('employee.can_view_profile_list', )
+    permission_required = ('employee.can_view_user_profile_list', )
     raise_exception = True
     model = Profile
     template_name = "employee_list.html"
@@ -125,7 +127,7 @@ class EmployeeListView(PermissionRequiredMixin,ListView):
 
 
 class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
-    permission_required = ('employee.can_view_profile_list', )
+    permission_required = ('employee.can_view_user_profile_list', )
     raise_exception = True 
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = kwargs['pk'])
@@ -528,15 +530,21 @@ class RequestLeaveView(CreateView):
         context['emails'] = email_data
         return context
 
-class EmpLeaveListView(PermissionRequiredMixin,ListView):
-    permission_required = ('employee.can_view_leave_list',)
-    raise_exception = True
+# class EmpLeaveListView(PermissionRequiredMixin,ListView):
+class EmpLeaveListView(ListView):    
+    # permission_required = ('employee.can_view_leave_list',)
+    # raise_exception = True
     model = Leave
     template_name = "leave/leave_list.html"
-    # def get_context_data(self, **kwargs):
-    #     context = super(FullLeaveListView, self).get_context_data(**kwargs)
-    #     context['object_list'] = self.model.objects.filter(emp_leave_type__in=[3,4,5])
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super(EmpLeaveListView, self).get_context_data(**kwargs)
+        usr = User.objects.filter(email=self.request.user.email)
+        profiles = Profile.objects.filter(teamlead=usr[0])
+        users =[]
+        for profile in profiles:
+            users.append(profile.user)
+        context['object_list'] = self.model.objects.filter(user__in=users)
+        return context
 
 
 def full_leave(request):
