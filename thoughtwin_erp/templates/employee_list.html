@@ -3,23 +3,7 @@
 {% block title %}{% endblock %}
 {% block content %} 
     <h3>Company Employee Details</h3>  
-<style type="text/css">
-  body
-{
-    counter-reset: Serial;           
-}
 
-table
-{
-    border-collapse: separate;
-}
-
-tr td:first-child:before
-{
-  counter-increment: Serial;     
-  content: counter(Serial); 
-}
-</style>
     <br>
   
         <table class = "table" id="myTable2" border="2">
@@ -47,7 +31,7 @@ tr td:first-child:before
         <tbody>
             {% for profile in object_list %}
               <tr>
-                <td></td>  
+                <td>{{ forloop.counter }}</td>  
                 <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a>
                  </td>
                 <td><a href="{% url 'employee:profile_list' profile.user.id %}"><span class="glyphicon glyphicon-pencil" >{{ profile.user }}</span></a></td>  

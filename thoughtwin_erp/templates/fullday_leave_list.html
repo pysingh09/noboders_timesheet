@@ -17,7 +17,7 @@
             <tbody>
                 {% for leave in object_list %}
                   <tr>
-                    <td></td>    
+                    <td>{{ forloop.counter }}</td>    
                     <td>{{ leave.user }}</td>
                     <td>{{ leave.date }}</td>
                     
@@ -75,22 +75,6 @@
 
     });
   </script>
-<style type="text/css">
-  body
-{
-    counter-reset: Serial;           
-}
 
-table
-{
-    border-collapse: separate;
-}
-
-tr td:first-child:before
-{
-  counter-increment: Serial;     
-  content: counter(Serial); 
-}
-</style>
 
 {% endblock %}
