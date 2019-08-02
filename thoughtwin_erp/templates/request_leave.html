@@ -78,7 +78,7 @@
 
     <div class="form-group col-sm-3" id="endtime">
       <label for="sel1">Time:</label>
-      {{ form.endtime|add_class:"form-control" }}
+      {{ form.endtime|add_class:"form-control"|attr:"disabled:true" }}
     </div>
 
     <div class="form-group col-sm-12" id="reason">
@@ -87,7 +87,11 @@
     </div>
     
     <input type="hidden" id="emails" value="" name="emails">
-    <div class="form-group col-sm-12" id="selectemail"></div> <!-- get email id-->
+    <div class="form-group col-sm-12" id="selectemail">
+         {% for email in mail_list %}   
+      <div style="margin: 2px;" class="btn btn-primary">{{ email }}</div>
+         {% endfor %}
+    </div> <!-- get email id-->
 
   <div class="col-md-12"><button class="btn btn-success" data-id="selectemail">Submit</button></div>
   
@@ -103,7 +107,7 @@
       <div id="myDropdown" class = "dropdown-menu drop" role = "menu">
      <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
           {% for em in emails %}    
-          <li><a class="emailtext" id="demo">{{ em }}</a></li>
+          <li><a class="emailtext">{{ em }}</a></li>
           {% endfor %}
       
       </div>
@@ -134,7 +138,7 @@
     }
 
     $(document).on('click', '.removeemailtext', function(){
-      $('.drop').append('<li><a class="emailtext" id="demo">'+$(this).text()+'</a></li>');
+      $('.drop').append('<li><a class="emailtext" >'+$(this).text()+'</a></li>');
       $(this).remove();
       add_email();
     });
@@ -228,6 +232,7 @@ $(document).on("change","#starttime",function(){
 
 
 });
+
 
 // $(document).on("click","#demo",function(){
 //    

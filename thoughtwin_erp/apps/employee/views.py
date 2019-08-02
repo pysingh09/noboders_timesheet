@@ -469,26 +469,28 @@ class RequestLeaveView(CreateView):
         
             # if year == datetime.datetime.now().year:
             if 'starttime' in form.data:
+                # import pdb; pdb.set_trace()
                 starttime = form.data['starttime']
                 starttime = datetime.strptime(starttime ,'%H:%M')
 
-                endtime = form.data['endtime']
-                endtime = datetime.strptime(endtime ,'%H:%M')
-                if starttime >= endtime:
-                    messages.error(self.request, 'End Time Not Valid')
-                    email_data = []
-                    email = email_data
-                    for user in User.objects.all():
-                        email_data.append(user.email)
-                        email_data.sort()
-                    return render(self.request,'request_leave.html',{'form':form ,'emails':email})
+                # endtime = form.data['endtime']
+                # endtime = datetime.strptime(endtime ,'%H:%M')
+                endtime = starttime + timedelta(hours=4)
+                # if starttime >= endtime:
+                #     messages.error(self.request, 'End Time Not Valid')
+                #     email_data = []
+                #     email = email_data
+                #     for user in User.objects.all():
+                #         email_data.append(user.email)
+                #         email_data.sort()
+                #     return render(self.request,'request_leave.html',{'form':form ,'emails':email})
 
                 starttime = starttime.strftime('%I:%M %p')
                 endtime = endtime.strftime('%I:%M %p')
                 
 
-                leave.starttime = form.data['starttime']
-                leave.endtime = form.data['endtime']
+                leave.starttime = starttime #form.data['starttime']
+                leave.endtime = endtime #form.data['starttime']
             
         
             startdate = form.data['startdate'].split('-')
@@ -508,20 +510,22 @@ class RequestLeaveView(CreateView):
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
 
 
-            content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
-            text_content = strip_tags(content)
+            
             emails = self.request.POST.get('emails').split(',')
-
+            mail_list = []
             default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
             for usr in default_mail_list:
                 emails.append(usr.email)
-            
+                mail_list.append(usr.email)        
             user_name =  self.request.user.email
+            content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
+            text_content = strip_tags(content)
             email = EmailMessage("Leave Request",text_content,settings.FROM_EMAIL,to=emails)
             email.send()
             
-           
             messages.success(self.request, 'Successfully Leave Request Send')
+            # 'mail_list':mail_list - get mail list
+            # return render(self.request,'request_leave.html', {'accept_emails' : mail_lists})
             return HttpResponseRedirect('/leave')
             # else:
             #     messages.error(self.request, 'Leave Are Not Alloted In This Year') 
@@ -538,11 +542,16 @@ class RequestLeaveView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.all()
+        default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
         email_data = []
+        mail_list = [] 
         for user in User.objects.all():
             email_data.append(user.email)
             email_data.sort()
+        for usr in default_mail_list:
+            mail_list.append(usr.email)
         context['emails'] = email_data
+        context['mail_list'] = mail_list
         return context
 
 # class EmpLeaveListView(PermissionRequiredMixin,ListView):
