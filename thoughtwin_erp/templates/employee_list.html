@@ -34,7 +34,7 @@
                 <td>{{ forloop.counter }}</td>  
                 <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a>
                  </td>
-                <td><a href="{% url 'employee:profile_list' profile.user.id %}"><span class="glyphicon glyphicon-pencil" >{{ profile.user }}</span></a></td>  
+                <td><a href="{% url 'employee:profile_list' profile.user.id %}">{{ profile.user }}</a></td>  
                  <!-- <td><a href="{% url 'employee:update' profile.pk %}">{{ profile.user }}</a></td> -->
                 <td>{{ profile.employee_id }}</td>
                 <td>{{ profile.user.first_name }}</td>
