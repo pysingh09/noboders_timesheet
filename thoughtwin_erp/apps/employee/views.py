@@ -64,7 +64,7 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
     permission_required = ('employee.add_profile', )
     raise_exception = True
     form_class = SignUpForm
-    second_form_class = UserProfileForm
+    second_form_class = ProfileForm
     template_name = "registration/signup.html"
     success_url = "/employeelist/"
 
@@ -104,16 +104,26 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     group = Group.objects.get(name=profile.get_designation_display()) 
                     group.user_set.add(user)
     
-                    return redirect("/employeelist/")                         
+                    return redirect("/employeelist/")    
+                else:
+                    messages.error(self.request,'Feild Fill Correctly')
+                    user_form = SignUpForm()
+                    profile_form = ProfileForm()
+                    return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
+
+                    
+
             else:
                 user_form = SignUpForm()
                 profile_form = ProfileForm()
                 return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
 
         except Exception as e:
-            messages.error(self.request,'File Upload Failed')
-            form = EmployeeRegistrationForm(self.request.POST)
-            return render(self.request,"registration/employee-create.html",{'form':form})
+            # messages.error(self.request,'File Upload Failed')
+            # form = EmployeeRegistrationForm(self.request.POST)
+            user_form = SignUpForm()
+            profile_form = ProfileForm()
+            return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form})
 
 
 
