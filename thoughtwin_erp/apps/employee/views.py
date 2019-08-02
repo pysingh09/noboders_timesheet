@@ -608,7 +608,7 @@ def full_leave_status(request):
         email_data = []
         aaccept_email_data = []
         aaccept_email_data.append(leave.user.profile.teamlead.email)
-
+        aaccept_email_data.append(leave.user.email)
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR']) 
         for usr in default_mail_list:
             aaccept_email_data.append(usr.email)
