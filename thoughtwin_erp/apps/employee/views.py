@@ -27,6 +27,7 @@ from django.db import IntegrityError
 # permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.template import loader
+from django.contrib.auth.models import Group
 # import datetime 
 from django.contrib.auth.forms import UserChangeForm,PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -102,13 +103,12 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     profile.save()
                     
                     group = Group.objects.get(name=profile.get_designation_display()) 
-                    group.user_set.add(user)
-    
+                    group.user_set.add(new_user)
                     return redirect("/employeelist/")    
                 else:
-                    messages.error(self.request,'Feild Fill Correctly')
                     user_form = SignUpForm()
                     profile_form = ProfileForm()
+                    messages.error(self.request,'Feild Fill Correctly')
                     return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
 
                     

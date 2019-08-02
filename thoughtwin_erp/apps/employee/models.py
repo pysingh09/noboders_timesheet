@@ -39,14 +39,14 @@ EMPATT_LEAVE_STATUS = (
 
 ROLE_CHOICES = ( 
     (1, ('MD')),
-    (2, ('Project manager')),
+    (2, ('Project Manager')),
     (3, ('BDE')),
     (4 , ('HR')),
     (5 , ('TeamLead')),
-    (6 , ('Senior developer')),
-    (7 , ('Junior developer')),
-    (8 , ('Trainee')),
-    (9 , ('QA')),
+    (6 , ('Trainee')),
+    (7 , ('QA')),
+    (8 , ('Senior Developer')),
+    (9 , ('Junior Developer')),
 )
 
 class BaseModel(models.Model):
