@@ -25,6 +25,8 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = PROJECT_APPS.child("media")
 MEDIA_URL = '/media/'
 
+
+FROM_EMAIL='ankita@thoughtwin.com'
 DEFAULT_FROM_EMAIL = 'ankita@thoughtwin.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
