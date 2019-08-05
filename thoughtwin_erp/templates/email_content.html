@@ -1,7 +1,32 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
 <h1>Hello</h1> 
-
 <h1>I am not able to attend the office from {{startdate}} to {{enddate}} </h1>
-<h1> {{reason}}</h1>
+<h1>{{reason}}</h1>
+<h1 style="color: red">{{email_user}}</h1>
+<br/>
+    <table cellpadding="2" cellspacing="2" style="border:1px solid #e5e5e5; width:100%;">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Reason</th>     
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>{{email_user}}</td>
+                <td>{{startdate}}</td>
+                <td>{{enddate}}</td>
+                <td>{{reason}}</td>
+              </tr>
+          </tbody>
+        </table>
+</body>
+</html>
 
-<h1> {{email_user}}</h1>
+

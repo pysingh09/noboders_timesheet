@@ -509,18 +509,29 @@ class RequestLeaveView(CreateView):
             leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
 
-
-            
+              
             emails = self.request.POST.get('emails').split(',')
-            mail_list = []
-            default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-            for usr in default_mail_list:
-                emails.append(usr.email)
-                mail_list.append(usr.email)        
-            user_name =  self.request.user.email
+            # mail_list = []
+            # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+            # for usr in default_mail_list:
+            #     emails.append(usr.email)
+            #     mail_list.append(usr.email)        
+            # user_name =  self.request.user.email
+            
+
+
             content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
+            start_date = d1 + timedelta(days=i)
+            end_date = d2 + timedelta(days=i)
+            email_startdate = start_date.strftime("%b %d, %Y")
+            email_enddate = end_date.strftime("%b %d, %Y")
+    
             text_content = strip_tags(content)
-            email = EmailMessage("Leave Request",text_content,settings.FROM_EMAIL,to=emails)
+            if form.data['leave_type'] == '2':
+                email_subject = "Leave Request|"+self.request.user.username+'|'+'Half Day'+"|"+str(email_startdate)
+            if form.data['leave_type'] == '3':    
+                email_subject = "Leave Request|"+self.request.user.username+'|'+'Full Day'+"|"+str(email_startdate)+"-"+str(email_enddate)
+            email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=emails)
             email.send()
             
             messages.success(self.request, 'Successfully Leave Request Send')
@@ -624,6 +635,7 @@ def full_leave_status(request):
             message = leave.user.username +",Leave accept by "+request.user.username
         if leave.status == '3':
             message = leave.user.username +",Leave reject by "+request.user.username
+
         email_data = []
         aaccept_email_data = []
         aaccept_email_data.append(leave.user.profile.teamlead.email)
