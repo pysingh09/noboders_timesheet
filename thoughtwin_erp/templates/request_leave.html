@@ -52,7 +52,7 @@
             </div>
         {% endfor %}
     {% endif %}
-    <form action="" method="POST"  novalidate="">
+    <form action="" method="POST"  >
     {% csrf_token %}
     <div class="col-sm-6">
 
@@ -63,7 +63,7 @@
 
     <div class="form-group col-sm-3" id="startdate">
       <label for="sel1">Start Date:</label>
-      {{ form.startdate|add_class:"form-control" }}
+      {{ form.startdate|add_class:"form-control"|attr:"readonly:readonly"}}
       
     </div>
     <div class="form-group col-sm-3" id="starttime">
@@ -73,7 +73,7 @@
 
     <div class="form-group col-sm-3" id="enddate">
       <label for="sel1">End Date:</label>
-      {{ form.enddate|add_class:"form-control" }}
+      {{ form.enddate|add_class:"form-control"|attr:"readonly:readonly" }}
     </div>
 
     <div class="form-group col-sm-3" id="endtime">
@@ -101,7 +101,7 @@
     
       
   
-<div class = "dropdown">
+<!-- <div class = "dropdown">
    
    <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
       <div id="myDropdown" class = "dropdown-menu drop" role = "menu">
@@ -111,7 +111,7 @@
           {% endfor %}
       
       </div>
-    </div>
+    </div> -->
 </div>
 
 {% endblock %}

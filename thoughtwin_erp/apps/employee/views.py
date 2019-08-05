@@ -17,7 +17,7 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import login, logout
-from django.core.mail import EmailMessage,send_mail
+from django.core.mail import EmailMessage,send_mail, EmailMultiAlternatives
 import datetime as only_datetime
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -354,13 +354,19 @@ class LeaveRequestView(View):
             date_list = request.POST.getlist('leaveRequestArr[]')
             attendance_request_list = EmployeeAttendance.objects.filter(date__in=date_list ,user=request.user)
             for attendance in attendance_request_list:
-                
-                emails = request.POST.getlist('emails[]')
+                # emails = request.POST.getlist('emails[]')
                 attendance.empatt_leave_status = 2
                 attendance.save()
-                
+                mail_list = []
+                default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+                for usr in default_mail_list:
+                    mail_list.append(usr.email)
+                request_user = request.user.email            
+                mail_list.append(request_user)
+                mail_list.append(request.user.profile.teamlead.email)
+                mail_list = set(mail_list)
                 text_content = request.user.username+ ',Leave request send for less hours'   
-                email = EmailMessage("Leave request for less hours",text_content,settings.FROM_EMAIL,to=emails)
+                email = EmailMessage("Leave request for less hours",text_content,settings.FROM_EMAIL,to=mail_list)
                 
                 email.send()   
             return JsonResponse({'status': 'success'})
@@ -386,11 +392,24 @@ def attendence_request_list(request):
     for attendance in attendances:
         if attendance.date_time_diffrence() < timedelta(hours=9):
             result.append(attendance)
-    for user in User.objects.all():
-            email_data.append(user.email)  
-            email_data.sort() 
-    return render(request,'red_list.html', {'attendance_data' : result,'emails':email_data})
+    mail_list = []
+    default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+    for usr in default_mail_list:
+        mail_list.append(usr.email)
+    request_user = request.user.email            
+    mail_list.append(request_user)
+    mail_list.append(request.user.profile.teamlead.email)
+    mail_list = set(mail_list)
+    # aaccept_email_data = []
+    # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])     
+    # for usr in default_mail_list:
+    #         aaccept_email_data.append(usr.email)
 
+    # for user in User.objects.all():
+    #         email_data.append(user.email)  
+    #         email_data.sort() 
+    # return render(request,'red_list.html', {'attendance_data' : result,'emails':mail_list,'aaccept_email_data':aaccept_email_data})
+    return render(request,'red_list.html', {'attendance_data' : result,'mail_list':mail_list})
 
 
 
@@ -510,29 +529,34 @@ class RequestLeaveView(CreateView):
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
 
               
-            emails = self.request.POST.get('emails').split(',')
-            # mail_list = []
-            # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-            # for usr in default_mail_list:
-            #     emails.append(usr.email)
-            #     mail_list.append(usr.email)        
-            # user_name =  self.request.user.email
             
-
+            # emails = self.request.POST.get('emails').split(',')
+            mail_list = []
+            default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+            for usr in default_mail_list:
+                # emails.append(usr.email)
+                mail_list.append(usr.email)
+            request_user = self.request.user.email            
+            mail_list.append(request_user)
+            mail_list.append(self.request.user.profile.teamlead.email)
+            mail_list = set(mail_list)
 
             content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
             start_date = d1 + timedelta(days=i)
             end_date = d2 + timedelta(days=i)
             email_startdate = start_date.strftime("%b %d, %Y")
             email_enddate = end_date.strftime("%b %d, %Y")
-    
             text_content = strip_tags(content)
             if form.data['leave_type'] == '2':
                 email_subject = "Leave Request|"+self.request.user.username+'|'+'Half Day'+"|"+str(email_startdate)
             if form.data['leave_type'] == '3':    
                 email_subject = "Leave Request|"+self.request.user.username+'|'+'Full Day'+"|"+str(email_startdate)+"-"+str(email_enddate)
-            email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=emails)
-            email.send()
+            # email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=mail_list)
+            # email.send()
+
+            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
+            msg.attach_alternative(content, "text/html")
+            msg.send()
             
             messages.success(self.request, 'Successfully Leave Request Send')
             # 'mail_list':mail_list - get mail list
@@ -553,15 +577,23 @@ class RequestLeaveView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.all()
+        # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+        # # email_data = []
+        # mail_list = [] 
+        # # for user in User.objects.all():
+        # #     email_data.append(user.email)
+        # #     email_data.sort()
+        # for usr in default_mail_list:
+        #     mail_list.append(usr.email)
+        # context['emails'] = email_data
+        mail_list = []
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-        email_data = []
-        mail_list = [] 
-        for user in User.objects.all():
-            email_data.append(user.email)
-            email_data.sort()
         for usr in default_mail_list:
             mail_list.append(usr.email)
-        context['emails'] = email_data
+        request_user = self.request.user.email            
+        mail_list.append(request_user)
+        mail_list.append(self.request.user.profile.teamlead.email)
+        mail_list = set(mail_list)
         context['mail_list'] = mail_list
         return context
 
@@ -571,6 +603,7 @@ class EmpLeaveListView(ListView):
     # raise_exception = True
     model = Leave
     template_name = "leave/leave_list.html"
+    ordering = ['-startdate']
     def get_context_data(self, **kwargs):
         context = super(EmpLeaveListView, self).get_context_data(**kwargs)
         if self.request.user.groups.exists():
@@ -623,21 +656,29 @@ def full_leave_status(request):
         startdate = leave.startdate
         enddate = leave.enddate
         delta = enddate - startdate
-        for i in range(delta.days + 1):
-            employee_attendence = EmployeeAttendance.objects.get(user = leave.user,date = startdate + timedelta(days=i))
-             
-            if leave_status == '2':    
-                employee_attendence.empatt_leave_status = 6
-            if leave_status == '3':
-                employee_attendence.empatt_leave_status = 7
-            employee_attendence.save()
+        for day in range(delta.days + 1):
+
+            employee_attendence = EmployeeAttendance.objects.filter(user = leave.user,date = startdate + timedelta(days=day))
+            names = set()
+            result = []
+            for att in employee_attendence:
+                if not att.date in names:
+                    names.add(att.date)
+                    result.append(att) 
+            for employee_attendence in result:        
+                if leave_status == '2':    
+                    employee_attendence.empatt_leave_status = 6
+                if leave_status == '3':
+                    employee_attendence.empatt_leave_status = 7
+                employee_attendence.save()
+        
         if leave.status == '2':
             message = leave.user.username +",Leave accept by "+request.user.username
         if leave.status == '3':
             message = leave.user.username +",Leave reject by "+request.user.username
-
+    
         email_data = []
-        aaccept_email_data = []
+        aaccept_email_data = []        
         aaccept_email_data.append(leave.user.profile.teamlead.email)
         aaccept_email_data.append(leave.user.email)
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR']) 
@@ -649,8 +690,8 @@ def full_leave_status(request):
 
         content = render_to_string('ooo_email_content.html',{'startdate':leave.startdate, 'enddate':leave.enddate ,'leave_type':leave_type })
         text_content = strip_tags(content)
-
-        accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=aaccept_email_data)
+        data_email = set(aaccept_email_data)
+        accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=data_email)
         accept_email.send()
         if leave.status == '2': 
             email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)

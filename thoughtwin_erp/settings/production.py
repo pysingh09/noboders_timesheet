@@ -26,19 +26,11 @@ MEDIA_ROOT = PROJECT_APPS.child("media")
 MEDIA_URL = '/media/'
 
 
-# FROM_EMAIL='ankita@thoughtwin.com'
-# DEFAULT_FROM_EMAIL = 'ankita@thoughtwin.com'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_HOST_USER = 'apikey'
-# EMAIL_HOST_PASSWORD = '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'
-# EMAIL_PORT = 587
 FROM_EMAIL='ankita@thoughtwin.com'
-DEFAULT_FROM_EMAIL = 'preetamthoughtwin@mailinator.com'
+DEFAULT_FROM_EMAIL = 'ankita@thoughtwin.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = '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'
+EMAIL_HOST_PASSWORD = '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'
 EMAIL_PORT = 587
