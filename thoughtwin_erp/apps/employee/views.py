@@ -529,7 +529,7 @@ class RequestLeaveView(CreateView):
             leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
 
-              
+         
             
             # emails = self.request.POST.get('emails').split(',')
             mail_list = []
@@ -542,7 +542,23 @@ class RequestLeaveView(CreateView):
             mail_list.append(self.request.user.profile.teamlead.email)
             mail_list = set(mail_list)
 
-            content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason']})
+
+
+
+            request_send_list = []
+            request_list = User.objects.filter(groups__name__in=['MD','HR'])
+            for usr in request_list:
+                # emails.append(usr.email)
+                request_send_list.append(usr.get_username())
+            request_user_name = self.request.user.username            
+            request_send_list.append(request_user_name)
+            request_send_list.append( self.request.user.profile.teamlead.username)
+            request_send_list = set(request_send_list)
+            
+
+
+
+            content = render_to_string('email_content.html',{'email_user':self.request.user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason'],'request_send_list':request_send_list})
             start_date = d1 + timedelta(days=i)
             end_date = d2 + timedelta(days=i)
             email_startdate = start_date.strftime("%b %d, %Y")

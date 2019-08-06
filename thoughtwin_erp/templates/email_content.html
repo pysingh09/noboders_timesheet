@@ -25,12 +25,18 @@
 
                                     <tr>
                                         <td bgcolor="#ffffff" style="color:#000;font-weight: 600;">Leave requested to </td>
-                                        <td bgcolor="#ffffff" style="color: #000;">{{startdate}}</td>
+                                        <td bgcolor="#ffffff" style="color: #000;">
+                                        {% for request_send_lists in request_send_list %}
+                                            {{request_send_lists}}
+                                             {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                        </td>
+                                        
                                     </tr>
 
                                     <tr>
                                         <td bgcolor="#ffffff" style="color:#000;font-weight: 600;"> Date</td>
-                                        <td bgcolor="#ffffff" style="color: #000;">{{enddate}}</td>
+                                        <td bgcolor="#ffffff" style="color: #000;">{{startdate}}-{{enddate}}</td>
                                     </tr>
 
                                     <tr>

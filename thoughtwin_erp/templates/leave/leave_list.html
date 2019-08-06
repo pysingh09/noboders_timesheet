@@ -25,8 +25,17 @@
                     <td>{{ leave.user }}</td>   
                     <td>{{ leave.startdate }}</td>
                     <td>{{ leave.enddate }}</td>
-                    <td>{{ leave.starttime }}</td>
+                    {% if leave.starttime %}
+                      <td>{{ leave.starttime }}</td>
+                    {% else %}
+                      <td>11.00 a.m.</td>
+                    {% endif %}
+                    {% if leave.endtime %}
                     <td>{{ leave.endtime }}</td>
+                    {% else %}
+                      <td>8.00 p.m.</td>
+                    {% endif %}
+                    
                     <td>{{ leave.get_leave_type_display }}</td>
                     <td>{{ leave.get_status_display }}</td>
                     <td>
