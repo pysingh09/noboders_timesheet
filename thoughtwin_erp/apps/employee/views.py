@@ -518,6 +518,7 @@ class RequestLeaveView(CreateView):
             d2 = date(int(enddate[0]),int(enddate[1]),int(enddate[2]))  #startdate
             delta = d2 - d1
             leave_type = form.data['leave_type']
+
             for i in range(delta.days + 1):
                 if leave_type == '2':   
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
