@@ -565,9 +565,9 @@ class RequestLeaveView(CreateView):
             email_enddate = end_date.strftime("%b %d, %Y")
             text_content = strip_tags(content)
             if form.data['leave_type'] == '2':
-                email_subject = "Leave Request|"+self.request.user.username+'|'+'Half Day'+"|"+str(email_startdate)
+                email_subject = "Leave Request |"" "+self.request.user.username+" "'|'" "+'Half Day'+" ""|"" "+str(email_startdate)
             if form.data['leave_type'] == '3':    
-                email_subject = "Leave Request|"+self.request.user.username+'|'+'Full Day'+"|"+str(email_startdate)+"-"+str(email_enddate)
+                email_subject = "Leave Request |"" "+self.request.user.username+" "'|'" "+'Full Day'" "+"|"" "+str(email_startdate)+"-"+str(email_enddate)
             # email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=mail_list)
             # email.send()
 
