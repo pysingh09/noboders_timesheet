@@ -70,7 +70,7 @@ let csvRecoredArr =[];
             csvRecoredArr.push($(this).val())
           });
       
-           var confirmbox = confirm("Are you sure you want to Deleted selected records?")
+           var confirmbox = confirm("Are you sure you want to Delete selected records?")
            if (confirmbox == true)// confirm box
            {
               let pk = csvRecoredArr;

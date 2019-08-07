@@ -876,7 +876,8 @@ class ForgotPassword(View):
 
 class ShowLeaveListView(ListView):
     model = Leave
-    template_name = "leave/fullday_leave.html"    
+    template_name = "leave/fullday_leave.html"   
+    ordering = ['-startdate']
     def get_context_data(self, **kwargs):
         context = super(ShowLeaveListView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3])
