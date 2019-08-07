@@ -119,9 +119,9 @@ class EmployeeAttendance(BaseModel):
             dateTimeOut = datetime.datetime.combine(datetime.date.today(), outtime)
             dateTimeDifference += dateTimeOut - dateTimeIn
         return dateTimeDifference
+        
 
-
-class AllottedLeave(models.Model):
+class AllottedLeave(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leaves')
     year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
     leave = models.FloatField(default=0,verbose_name=_('Leaves'))
@@ -152,8 +152,8 @@ class EmployeeAttendanceDetail(models.Model):
         dateTimeOut = datetime.datetime.combine(datetime.date.today(), self.out_time)
         dateTimeDifference = dateTimeOut - dateTimeIn
         return dateTimeDifference
-
-class Leave(models.Model):
+    
+class Leave(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fullday_leave_user')
     startdate = models.DateField(verbose_name=_('Start Date'))
     enddate = models.DateField(verbose_name=_('End Date'))

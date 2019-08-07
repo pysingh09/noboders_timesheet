@@ -144,7 +144,7 @@ class changePassForm(forms.Form):
 
     old_password = forms.CharField(label="Old Password", min_length=6, widget=forms.PasswordInput())
     new_password = forms.CharField(label="New Password", min_length=6, widget=forms.PasswordInput())
-    re_new_password = forms.CharField(label="Re-type New Password", min_length=6, widget=forms.PasswordInput())
+    re_new_password = forms.CharField(label="Conform Password", min_length=6, widget=forms.PasswordInput())
 
     def set_old_password_flag(self): 
         self.old_password_flag = False
