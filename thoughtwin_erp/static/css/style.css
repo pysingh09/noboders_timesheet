@@ -70,3 +70,189 @@ div#myTable1_length {
   border: none;
   background: transparent url("http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png") no-repeat 60px center;
 }*/
+
+/*new*/
+.dataTables_length{
+    margin-bottom: 20px;
+      padding-left: 4px;
+}
+.navimg{
+    border-radius: 50px;
+    height: 40px;
+    width: 40px;
+}
+.navprofile a.dropdown-toggle{
+  display: inline-block;
+}
+.dataTables_filter input{
+    border: 1px solid #ada7a7;
+    height: 30px;
+      margin-bottom: 20px;
+}
+.dataTables_length select{
+    background: #fdf9f9;
+    padding: 5px 11px 5px 4px;
+    margin: 4px 3px 0 3px;
+}
+.dataTable th.sorting, .table>thead>tr>th{
+    border: none !important;
+    border-bottom: none !important;
+    border-right: 1px solid #8c8b8b !important;
+    padding: 10px 16px;
+}
+.dataTable{
+  border: 1px solid #8c8b8b !important;
+}
+.dataTable tbody tr td{
+  border-top: 1px solid #8c8b8b !important;
+  padding: 13px 17px 10px;
+  border-right: 1px solid #8c8b8b;
+}
+.dataTable tbody tr td:last-child{
+  border-right: none !important;
+}
+.sorting input[type="text"]{
+  max-width: 150px;
+}
+.table>thead>tr>th:last-child{
+  border-right: none !important;
+}
+.card{
+    background: #fff;
+    padding: 17px;
+    box-shadow: 0px 0px 5px #ccc;
+    border-radius: 5px;
+  margin: 10px 20px 0px;
+}
+.dataTable thead{
+  background: #f5f5f5;
+}
+.search-container .delete-row{
+  margin: 20px;
+}
+#myTable1_filter{
+  padding-top: 6px;
+}
+a.attendence_datetime {
+    font-weight: 600;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: #337ab7 !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    margin: 13px 0 4px;
+    border: 1px solid transparent;
+    font-weight: 600;
+      transition: all 0.25s ease 0s;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active{
+    background: #337ab7 !important;
+    color: #fff !important;
+    border-color: transparent;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled{
+    background: #fff !important;
+    color: #337ab7 !important;
+    padding: 8px 16px;
+    margin: 17px 10px 0px;
+    border: 1px solid #337ab7;
+    font-weight: 600;
+    transition: all 0.25s ease 0s;
+}
+.dataTables_info{
+    vertical-align: middle;
+    margin-top: 15px;
+}
+.employeehead{
+    margin: 10px 20px 26px;
+    display: block;
+    font-weight: 600;
+    color: #000;
+    font-size: 21px;
+}
+.table-striped>tbody>tr:nth-of-type(odd){
+  background: #fff !important;
+}
+.sameicon{
+    border: 2px solid;
+    border-radius: 50px;
+    font-size: 14px;
+    height: 28px;
+    width: 28px;
+    display: inline-block;
+    text-align: center;
+    padding: 4px;
+    margin-right: 5px;
+    transition: all 0.25s ease 0s;
+}
+.pencilicon{
+    color: #337ab7;
+    border-color: #337ab7;
+}
+.eyeicon{
+    border-color: #000;
+    color: #000;
+}
+.calendaricon{
+    border-color: #5bb85b;
+    color: #5bb85b;
+}
+.timeicon{
+    border-color: #ef6e3b;
+    color: #ef6e3b;
+}
+.pencilicon:hover{
+    color: #fff;
+    border-color: #337ab7;
+    background: #337ab7;
+}
+.eyeicon:hover{
+  background: #000;
+    border-color: #000;
+    color: #fff;
+}
+.calendaricon:hover{
+  background: #5bb85b;
+    border-color: #5bb85b;
+    color: #fff;
+}
+.timeicon:hover{
+  background:#ef6e3b; 
+    border-color: #ef6e3b;
+    color: #fff;
+}
+.btnsuccess1 {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    margin: 20px;
+    text-transform: capitalize;
+    font-weight: 600;
+}
+#selectemail{
+  padding-left: 0px;
+}
+.inmodal .modal-header h5 {
+    color: #000;
+    font-weight: 600;
+    font-size: 22px;
+}
+.inmodal .modal-header .close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: #000;
+    opacity: 1;
+}
+.inmodal table td {
+    padding: 5px 15px !important;
+}
+
+
+@media only screen and (min-width: 200px) and (max-width: 1400px){
+
+.card{
+  padding: 15px;
+  margin: 10px 0px;
+}
+}

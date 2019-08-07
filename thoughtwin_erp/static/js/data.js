@@ -5,30 +5,30 @@ $(document).ready(function(){
     
 $(document).ready(function() {
     // Setup - add a text input to each footer cell
-    $('#myTable2 thead tr').clone(true).appendTo( '#myTable2 thead ' );
-    $('#myTable2 thead tr:eq(1) th').each( function (i) {
-        var title = $(this).text();
+    // $('#myTable2 thead tr').clone(true).appendTo( '#myTable2 thead ' );
+    // $('#myTable2 thead tr:eq(1) th').each( function (i) {
+    //     var title = $(this).text();
         
-        if (i==2||i==4 || i==5 || i==6)
+    //     if (i==2||i==4 || i==5 || i==6)
 
-          $(this).html( '<input type="text" placeholder="Search" />' );
-        if (i==12||i==7||i==8||i==9||i==10||i==11||i==0||i==1||i==3||i==13)
-          $(this).html('<td</td>');   
+    //       $(this).html( '<input type="text" placeholder="Search" />' );
+    //     if (i==12||i==7||i==8||i==9||i==10||i==11||i==0||i==1||i==3||i==13)
+    //       $(this).html('<td</td>');   
 
-        $( 'input', this ).on( 'keyup change', function () {
-            if ( table.column(i).search() !== this.value ) {
-                table
+    //     $( 'input', this ).on( 'keyup change', function () {
+    //         if ( table.column(i).search() !== this.value ) {
+    //             table
 
-                    .column(i)
-                    .search( this.value )
-                    .draw();
-            }
-        } );
-    } );
+    //                 .column(i)
+    //                 .search( this.value )
+    //                 .draw();
+    //         }
+    //     } );
+    // } );
  
     var table = $('#myTable2').DataTable( {
-        // orderCellsTop: true,
-        // fixedHeader: true
+        orderCellsTop: true,
+        ixedHeader: true
     } );
 } );
  

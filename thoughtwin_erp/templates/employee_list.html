@@ -2,28 +2,24 @@
 {% load static %}    
 {% block title %}{% endblock %}
 {% block content %} 
-    <h3>Company Employee Details</h3>  
+    <h3 class="employeehead">Company Employee Details</h3>  
 
-    <br>
+    <div class="card">
   
-        <table class = "table" id="myTable2" border="2">
+
+    <div class="table-responsive">
+        <table class="table table-striped" id="myTable2">
         <thead>
          
           <tr>
-            <th>Sno.</th>
-            <th>Calendar</th>
+            <th>S. No.</th>
             <th>Username</th>
-            <th>Employee ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+             <th>Employee ID</th>
+            <th>Name</th>
             <th>Contact</th>
             <th>Designation</th>
-            <th>Employee Home</th>
-            <!-- <th>Profile</th> -->
-            <th>Date Of Birth</th>
-            <th>Date Of Joining</th>
             <th>Team Lead</th>
-            <th>Edit</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
       
@@ -32,32 +28,37 @@
             {% for profile in object_list %}
               <tr>
                 <td>{{ forloop.counter }}</td>  
-                <td><a href="{% url 'employee:show_calendar' profile.user.id %}">view</a>
-                 </td>
-                <td><a href="{% url 'employee:profile_list' profile.user.id %}">{{ profile.user }}</a></td>  
-                 <!-- <td><a href="{% url 'employee:update' profile.pk %}">{{ profile.user }}</a></td> -->
+                <td>{{ profile.user }}</td>  
                 <td>{{ profile.employee_id }}</td>
-                <td>{{ profile.user.first_name }}</td>
-                <td>{{ profile.user.last_name }}</td>
+                 <!-- <td><a href="{% url 'employee:update' profile.pk %}">{{ profile.user }}</a></td> -->
+               
+                <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
                 <td>{{ profile.contact_no}}</td>
                 <td>{{ profile.get_designation_display }}</td>
-                <td><a href="{% url 'employee:employee_details' profile.user.id %}">In/Out Detail</a></td>
-                <td>{{ profile.date_of_birth }}</td>
-                <td>{{ profile.date_of_joining }}</td>
                 <td>{{ profile.teamlead }}</td>
-                <td><a href="{% url 'employee:update' profile.pk %}"><span class="glyphicon glyphicon-pencil" >Edit</span>
-                </a></td>
-                {% if profile.user.is_active %}
-                    <td><button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
+                <td>
+                   {% if profile.user.is_active %}
+                      <button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
                 {% else %}
-                     <td><button class="deactivateEmployee btn btn-success" id="Activate" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button></td>
+                <button class="deactivateEmployee btn btn-success" id="Activate" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button>
                 {% endif %}
+                    
+                </td>
+                    <td>
+                      <a href="{% url 'employee:update' profile.pk %}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" ></span></a>
+                      <a href="{% url 'employee:profile_list' profile.user.id %}" class="sameicon eyeicon"><span class="glyphicon glyphicon-eye-open" ></span></a>
+                      <a href="{% url 'employee:show_calendar' profile.user.id %}" class="sameicon calendaricon"><span class="glyphicon glyphicon-calendar"> </span></a> 
+                      <a href="{% url 'employee:employee_details' profile.user.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-time"></span> </a>
+                    </td>
+               
+                
               </tr>
           {% endfor %}
         </tbody>
             </table>
           </div>
-        
+          </div>
+        </div>
   {% block js %}
   {{block.super}}
   <script src="{% static 'js/data.js' %}"></script>

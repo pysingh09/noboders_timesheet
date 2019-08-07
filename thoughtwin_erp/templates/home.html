@@ -2,60 +2,67 @@
 {% load static %}
 {% block content %} 
   <div class="search-container">
-      <div> 
-        <table class = "table" id="myTable1" border="2">
+      <div class="card"> 
+        <table class="table table-stripped" id="myTable1">
           <thead>
             <tr>
-              <th>Sno.</th>
-              <th>In/Out Details</th>
-              <!-- <th>User</th> -->
-              <!-- <th>Employee ID</th> -->
-              <th>Today's Date</th>
-              <th>Today Timing</th>
-              
-              
               {% if user.is_superuser  %}
               <th scope="col" class="action-checkbox-column">
               <div class="text"><span><input type="checkbox" id="checkall"></span></div>
               <div class="clear"></div>
               {% endif %}
-              </th>   
+              </th> 
+              <th>S.No.</th>
+              
+              <!-- <th>User</th> -->
+              <!-- <th>Employee ID</th> -->
+              <th>Today's Date</th>
+              <th>Today Timing</th>
+              <th>In/Out Details</th>
+              
+              
+                
             </tr>
           </thead>
           <tbody class="mychkboxs">
             {% for attendance in attendances_data %}
               <tr>
-                <td>{{ forloop.counter }}</td>
-                <td><a class="attendence_datetime" href="" data-id="{{ attendance.id }}">View</a></td>
-                <!-- <td><p>{{ attendance.user }}</p></td> -->
-                <!-- <td>{{ attendance.employee_id }}</td> -->
-                <td>{{ attendance.date }}</td>
-                <td><p>{{ attendance.date_time_diffrence }}</p></td> 
-                 {% if user.is_superuser  %}
+                {% if user.is_superuser  %}
                 <td class="action-checkbox">
                   <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date|date:'Y-m-d' }}">
                   {% endif %}
                 </td>
+                <td>{{ forloop.counter }}</td>
+               
+                <!-- <td><p>{{ attendance.user }}</p></td> -->
+                <!-- <td>{{ attendance.employee_id }}</td> -->
+                <td>{{ attendance.date }}</td>
+                <td><p>{{ attendance.date_time_diffrence }}</p></td> 
+                 <td><a class="attendence_datetime" href="" data-id="{{ attendance.id }}">View</a></td>
+
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
       {% if user.is_superuser  %}
-      <button class="btn btn-success delete-row" id="delrow" onclick="return delrow();">Delete row</button>
+      <button class="btn btn-success delete-row btnsuccess1" id="delrow" onclick="return delrow();">Delete row</button>
        {% endif %}
     </div>
     {{ attendance.intime }}
   <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade inmodal" id="myModal" role="dialog">
     <div class="modal-dialog">
     
       <!-- Modal content-->
       <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">In / Out Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
         <div class="modal-body" id="attendence_model">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
       
