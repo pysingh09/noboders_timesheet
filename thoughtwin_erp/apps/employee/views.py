@@ -784,7 +784,7 @@ def full_leave_status(request):
 
 
         if leave.status == '2': 
-            email_subject = "ooo |"" "+leave.user.username+" "'|'" "+leave_type+" "'|'" "+startdate+"-"+enddate
+            email_subject = "OOO |"" "+leave.user.username+" "'|'" "+leave_type+" "'|'" "+startdate+"-"+enddate
             content = render_to_string('email/ooo_email_content.html',{'user':leave.user.username,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
 
             text_content = strip_tags(content)
@@ -877,10 +877,9 @@ class ForgotPassword(View):
 class ShowLeaveListView(ListView):
     model = Leave
     template_name = "leave/fullday_leave.html"   
-    ordering = ['-startdate']
     def get_context_data(self, **kwargs):
         context = super(ShowLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3])
+        context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3]).order_by('-startdate')
         return context
 
 def delete_leave(request):
