@@ -398,7 +398,7 @@ class LeaveRequestView(View):
             subject_date = attendance.date.strftime("%b %d, %Y")
             content = render_to_string('email/less_leave_mail_content.html',{'email_user':user,'date_list':user_date_list,'request_send_list':request_send_list,'date_time_diffrence': attendance.date_time_diffrence })
         
-            email_subject = "Leave Request For Less Hour |"" "+user+" "'|'" "+ subject_date
+            email_subject = "Leave Request For Less Hour ||"" "+user+" "'||'" "+ subject_date
             
             text_content = strip_tags(content)
             msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
@@ -511,12 +511,12 @@ class LeaveStatusView(View):
         email_date = employee_attendance.date.strftime("%b %d, %Y")
         if employee_attendance. empatt_leave_status == '3':
 
-            email_subject = "Leave Approved For Less Hour |"" "+user+" "'|'" "+email_date
+            email_subject = "Leave Approved For Less Hour ||"" "+user+" "'||'" "+email_date
             content = render_to_string('email/approved_less_leave.html',{'approved_user':approved_user,'user':user,'date':email_date,'date_time_diffrence': employee_attendance.date_time_diffrence })
 
         if employee_attendance. empatt_leave_status == '4':
 
-            email_subject = "Leave Rejected For Less Hour |"" "+user+" "'|'" "+email_date              
+            email_subject = "Leave Rejected For Less Hour ||"" "+user+" "'||'" "+email_date              
             content = render_to_string('email/reject_less_leave.html',{'approved_user':approved_user,'user':user,'date':email_date,'date_time_diffrence': employee_attendance.date_time_diffrence })
         
         text_content = strip_tags(content)
@@ -637,9 +637,9 @@ class RequestLeaveView(CreateView):
             email_enddate = end_date.strftime("%b %d, %Y")
             text_content = strip_tags(content)
             if form.data['leave_type'] == '2':
-                email_subject = "Leave Request |"" "+user+" "'|'" "+'Half Day'+" ""|"" "+str(email_startdate)
+                email_subject = "Leave Request ||"" "+user+" "'||'" "+'Half Day'+" ""||"" "+str(email_startdate)
             if form.data['leave_type'] == '3':    
-                email_subject = "Leave Request |"" "+user+" "'|'" "+'Full Day'" "+"|"" "+str(email_startdate)+"-"+str(email_enddate)
+                email_subject = "Leave Request ||"" "+user+" "'||'" "+'Full Day'" "+"||"" "+str(email_startdate)+"-"+str(email_enddate)
             # email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=mail_list)
             # email.send()
 
@@ -797,17 +797,17 @@ def full_leave_status(request):
         enddate = enddate.strftime("%b %d, %Y")        
         if leave.status == '2':
             if leave_type == 'Half day':
-                email_subject = "Leave Approved |"" "+user+" "'|'" "+startdate
+                email_subject = "Leave Approved ||"" "+user+" "'||'" "+startdate
                 content = render_to_string('email/accept_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'reason':leavedetail.reason })
             if leave_type == 'Full day':
-                email_subject = "Leave Approved |"" "+user+" "'|'" "+startdate+"-"+enddate
+                email_subject = "Leave Approved ||"" "+user+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/accept_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason })
         if leave.status == '3':
             if leave_type == 'Half day': 
-                email_subject = "Leave Rejected |"" "+user+" "'|'" "+startdate
+                email_subject = "Leave Rejected ||"" "+user+" "'||'" "+startdate
                 content = render_to_string('email/reject_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'reason':leavedetail.reason })
             if leave_type == 'Full day':
-                email_subject = "Leave Rejected |"" "+user+" "'|'" "+startdate+"-"+enddate
+                email_subject = "Leave Rejected ||"" "+user+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/reject_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason })
     
         text_content = strip_tags(content)
@@ -822,10 +822,10 @@ def full_leave_status(request):
 
         if leave.status == '2': 
             if leave_type == 'Half day':
-                email_subject = "OOO |"" "+user+" "'|'" "+leave_type+" "'|'" "+startdate
+                email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate
                 content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'reason':leavedetail.reason  })
             if leave_type == 'Full day':
-                email_subject = "OOO |"" "+user+" "'|'" "+leave_type+" "'|'" "+startdate+"-"+enddate
+                email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
 
             text_content = strip_tags(content)
