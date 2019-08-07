@@ -624,7 +624,7 @@ class RequestLeaveView(CreateView):
             msg.attach_alternative(content, "text/html")
             msg.send()
             
-            messages.success(self.request, 'Successfully Leave Request Send')
+            messages.success(self.request, ' Leave Request Sent Successfully')
             # 'mail_list':mail_list - get mail list
             # return render(self.request,'request_leave.html', {'accept_emails' : mail_lists})
             return HttpResponseRedirect('/leave')
