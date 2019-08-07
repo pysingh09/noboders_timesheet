@@ -360,7 +360,6 @@ class LeaveRequestView(View):
                 attendance.save()
             
 
-
             mail_list = []
             default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
             for usr in default_mail_list:
@@ -379,9 +378,10 @@ class LeaveRequestView(View):
             request_send_list.append( self.request.user.profile.teamlead.username)
             request_send_list = set(request_send_list)
 
-            user_time = EmployeeAttendanceDetail.objects.get(id = attendance.id)
-            user_in_time = user_time.in_time
-            user_out_time = user_time.out_time
+            
+            # user_time = EmployeeAttendanceDetail.objects.get(id = attendance.id)
+            # user_in_time = user_time.in_time
+            # user_out_time = user_time.out_time
             user_date_list = []
 
             for date_lists in date_list:
@@ -390,7 +390,7 @@ class LeaveRequestView(View):
                 user_date_list.append(send_email_data.strftime("%b %d, %Y"))
         
             subject_date = attendance.date.strftime("%b %d, %Y")
-            content = render_to_string('email/less_leave_mail_content.html',{'email_user':self.request.user,'date_list':user_date_list,'request_send_list':request_send_list,'user_in_time':user_in_time,'user_out_time':user_out_time })
+            content = render_to_string('email/less_leave_mail_content.html',{'email_user':self.request.user,'date_list':user_date_list,'request_send_list':request_send_list})
         
             email_subject = "Leave Request For Less Hour |"" "+self.request.user.username+" "'|'" "+ subject_date
             
@@ -496,16 +496,16 @@ class LeaveStatusView(View):
         mail_list.append(employee_attendance.user.profile.teamlead.email)
         mail_list = set(mail_list)
 
-        user_time = EmployeeAttendanceDetail.objects.get(id = employee_attendance.id)
-        user_in_time = user_time.in_time
-        user_out_time = user_time.out_time
+        # user_time = EmployeeAttendanceDetail.objects.get(id = employee_attendance.id)
+        # user_in_time = user_time.in_time
+        # user_out_time = user_time.out_time
         email_date = employee_attendance.date.strftime("%b %d, %Y")
         if employee_attendance. empatt_leave_status == '3':
             email_subject = "Leave Approved For Less Hour |"" "+employee_attendance.user.username+" "'|'" "+email_date
-            content = render_to_string('email/approved_less_leave.html',{'approved_user':self.request.user,'user':employee_attendance.user.username,'user_in_time':user_in_time,'user_out_time':user_out_time,'date':email_date })
+            content = render_to_string('email/approved_less_leave.html',{'approved_user':self.request.user,'user':employee_attendance.user.username,'date':email_date })
         if employee_attendance. empatt_leave_status == '4':
             email_subject = "Leave Rejected For Less Hour |"" "+employee_attendance.user.username+" "'|'" "+email_date              
-            content = render_to_string('email/reject_less_leave.html',{'approved_user':self.request.user,'user':employee_attendance.user.username,'user_in_time':user_in_time,'user_out_time':user_out_time,'date':email_date })
+            content = render_to_string('email/reject_less_leave.html',{'approved_user':self.request.user,'user':employee_attendance.user.username,'date':email_date })
         
         text_content = strip_tags(content)
         msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
