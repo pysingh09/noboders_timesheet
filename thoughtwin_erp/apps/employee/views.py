@@ -380,10 +380,12 @@ class LeaveRequestView(View):
             request_send_list.append( self.request.user.profile.teamlead.first_name+" "+self.request.user.profile.teamlead.last_name)
             request_send_list = set(request_send_list)
             
-            full_name = []
-            full_name.append(self.request.user.first_name)
-            full_name.append(self.request.user.last_name)
-            user = full_name[0] +" "+ full_name[1]
+            # full_name = []
+            # full_name.append(self.request.user.first_name)
+            # full_name.append(self.request.user.last_name)
+            # user = full_name[0] +" "+ full_name[1]
+            full_name = self.request.user.first_name+" "+self.request.user.last_name
+            user = full_name.title()
 
 
             user_date_list = []
@@ -493,9 +495,10 @@ class LeaveStatusView(View):
         #     message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
 
 
-        user = employee_attendance.user.first_name+" "+employee_attendance.user.last_name
-        approved_user = self.request.user.first_name+" "+self.request.user.last_name
-        
+        full_name = employee_attendance.user.first_name+" "+employee_attendance.user.last_name
+        user = full_name.title()
+        approved_full_name = self.request.user.first_name+" "+self.request.user.last_name
+        approved_user = approved_full_name.title()
         mail_list = []
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
         for usr in default_mail_list:
@@ -620,12 +623,9 @@ class RequestLeaveView(CreateView):
                 request_send_list.append(usr.first_name +" "+ usr.last_name)            
             request_send_list.append( self.request.user.profile.teamlead.first_name+" "+self.request.user.profile.teamlead.last_name)
             request_send_list = set(request_send_list)
-            
-            full_name = []
-            full_name.append(self.request.user.first_name)
-            full_name.append(self.request.user.last_name)
-            user = full_name[0] +" "+ full_name[1]
-
+           
+            full_name = self.request.user.first_name +" "+ self.request.user.last_name
+            user = full_name.title()
 
             if leave_type == '2':
                 content = render_to_string('email/email_content.html',{'email_user':user,'startdate':d1 + timedelta(days=i),'reason':form.data['reason'],'request_send_list':request_send_list})
@@ -786,11 +786,9 @@ def full_leave_status(request):
         #     request_send_list.append(usr.get_username())            
         # request_send_list.append(request.user.profile.teamlead.username)
         # request_send_list = set(request_send_list)
-        full_name = []
-        full_name.append(leave.user.first_name)
-        full_name.append(leave.user.last_name)
-        user = full_name[0] +" "+ full_name[1]
-
+       
+        full_name = leave.user.first_name +" "+ leave.user.last_name
+        user = full_name.title()
         approve_fullname = []
         approve_fullname.append(request.user.first_name)
         approve_fullname.append(request.user.last_name)
