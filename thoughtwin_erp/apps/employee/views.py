@@ -231,20 +231,22 @@ def file_upload(request):
         }
         if request.method == 'GET':
             return render(request,template,prompt)
+
         excel_file = request.FILES["excel_file"]
         filename = fs.save(excel_file.name,excel_file)        
         file_url = settings.PROJECT_APPS + fs.url(filename) # project app url + filename
         wb = xlrd.open_workbook(file_url)
         sheet = wb.sheet_by_index(0) 
-        for i in range(sheet.nrows):
+
+        for i in range(sheet.nrows-4):
             if i == sheet.nrows-1: # row-1 
                 break
-            name = sheet.cell_value(i+1,1)
+            name = sheet.cell_value(i+4,1)
             
-            employee_id = sheet.cell_value(i+1,0)
-            in_time = sheet.cell_value(i+1,2)    
-            out_time = sheet.cell_value(i+1,3)
-            dat = sheet.cell_value(i+1,4).split('/')
+            employee_id = sheet.cell_value(i+4,0)
+            in_time = sheet.cell_value(i+4,3)    
+            out_time = sheet.cell_value(i+4,sheet.ncols-1) #sheet.cell_value(i+4,3)
+            dat = sheet.cell_value(0,7).split('/')
        
 
             # in_time = datetime.strptime(in_time ,'%H:%M')
@@ -259,26 +261,26 @@ def file_upload(request):
                 in_time = datetime.strptime(in_time ,'%H:%M')
                 out_time = datetime.strptime(out_time ,'%H:%M')
 
-            profile = Profile.objects.get(employee_id=employee_id)   
             
-            emp, created = EmployeeAttendance.objects.update_or_create(
-                user=profile.user,
-                employee_id = employee_id,
-                date = dat[2]+'-'+dat[1]+'-'+dat[0],
-                created_by=request.user
-            )
-
-            if emp:
-                detail = EmployeeAttendanceDetail.objects.update_or_create(
-                employee_attendance=emp,
-                in_time = in_time,
-                out_time = out_time,
-            )
-
+            
+            profile = Profile.objects.filter(employee_id=employee_id)
+            if profile.exists():
+                profile = Profile.objects.get(employee_id=employee_id)   
+                
+                emp, created = EmployeeAttendance.objects.update_or_create(
+                    user=profile.user,
+                    employee_id = profile.employee_id,
+                    date = dat[2]+'-'+dat[1]+'-'+dat[0],
+                    created_by=request.user
+                )
+                if emp:
+                    detail = EmployeeAttendanceDetail.objects.update_or_create(
+                    employee_attendance=emp,
+                    in_time = in_time,
+                    out_time = out_time,
+                    )
 
         messages.success(request, ' File Successfully Uploaded.')
-     
-       
         return render(request,template)
     except Exception as e:
         messages.error(request,'File Upload Failed')
