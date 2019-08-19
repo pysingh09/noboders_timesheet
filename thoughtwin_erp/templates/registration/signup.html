@@ -2,60 +2,108 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
+  <h3 class="employeehead">Create New Employee</h3>
+    <div class="card">
 
+    <form class="form-horizontal signup_form sign_form1" method="POST" enctype="multipart/form-data" class="form-horizontal">   
+      {% csrf_token %}
 
-<form class="form-horizontal signup_form" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
-<h2>Create New Employee</h2>
-  {% csrf_token %}
-
-{% if form.errors %}
-       {% for field in form %}
-           {% for error in field.errors %}
+    {% if form.errors %}
+           {% for field in form %}
+               {% for error in field.errors %}
+                   <div class="alert alert-danger">
+                       <strong>{{ field.label }} : {{ error|escape }}</strong>
+                   </div>
+               {% endfor %}
+           {% endfor %}
+           {% for error in form.non_field_errors %}
                <div class="alert alert-danger">
-                   <strong>{{ field.label }} : {{ error|escape }}</strong>
+                   <strong>{{ error|escape }}</strong>
                </div>
            {% endfor %}
-       {% endfor %}
-       {% for error in form.non_field_errors %}
-           <div class="alert alert-danger">
-               <strong>{{ error|escape }}</strong>
-           </div>
-       {% endfor %}
-   {% endif %}
+       {% endif %}
 
-{% if form2.errors %}
-       {% for field in form2 %}
-           {% for error in field.errors %}
+    {% if form2.errors %}
+           {% for field in form2 %}
+               {% for error in field.errors %}
+                   <div class="alert alert-danger">
+                       <strong>{{ field.label }} : {{ error|escape }}</strong>
+                   </div>
+               {% endfor %}
+           {% endfor %}
+           {% for error in form2.non_field_errors %}
                <div class="alert alert-danger">
-                   <strong>{{ field.label }} : {{ error|escape }}</strong>
+                   <strong>{{ error|escape }}</strong>
                </div>
            {% endfor %}
-       {% endfor %}
-       {% for error in form2.non_field_errors %}
-           <div class="alert alert-danger">
-               <strong>{{ error|escape }}</strong>
-           </div>
-       {% endfor %}
-   {% endif %}
-
-    <p>Username  :<br>{{ form.username }}</p>
-    <p>Password  :<br>{{ form.password1 }}</p>
-    <p>Confirm Password  :<br>{{ form.password2 }}</p>
-    <p>First Name:<br>{{ form.first_name }}</p>
-    <p>Last Name :<br>{{ form.last_name }}</p>
-    <p>Email     :<br>{{ form.email }}</p>
-    <p>Employee Id :<br>{{ form2.employee_id }}</p>
-    <p>Contact   :<br>{{ form2.contact_no }}</p>
-    <p>Designation   :<br>{{ form2.designation }}</p>
-    <p>NOTE : Date Format :YYYY-MM-DD</p>
-    <p>DOB       :<br>{{ form2.date_of_birth }}</p>
-    <p>DOJ       :<br>{{ form2.date_of_joining}}</p>
-    <p>Team Lead   :<br>{{ form2.teamlead }}</p>
+       {% endif %}
 
 
-      <button type="submit" class="btn btn-success sub_btn" id = "phonenumber">Submit</button>
-</form>
+          <div class="col-md-6">
+              <label>Username</label>
+              {{ form.username }}
+          </div>
 
+          <div class="col-md-6">
+              <label>Email</label>
+              {{ form.email }}
+          </div>
+
+          <div class="col-md-6">
+              <label>Password</label>
+              {{ form.password1 }}
+          </div>
+
+          <div class="col-md-6">
+              <label>Confirm Password</label>
+              {{ form.password2 }}
+          </div>
+
+          <div class="col-md-6">
+              <label>First Name</label>
+              {{ form.first_name }}
+          </div>
+
+          <div class="col-md-6">
+              <label>Last Name</label>
+              {{ form.last_name }}
+          </div>
+
+          <div class="col-md-6">
+            <label>Employee Id</label>
+            {{ form.last_name }}
+          </div>
+
+          <div class="col-md-6">
+            <label>Contact</label>
+            {{ form2.contact_no }}
+          </div>
+
+          <div class="col-md-6">
+            <label>Designation</label>
+            {{ form2.designation }}
+          </div>
+
+          <div class="col-md-6">
+            <label>Date of Birth</label>
+            {{ form2.date_of_birth }}
+             <p>NOTE : Date Format :YYYY-MM-DD</p>
+          </div>
+
+          <div class="col-md-6">
+            <label>Date of Joining</label>
+            {{ form2.date_of_joining}}
+          </div>
+
+          <div class="col-md-6">
+            <label>Team Lead</label>
+            {{ form2.teamlead }}
+          </div>
+          <div class="cardrow">
+            <button type="submit" class="btn btn-success12 sub_btn" id = "phonenumber">Submit</button>
+          </div>
+    </form>
+  </div>
 
 <script>
     $(document).ready(function () {

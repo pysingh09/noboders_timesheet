@@ -3,6 +3,7 @@
 {% block content %} 
   <div class="search-container">
       <div class="card"> 
+        <div class="table-responsive">
         <table class="table table-stripped" id="myTable1">
           <thead>
             <tr>
@@ -44,6 +45,7 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
       </div>
       {% if user.is_superuser  %}
       <button class="btn btn-success delete-row btnsuccess1" id="delrow" onclick="return delrow();">Delete row</button>
