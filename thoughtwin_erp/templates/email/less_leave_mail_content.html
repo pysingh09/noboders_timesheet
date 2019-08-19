@@ -19,15 +19,15 @@
                                <table bgcolor="#000" align="center" cellpadding="2" cellspacing="1" style="border:1px solid #e5e5e5; width:600px;">
                                 <tbody>
                                     <tr>
-                                        <td bgcolor="#ffffff" style="color:#000;font-weight: 600;">Leave requested by</td>
-                                        <td bgcolor="#ffffff" style="color: #000;">{{email_user}}</td>
+                                        <td bgcolor="#ffffff" style="color:#000;font-weight: 600;">Leave Requested By</td>
+                                        <td bgcolor="#ffffff" style="color: #000;">{{email_user|capfirst}}</td>
                                     </tr>
 
                                     <tr>
-                                        <td bgcolor="#ffffff" style="color:#000;font-weight: 600;">Leave requested to </td>
+                                        <td bgcolor="#ffffff" style="color:#000;font-weight: 600;">Leave Requested To </td>
                                         <td bgcolor="#ffffff" style="color: #000;">
                                         {% for request_send_lists in request_send_list %}
-                                            {{request_send_lists}}
+                                            {{request_send_lists|capfirst}}
                                              {% if not forloop.last %},{% endif %}
                                         {% endfor %}
                                         </td>

@@ -37,11 +37,15 @@
                 <td>{{ profile.get_designation_display }}</td>
                 <td>{{ profile.teamlead }}</td>
                 <td>
+                  {% if profile.user.is_superuser %}
+                  
+                  {% else %}
                    {% if profile.user.is_active %}
                       <button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
-                {% else %}
-                <button class="deactivateEmployee btn btn-success" id="Activate" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button>
-                {% endif %}
+                    {% else %}
+                    <button class="deactivateEmployee btn btn-success" id="Activate" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button>
+                    {% endif %}
+                  {% endif %}  
                     
                 </td>
                     <td>
