@@ -295,6 +295,7 @@ a.attendence_datetime {
 .cardrow{
     display: flex;
     width: 100%;
+    padding: 0 15px;  
 }
 .cardleave{
     display: flex;
@@ -331,8 +332,46 @@ a.attendence_datetime {
 .cardalot .card-body {
     padding: 0px 20px;
 }
-
-
+.background_colorbtn{
+      background: linear-gradient(to right,rgba(239,110,59,1) 0,rgba(213,63,168,1) 100%);
+      border: none;
+      padding: 10px 30px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 16px;
+}
+input:focus{
+  outline: none!important;
+  box-shadow: none!important;
+}
+select:focus{
+  outline: none!important;
+  box-shadow: none!important;
+}
+textarea:focus{
+  outline: none!important;
+  box-shadow: none!important;
+}
+.cardleave form{
+  width: 100%;
+}
+.card_width{
+  width: 700px;
+  margin: auto;
+}
+.card_width input{
+  width: 78%;
+    padding: 6px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin: 4px 0;
+}
+.card_width label{
+  width: 130px;
+}
+.form-group.formmargin_none {
+    margin: 0 0 15px 0!important;
+}
 /*responsive*/
 @media only screen and (min-width: 200px) and (max-width: 1400px){
 

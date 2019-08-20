@@ -8,32 +8,38 @@
     <form class="form-horizontal signup_form sign_form1" method="POST" enctype="multipart/form-data" class="form-horizontal">   
       {% csrf_token %}
 
-    {% if form.errors %}
-           {% for field in form %}
-               {% for error in field.errors %}
-                   <div class="alert alert-danger">
-                       <strong>{{ field.label }} : {{ error|escape }}</strong>
-                   </div>
-               {% endfor %}
-           {% endfor %}
-           {% for error in form.non_field_errors %}
 
 
-    {% if form2.errors %}
-           {% for field in form2 %}
-               {% for error in field.errors %}
-                   <div class="alert alert-danger">
-                       <strong>{{ field.label }} : {{ error|escape }}</strong>
-                   </div>
-               {% endfor %}
-           {% endfor %}
-           {% for error in form2.non_field_errors %}
-               <div class="alert alert-danger">
-                   <strong>{{ error|escape }}</strong>
-               </div>
-           {% endfor %}
-       {% endif %}
+      {% if form.errors %}
+          {% for field in form %}
+            {% for error in field.errors %}
+              <div class="alert alert-danger">
+                  <strong>{{ field.label }} : {{ error|escape }}</strong>
+              </div>
+            {% endfor %}
+          {% endfor %}
 
+          {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+            </div>
+          {% endfor %}
+      {% endif %}
+
+      {% if form2.errors %}
+            {% for field in form2 %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ field.label }} : {{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form2.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
 
           <div class="col-md-6">
               <label>Username</label>
@@ -95,8 +101,9 @@
             <label>Team Lead</label>
             {{ form2.teamlead }}
           </div>
+
           <div class="cardrow">
-            <button type="submit" class="btn btn-success12 sub_btn" id = "phonenumber">Submit</button>
+            <button type="submit" class="sub_btn background_colorbtn" id = "phonenumber">Submit</button>
           </div>
     </form>
   </div>

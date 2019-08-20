@@ -45,11 +45,13 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
-      </div>
-      {% if user.is_superuser  %}
-      <button class="btn btn-success delete-row btnsuccess1" id="delrow" onclick="return delrow();">Delete row</button>
+
+        {% if user.is_superuser  %}
+      <button class="background_colorbtn" id="delrow" onclick="return delrow();">Delete row</button>
        {% endif %}
+      </div>
+      </div>
+      
     </div>
     {{ attendance.intime }}
   <!-- Modal -->
@@ -115,6 +117,5 @@ $('.action-select').change(function(){
   }
 });
 </script>
-
 {% endblock %}
 
