@@ -107,7 +107,9 @@
           </div>
     </form>
   </div>
-
+  {% endblock %}
+{% block extra_js %} 
+{{ block.super}}
 <script>
     $(document).ready(function () {
         $('#id_date_of_birth ').datepicker({
@@ -141,4 +143,4 @@
     });
 </script>
 
-{% endblock %} 
+{% endblock extra_js%} 

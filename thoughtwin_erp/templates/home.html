@@ -73,9 +73,11 @@
       
     </div>
   </div>
+{% endblock %}
 
 
-
+{% block extra_js %}
+{{ block.super }} 
   <script>
     $(document).ready(function(){
       $(".attendence_datetime").click(function(e){
@@ -118,5 +120,5 @@ $('.action-select').change(function(){
   }
 });
 </script>
-{% endblock %}
 
+{% endblock extra_js %}

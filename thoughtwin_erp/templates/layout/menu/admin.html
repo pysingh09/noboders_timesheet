@@ -1,25 +1,28 @@
-<ul class="nav navbar-nav">
-  <li><a href="{% url 'employee:home' %}">Home</a></li>
-  
-    <li><a href="{% url 'employee:file_upload' %}">Upload Report</a></li>
-    <li><a href="{% url 'employee:signup' %}">Create New Employee</a></li>
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+        <li class="active">               
+            <a href="{% url 'employee:home' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>Home</a>
+   
+              
+                <li><a href="{% url 'employee:file_upload' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Upload Report</a></li>
+                <li><a href="{% url 'employee:signup' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Create New Employee</a></li>
 
-    <li><a href="{% url 'employee:employee_list' %}">All Employee List</a></li>
-    <li><a href="{% url 'employee:attendence-request-list' %}">In/Out Request</a></li>
-    <li><a href="{% url 'employee:request-full-leave' %}">Leave Request</a></li>
-    <li><a href="{% url 'employee:show-leave-list' %}">Show All Leave</a></li>  
-  
-  <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">All Requests<span class="caret"></span></a>
-    <ul class="dropdown-menu">
-    <!-- <li><a href="{% url 'employee:leave_list' %}">Leave List</a></li> -->
-    <li><a href="{% url 'employee:fullday-list' %}">All In/Out Requests</a></li>
-    <li><a href="{% url 'employee:leaves' %}">All Leave Status</a></li>
-    <li><a href="{% url 'employee:leave-list' %}">All Leave Requests</a></li>
-    
-    
-    
-  </ul>
-  </li>
-  <li class="cal_btn"><a href="{% url 'employee:show-hour-calender' %}">Calendar</a></li>
-</ul>
+                <li><a href="{% url 'employee:employee_list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>All Employee List</a></li>
+                <li><a href="{% url 'employee:attendence-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>In/Out Request</a></li>
+                <li><a href="{% url 'employee:request-full-leave' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Leave Request</a></li>
+                <li><a href="{% url 'employee:show-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Show All Leave</a></li>  
+              
+               <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>All Requests<span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                      <!-- <li><a href="{% url 'employee:leave_list' %}">Leave List</a></li> -->
+                      <li><a href="{% url 'employee:fullday-list' %}">All In/Out Requests</a></li>
+                      <li><a href="{% url 'employee:leaves' %}">All Leave Status</a></li>
+                      <li><a href="{% url 'employee:leave-list' %}">All Leave Requests</a></li>
+                     </ul>
+               </li>
+                <li class="cal_btn"><a href="{% url 'employee:show-hour-calender' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Calendar</a></li>
+                                  
+        </li>
+    </ul>
+</div>

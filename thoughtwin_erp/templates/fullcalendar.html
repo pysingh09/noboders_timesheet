@@ -20,6 +20,24 @@
     </div>
   </div>
 
+
+<body>
+      
+<div id='wrap'>
+
+
+<div id='calendar' class="card"></div>
+
+
+<div style='clear:both'></div>
+</div>
+
+
+</body>
+{% endblock %}
+{% block extra_js %}
+  {{block.super}}
+
 <script>
     
 $(document).ready(function() {
@@ -110,18 +128,4 @@ $(document).ready(function() {
     });
     
   </script>
-
-<body>
-      
-<div id='wrap'>
-
-
-<div id='calendar' class="card"></div>
-
-
-<div style='clear:both'></div>
-</div>
-
-
-</body>
-{% endblock %}
+{% endblock extra_js %}

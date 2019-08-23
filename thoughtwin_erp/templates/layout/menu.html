@@ -1,39 +1,35 @@
 {% load static %}
-{% load date_time_diff_tags %}
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      
-    </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      
-      {% if request.user|has_group:"HR" or request.user|has_group:"MD" %}
-        {% include "layout/menu/admin.html" %}
-      {% else %}
-        {% include "layout/menu/employee.html" %}
-      {% endif %}
-      
-      <ul class="nav navbar-nav navbar-right navprofile">
+{% load date_time_diff_tags %}
+<nav class="navbar navbar-default no-margin">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header fixed-brand">
+       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
+          <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </button>
+         <a class="navbar-brand" href="#"><img src="{% static 'img/logo.png' %}"></a>
+      </div>
+      <!-- navbar-header-->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+         <ul class="nav navbar-nav">
+            <li class="active">
+               <button class="navbar-toggle collapse in" data-toggle="collapse" id="menu-toggle-2"> <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+               </button>
+            </li>
+         </ul>
+         <ul class="nav navbar-nav navbar-right navprofile">
         <li class="dropdown">
-          <img src="{% static 'img/avatar-mini-2.jpg' %}" class="navimg">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
+          <img src="/staticfiles/img/avatar-mini-2.jpg" class="navimg">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }}<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'employee:profile' %}">Profile</a></li>
-            <li><a class="dropdown-item" href="{% url 'employee:change_password' %}">Change Password</a></li>
-            <li> <a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+            <li><a class="dropdown-item" href="/dashboard">Profile</a></li>
+            <li><a class="dropdown-item" href="/change-password/">Change Password</a></li>
+            <li> <a class="dropdown-item" href="/logout/">Log out</a></li>
           </ul>
         </li>
       </ul>
+      </div>
       
-    </div>
-  </div>
+    <!-- bs-example-navbar-collapse-1 -->
 </nav>
+

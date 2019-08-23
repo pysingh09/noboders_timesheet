@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}    
-{% block title %}{% endblock %}
+{% load static %}
 {% block content %} 
     <h3 class="employeehead">Company Employee Details</h3>  
 
@@ -63,12 +62,8 @@
           </div>
           </div>
         </div>
-  {% block js %}
+{% endblock %}
+{% block extra_js %}
   {{block.super}}
-  <script src="{% static 'js/data.js' %}"></script>
-{% endblock js %}
-{% block css %}
-<link href="{% static 'css/style.css' %}" rel="stylesheet">
-{% endblock %}
-{% endblock %}
+{% endblock extra_js %}
 

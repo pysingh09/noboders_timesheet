@@ -44,8 +44,9 @@
 
       <button type="submit" class="btn btn-success sub_btn" id = "phonenumber">Submit</button>
 </form>
-
-
+{% endblock %} 
+{% block extra_js %}
+  {{block.super}}
 <script>
     $(document).ready(function () {
         $('#id_date_of_birth ').datepicker({
@@ -61,4 +62,4 @@
     });
 
 </script>
-{% endblock %} 
+{% endblock extra_js %} 
