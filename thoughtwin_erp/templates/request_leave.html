@@ -58,36 +58,32 @@
     {% csrf_token %}
     <div class="col-md-6 col-sm-6 col-xs-12">
 
-    <div class="form-group col-sm-12">
+    <div class="form-group col-sm-12 input_widthdiv">
       <label for="sel1">Select leave type :</label>
       {{ form.leave_type|add_class:"form-control" }}
     </div>
 
-    <div class="form-group col-lg-3 col-md-6 col-sm-6 col-xs-12" id="startdate">
+    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="startdate">
       <label for="sel1">Start Date:</label>
       {{ form.startdate|add_class:"form-control"|attr:"readonly:readonly"}}
       
     </div>
-    <div class="form-group col-lg-3 col-md-6 col-sm-6 col-xs-12" id="starttime">
+    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="starttime">
       <label for="sel1">Time:</label>
       {{ form.starttime|add_class:"form-control" }}
     </div>
 
-    <div class="form-group col-lg-3 col-md-6 col-sm-6 col-xs-12" id="enddate">
+    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="enddate">
       <label for="sel1">End Date:</label>
       {{ form.enddate|add_class:"form-control"|attr:"readonly:readonly" }}
     </div>
 
-    <div class="form-group col-lg-3 col-md-6 col-sm-6 col-xs-12" id="endtime">
+    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="endtime">
       <label for="sel1">Time:</label>
       {{ form.endtime|add_class:"form-control"|attr:"disabled:true" }}
     </div>
 
-  
-  </div> <!--end of col sm 6-->
-
-  <div class="col-md-6 col-sm-6 col-xs-12">
-        <div class="form-group col-md-12 col-sm-12 col-xs-12" id="reason">
+    <div class="form-group col-md-12 col-sm-12 col-xs-12 input_widthdiv" id="reason">
       <label for="sel1">Reason:</label>
       {{ form.reason|add_class:"form-control" }}
     </div>
@@ -99,11 +95,11 @@
          {% endfor %}
     </div> <!-- get email id-->
 
-  
-  </div>
+    <div class="orm-group col-md-12 cardrow">
+      <button class="background_colorbtn" data-id="selectemail">Submit</button>
+    </div>
 
-  <div class="col-md-12 cardrow"><button class="background_colorbtn" data-id="selectemail">Submit</button></div>
-
+  </div> <!--end of col sm 6-->
   </form>
     </div>
 
