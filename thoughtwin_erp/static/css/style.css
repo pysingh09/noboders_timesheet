@@ -102,11 +102,11 @@ div#myTable1_length {
   border-right: none !important;
 }
 .card{
-    background: #fff;
-    padding: 17px;
-    box-shadow: 0px 0px 5px #ccc;
-    border-radius: 5px;
-  margin: 10px 20px 0px;
+  background: #fff;
+  padding: 17px;
+  box-shadow: 0px 0px 5px #ccc;
+  border-radius: 5px;
+  margin: 0px;
 }
 .dataTable thead{
   background: #f5f5f5;
@@ -148,7 +148,7 @@ a.attendence_datetime {
     margin-top: 15px;
 }
 .employeehead{
-    margin: 10px 20px 26px;
+    margin: 0 0 26px;
     display: block;
     font-weight: 600;
     color: #000;
@@ -505,6 +505,12 @@ div#wrapper{
 div#sidebar-wrapper {
     position: fixed;
     height: 100%;
+}
+.main_contentdiv{
+  padding: 0;
+}
+.col-lg-12.col-md-12.col-sm-12.col-xs-12.filecard{
+  padding: 0!important;
 }
 /*responsive*/
 @media only screen and (min-width: 200px) and (max-width: 1400px){
