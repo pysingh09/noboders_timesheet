@@ -799,18 +799,19 @@ def full_leave_status(request):
         enddate = enddate.strftime("%b %d, %Y")        
         if leave.status == '2':
             if leave_type == 'Half day':
-                email_subject = "Leave Approved ||"" "+user+" "'||'" "+startdate
-                content = render_to_string('email/accept_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'reason':leavedetail.reason })
+                email_subject = "Leave Approved " "||"" " +user+  " "'|| Half Day'" "'||' " "+startdate
+
+                content = render_to_string('email/accept_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'reason':leavedetail.reason,'daytype':leave_type })
             if leave_type == 'Full day':
-                email_subject = "Leave Approved ||"" "+user+" "'||'" "+startdate+"-"+enddate
-                content = render_to_string('email/accept_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason })
+                email_subject = "Leave Approved " "||"" " +user+  " "'|| Full Day'" "'||' " "+startdate+"-"+enddate
+                content = render_to_string('email/accept_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason,'daytype':leave_type })
         if leave.status == '3':
             if leave_type == 'Half day': 
-                email_subject = "Leave Rejected ||"" "+user+" "'||'" "+startdate
-                content = render_to_string('email/reject_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'reason':leavedetail.reason })
+                email_subject = "Leave Rejected " "||"" " +user+  " "'|| Half Day'" "'||' " "+startdate
+                content = render_to_string('email/reject_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'reason':leavedetail.reason,'daytype':leave_type })
             if leave_type == 'Full day':
-                email_subject = "Leave Rejected ||"" "+user+" "'||'" "+startdate+"-"+enddate
-                content = render_to_string('email/reject_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason })
+                email_subject = "Leave Rejected " "||"" " +user+  " "'|| Full Day'" "'||' " "+startdate+"-"+enddate
+                content = render_to_string('email/reject_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason,'daytype':leave_type })
     
         text_content = strip_tags(content)
         msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
