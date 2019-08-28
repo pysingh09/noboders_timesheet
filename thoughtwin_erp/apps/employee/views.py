@@ -902,7 +902,7 @@ class ForgotPassword(View):
     
     def post(self,request):
         try:
-            if request.method == 'POST':                
+            if request.method == 'POST':            
                 email = request.POST['email']
                 try:
                     user = User.objects.get(email=email)
@@ -910,7 +910,7 @@ class ForgotPassword(View):
                     messages.error(self.request, 'Email Not Exist')
                     return HttpResponseRedirect('/forgot-password/')
                     
-                password = User.objects.make_random_password()
+                password = User.objects.make_random_password(length=8, allowed_chars='123456789')
                 user.set_password(password)
                 user.save()
                 body = "Hi there. \n You have requested a new password for your account on Testing.\nYour temporary password is "+password+""

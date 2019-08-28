@@ -64,6 +64,7 @@ div#myTable1_length {
     border-radius: 50px;
     height: 40px;
     width: 40px;
+    
 }
 .navprofile a.dropdown-toggle{
   display: inline-block;
@@ -577,3 +578,4 @@ div#sidebar-wrapper {
       width: auto;
    }
 }
+

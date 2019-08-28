@@ -49,13 +49,12 @@
   </div>
 </div>
 
-
-    </script>   
+   
 
 {% endblock %}
-{% block extra_js %}
-  {{block.super}}
-  <script>
+{% block script %}
+{{block.super}}
+<script>
   $(document).ready(function(){
       $(document).on('click', '#leave', function(e){
         e.preventDefault();
@@ -89,4 +88,5 @@
 
       });
       });
-{% endblock extra_js %}
+</script>
+{% endblock %}
