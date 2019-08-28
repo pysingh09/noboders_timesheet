@@ -101,17 +101,17 @@
     
       
   
-<!-- <div class = "dropdown">
+<div class = "dropdown">
    
    <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
       <div id="myDropdown" class = "dropdown-menu drop" role = "menu">
      <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
-          {% for em in emails %}    
+          {% for em in email_data %}    
           <li><a class="emailtext">{{ em }}</a></li>
           {% endfor %}
       
       </div>
-    </div> -->
+    </div>
 </div>
 
 {% endblock %}
@@ -122,6 +122,7 @@
   <script type="text/javascript">
     function add_email(){
       $("#emails").val();
+      debugger
       var emails = $('#selectemail').children();
       var email = [] ;
 

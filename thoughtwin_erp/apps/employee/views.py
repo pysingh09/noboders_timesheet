@@ -602,16 +602,19 @@ class RequestLeaveView(CreateView):
 
          
             
-            # emails = self.request.POST.get('emails').split(',')
-            mail_list = []
-            default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-            for usr in default_mail_list:
-                # emails.append(usr.email)
-                mail_list.append(usr.email)
-            request_user = self.request.user.email            
-            mail_list.append(request_user)
-            mail_list.append(self.request.user.profile.teamlead.email)
-            mail_list = set(mail_list)
+            emails = self.request.POST.get('emails').split(',')
+           
+            # for MD , HR and teamlead   
+           
+            # mail_list = []
+            # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+            # for usr in default_mail_list:
+            #     # emails.append(usr.email)
+            #     mail_list.append(usr.email)
+            # request_user = self.request.user.email            
+            # mail_list.append(request_user)
+            # mail_list.append(self.request.user.profile.teamlead.email)
+            # mail_list = set(mail_list)
 
 
 
@@ -645,7 +648,7 @@ class RequestLeaveView(CreateView):
             # email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=mail_list)
             # email.send()
 
-            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
+            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, emails)
             msg.attach_alternative(content, "text/html")
             msg.send()
             
@@ -669,11 +672,11 @@ class RequestLeaveView(CreateView):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.all()
         # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-        # # email_data = []
+        email_data = []
         # mail_list = [] 
-        # # for user in User.objects.all():
-        # #     email_data.append(user.email)
-        # #     email_data.sort()
+        for user in User.objects.all():
+            email_data.append(user.email)
+            email_data.sort()
         # for usr in default_mail_list:
         #     mail_list.append(usr.email)
         # context['emails'] = email_data
@@ -686,6 +689,8 @@ class RequestLeaveView(CreateView):
         mail_list.append(self.request.user.profile.teamlead.email)
         mail_list = set(mail_list)
         context['mail_list'] = mail_list
+        context['email_data']=email_data
+
         return context
 
 # class EmpLeaveListView(PermissionRequiredMixin,ListView):

@@ -98,7 +98,7 @@ class ProfileForm(forms.ModelForm):
         # first call parent's constructor
         super(ProfileForm, self).__init__(*args, **kwargs)
         # if you want to admin can not update employee_id so uncomment both lines which are commented
-
+        
         # self.fields['employee_id'].required = False 
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
