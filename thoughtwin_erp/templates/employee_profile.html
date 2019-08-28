@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<div class="card">
 <h2>Welcome : {{ employee.username }}</h2> 
 
     <p>Username  :{{ employee.username }}</p>
@@ -14,5 +14,5 @@
     <p>DOB :{{ employee.profile.date_of_birth }}</p>
     <p>DOJ :{{ employee.profile.date_of_joining}}</p>
     <p>Alloted Leaves : {% if employee.profile.get_leave %} {{ employee.profile.get_leave }}{% else %}N/A{% endif %}</p>
-
+</div>
 {% endblock %}

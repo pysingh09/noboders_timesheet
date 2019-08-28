@@ -46,41 +46,6 @@
     </div>
   </div>
 
-
-<script>
-    $(".leave").on('click', function (e) {
-      e.preventDefault();
-      var leave_id = $(this).data("leave-id");
-      var leave_type = $(this).data("leave_type");
-      var leave_user = $(this).data("leave-user");
-      $.ajax({
-        url: "{% url "employee:approved_leave" %}",
-        'type': "POST",
-        data: {
-          'leave_id': leave_id,
-          'leave_type':leave_type,
-          'csrfmiddlewaretoken': '{{ csrf_token }}',
-        },
-      success: function(response) {
-           
-            if(response.status=="success"){
-              if(leave_type==3){
-                alert("Leave Request For "+leave_user+ " Is Accepted")
-                location.reload();
-                }
-              else{
-                alert("Leave Request For "+leave_user+ " Is Rejected")
-                location.reload();
-                  }
-                
-              }
-
-            }
-      });
-
-    });
-  </script>
-
 <style type="text/css">
   body
 {
@@ -99,3 +64,41 @@ tr td:first-child:before
 }
 </style>
 {% endblock %}
+
+{% block extra_js %}
+  {{block.super}}
+  <script>
+      $(".leave").on('click', function (e) {
+        e.preventDefault();
+        var leave_id = $(this).data("leave-id");
+        var leave_type = $(this).data("leave_type");
+        var leave_user = $(this).data("leave-user");
+        $.ajax({
+          url: "{% url "employee:approved_leave" %}",
+          'type': "POST",
+          data: {
+            'leave_id': leave_id,
+            'leave_type':leave_type,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+        success: function(response) {
+             
+              if(response.status=="success"){
+                if(leave_type==3){
+                  alert("Leave Request For "+leave_user+ " Is Accepted")
+                  location.reload();
+                  }
+                else{
+                  alert("Leave Request For "+leave_user+ " Is Rejected")
+                  location.reload();
+                    }
+                  
+                }
+
+              }
+        });
+
+      });
+    </script>
+  }
+{% block extra_js %}

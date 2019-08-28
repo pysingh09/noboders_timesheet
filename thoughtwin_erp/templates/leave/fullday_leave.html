@@ -50,41 +50,43 @@
 </div>
 
 
-
-<script>
-$(document).ready(function(){
-    $(document).on('click', '#leave', function(e){
-      e.preventDefault();
-      var leave_id = $(this).data("leave-id");
-      var leave_status = $(this).data("leave_status");
-      var start_date = $(this).data("start_date");
-      var end_date = $(this).data("end_date");
-      $.ajax({
-        url: "{% url "employee:del-leave-list" %}",
-        'type': "POST",
-        data: {
-          'leave_id': leave_id,
-          'leave_status':leave_status,
-          'start_date':start_date,
-          'end_date':end_date,
-          'csrfmiddlewaretoken': '{{ csrf_token }}',
-        },
-        success: function(response) {
-           
-            if(response.status=="success"){
-             
-                alert("Leave is Deleted Successfully")
-                location.reload();
-                
-             
-                
-              }
-
-            }
-      });
-
-    });
-    });
-  </script>   
+    </script>   
 
 {% endblock %}
+{% block extra_js %}
+  {{block.super}}
+  <script>
+  $(document).ready(function(){
+      $(document).on('click', '#leave', function(e){
+        e.preventDefault();
+        var leave_id = $(this).data("leave-id");
+        var leave_status = $(this).data("leave_status");
+        var start_date = $(this).data("start_date");
+        var end_date = $(this).data("end_date");
+        $.ajax({
+          url: "{% url "employee:del-leave-list" %}",
+          'type': "POST",
+          data: {
+            'leave_id': leave_id,
+            'leave_status':leave_status,
+            'start_date':start_date,
+            'end_date':end_date,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          success: function(response) {
+             
+              if(response.status=="success"){
+               
+                  alert("Leave is Deleted Successfully")
+                  location.reload();
+                  
+               
+                  
+                }
+
+              }
+        });
+
+      });
+      });
+{% endblock extra_js %}

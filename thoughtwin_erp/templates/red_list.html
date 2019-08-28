@@ -1,21 +1,78 @@
 {% extends 'base.html' %}
 {% load staticfiles %}    
 {% load date_time_diff_tags %}
+
+{% block css %}
+    {{block.super}}
+    <style>
+        .dropbtn {
+          background-color: #4CAF50;
+          color: white;
+          padding: 16px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+          background-color: #3e8e41;
+        }
+
+        #myInput {
+          box-sizing: border-box;
+          background-image: url('searchicon.png');
+          background-position: 14px 12px;
+          background-repeat: no-repeat;
+          font-size: 16px;
+          padding: 14px 20px 12px 45px;
+          border: none;
+          border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f6f6f6;
+          min-width: 230px;
+          overflow: auto;
+          border: 1px solid #ddd;
+          z-index: 1;
+        }
+
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+    </style>
+{% endblock css %}
 {% block content %} 
 
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li class="{{ message.tags }}">{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
 
-        <h3 class="employeehead"> Employee Leave List </h3>
-          <!-- <p class = "no_record_in_table"></p> -->
+    <h3 class="employeehead"> Employee Leave List </h3>
+      <!-- <p class = "no_record_in_table"></p> -->
 
-            <div class="card">
+        <div class="card">
     <div class="search-container">
     <div class="table-responsive">
         <table class = "table" id="myTable1">
@@ -79,196 +136,129 @@
 
   <button class="btn btn-success submit-email-btn btnsuccess1" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>          
 
-<script>
-  function checkrow() {
-    var leaveRequestArr =[];
-     if (!$("input:checkbox").is(":checked"))  {
-        
-            alert("Please tick checkbox if you want to send leave request");
-            location.reload();
-            return false;
-            }
-             
-              else($(document)).on("click","#checkrow",function(e){
-                 
-                  e.preventDefault();
-                  var emails = Array.from( new Set(email)) 
-                  $(".chkboxs:checked").each(function () {
-                    leaveRequestArr.push($(this).val());
-
-                       });
-                     $.ajax({
-                     'url': '/request/leave/',
-                     'type': "POST",
-                     'dataType': 'json',
-                     'data': {
-                         'leaveRequestArr': leaveRequestArr,
-                         'emails[]': emails ,
-                         'csrfmiddlewaretoken': '{{ csrf_token }}',
-                     },
-                     success: function(response) {
-                        if(response.status=="success"){
-                            alert("Request leave successfull")
-                            location.reload();
-                            }
-
-                        }                    
-                                                       
-                       
-                    });
-
-                  }) 
-          } 
-   
-
- var email = [] ;
-
-    function add_email(){
-
-      $("#emails").val();
-      var emails = $('#selectemail').children();
-
-       for(i=0;i<emails.length;i++)
-          {
-
-            email.push($(emails[i]).text()+'');
-   
-          }
-
-
-        $("#emails").val(email);
-
-    }
-
-    $(document).on('click', '.removeemailtext', function(){
-      $('.drop').append('<li><a class="emailtext" id="demo">'+$(this).text()+'</a></li>');
-      $(this).remove();
-      add_email();
-    });
-
-    $(document).on('click', '.emailtext', function(){
-      $(this).remove();
-      $("#selectemail").append('<div style="margin: 2px;" class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
-      add_email();
-    });
-
-  $(document).ready(function() {
-    $('#checkrow').hide();
-      $('.chkboxs').mouseup(function() {
-          $('input[type="checkbox"]').click(function(){
-          if($('input[type="checkbox"]:checked').length > 0)
-            $('#checkrow').show();
-          else
-            $('#checkrow').hide();
-
-      });
-  });
-});
- $(document).ready(function() {
-    $('#email-button').hide();
-      $('.chkboxs').mouseup(function() {
-          $('input[type="checkbox"]').click(function(){
-          if($('input[type="checkbox"]:checked').length > 0)
-            $('#email-button').show();
-          else
-            $('#email-button').hide();
-
-      });
-  });
-})
-
-
-    // $(document).on('click', '.submit-email-btn', function(){
-    //     var emails = Array.from( new Set(email))  
-    //     $.ajax({
-    //       type: 'POST',
-    //       url: '/request/leave/',
-    //       data: {
-    //         'emails[]': emails , 
-    //          'csrfmiddlewaretoken':'{{ csrf_token }}'},
-    //     });
-
-
-        // $.post("{% url 'employee:request_leave' %}", data:{email:emails, csrfmiddlewaretoken:'{{ csrf_token }}'})
-        // }) ;
-    </script>
-<style>
-.dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #3e8e41;
-}
-
-#myInput {
-  box-sizing: border-box;
-  background-image: url('searchicon.png');
-  background-position: 14px 12px;
-  background-repeat: no-repeat;
-  font-size: 16px;
-  padding: 14px 20px 12px 45px;
-  border: none;
-  border-bottom: 1px solid #ddd;
-}
-
-#myInput:focus {outline: 3px solid #ddd;}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f6f6f6;
-  min-width: 230px;
-  overflow: auto;
-  border: 1px solid #ddd;
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown a:hover {background-color: #ddd;}
-
-.show {display: block;}
-</style>
-
-<script>
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
-
-function filterFunction() {
-  var input, filter, a, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
-    }
-  }
-}
-</script>    
-
-
 {% endblock %}
+{% block extra_js %}
+    {{block.super}}
+    <script>
+      function checkrow() {
+        var leaveRequestArr =[];
+         if (!$("input:checkbox").is(":checked"))  {
+            
+                alert("Please tick checkbox if you want to send leave request");
+                location.reload();
+                return false;
+                }
+                 
+                  else($(document)).on("click","#checkrow",function(e){
+                     
+                      e.preventDefault();
+                      var emails = Array.from( new Set(email)) 
+                      $(".chkboxs:checked").each(function () {
+                        leaveRequestArr.push($(this).val());
+
+                           });
+                         $.ajax({
+                         'url': '/request/leave/',
+                         'type': "POST",
+                         'dataType': 'json',
+                         'data': {
+                             'leaveRequestArr': leaveRequestArr,
+                             'emails[]': emails ,
+                             'csrfmiddlewaretoken': '{{ csrf_token }}',
+                         },
+                         success: function(response) {
+                            if(response.status=="success"){
+                                alert("Request leave successfull")
+                                location.reload();
+                                }
+
+                            }                    
+                                                           
+                           
+                        });
+
+                      }) 
+              } 
+       
+
+         var email = [] ;
+
+            function add_email(){
+
+              $("#emails").val();
+              var emails = $('#selectemail').children();
+
+               for(i=0;i<emails.length;i++)
+                  {
+
+                    email.push($(emails[i]).text()+'');
+           
+                  }
+
+
+                $("#emails").val(email);
+
+            }
+
+            $(document).on('click', '.removeemailtext', function(){
+              $('.drop').append('<li><a class="emailtext" id="demo">'+$(this).text()+'</a></li>');
+              $(this).remove();
+              add_email();
+            });
+
+            $(document).on('click', '.emailtext', function(){
+              $(this).remove();
+              $("#selectemail").append('<div style="margin: 2px;" class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
+              add_email();
+            });
+
+          $(document).ready(function() {
+            $('#checkrow').hide();
+              $('.chkboxs').mouseup(function() {
+                  $('input[type="checkbox"]').click(function(){
+                  if($('input[type="checkbox"]:checked').length > 0)
+                    $('#checkrow').show();
+                  else
+                    $('#checkrow').hide();
+
+              });
+          });
+        });
+         $(document).ready(function() {
+            $('#email-button').hide();
+              $('.chkboxs').mouseup(function() {
+                  $('input[type="checkbox"]').click(function(){
+                  if($('input[type="checkbox"]:checked').length > 0)
+                    $('#email-button').show();
+                  else
+                    $('#email-button').hide();
+
+              });
+          });
+        });
+
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+          document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        function filterFunction() {
+          var input, filter, a, i;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          div = document.getElementById("myDropdown");
+          a = div.getElementsByTagName("a");
+          for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              a[i].style.display = "";
+            } else {
+              a[i].style.display = "none";
+            }
+          }
+        }
+    </script>    
+
+
+{% endblock extra_js %}

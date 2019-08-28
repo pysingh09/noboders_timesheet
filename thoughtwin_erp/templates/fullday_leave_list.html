@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <h3>In/Out Time Requests List</h3>
-    <br>
+    <h3 class="employeehead">In/Out Time Requests List</h3>
+
     <!-- <p class ="no_record_in_table"></p> -->
     <div class="search-container">
-     <table class = "table" id="myTable1" border="2">
+      <div class="card"> 
+        <div class="table-responsive">
+     <table class = "table table-stripped" id="myTable1">
         <thead>
           <tr>
             <th>Sno.</th>          
@@ -39,8 +41,12 @@
             </tbody>
       </table>
     </div>
+  </div>
+  </div>
 
-
+{% endblock %}
+{% block extra_js%}
+{{block.super}}
 <script>
     $(".leave").on('click', function (e) {
       e.preventDefault();
@@ -75,6 +81,4 @@
 
     });
   </script>
-
-
-{% endblock %}
+{% endblock extra_js%}

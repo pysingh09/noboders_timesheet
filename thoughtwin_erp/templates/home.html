@@ -2,7 +2,9 @@
 {% load static %}
 {% block content %} 
   <div class="search-container">
+    <h3 class="employeehead">Dashboard</h3>
       <div class="card"> 
+        <div class="table-responsive">
         <table class="table table-stripped" id="myTable1">
           <thead>
             <tr>
@@ -44,10 +46,13 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
-      {% if user.is_superuser  %}
-      <button class="btn btn-success delete-row btnsuccess1" id="delrow" onclick="return delrow();">Delete row</button>
+
+        {% if user.is_superuser  %}
+      <button class="background_colorbtn" id="delrow" onclick="return delrow();">Delete row</button>
        {% endif %}
+      </div>
+      </div>
+      
     </div>
     {{ attendance.intime }}
   <!-- Modal -->
@@ -68,9 +73,11 @@
       
     </div>
   </div>
+{% endblock %}
 
 
-
+{% block extra_js %}
+{{ block.super }} 
   <script>
     $(document).ready(function(){
       $(".attendence_datetime").click(function(e){
@@ -114,5 +121,4 @@ $('.action-select').change(function(){
 });
 </script>
 
-{% endblock %}
-
+{% endblock extra_js %}

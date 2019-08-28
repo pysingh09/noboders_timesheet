@@ -56,22 +56,6 @@ div#myTable1_length {
     font-weight: 700;
     margin-left: 10px;
 }
-
-
-
-/*.selectParent select {
-  text-indent: 1px;
-  text-overflow: '';
-  width: 100px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding: 2px 2px 2px 2px;
-  border: none;
-  background: transparent url("http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png") no-repeat 60px center;
-}*/
-
-/*new*/
 .dataTables_length{
     margin-bottom: 20px;
       padding-left: 4px;
@@ -118,11 +102,11 @@ div#myTable1_length {
   border-right: none !important;
 }
 .card{
-    background: #fff;
-    padding: 17px;
-    box-shadow: 0px 0px 5px #ccc;
-    border-radius: 5px;
-  margin: 10px 20px 0px;
+  background: #fff;
+  padding: 17px;
+  box-shadow: 0px 0px 5px #ccc;
+  border-radius: 5px;
+  margin: 0px;
 }
 .dataTable thead{
   background: #f5f5f5;
@@ -164,7 +148,7 @@ a.attendence_datetime {
     margin-top: 15px;
 }
 .employeehead{
-    margin: 10px 20px 26px;
+    margin: 0 0 26px;
     display: block;
     font-weight: 600;
     color: #000;
@@ -247,12 +231,349 @@ a.attendence_datetime {
 .inmodal table td {
     padding: 5px 15px !important;
 }
+#attendence_model .table {
+    border: 1px solid #8c8b8b !important;
+}
+#attendence_model .table tr th{
+  border: 1px solid #8c8b8b !important;
+}
+.card-upload {
+    padding: 40px 0px 40px;
+}
+.card-upload .form-group label{
+  font-size: 17px;
+  line-height: 20px;
+}
+.card-upload .form-group .form-control {
+    height: 45px;
+    padding: 10px;
+}
+.card .sign_form1 {
+  padding: 0px 7px;
+  border-radius: 0px;
+  background: transparent;
+  width: 100%;
+  margin: 0px;
+}
+.sign_form1 input, .sign_form1 select{
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f5f5f5;
+    margin-top: 6px;
+}
+.btn-success12, .btn-success12:focus {
+    text-align: left;
+    color: #fff !important;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    margin: 20px 15px;
+    text-transform: capitalize;
+    font-weight: 600;
+    padding: 9px 20px;
+}
+.sign_form1 label{
+  margin: 20px 0px 0px;
+}
+.cardrow{
+    display: flex;
+    width: 100%;
+    padding: 0 15px;  
+}
+.cardleave{
+    display: flex;
+    padding: 35px 10px;
+}
+#selectemail.mailhide {
+    padding-left: 15px;
+}
+.fieldWrapper{
+    padding: 10px 0px;
+    margin: 10px 0px;
+}
+.leavetable{
+    margin: 20px 2px;
+}
+.fieldWrapper select, .fieldWrapper input {
+    width: 85%;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    height: 40px;
+    padding: 5px;
+}
+.cardalot .btn-success {
+    text-align: left;
+    color: #fff !important;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    margin: 13px 4px;
+    text-transform: capitalize;
+    font-weight: 600;
+    padding: 9px 25px;
+}
+.cardalot .card-body {
+    padding: 0px 20px;
+}
+.background_colorbtn{
+      background: linear-gradient(to right,rgba(239,110,59,1) 0,rgba(213,63,168,1) 100%);
+      border: none;
+      padding: 10px 30px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 16px;
+}
+input:focus{
+  outline: none!important;
+  box-shadow: none!important;
+}
+select:focus{
+  outline: none!important;
+  box-shadow: none!important;
+}
+textarea:focus{
+  outline: none!important;
+  box-shadow: none!important;
+}
+.cardleave form{
+  width: 100%;
+}
+.card_width input{
+  width: 40%;
+    padding: 6px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin: 4px 0;
+}
+.card_width label{
+  width: 130px;
+}
+.form-group.formmargin_none {
+    margin: 0 0 15px 0!important;
+}
+.input_widthdiv input{
+    width: 100%!important;
+    padding: 8px!important;
+    border: 1px solid #ddd!important;
+    border-radius: 4px!important;
+    background: #f5f5f5!important;
+    margin-top: 6px!important;
+}
+.input_widthdiv select{
+    width: 100%!important;
+    padding: 8px!important;
+    border: 1px solid #ddd!important;
+    border-radius: 4px!important;
+    background: #f5f5f5!important;
+    margin-top: 6px!important;
+}
+.input_widthdiv textarea{
+    width: 100%!important;
+    padding: 8px!important;
+    border: 1px solid #ddd!important;
+    border-radius: 4px!important;
+    background: #f5f5f5!important;
+    margin-top: 6px!important;
+}
+button.background_colorbtn.updatebutton {
+    margin-top: 20px;
+}
+.nav-pills > li > a {
+   border-radius: 0;
+}
 
+#wrapper {
+   padding-left: 0;
+   -webkit-transition: all 0.5s ease;
+   -moz-transition: all 0.5s ease;
+   -o-transition: all 0.5s ease;
+   transition: all 0.5s ease;
+   overflow: hidden;
+}
 
+#wrapper.toggled {
+   padding-left: 250px;
+   overflow: hidden;
+}
+
+#sidebar-wrapper {
+   z-index: 1000;
+   position: absolute;
+   left: 250px;
+   width: 0;
+   height: 100%;
+   margin-left: -250px;
+   overflow-y: auto;
+   background: #000;
+   -webkit-transition: all 0.5s ease;
+   -moz-transition: all 0.5s ease;
+   -o-transition: all 0.5s ease;
+   transition: all 0.5s ease;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+   width: 250px;
+}
+
+#page-content-wrapper {
+   position: absolute;
+   padding: 15px;
+   width: 100%;
+   overflow-x: hidden;
+}
+
+.xyz {
+   min-width: 360px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+   position: relative;
+   margin-right: 0px;
+}
+
+.fixed-brand {
+   width: auto;
+}
+/* Sidebar Styles */
+
+.sidebar-nav {
+   position: absolute;
+   top: 0;
+   width: 250px;
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   margin-top: 2px;
+}
+
+.sidebar-nav li {
+   text-indent: 15px;
+   line-height: 40px;
+}
+
+.sidebar-nav li a {
+   display: block;
+   text-decoration: none;
+   color: #999999;
+}
+
+.sidebar-nav li a:hover {
+   text-decoration: none;
+   color: #fff;
+   background: rgba(255, 255, 255, 0.2);
+   border-left: red 2px solid;
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+   text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+   height: 65px;
+   font-size: 18px;
+   line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+   color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+   color: #fff;
+   background: none;
+}
+
+.no-margin {
+   margin: 0;
+}
+a.navbar-brand{
+  padding: 5px 15px!important;
+}
+nav.navbar.navbar-default.no-margin {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  z-index: 999;
+}
+div#wrapper{
+  margin-top: 50px;
+}
+div#sidebar-wrapper {
+    position: fixed;
+    height: 100%;
+}
+.main_contentdiv{
+  padding: 0;
+}
+.col-lg-12.col-md-12.col-sm-12.col-xs-12.filecard{
+  padding: 0!important;
+}
+/*responsive*/
 @media only screen and (min-width: 200px) and (max-width: 1400px){
 
-.card{
-  padding: 15px;
-  margin: 10px 0px;
+  .card{
+    padding: 15px;
+    margin: 10px 0px;
+  }
+  .table tr th {
+    vertical-align: top !important;
+    padding-top: 23px !important;
 }
+}
+
+
+@media only screen and (min-width: 768px) and (max-width: 1000px){
+  .filecard{
+      margin-left: 15%;
+  }
+}
+@media (min-width: 768px) {
+   #wrapper {
+      padding-left: 250px;
+   }
+   .fixed-brand {
+      width: 250px;
+   }
+   #wrapper.toggled {
+      padding-left: 0;
+   }
+   #sidebar-wrapper {
+      width: 250px;
+   }
+   #wrapper.toggled #sidebar-wrapper {
+      width: 250px;
+   }
+   #wrapper.toggled-2 #sidebar-wrapper {
+      width: 50px;
+   }
+   #wrapper.toggled-2 #sidebar-wrapper:hover {
+      width: 250px;
+   }
+   #page-content-wrapper {
+      padding: 20px;
+      position: relative;
+      -webkit-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+      transition: all 0.5s ease;
+   }
+   #wrapper.toggled #page-content-wrapper {
+      position: relative;
+      margin-right: 0;
+      padding-left: 250px;
+   }
+   #wrapper.toggled-2 #page-content-wrapper {
+      position: relative;
+      margin-right: 0;
+      margin-left: -200px;
+      -webkit-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+      transition: all 0.5s ease;
+      width: auto;
+   }
 }
