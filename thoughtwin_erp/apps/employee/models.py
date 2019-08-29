@@ -62,7 +62,7 @@ class Profile(BaseModel):
     contact_no = models.CharField(max_length=10)
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_('Date Of Birth'))
     date_of_joining = models.DateField(null=True, blank=True, verbose_name=_('Date Of Joining'))
-
+    profile_image = models.ImageField(upload_to = 'pic_folder/', default = 'avatar-mini-2.jpg')
     teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'), related_name='teamlead')
     designation = models.IntegerField(choices=ROLE_CHOICES, default=7, verbose_name=_('Designation'))
 
