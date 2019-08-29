@@ -110,9 +110,27 @@
   </div>
 
   {% endblock %}
-  
+
   {% block extra_js %} 
   {{ block.super}}
+  <script>
+  
+  $(function () {
+  $("#id_date_of_birth").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true,
+        format: 'yyyy-mm-dd',
+  }).datepicker('update', new Date());
+});
+
+$(function () {
+  $("#id_date_of_joining").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true,
+        format: 'yyyy-mm-dd',
+  }).datepicker('update', new Date());
+});
+
   </script>
   <script>
     $(document).ready(function(){

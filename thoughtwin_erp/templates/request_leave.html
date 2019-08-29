@@ -127,7 +127,7 @@
   <script type="text/javascript">
     function add_email(){
       $("#emails").val();
-      debugger
+
       var emails = $('#selectemail').children();
       var email = [] ;
 
@@ -190,13 +190,20 @@
 
   </script>
     <script type="text/javascript">
+
+
+
       $( function() {
+
         $( "#id_startdate" ).datepicker({ 
+            // autoclose: true, 
+            // todayHighlight: true,
             format: 'yyyy-mm-dd',
               beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
 
             minDate: 0, 
             onSelect: function(date) {
+               debugger
                $("#id_enddate").datepicker('option', 'minDate', date);
                if($('#id_leave_type').val() == '2')
                  {
@@ -207,6 +214,8 @@
         });
 
         $( "#id_enddate" ).datepicker({ 
+            // autoclose: true, 
+            // todayHighlight: true,
             format: 'yyyy-mm-dd',
               beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
             minDate: 0,
