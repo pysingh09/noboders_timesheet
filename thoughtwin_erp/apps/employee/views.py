@@ -483,20 +483,24 @@ class LeaveStatusView(View):
         employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
     
         empatt_leave_status = request.POST.get("leave_type")
-        if empatt_leave_status == '4':
-            employee_attendance.leave_day_time = '0.5'
-        if empatt_leave_status == '3':
-            employee_attendance.leave_day_time = '1.0'
+
+        # half leave minus in alloated 
+
+        # if empatt_leave_status == '4':
+        #     employee_attendance.leave_day_time = '0.5'
+        # if empatt_leave_status == '3':
+        #     employee_attendance.leave_day_time = '1.0'
         employee_attendance.empatt_leave_status = request.POST.get("leave_type")
         employee_attendance.save()
         # message = "dummy"
+        #______________________________________________ 
 
         # if employee_attendance. empatt_leave_status == '3':
         #     message = employee_attendance.user.username +",Leave accept by "+request.user.username+" for less hour"
         # if employee_attendance. empatt_leave_status == '4':
         #     message = employee_attendance.user.username +",Leave reject by "+request.user.username+" for less hour"
 
-
+       
         full_name = employee_attendance.user.first_name+" "+employee_attendance.user.last_name
         user = full_name.title()
         approved_full_name = self.request.user.first_name+" "+self.request.user.last_name
@@ -582,14 +586,12 @@ class RequestLeaveView(CreateView):
                 leave.starttime = starttime #form.data['starttime']
                 leave.endtime = endtime #form.data['starttime']
             
-        
             startdate = form.data['startdate'].split('-')
             enddate = form.data['enddate'].split('-')
             d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2])) #startdate
             d2 = date(int(enddate[0]),int(enddate[1]),int(enddate[2]))  #startdate
             delta = d2 - d1
             leave_type = form.data['leave_type']
-
             for i in range(delta.days + 1):
                 if leave_type == '2':   
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
@@ -600,23 +602,21 @@ class RequestLeaveView(CreateView):
             leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
 
-         
-            
-            emails = self.request.POST.get('emails').split(',')
-           
             # for MD , HR and teamlead   
            
-            # mail_list = []
-            # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-            # for usr in default_mail_list:
-            #     # emails.append(usr.email)
-            #     mail_list.append(usr.email)
-            # request_user = self.request.user.email            
-            # mail_list.append(request_user)
-            # mail_list.append(self.request.user.profile.teamlead.email)
-            # mail_list = set(mail_list)
+            mail_list = []
+            default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+            for usr in default_mail_list:
+                # emails.append(usr.email)
+                mail_list.append(usr.email)
+            request_user = self.request.user.email            
+            mail_list.append(request_user)
+            mail_list.append(self.request.user.profile.teamlead.email)
 
-
+            emails = self.request.POST.get('emails').split(',')
+            for email in emails:
+                mail_list.append(email)
+            mail_list = set(mail_list)
 
 
             request_send_list = []
@@ -633,11 +633,11 @@ class RequestLeaveView(CreateView):
             user = full_name.title()
 
             if leave_type == '2':
-                content = render_to_string('email/email_content.html',{'email_user':user,'startdate':d1 + timedelta(days=i),'reason':form.data['reason'],'request_send_list':request_send_list})
+                content = render_to_string('email/email_content.html',{'email_user':user,'startdate':d1,'reason':form.data['reason'],'request_send_list':request_send_list})
             if leave_type == '3':
-                content = render_to_string('email/email_content.html',{'email_user':user,'startdate':d1 + timedelta(days=i), 'enddate':d2 + timedelta(days=i),'reason':form.data['reason'],'request_send_list':request_send_list})
-            start_date = d1 + timedelta(days=i)
-            end_date = d2 + timedelta(days=i)
+                content = render_to_string('email/email_content.html',{'email_user':user,'startdate':d1, 'enddate':d2 ,'reason':form.data['reason'],'request_send_list':request_send_list})
+            start_date = d1 
+            end_date = d2 
             email_startdate = start_date.strftime("%b %d, %Y")
             email_enddate = end_date.strftime("%b %d, %Y")
             text_content = strip_tags(content)
@@ -647,8 +647,8 @@ class RequestLeaveView(CreateView):
                 email_subject = "Leave Request ||"" "+user+" "'||'" "+'Full Day'" "+"||"" "+str(email_startdate)+"-"+str(email_enddate)
             # email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=mail_list)
             # email.send()
-
-            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, emails)
+           
+            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
             msg.attach_alternative(content, "text/html")
             msg.send()
             

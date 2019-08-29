@@ -93,3 +93,19 @@ let csvRecoredArr =[];
             
     }
 
+
+  $(function () {
+  $("#id_date_of_birth").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true,
+        format: 'yyyy-mm-dd',
+  }).datepicker('update', new Date());
+});
+
+$(function () {
+  $("#id_date_of_joining").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true,
+        format: 'yyyy-mm-dd',
+  }).datepicker('update', new Date());
+});

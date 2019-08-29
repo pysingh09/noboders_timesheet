@@ -192,7 +192,7 @@
     <script type="text/javascript">
       $( function() {
         $( "#id_startdate" ).datepicker({ 
-            dateFormat: 'yy-mm-dd',
+            format: 'yyyy-mm-dd',
               beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
 
             minDate: 0, 
@@ -207,7 +207,7 @@
         });
 
         $( "#id_enddate" ).datepicker({ 
-            dateFormat: 'yy-mm-dd',
+            format: 'yyyy-mm-dd',
               beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
             minDate: 0,
             onSelect: function(date) {

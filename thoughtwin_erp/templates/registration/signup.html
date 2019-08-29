@@ -2,6 +2,7 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
+
   <h3 class="employeehead">Create New Employee</h3>
     <div class="card">
 
@@ -107,40 +108,28 @@
           </div>
     </form>
   </div>
+
   {% endblock %}
-{% block extra_js %} 
-{{ block.super}}
-<script>
-    $(document).ready(function () {
-        $('#id_date_of_birth ').datepicker({
+  
+  {% block extra_js %} 
+  {{ block.super}}
+  </script>
+  <script>
+    $(document).ready(function(){
+      $("#phonenumber").click(function(e){
+      phone = $('#id_contact_no').val();
+      if(phone.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/))
+      {  
+        location.reload();
+        return true;
+      } 
 
-          dateFormat: 'yy-mm-dd'
-        });
-    });
-    $(document).ready(function () {
-        $('#id_date_of_joining').datepicker({
+      {
+          alert('Invalid Phone Number');
+          return false;
+      }
+      });
+      });
+  </script>
 
-          dateFormat: 'yy-mm-dd'
-        });
-    });
-
-</script>
-<script>
-  $(document).ready(function(){
-    $("#phonenumber").click(function(e){
-    phone = $('#id_contact_no').val();
-    if(phone.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/))
-    {  
-      location.reload();
-      return true;
-    } 
-
-    {
-        alert('Invalid Phone Number');
-        return false;
-    }
-    });
-    });
-</script>
-
-{% endblock extra_js%} 
+  {% endblock extra_js%} 

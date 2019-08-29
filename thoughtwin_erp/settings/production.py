@@ -26,14 +26,7 @@ MEDIA_ROOT = PROJECT_APPS.child("media")
 MEDIA_URL = '/media/'
 
 
-# FROM_EMAIL='ankita@thoughtwin.com'
-# DEFAULT_FROM_EMAIL = 'ankita@thoughtwin.com'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_HOST_USER = 'apikey'
-# EMAIL_HOST_PASSWORD = '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'
-# EMAIL_PORT = 587
+
 
 FROM_EMAIL='arpitgupta0907.ag@gmail.com'
 DEFAULT_FROM_EMAIL = 'arpitgupta0907.ag@gmail.com'

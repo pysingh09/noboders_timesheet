@@ -81,11 +81,11 @@ class Profile(BaseModel):
     def get_leave(self):
           return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
 
-    def get_leave(self):
-        try:
-            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
-        except Exception as e:
-             return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
+    # def get_leave(self):
+    #     try:
+    #         return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
+    #     except Exception as e:
+    #          return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
 
 class EmployeeAttendance(BaseModel):
@@ -135,10 +135,11 @@ class AllottedLeave(BaseModel):
 
 
     def get_full_leave(self):
-        try:
-            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum'] - self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
-        except Exception as e:
-             return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
+        return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
+    #     try:
+    #         return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum'] - self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
+    #     except Exception as e:
+    #          return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
 class EmployeeAttendanceDetail(models.Model):
     employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE, related_name='employee_attendance')
