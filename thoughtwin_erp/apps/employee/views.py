@@ -6,7 +6,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
-from employee.models import Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
+from employee.models import MonthlyRemainingLeave,Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
 from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -108,7 +108,7 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                 else:
                     user_form = SignUpForm()
                     profile_form = ProfileForm()
-                    messages.error(self.request,'Feild Fill Correctly')
+                    messages.error(self.request,'Fields Fill Correctly')
                     return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
 
                     
@@ -127,8 +127,14 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
 
 
 
-class EmployeeProfile(TemplateView):
-    template_name = "profile.html"
+class EmployeeProfile(DetailView):
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk = kwargs['pk'])
+        monthly_leaves = MonthlyRemainingLeave.objects.filter(month=datetime.now().month,allotted_leave__user=request.user)
+        if monthly_leaves.exists():
+            return render(request,'profile.html',{'employee' : user,'monthly_leaves':monthly_leaves.first()}) 
+        else:
+            return render(request,'profile.html',{'employee' : user})    
 
 class EmployeeListView(PermissionRequiredMixin,ListView):
     permission_required = ('employee.can_view_user_profile_list', )
@@ -158,6 +164,15 @@ class LeaveCreateView(PermissionRequiredMixin,CreateView):
         return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list= AllottedLeave.objects.all().order_by('-created_at'))
 
     
+    def form_valid(self,form):
+        try:
+            leave = form.save()
+            month = self.request.POST.get('month')
+            monthlyremainingLeave = MonthlyRemainingLeave.objects.create(allotted_leave=leave,month=month,alloted_leave=(leave.bonusleave+1.0))
+            return HttpResponseRedirect("/leaves/")
+        except Exception as e:
+            raise e
+
     
 
 

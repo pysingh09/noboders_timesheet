@@ -21,11 +21,31 @@
                 {% endfor %}
             {% endif %}
             {% for field in form %}
-                <div class="fieldWrapper col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="fieldWrapper col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     {{ field.errors }}
                     {{ field.label_tag }} {{ field }} 
                 </div>
             {% endfor %}
+            <div class="fieldWrapper col-xs-12">
+              <label for="id_user">Leave Alloted From Selected Month:</label> 
+                <select name="month" id="id_month" required="">
+                <option value="" selected="">---------</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+
+
+              </select> 
+            </div>
           
             <button class="background_colorbtn" type="submit">Submit</button>
        </form>
@@ -36,6 +56,8 @@
             <th>S.no.</th>
             <th>Username</th>
             <th>Year</th>
+            <th>Leave</th>
+            <th>Bonus Leave</th>
             <th>Allotted Leave</th>
             <th>Remaining Leave</th>
             <th>Action</th>
@@ -48,6 +70,8 @@
                 <td>{{ leave.user }}</td>
                 <td>{{ leave.year }}</td>
                 <td>{{ leave.leave }}</td>
+                <td>{{ leave.bonusleave }}</td>
+                <td>{{ leave.total_allotted_leave }}</td>
                 <td>{{ leave.get_full_leave }}</td>
                 <td><a href="{% url 'employee:update_leave' leave.pk %}"><span class="glyphicon glyphicon-pencil" ></span></a></td>
                     

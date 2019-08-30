@@ -16,5 +16,17 @@
 	    <p>DOJ :{{ user.profile.date_of_joining}}</p>
 	    <p>Alloted Leaves : {% if user.profile.get_leave %} {{ user.profile.get_leave }}{% else %}N/A{% endif %}</p>
 </div>
-	{% endblock %}
+
+<div>
+	{% if monthly_leaves %}
+	<p>Month : {{ monthly_leaves.month }}</p>
+	<p>Allotted Leave : {{ monthly_leaves.alloted_leave }}</p>
+	<p>Taken Leave : {{ monthly_leaves.taken_leave }}</p>
+	<p>Taken Bonus Leave :{{ monthly_leaves.taken_bonus_leave }}</p>
+	<p>Rejected Leave : {{ monthly_leaves.reject_leave }}</p>
+
+	{% endif %}
+</div>
+{% endblock %}
+
 

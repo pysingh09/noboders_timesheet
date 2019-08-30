@@ -13,6 +13,22 @@ import datetime
 LEAVE_CHOICES = []
 for r in range(2019, (datetime.datetime.now().year+10)):
    LEAVE_CHOICES.append((r,r))
+MONTH_CHOICES = (
+    (1, 'January'),
+    (2, 'February'),
+    (3, 'March'),
+    (4, 'April'),
+    (5, 'May'),
+    (6, 'June'),
+    (7, 'July'),
+    (8, 'August'),
+    (9, 'September'),
+    (10, 'October'),
+    (11,'November'),
+    (12,'December'),
+
+    )
+
 
 LEAVE_STATUS = (
     (1, 'Pending'),
@@ -125,8 +141,13 @@ class AllottedLeave(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leaves')
     year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
     leave = models.FloatField(default=0,verbose_name=_('Leaves'))
+    bonusleave = models.FloatField(default=0,verbose_name=_('Bonus Leave'))
+    available_bonus_leave = models.FloatField(default=0,verbose_name=_('Available Bonus Leave'))
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='leave_created_by')
     
+    def total_allotted_leave(self):
+        return self.leave + self.bonusleave
+
     class Meta:
         unique_together = ('year', 'user',)
 
@@ -136,10 +157,10 @@ class AllottedLeave(BaseModel):
 
     def get_full_leave(self):
         return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
-    #     try:
-    #         return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum'] - self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
-    #     except Exception as e:
-    #          return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
+        try:
+            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum'] - self.user.employee_user.filter(empatt_leave_status__in =['6']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
+        except Exception as e:
+             return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
 class EmployeeAttendanceDetail(models.Model):
     employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE, related_name='employee_attendance')
@@ -172,4 +193,16 @@ class LeaveDetails(models.Model):
     status = models.IntegerField(choices=LEAVE_STATUS, default=1)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='leave_detail_created_by')
 
+
+class MonthlyRemainingLeave(BaseModel):
+    allotted_leave = models.ForeignKey(AllottedLeave, on_delete=models.CASCADE, related_name='allotted_leave')
+    month = models.IntegerField(choices=MONTH_CHOICES, verbose_name=_('Month'))
+    alloted_leave = models.FloatField(default=0)
+    taken_leave = models.FloatField(default=0)
+    taken_bonus_leave = models.FloatField(default=0)
+    reject_leave = models.FloatField(default=0)
     
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='monthremaining_created_by')
+    
+    # def __str__(self):
+    #     return self.month
