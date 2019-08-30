@@ -578,8 +578,16 @@ div#sidebar-wrapper {
       width: auto;
    }
 }
+img.imgnav {
+    border: 0;
+    height: 80px;
+    border-radius: 50px;
+}
 
-
-  label{margin-left: 20px;}
-#datepicker{width:180px; margin: 0 20px 20px 20px;}
+label{
+  margin-left: 20px;
+}
+#datepicker{
+  width:180px; margin: 0 20px 20px 20px;
+}
 #datepicker > span:hover{cursor: pointer;}

@@ -90,9 +90,9 @@
     
     <input type="hidden" id="emails" value="" name="emails">
     <div class="form-group col-md-12 col-sm-12 col-xs-12 mailhide" id="selectemail">
-         {% for email in mail_list %}   
-      <div style="margin: 2px;" class="btn btn-primary">{{ email }}</div>
-         {% endfor %}
+        {% for email in mail_list %}   
+            <div style="margin: 2px;" class="btn btn-primary">{{ email }}</div>
+        {% endfor %}
     </div> <!-- get email id-->
 
     <div class="orm-group col-md-12 cardrow">
@@ -100,17 +100,16 @@
     </div>
 
   </div> <!--end of col sm 6-->
-<div class = "dropdown">
-   
-   <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
+  <div class = "dropdown">
+     
+     <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
       <div id="myDropdown" class = "dropdown-menu drop" role = "menu">
-     <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
-          {% for em in email_data %}    
-          <li><a class="emailtext">{{ em }}</a></li>
-          {% endfor %}
-      
+          <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
+            {% for em in email_data %}    
+            <li><a class="emailtext">{{ em }}</a></li>
+            {% endfor %}      
       </div>
-    </div>
+  </div>
 </div>
   </form>
     </div>
