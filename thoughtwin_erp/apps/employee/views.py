@@ -6,8 +6,10 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
+
 from employee.models import MonthlyRemainingLeave,Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm 
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm,ProfileEditForm 
+
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, date, timedelta
@@ -47,9 +49,12 @@ def login_view(request):
                 login(request,user)
                 return redirect('employee:profile')
             else:
+
                 return render(request,'registration/login.html',{ 'form':form})
+
         else:
             form = AuthenticationForm()
+            messages.error(request,'')
         return render(request,'registration/login.html',{ 'form':form})
     else:
         return redirect('employee:profile')
@@ -306,7 +311,7 @@ def home(request):
     names = set()
     result = []
     for att in attendances_data:
-        if not att.date in names:
+        if not att.date in names and att.date_time_diffrence() != timedelta(hours=0):
             names.add(att.date)
             result.append(att)
 
@@ -447,7 +452,7 @@ def attendence_request_list(request):
     result = []
     email_data = []
     for attendance in attendances:
-        if attendance.date_time_diffrence() < timedelta(hours=9):
+        if attendance.date_time_diffrence() < timedelta(hours=9) and attendance.date_time_diffrence() != timedelta(hours=0):
             result.append(attendance)
     mail_list = []
     default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
@@ -687,14 +692,12 @@ class RequestLeaveView(CreateView):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.all()
         # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-        email_data = []
-        # mail_list = [] 
-        for user in User.objects.all():
-            email_data.append(user.email)
-            email_data.sort()
+        
         # for usr in default_mail_list:
         #     mail_list.append(usr.email)
         # context['emails'] = email_data
+        # import pdb; pdb.set_trace()
+        
         mail_list = []
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
         for usr in default_mail_list:
@@ -702,7 +705,22 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
+
+        email_data = []
+        groups_email = []
+    
+        for user in User.objects.all():
+            if user.email in mail_list:
+                groups_email.append(user.email)               
+            else:
+                email_data.append(user.email)
+                email_data.sort()
+
+
+        email_data = set(email_data)
         mail_list = set(mail_list)
+        
+
         context['mail_list'] = mail_list
         context['email_data']=email_data
 
@@ -963,10 +981,25 @@ def delete_leave(request):
             delete_employee_leave.delete()
     return JsonResponse({'status': 'success'})
         
-    
+class EmployeeUpdateView(UpdateView):
+    model = Profile
+    form_class = ProfileEditForm
+    template_name = 'edit_form.html'
+    success_url = reverse_lazy('')
 
-
-
+    def form_valid(self, form, *args, **kwargs):
+        profile = self.object
+        profile.user.first_name = form.data['first_name']
+        profile.user.last_name = form.data['last_name']     
+        if form.files.get('profile_image')==None:   
+            pass
+        else:
+            profile.profile_image = form.files.get('profile_image')
+        profile.contact_no = form.data['contact_no']
+        profile.user.save()
+        profile.save()
+        return redirect('employee:profile')
+        
 
 
 

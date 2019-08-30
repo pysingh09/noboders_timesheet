@@ -14,12 +14,15 @@ urlpatterns = [
     path('profile/', EmployeeProfile.as_view(), name='profile'),
     path('deactivate/<int:pk>/', deactivate_user,name='deactivate-user'),
     path('delete_record/', delete_record, name='delete_record'), 
+    
     path('update/<int:pk>/', EditProfileView.as_view(), name="update"),
+    path('profile_update/<int:pk>/', EmployeeUpdateView.as_view(), name="profile_update"),
+
     path('leave/employeelist/', LeaveListView.as_view(), name='leave_list'),
     path('profile/<int:pk>/', AllEmployeeProfile.as_view(), name="profile_list"),
     
     path('leaves/', LeaveCreateView.as_view(), name="leaves"),
-    path('update_leave/<int:pk>/', EditAllotedLeaveView.as_view(), name="update_leave"),
+    path('update_leave/<int:id>/', EditAllotedLeaveView.as_view(), name="update_leave"),
     
     path('show/calendar/<int:id>', show_calendar,name ='show_calendar'),
     path('show/calendar', show_hour_calender,name ='show-hour-calender'),

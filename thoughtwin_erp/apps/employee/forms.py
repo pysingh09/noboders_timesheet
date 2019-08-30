@@ -159,3 +159,20 @@ class changePassForm(forms.Form):
             raise forms.ValidationError("The old password that you have entered is wrong.")
         return old_password
 
+class ProfileEditForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=10)
+    last_name = forms.CharField(max_length=10)
+    class Meta:
+        model = Profile
+        fields = ('contact_no','first_name', 'last_name','profile_image')
+    def __init__(self, *args, **kwargs):
+        # first call parent's constructor
+        super(ProfileEditForm, self).__init__(*args, **kwargs)
+        # if you want to admin can not update employee_id so uncomment both lines which are commented
+        
+        # self.fields['employee_id'].required = False 
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            # self.fields['employee_id'].widget.attrs['readonly'] = True
+            self.fields['first_name'].initial = instance.user.first_name
+            self.fields['last_name'].initial = instance.user.last_name  
