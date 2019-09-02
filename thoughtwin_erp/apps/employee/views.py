@@ -134,7 +134,8 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
 
 class EmployeeProfile(DetailView):
     def get(self, request, *args, **kwargs):
-        user = User.objects.get(pk = kwargs['pk'])
+        # import pdb; pdb.set_trace()
+        user = User.objects.get(pk = self.request.user.id)
         monthly_leaves = MonthlyRemainingLeave.objects.filter(month=datetime.now().month,allotted_leave__user=request.user)
         if monthly_leaves.exists():
             return render(request,'profile.html',{'employee' : user,'monthly_leaves':monthly_leaves.first()}) 
