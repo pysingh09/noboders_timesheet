@@ -22,7 +22,7 @@ urlpatterns = [
     path('profile/<int:pk>/', AllEmployeeProfile.as_view(), name="profile_list"),
     
     path('leaves/', LeaveCreateView.as_view(), name="leaves"),
-    path('update_leave/<int:id>/', EditAllotedLeaveView.as_view(), name="update_leave"),
+    path('update_leave/<int:pk>/', EditAllotedLeaveView.as_view(), name="update_leave"),
     
     path('show/calendar/<int:id>', show_calendar,name ='show_calendar'),
     path('show/calendar', show_hour_calender,name ='show-hour-calender'),

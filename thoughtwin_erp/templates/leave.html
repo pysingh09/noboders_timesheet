@@ -73,7 +73,7 @@
                 <td>{{ leave.bonusleave }}</td>
                 <td>{{ leave.total_allotted_leave }}</td>
                 <td>{{ leave.get_full_leave }}</td>
-                <td><a href="{% url 'employee:update_leave' leave.pk %}"><span class="glyphicon glyphicon-pencil" ></span></a></td>
+                <td><a href="{% url 'employee:update_leave' leave.id %}"><span class="glyphicon glyphicon-pencil" ></span></a></td>
                     
               </tr>
           {% endfor %}

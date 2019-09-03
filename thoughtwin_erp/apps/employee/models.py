@@ -97,11 +97,11 @@ class Profile(BaseModel):
     def get_leave(self):
           return self.user.user_leaves.get(user=self.user, year=datetime.datetime.now().year).leave
 
-    # def get_leave(self):
-    #     try:
-    #         return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status__in =['6', '4']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
-    #     except Exception as e:
-    #          return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
+    def get_leave(self):
+        try:
+            return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']-self.user.employee_user.filter(empatt_leave_status__in =['6']).aggregate(Sum('leave_day_time'))['leave_day_time__sum']
+        except Exception as e:
+             return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
 
 class EmployeeAttendance(BaseModel):
@@ -129,6 +129,7 @@ class EmployeeAttendance(BaseModel):
     def date_time_diffrence(self):
         dateTimeDifference = datetime.timedelta(0, 0)
         for emp_detail in self.employee_attendance.all():
+            # import pdb; pdb.set_trace()
             intime = emp_detail.in_time
             outtime = emp_detail.out_time
             dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
@@ -152,7 +153,7 @@ class AllottedLeave(BaseModel):
         unique_together = ('year', 'user',)
 
     def __str__(self):
-        return self.user.username
+        return self.user.username + " : " + str(self.leave)
 
 
     def get_full_leave(self):

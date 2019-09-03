@@ -52,7 +52,6 @@ $(document).ready(function() {
 
               {% for attendance in attendances_data %}
                 {
-              
                 'title':"{{ attendance.date_time_diffrence }} {% if attendance.empatt_leave_status == 5 %} Absent {% elif attendance.empatt_leave_status == 6 %} Leave {% elif attendance.empatt_leave_status == 7 %} NA {% endif %}",
                 'date':"{{ attendance.date}}",
                 'test':"{{ attendance.empatt_leave_status }}",
@@ -67,6 +66,7 @@ $(document).ready(function() {
                        var total_hour = parseFloat(title[0]);
                        var calculation = parseFloat("9:00");
                        var id = event.id;
+                       console.log(test + " __" + title +" __" + total_hour +" : " +id);
                        if (test==5) {
 
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
@@ -79,7 +79,7 @@ $(document).ready(function() {
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff6e00').append().attr("id",id).attr("class","demo");
                             }
                         if (test==7) {
-                           
+                           // debugger
                            var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                            view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","demo");
                             }        
