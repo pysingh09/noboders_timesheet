@@ -18,7 +18,10 @@
 	    <p>Contact :{{ user.profile.contact_no }}</p>
 	    <p>DOB :{{ user.profile.date_of_birth }}</p>
 	    <p>DOJ :{{ user.profile.date_of_joining}}</p>
+	    <p>Total Leave : {{ user. }}</p>
 	    <p>Alloted Leaves : {% if user.profile.get_leave %} {{ user.profile.get_leave }}{% else %}N/A{% endif %}</p>
+
+
 </div>
 
 <div>

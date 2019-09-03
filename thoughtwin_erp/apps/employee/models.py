@@ -195,20 +195,6 @@ class LeaveDetails(models.Model):
     status = models.IntegerField(choices=LEAVE_STATUS, default=1)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='leave_detail_created_by')
 
-
-class MonthlyRemainingLeave(BaseModel):
-    allotted_leave = models.ForeignKey(AllottedLeave, on_delete=models.CASCADE, related_name='allotted_leave')
-    month = models.IntegerField(choices=MONTH_CHOICES, verbose_name=_('Month'))
-    alloted_leave = models.FloatField(default=0)
-    taken_leave = models.FloatField(default=0)
-    taken_bonus_leave = models.FloatField(default=0)
-    reject_leave = models.FloatField(default=0)
-    
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='monthremaining_created_by')
-    
-    # def __str__(self):
-    #     return self.month
-
 LEAVE_MONTH_STATUS_CHOICES =((1, 'Paid'),(2, 'Unpaid'),)
 class MonthlyTakeLeave(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_take_leaves')
