@@ -7,7 +7,7 @@
 
         <img src="{{ request.profile.profile_image.url }}" class="imgnav">
 
-	 <h2>Welcome : {{ user.username }}</h2> 
+	 	<h2>Welcome : {{ user.username }}</h2> 
 
 	    <p>Username  :{{ user.username }}</p>
 	    <p>First name:{{ user.first_name }}</p>
@@ -18,21 +18,15 @@
 	    <p>Contact :{{ user.profile.contact_no }}</p>
 	    <p>DOB :{{ user.profile.date_of_birth }}</p>
 	    <p>DOJ :{{ user.profile.date_of_joining}}</p>
-	    <p>Total Leave : {{ user. }}</p>
-	    <p>Alloted Leaves : {% if user.profile.get_leave %} {{ user.profile.get_leave }}{% else %}N/A{% endif %}</p>
-
-
+	    <p>Total Leave : {{ total_yearly }}</p>
 </div>
 
 <div>
-	{% if monthly_leaves %}
-	<p>Month : {{ monthly_leaves.month }}</p>
-	<p>Allotted Leave : {{ monthly_leaves.alloted_leave }}</p>
-	<p>Taken Leave : {{ monthly_leaves.taken_leave }}</p>
-	<p>Taken Bonus Leave :{{ monthly_leaves.taken_bonus_leave }}</p>
-	<p>Rejected Leave : {{ monthly_leaves.reject_leave }}</p>
-
-	{% endif %}
+	<p>Total Yealy : {{ total_yearly }}</p>
+	<p>Available Leave (Current Month) : {{ total_available_leave }}</p>
+	<p>Total Paid Leave : {{ get_taken_leave.leave__sum }}</p>
+	<p>Total UnPaid Leave : {{ get_taken_unpaid_leave.leave__sum }}</p>
+	
 </div>
 {% endblock %}
 
