@@ -142,7 +142,10 @@ class EmployeeProfile(DetailView):
 
         available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
         available_leave = (datetime.now().month - alloted_leave.month) + 1
-        total_available_leave = available_bonus_leave + available_leave - (get_taken_leave['leave__sum']-alloted_leave.available_bonus_leave)
+        leave_sum = 0
+        if get_taken_leave['leave__sum']:
+           leave_sum = get_taken_leave['leave__sum']
+        total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
         remaning_leave = total_available_leave
         return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
@@ -802,34 +805,49 @@ def full_leave_status(request):
         # monthly model update 
         if int(leave.status) == 2:
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
-            monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave = count)
-
+            # import pdb; pdb.set_trace()
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
-
-            get_taken_leave['leave__sum']
+            
+            gettaken = 0
+            if get_taken_leave['leave__sum']:
+                gettaken = get_taken_leave['leave__sum']
             
             available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
             available_leave = (leave.startdate.month - alloted_leave.month) + 1
-            total_available_leave = available_bonus_leave + available_leave - (get_taken_leave['leave__sum']-alloted_leave.available_bonus_leave)
+            total_available_leave = available_bonus_leave + available_leave - (gettaken - alloted_leave.available_bonus_leave)
+            
+            
             if total_available_leave >= count:
-                monthly_take_leave.leave = count
-                monthly_take_leave.status = 1
-                monthly_take_leave.save()
-
-                if available_bonus_leave >= count:
-                    alloted_available_bonus_leave = alloted_leave.available_bonus_leave + count
+                monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave = count)
+                
+                if available_bonus_leave > 0 :
+                    if available_bonus_leave >= count:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + count
+                    else:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + available_bonus_leave
+                    
                     alloted_leave.available_bonus_leave = alloted_available_bonus_leave
                     alloted_leave.save()
+                    # remaining_count = count-available_bonus_leave
+                # else:
+            else:
+                if available_bonus_leave > 0 :
+                    if available_bonus_leave >= count:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + count
+                    else:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + available_bonus_leave
+                    alloted_leave.available_bonus_leave = alloted_available_bonus_leave
+                    alloted_leave.save()
+                    # remaining_count = count-available_bonus_leave    
 
-            # else:
-            #     import pdb; pdb.set_trace()
-
-            # import pdb; pdb.set_trace()    
-
-
-
-
+                    
+                unpaid_leave = count - total_available_leave
+                monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave = total_available_leave)
+                monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave = unpaid_leave)
+                # import pdb; pdb.set_trace()
+            
         # end monthly model
+        #------------------------------------------------------------
 
 
 
