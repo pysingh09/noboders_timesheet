@@ -287,13 +287,14 @@ def file_upload(request):
             profile = Profile.objects.filter(employee_id=employee_id)
             if profile.exists():
                 profile = Profile.objects.get(employee_id=employee_id)   
-                
                 emp, created = EmployeeAttendance.objects.update_or_create(
                     user=profile.user,
                     employee_id = profile.employee_id,
                     date = dat[2]+'-'+dat[1]+'-'+dat[0],
-                    created_by=request.user
+                    created_by=profile.user,
                 )
+                emp.empatt_leave_status = 1
+                emp.save()
                 if emp:
                     detail = EmployeeAttendanceDetail.objects.update_or_create(
                     employee_attendance=emp,
@@ -331,14 +332,15 @@ def employee_details(request,id):
 
 def show_hour_calender(request):
     attendances_data = EmployeeAttendance.objects.filter(user_id=request.user.id)
-    names = set()
-    result = []
-    for att in attendances_data:
-        if not att.date in names:
-            names.add(att.date)
-            result.append(att)
+    # names = set()
+    # result = []
+    # for att in attendances_data:
+    #     if not att.date in names:
+    #         names.add(att.date)
+    #         result.append(att)
+    # import pdb; pdb.set_trace()
 
-    return render(request,'fullcalendar.html', {'attendances_data' : result})
+    return render(request,'fullcalendar.html', {'attendances_data' : attendances_data})
 
 def show_calendar(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
@@ -779,6 +781,7 @@ def full_leave_status(request):
         leave = Leave.objects.get(id=leave_id)
         leave.status = request.POST.get("leave_status")
         leave.save()
+
         leavedetails = LeaveDetails.objects.filter(leave=leave)
         for leavedetail in leavedetails:
         
@@ -786,8 +789,9 @@ def full_leave_status(request):
         startdate = leave.startdate
         enddate = leave.enddate
         delta = enddate - startdate
+        count = 0
         for day in range(delta.days + 1):
-
+            count +=1
             employee_attendence = EmployeeAttendance.objects.filter(user = leave.user,date = startdate + timedelta(days=day))
             names = set()
             result = []
@@ -802,6 +806,50 @@ def full_leave_status(request):
                     employee_attendence.empatt_leave_status = 7
                 employee_attendence.save()
         
+        # start        
+        if leave.status == '2':
+            leave_accept = count
+            monthlyremainingdetail = MonthlyRemainingLeave.objects.filter(allotted_leave__user=leave.user,allotted_leave__year=startdate.year,month=startdate.month)
+            if monthlyremainingdetail.exists():
+                monthly_remaining_leave = monthlyremainingdetail.first()
+                allotted = monthly_remaining_leave.alloted_leave
+                taken_leave = monthly_remaining_leave.taken_leave
+                taken_bonus = monthly_remaining_leave.taken_bonus_leave
+                reject_leave = monthly_remaining_leave.reject_leave
+                # import pdb; pdb.set_trace()
+                bonus = monthly_remaining_leave.allotted_leave.bonusleave
+                takenbonus = monthly_remaining_leave.allotted_leave.available_bonus_leave
+
+                alloted_leave = leave_accept - (taken_leave+taken_bonus)
+                remain = alloted_leave - (bonus-takenbonus)
+
+                if remain == 0:
+                    taken_bonus = taken_bonus + alloted_leave
+                    taken_leave = taken_leave + (leave_accept - alloted_leave)
+                    reject_leave = 0
+                    #update monthly leave data
+                    monthly_remaining_leave.taken_leave = taken_leave
+                    monthly_remaining_leave.taken_bonus = taken_bonus
+                    monthly_remaining_leave.save()
+
+                elif remain<0 :
+                    taken_leave = taken_leave + leave_accept
+                    #update monthly leave data
+                    monthly_remaining_leave.taken_leave = taken_leave
+                    monthly_remaining_leave.save()
+
+                elif leave_accept>remain and remain>0 :
+                    taken_leave = taken_leave + remain
+                    taken_bonus = taken_bonus + leave_accept - taken_leave 
+                    reject_leave = 0
+                    #update monthly leave data
+                    monthly_remaining_leave.taken_leave = taken_leave
+                    monthly_remaining_leave.taken_bonus = taken_bonus
+                    monthly_remaining_leave.save()
+        
+        #end monthly status                
+
+
         # if leave.status == '2':
         #     message = leave.user.username +",Leave accept by "+request.user.username
         # if leave.status == '3':
@@ -889,6 +937,7 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
     template_name = "fullday_leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
+        # import pdb; pdb.set_trace()
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
         return context
 
