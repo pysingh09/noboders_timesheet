@@ -122,6 +122,7 @@
 
 <!--java script -->
 {% block script %}
+
 {{ block.super }}
   <script type="text/javascript">
     function add_email(){
@@ -193,17 +194,17 @@
 
 
       $( function() {
-
         $( "#id_startdate" ).datepicker({ 
             // autoclose: true, 
             // todayHighlight: true,
-            format: 'yyyy-mm-dd',
-              beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
+            dateFormat: 'yy-mm-dd',
+              // beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
 
-            minDate: 0, 
+            // minDate: 0, 
             onSelect: function(date) {
-               debugger
-               $("#id_enddate").datepicker('option', 'minDate', date);
+               
+
+               $("#id_enddate").datepicker('option', date);
                if($('#id_leave_type').val() == '2')
                  {
                   $("#id_enddate").val($("#id_startdate").val());
@@ -215,9 +216,9 @@
         $( "#id_enddate" ).datepicker({ 
             // autoclose: true, 
             // todayHighlight: true,
-            format: 'yyyy-mm-dd',
-              beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
-            minDate: 0,
+            dateFormat: 'yy-mm-dd',
+              // beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
+            // minDate: 0,
             onSelect: function(date) {
                if($('#id_leave_type').val() == '2')
                  {
