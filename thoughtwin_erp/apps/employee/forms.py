@@ -110,7 +110,7 @@ class AllottedLeavesForm(forms.ModelForm):
 
     class Meta:
         model = AllottedLeave
-        fields = ['user','year','leave','bonusleave']
+        fields = ['user','year','month','leave','bonusleave']
 
 import datetime as dt
 

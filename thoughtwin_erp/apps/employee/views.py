@@ -7,7 +7,7 @@ from django.views.generic import View,ListView,TemplateView,CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 
-from employee.models import MonthlyRemainingLeave,Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
+from employee.models import MonthlyTakeLeave,Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
 from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm,ProfileEditForm 
 
 from django.contrib.auth.models import User
@@ -134,13 +134,21 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
 
 class EmployeeProfile(DetailView):
     def get(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
         user = User.objects.get(pk = self.request.user.id)
-        monthly_leaves = MonthlyRemainingLeave.objects.filter(month=datetime.now().month,allotted_leave__user=request.user)
-        if monthly_leaves.exists():
-            return render(request,'profile.html',{'employee' : user,'monthly_leaves':monthly_leaves.first()}) 
-        else:
-            return render(request,'profile.html',{'employee' : user})    
+        # import pdb; pdb.set_trace()
+        alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
+        get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
+        get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
+
+        available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
+        available_leave = (datetime.now().month - alloted_leave.month) + 1
+        leave_sum = 0
+        if get_taken_leave['leave__sum']:
+           leave_sum = get_taken_leave['leave__sum']
+        total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
+
+        remaning_leave = total_available_leave
+        return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
 
 class EmployeeListView(PermissionRequiredMixin,ListView):
     permission_required = ('employee.can_view_user_profile_list', )
@@ -170,26 +178,14 @@ class LeaveCreateView(PermissionRequiredMixin,CreateView):
         return dict( super(LeaveCreateView, self).get_context_data(**kwargs), leave_list= AllottedLeave.objects.all().order_by('-created_at'))
 
     
-    def form_valid(self,form):
-        try:
-            leave = form.save()
-            month = self.request.POST.get('month')
-            monthlyremainingLeave = MonthlyRemainingLeave.objects.create(allotted_leave=leave,month=month,alloted_leave=(leave.bonusleave+1.0))
-            return HttpResponseRedirect("/leaves/")
-        except Exception as e:
-            raise e
-
-    
-
-
-    # def post(self,request):
-    #     if request.method=='POST':
-    #         total_alloated_leave = request.POST.get('total_leave')
-    #         leave_user = request.POST.get('leave')
-    #         alloated_leave_user = AllottedLeave.objects.get(user__username=leave_user)
-    #         alloated_leave_user.leave = total_alloated_leave
-    #         alloated_leave_user.save()
-
+    # def form_valid(self,form):
+    #     try:
+    #         leave = form.save()
+    #         month = self.request.POST.get('month')
+    #         monthlyremainingLeave = MonthlyRemainingLeave.objects.create(allotted_leave=leave,month=month,alloted_leave=(leave.bonusleave+1.0))
+    #         return HttpResponseRedirect("/leaves/")
+    #     except Exception as e:
+    #         raise e
 
 
 class EditAllotedLeaveView(PermissionRequiredMixin,UpdateView): 
@@ -813,56 +809,55 @@ def full_leave_status(request):
                     employee_attendence.empatt_leave_status = 7
                 employee_attendence.save()
         
-        # start        
-        if leave.status == '2':
-            leave_accept = count
-            monthlyremainingdetail = MonthlyRemainingLeave.objects.filter(allotted_leave__user=leave.user,allotted_leave__year=startdate.year,month=startdate.month)
-            if monthlyremainingdetail.exists():
-                monthly_remaining_leave = monthlyremainingdetail.first()
-                allotted = monthly_remaining_leave.alloted_leave
-                taken_leave = monthly_remaining_leave.taken_leave
-                taken_bonus = monthly_remaining_leave.taken_bonus_leave
-                reject_leave = monthly_remaining_leave.reject_leave
+        # monthly model update 
+        if int(leave.status) == 2:
+            alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
+            # import pdb; pdb.set_trace()
+            get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
+            
+            gettaken = 0
+            if get_taken_leave['leave__sum']:
+                gettaken = get_taken_leave['leave__sum']
+            
+            available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
+            available_leave = (leave.startdate.month - alloted_leave.month) + 1
+            total_available_leave = available_bonus_leave + available_leave - (gettaken - alloted_leave.available_bonus_leave)
+            
+            
+            if total_available_leave >= count:
+                monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave = count)
+                
+                if available_bonus_leave > 0 :
+                    if available_bonus_leave >= count:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + count
+                    else:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + available_bonus_leave
+                    
+                    alloted_leave.available_bonus_leave = alloted_available_bonus_leave
+                    alloted_leave.save()
+                    # remaining_count = count-available_bonus_leave
+                # else:
+            else:
+                if available_bonus_leave > 0 :
+                    if available_bonus_leave >= count:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + count
+                    else:
+                        alloted_available_bonus_leave = alloted_leave.available_bonus_leave + available_bonus_leave
+                    alloted_leave.available_bonus_leave = alloted_available_bonus_leave
+                    alloted_leave.save()
+                    # remaining_count = count-available_bonus_leave    
+
+                    
+                unpaid_leave = count - total_available_leave
+                monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave = total_available_leave)
+                monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave = unpaid_leave)
                 # import pdb; pdb.set_trace()
-                bonus = monthly_remaining_leave.allotted_leave.bonusleave
-                takenbonus = monthly_remaining_leave.allotted_leave.available_bonus_leave
-
-                alloted_leave = leave_accept - (taken_leave+taken_bonus)
-                remain = alloted_leave - (bonus-takenbonus)
-
-                if remain == 0:
-                    taken_bonus = taken_bonus + alloted_leave
-                    taken_leave = taken_leave + (leave_accept - alloted_leave)
-                    reject_leave = 0
-                    #update monthly leave data
-                    monthly_remaining_leave.taken_leave = taken_leave
-                    monthly_remaining_leave.taken_bonus = taken_bonus
-                    monthly_remaining_leave.save()
-
-                elif remain<0 :
-                    taken_leave = taken_leave + leave_accept
-                    #update monthly leave data
-                    monthly_remaining_leave.taken_leave = taken_leave
-                    monthly_remaining_leave.save()
-
-                elif leave_accept>remain and remain>0 :
-                    taken_leave = taken_leave + remain
-                    taken_bonus = taken_bonus + leave_accept - taken_leave 
-                    reject_leave = 0
-                    #update monthly leave data
-                    monthly_remaining_leave.taken_leave = taken_leave
-                    monthly_remaining_leave.taken_bonus = taken_bonus
-                    monthly_remaining_leave.save()
-        
-        #end monthly status                
+            
+        # end monthly model
+        #------------------------------------------------------------
 
 
-        # if leave.status == '2':
-        #     message = leave.user.username +",Leave accept by "+request.user.username
-        # if leave.status == '3':
-        #     message = leave.user.username +",Leave reject by "+request.user.username
-    
-        
+
         aaccept_email_data = []        
         aaccept_email_data.append(leave.user.profile.teamlead.email)
         aaccept_email_data.append(leave.user.email)
@@ -876,12 +871,7 @@ def full_leave_status(request):
         for user in User.objects.all():
             email_data.append(user.email)    
 
-        # request_send_list = []
-        # request_list = User.objects.filter(groups__name__in=['MD','HR'])
-        # for usr in request_list:
-        #     request_send_list.append(usr.get_username())            
-        # request_send_list.append(request.user.profile.teamlead.username)
-        # request_send_list = set(request_send_list)
+        
        
         full_name = leave.user.first_name +" "+ leave.user.last_name
         user = full_name.title()

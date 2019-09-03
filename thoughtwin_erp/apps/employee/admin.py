@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import Profile,EmployeeAttendance,AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails,MonthlyRemainingLeave
+from .models import MonthlyTakeLeave,Profile,EmployeeAttendance,AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
 
 class EmployeeAttendanceModelAdmin(admin.ModelAdmin):
     list_display = ( 'user_obj', 'employee_id', 'date')
@@ -15,5 +15,4 @@ admin.site.register(AllottedLeave)
 admin.site.register(EmployeeAttendanceDetail)
 admin.site.register(Leave)
 admin.site.register(LeaveDetails)
-
-admin.site.register(MonthlyRemainingLeave)
+admin.site.register(MonthlyTakeLeave)
