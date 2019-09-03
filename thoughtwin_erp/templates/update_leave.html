@@ -6,7 +6,8 @@
                 <div class="card-body">
 
                     <h2>Update Alloted Leave</h2>
-                        <form method="post">{% csrf_token %}
+                        <form method="post">
+                            {% csrf_token %}
                             {{ form.as_p }}
                             <input type="submit" value="Update">
                         </form>

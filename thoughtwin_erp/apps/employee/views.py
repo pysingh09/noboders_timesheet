@@ -327,7 +327,14 @@ def date_time_attendence_view(request):
 @permission_required('employee.can_view_employee_attendance_list', raise_exception=True)
 def employee_details(request,id):
     attendances_data = EmployeeAttendance.objects.filter(user_id=id)
-    return render(request,'home.html', {'attendances_data' : attendances_data})
+    names = set()
+    result = []
+    for att in attendances_data:
+        if not att.date in names and att.date_time_diffrence() != timedelta(hours=0):
+            names.add(att.date)
+            result.append(att)
+
+    return render(request,'home.html', {'attendances_data' : result})
 
 
 def show_hour_calender(request):

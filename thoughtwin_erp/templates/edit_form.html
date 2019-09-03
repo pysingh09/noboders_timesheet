@@ -23,9 +23,8 @@
            {% endfor %}
        {% endif %}
 
-       <!-- <form class="form-horizontal signup_form sign_form1" method="post" novalidate>
-        {% csrf_token %} -->
-        <form class="form-horizontal method="post" action="" enctype="multipart/form-data">
+       <form class="form-horizontal signup_form sign_form1" method="post" action="" enctype="multipart/form-data" novalidate autocomplete="off">
+
           {% csrf_token %}
             
             
