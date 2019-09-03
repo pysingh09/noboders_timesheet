@@ -135,20 +135,23 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
 class EmployeeProfile(DetailView):
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = self.request.user.id)
-        # import pdb; pdb.set_trace()
-        alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
-        get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
-        get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
+        if user.user_leaves.all().exists():
+            alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
+            get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
+            get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
 
-        available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
-        available_leave = (datetime.now().month - alloted_leave.month) + 1
-        leave_sum = 0
-        if get_taken_leave['leave__sum']:
-           leave_sum = get_taken_leave['leave__sum']
-        total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
+            available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
+            available_leave = (datetime.now().month - alloted_leave.month) + 1
+            leave_sum = 0
+            if get_taken_leave['leave__sum']:
+               leave_sum = get_taken_leave['leave__sum']
+            total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
-        remaning_leave = total_available_leave
-        return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
+            remaning_leave = total_available_leave
+            return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
+        else:
+            return render(request,'profile.html',{'employee' : user})
+                
 
 class EmployeeListView(PermissionRequiredMixin,ListView):
     permission_required = ('employee.can_view_user_profile_list', )

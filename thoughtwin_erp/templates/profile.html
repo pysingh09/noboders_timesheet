@@ -18,14 +18,12 @@
 	    <p>Contact :{{ user.profile.contact_no }}</p>
 	    <p>DOB :{{ user.profile.date_of_birth }}</p>
 	    <p>DOJ :{{ user.profile.date_of_joining}}</p>
-	    <p>Total Leave : {{ total_yearly }}</p>
-</div>
+	    
 
-<div>
-	<p>Total Yealy : {{ total_yearly }}</p>
-	<p>Available Leave (Current Month) : {{ total_available_leave }}</p>
-	<p>Total Paid Leave : {{ get_taken_leave.leave__sum }}</p>
-	<p>Total UnPaid Leave : {{ get_taken_unpaid_leave.leave__sum }}</p>
+	<p>Total Yealy : {% if total_yearly %} {{ total_yearly }} {% else %} 0  {% endif %}</p>
+	<p>Available Leave (Current Month) : {% if total_available_leave %} {{ total_available_leave }}{% else %} 0  {% endif %}</p>
+	<p>Total Paid Leave : {% if get_taken_leave.leave__sum %} {{ get_taken_leave.leave__sum }}{% else %} 0  {% endif %}</p>
+	<p>Total UnPaid Leave : {% if get_taken_unpaid_leave.leave__sum %} {{ get_taken_unpaid_leave.leave__sum }}{% else %}  0 {% endif %}</p>
 	
 </div>
 {% endblock %}
