@@ -129,7 +129,6 @@ class EmployeeAttendance(BaseModel):
     def date_time_diffrence(self):
         dateTimeDifference = datetime.timedelta(0, 0)
         for emp_detail in self.employee_attendance.all():
-            # import pdb; pdb.set_trace()
             intime = emp_detail.in_time
             outtime = emp_detail.out_time
             dateTimeIn = datetime.datetime.combine(datetime.date.today(), intime)
@@ -141,6 +140,8 @@ class EmployeeAttendance(BaseModel):
 class AllottedLeave(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_leaves')
     year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
+    month = models.IntegerField(choices=MONTH_CHOICES, verbose_name=_('Month'))
+
     leave = models.FloatField(default=0,verbose_name=_('Leaves'))
     bonusleave = models.FloatField(default=0,verbose_name=_('Bonus Leave'))
     available_bonus_leave = models.FloatField(default=0,verbose_name=_('Available Bonus Leave'))
@@ -207,3 +208,12 @@ class MonthlyRemainingLeave(BaseModel):
     
     # def __str__(self):
     #     return self.month
+
+LEAVE_MONTH_STATUS_CHOICES =((1, 'Paid'),(2, 'Unpaid'),)
+class MonthlyTakeLeave(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_take_leaves')
+    year = models.IntegerField(choices=LEAVE_CHOICES, verbose_name=_('Year'))
+    month = models.IntegerField(choices=MONTH_CHOICES, verbose_name=_('Month'))
+    leave = models.FloatField(default=0,verbose_name=_('Leaves'))
+    status = models.IntegerField(choices=LEAVE_MONTH_STATUS_CHOICES,verbose_name=_('Leave Status'))
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='monthy_leave_created_by')    
