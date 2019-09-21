@@ -3,10 +3,11 @@
 {% block content %}
 
 <div class="card">
+	 {% if user.profile %}	
 	 <a href="{% url 'employee:profile_update' user.profile.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-pencil"></span></a>
 
         <img src="{{ request.profile.profile_image.url }}" class="imgnav">
-
+     {% endif %}   
 	 	<h2>Welcome : {{ user.username }}</h2> 
 
 	    <p>Username  :{{ user.username }}</p>

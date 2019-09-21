@@ -592,7 +592,7 @@ class RequestLeaveView(CreateView):
         
             # if year == datetime.datetime.now().year:
             if 'starttime' in form.data:
-       
+                # import pdb; pdb.set_trace()
                 starttime = form.data['starttime']
                 starttime = datetime.strptime(starttime ,'%H:%M')
 
@@ -608,8 +608,8 @@ class RequestLeaveView(CreateView):
                 #         email_data.sort()
                 #     return render(self.request,'request_leave.html',{'form':form ,'emails':email})
 
-                starttime = starttime.strftime('%I:%M %p')
-                endtime = endtime.strftime('%I:%M %p')
+                # starttime = starttime.strftime('%I:%M %p')
+                # endtime = endtime.strftime('%I:%M %p')
                 
 
                 leave.starttime = starttime #form.data['starttime']
