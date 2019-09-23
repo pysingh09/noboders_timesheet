@@ -236,6 +236,7 @@ class EditProfileView(PermissionRequiredMixin,UpdateView):
                 userdata = form.save()
                 userdata.user.first_name = form.data['first_name']
                 userdata.user.last_name = form.data['last_name']
+                userdata.user.email = form.data['email']
                 userdata.user.save()
                 return HttpResponseRedirect("/employeelist/")
             else:

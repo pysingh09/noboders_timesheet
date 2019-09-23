@@ -25,8 +25,8 @@
                   <tr>
                     <td>{{ forloop.counter }}</td> 
                     <td>{{ leave.user }}</td>   
-                    <td>{{ leave.startdate }}</td>
-                    <td>{{ leave.enddate }}</td>
+                    <td>{{ leave.startdate|date:'D,d M Y' }}</td>
+                    <td>{{ leave.enddate|date:'D,d M Y' }}</td>
                     {% if leave.starttime %}
                       <td>{{ leave.starttime }}</td>
                     {% else %}

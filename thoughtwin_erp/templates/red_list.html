@@ -90,7 +90,7 @@
             {% for attendance in attendance_data %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ attendance.date}}</td>
+                <td>{{ attendance.date|date:'D,d M Y'}}</td>
                 
                 
                 <td><p>{{ attendance.date_time_diffrence }}</p></td> 

@@ -76,9 +76,11 @@ ROLE_CHOICES = (
 class UserProfileForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=10)
 
+
     # contact_no = PhoneNumberField(widget=forms.TextInput(attrs={'value': _('+91')}), 
 
     #                    label=_("Phone number"), required=True)
+
     class Meta:
         model = Profile
         fields = ('contact_no','designation','date_of_birth','date_of_joining','teamlead',)    
@@ -90,9 +92,10 @@ class ProfileForm(forms.ModelForm):
     date_of_birth = forms.DateField(input_formats=['%Y-%m-%d'])
     date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])
     contact_no = forms.IntegerField()
+    email =  forms.EmailField()
     class Meta:
         model = Profile
-        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name')
+        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name','email')
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -104,7 +107,8 @@ class ProfileForm(forms.ModelForm):
         if instance and instance.pk:
             # self.fields['employee_id'].widget.attrs['readonly'] = True
             self.fields['first_name'].initial = instance.user.first_name
-            self.fields['last_name'].initial = instance.user.last_name  
+            self.fields['last_name'].initial = instance.user.last_name 
+            self.fields['email'].initial = instance.user.email 
 
 class AllottedLeavesForm(forms.ModelForm):
 
