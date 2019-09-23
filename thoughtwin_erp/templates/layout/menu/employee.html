@@ -5,7 +5,9 @@
       
                 <li><a href="{% url 'employee:attendence-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>In/Out Request</a></li>
                 <li><a href="{% url 'employee:request-full-leave' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Leave Request</a></li>
+                {% if request.profile.designation == 5 %}
                 <li><a href="{% url 'employee:leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Leaves Status</a></li>
+                {% endif %}
                <!--  <li><a href="{% url 'employee:show-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Show All Leave</a></li>  -->            
                 <li class="cal_btn"><a href="{% url 'employee:show-hour-calender' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Calendar</a></li>
        
