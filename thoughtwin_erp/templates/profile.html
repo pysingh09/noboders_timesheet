@@ -23,8 +23,8 @@
 
 	<p>Total Yealy : {% if total_yearly %} {{ total_yearly }} {% else %} 0  {% endif %}</p>
 	<p>Available Leave (Current Month) : {% if total_available_leave %} {{ total_available_leave }}{% else %} 0  {% endif %}</p>
-	<p>Total UnPaid Leave : {% if get_taken_leave.leave__sum %} {{ get_taken_leave.leave__sum }}{% else %} 0  {% endif %}</p>
-	<p>Total Paid Leave : {% if get_taken_unpaid_leave.leave__sum %} {{ get_taken_unpaid_leave.leave__sum }}{% else %}  0 {% endif %}</p>
+	<p>Total Paid Leave : {% if get_taken_leave.leave__sum %} {{ get_taken_leave.leave__sum }}{% else %} 0  {% endif %}</p>
+	<p>Total UnPaid Leave : {% if get_taken_unpaid_leave.leave__sum %} {{ get_taken_unpaid_leave.leave__sum }}{% else %}  0 {% endif %}</p>
 	
 </div>
 {% endblock %}
