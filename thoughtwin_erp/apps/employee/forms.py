@@ -135,12 +135,12 @@ for x in range(1,24):
 
 class LeaveCreateForm(forms.ModelForm):
     leave_type = forms.ChoiceField(choices=[('', '----'),(2, 'Half Day'),(3, 'Full Day'),])
-    reason = forms.CharField(required=False,widget=forms.Textarea(attrs={'rows':4}))
+    reason = forms.CharField(required=True,widget=forms.Textarea(attrs={'rows':4}))
     starttime = forms.ChoiceField(required=False,choices=HOUR_CHOICES)
     endtime = forms.ChoiceField(required=False,choices=HOUR_CHOICES)
     class Meta:
         model = Leave
-        fields = ('startdate','enddate')
+        fields = ('startdate','enddate','reason')
 
 
 class changePassForm(forms.Form):
