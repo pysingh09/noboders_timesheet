@@ -162,6 +162,14 @@ class changePassForm(forms.Form):
         if self.old_password_flag == False:
             raise forms.ValidationError("The old password that you have entered is wrong.")
         return old_password
+        
+    def clean(self,*args,**kwargs):
+        new_password = self.cleaned_data.get('new_password')
+        re_new_password = self.cleaned_data.get('re_new_password')
+        if new_password and re_new_password and new_password != re_new_password:
+            raise ValidationError("New Password and Confirm Password are not match")
+ 
+        return re_new_password
 
 class ProfileEditForm(forms.ModelForm):
     first_name = forms.CharField(max_length=10)
