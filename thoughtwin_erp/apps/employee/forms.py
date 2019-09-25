@@ -76,9 +76,11 @@ ROLE_CHOICES = (
 class UserProfileForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=10)
 
+
     # contact_no = PhoneNumberField(widget=forms.TextInput(attrs={'value': _('+91')}), 
 
     #                    label=_("Phone number"), required=True)
+
     class Meta:
         model = Profile
         fields = ('contact_no','designation','date_of_birth','date_of_joining','teamlead',)    
@@ -90,9 +92,10 @@ class ProfileForm(forms.ModelForm):
     date_of_birth = forms.DateField(input_formats=['%Y-%m-%d'])
     date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])
     contact_no = forms.IntegerField()
+    email =  forms.EmailField()
     class Meta:
         model = Profile
-        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name')
+        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name','email')
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -104,7 +107,8 @@ class ProfileForm(forms.ModelForm):
         if instance and instance.pk:
             # self.fields['employee_id'].widget.attrs['readonly'] = True
             self.fields['first_name'].initial = instance.user.first_name
-            self.fields['last_name'].initial = instance.user.last_name  
+            self.fields['last_name'].initial = instance.user.last_name 
+            self.fields['email'].initial = instance.user.email 
 
 class AllottedLeavesForm(forms.ModelForm):
 
@@ -131,12 +135,12 @@ for x in range(1,24):
 
 class LeaveCreateForm(forms.ModelForm):
     leave_type = forms.ChoiceField(choices=[('', '----'),(2, 'Half Day'),(3, 'Full Day'),])
-    reason = forms.CharField(required=False,widget=forms.Textarea(attrs={'rows':4}))
+    reason = forms.CharField(required=True,widget=forms.Textarea(attrs={'rows':4}))
     starttime = forms.ChoiceField(required=False,choices=HOUR_CHOICES)
     endtime = forms.ChoiceField(required=False,choices=HOUR_CHOICES)
     class Meta:
         model = Leave
-        fields = ('startdate','enddate')
+        fields = ('startdate','enddate','reason')
 
 
 class changePassForm(forms.Form):
@@ -158,6 +162,14 @@ class changePassForm(forms.Form):
         if self.old_password_flag == False:
             raise forms.ValidationError("The old password that you have entered is wrong.")
         return old_password
+        
+    def clean(self,*args,**kwargs):
+        new_password = self.cleaned_data.get('new_password')
+        re_new_password = self.cleaned_data.get('re_new_password')
+        if new_password and re_new_password and new_password != re_new_password:
+            raise ValidationError("New Password and Confirm Password are not match")
+ 
+        return re_new_password
 
 class ProfileEditForm(forms.ModelForm):
     first_name = forms.CharField(max_length=10)

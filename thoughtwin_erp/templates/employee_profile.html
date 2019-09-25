@@ -2,19 +2,26 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="card">
-<h2>Welcome : {{ employee.username }}</h2> 
 
-    <p>Username  :{{ employee.username }}</p>
-    <p>First name:{{ employee.first_name }}</p>
-    <p>Last name :{{ employee.last_name }}</p>
-    <p>Email     :{{ employee.email }}</p>
+<div class="card">
     
-    <p>ID :{{ employee.profile.employee_id }}</p>
-    <p>Contact :{{ employee.profile.contact_no }}</p>
-    <p>DOB :{{ employee.profile.date_of_birth|attr:"readonly:true" }}</p>
-    <p>DOJ :{{ employee.profile.date_of_joining|attr:"readonly:true"}}</p>
-    <p>Alloted Leaves : {% if employee.profile.get_leave %} {{ employee.profile.get_leave }}{% else %}N/A{% endif %}</p>
+        <h2>Welcome : {{ employee.username }}</h2> 
+
+        <p>Username  :{{ employee.username }}</p>
+        <p>First name:{{ employee.first_name }}</p>
+        <p>Last name :{{ employee.last_name }}</p>
+        <p>Email     :{{ employee.email }}</p>
+        
+        <p>ID :{{ employee.profile.employee_id }}</p>
+        <p>Contact :{{ employee.profile.contact_no }}</p>
+        <p>DOB :{{ employee.profile.date_of_birth }}</p>
+        <p>DOJ :{{ employee.profile.date_of_joining}}</p>
+        
+
+    <p>Total Yearly : {% if total_yearly %} {{ total_yearly }} {% else %} 0  {% endif %}</p>
+    <p>Available Leave (Current Month) : {% if total_available_leave %} {{ total_available_leave }}{% else %} 0  {% endif %}</p>
+    <p>Total Paid Leave : {% if get_taken_leave.leave__sum %} {{ get_taken_leave.leave__sum }}{% else %} 0  {% endif %}</p>
+    <p>Total UnPaid Leave : {% if get_taken_unpaid_leave.leave__sum %} {{ get_taken_unpaid_leave.leave__sum }}{% else %}  0 {% endif %}</p>
+    
 </div>
 {% endblock %}
-|attr:"readonly:true"

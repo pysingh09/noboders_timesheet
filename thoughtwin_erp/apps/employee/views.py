@@ -145,6 +145,7 @@ class EmployeeProfile(DetailView):
             leave_sum = 0
             if get_taken_leave['leave__sum']:
                leave_sum = get_taken_leave['leave__sum']
+
             total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
             remaning_leave = total_available_leave
@@ -164,9 +165,29 @@ class EmployeeListView(PermissionRequiredMixin,ListView):
 class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
     permission_required = ('employee.can_view_user_profile_list', )
     raise_exception = True 
+    # def get(self, request, *args, **kwargs):
+    #     user = User.objects.get(pk = kwargs['pk'])
+    #     return render(request,'employee_profile.html',{'employee' : user})
+
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = kwargs['pk'])
-        return render(request,'employee_profile.html',{'employee' : user})
+        if user.user_leaves.all().exists():
+            user = User.objects.get(pk = kwargs['pk'])
+            alloted_leave =  user.user_leaves.get(user=user, year=datetime.now().year)
+            get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
+            get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
+
+            available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
+            available_leave = (datetime.now().month - alloted_leave.month) + 1
+            leave_sum = 0
+            if get_taken_leave['leave__sum']:
+               leave_sum = get_taken_leave['leave__sum']
+            total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
+
+            remaning_leave = total_available_leave
+            return render(request,'employee_profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
+        else:
+            return render(request,'employee_profile.html',{'employee' : user})
     
        
 class LeaveCreateView(PermissionRequiredMixin,CreateView):
@@ -215,6 +236,7 @@ class EditProfileView(PermissionRequiredMixin,UpdateView):
                 userdata = form.save()
                 userdata.user.first_name = form.data['first_name']
                 userdata.user.last_name = form.data['last_name']
+                userdata.user.email = form.data['email']
                 userdata.user.save()
                 return HttpResponseRedirect("/employeelist/")
             else:
@@ -344,7 +366,6 @@ def show_hour_calender(request):
     #     if not att.date in names:
     #         names.add(att.date)
     #         result.append(att)
-    # import pdb; pdb.set_trace()
 
     return render(request,'fullcalendar.html', {'attendances_data' : attendances_data})
 
@@ -508,6 +529,7 @@ class LeaveStatusView(View):
     model = EmployeeAttendance
 
     def post(self,request):
+        
         leave_id = request.POST.get("leave_id")
         employee_attendance = EmployeeAttendance.objects.get(id=leave_id)
     
@@ -592,7 +614,6 @@ class RequestLeaveView(CreateView):
         
             # if year == datetime.datetime.now().year:
             if 'starttime' in form.data:
-                # import pdb; pdb.set_trace()
                 starttime = form.data['starttime']
                 starttime = datetime.strptime(starttime ,'%H:%M')
 
@@ -622,7 +643,7 @@ class RequestLeaveView(CreateView):
             delta = d2 - d1
             leave_type = form.data['leave_type']
             for i in range(delta.days + 1):
-                if leave_type == '2':   
+                if leave_type == '2': 
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
                 if leave_type == '3':
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
@@ -705,7 +726,7 @@ class RequestLeaveView(CreateView):
         # for usr in default_mail_list:
         #     mail_list.append(usr.email)
         # context['emails'] = email_data
-        # import pdb; pdb.set_trace()
+        
         
         mail_list = []
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
@@ -815,7 +836,6 @@ def full_leave_status(request):
         # monthly model update 
         if int(leave.status) == 2:
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
-            # import pdb; pdb.set_trace()
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
             
             gettaken = 0
@@ -854,7 +874,6 @@ def full_leave_status(request):
                 unpaid_leave = count - total_available_leave
                 monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave = total_available_leave)
                 monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave = unpaid_leave)
-                # import pdb; pdb.set_trace()
             
         # end monthly model
         #------------------------------------------------------------
@@ -937,7 +956,6 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
     template_name = "fullday_leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
-        # import pdb; pdb.set_trace()
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
         return context
 

@@ -21,8 +21,14 @@
                 {% endif %}
                 {% for field in form %}
                     <div class="fieldWrapper col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        {{ field.errors }}
-                        {{ field.label_tag }} {{ field }} 
+                        {% if field.name == 'month' %}
+                            {{ field.errors }}
+                            <b>Start Month</b> {{ field }}
+                        {% else %}
+                        
+                            {{ field.errors }}
+                            {{ field.label_tag }} {{ field }} 
+                        {% endif %}
                     </div>
                 {% endfor %}
                 

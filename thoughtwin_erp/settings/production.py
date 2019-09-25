@@ -28,10 +28,11 @@ MEDIA_URL = '/media/'
 
 
 
-FROM_EMAIL='arpitgupta0907.ag@gmail.com'
-DEFAULT_FROM_EMAIL = 'arpitgupta0907.ag@gmail.com'
-EMAIL_USE_TLS = True
+FROM_EMAIL='erp.thoughtwin@gmail.com'
+DEFAULT_FROM_EMAIL = 'erp.thoughtwin@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'arpitgupta0907.ag@gmail.com'
-EMAIL_HOST_PASSWORD = 'bbqqscliowazatnc'
+EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+EMAIL_HOST_USER = 'erp.thoughtwin@gmail.com'
+EMAIL_HOST_PASSWORD = 'cuqtnmjcdregfyfd'
