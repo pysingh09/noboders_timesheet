@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load widget_tweaks %}
 {% block content %}
 
 <div class="row justify-content-center">
@@ -48,11 +49,11 @@
         </div>
         <div class="col-md-6">
           <label>DOB       :</label>
-          {{ form.date_of_birth }}
+          {{ form.date_of_birth|attr:"readonly:true" }}
         </div>
         <div class="col-md-6">
           <label>DOJ       :</label>
-          {{ form.date_of_joining}}
+          {{ form.date_of_joining|attr:"readonly:true"}}
         </div>
         <div class="col-md-6">
           <label>Team lead   :</label>

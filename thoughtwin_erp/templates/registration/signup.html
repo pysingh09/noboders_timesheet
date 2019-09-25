@@ -89,13 +89,13 @@
 
           <div class="col-md-6">
             <label>Date of Birth</label>
-            {{ form2.date_of_birth }}
+            {{ form2.date_of_birth|attr:"readonly:true" }}
              <p>NOTE : Date Format :YYYY-MM-DD</p>
           </div>
 
           <div class="col-md-6">
             <label>Date of Joining</label>
-            {{ form2.date_of_joining}}
+            {{ form2.date_of_joining|attr:"readonly:true"}}
           </div>
 
           <div class="col-md-6">
