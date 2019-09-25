@@ -806,13 +806,21 @@ def full_leave_status(request):
         leave_type =request.POST.get("leave_type")
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
+        
+        # 
+        leave_status = False
+        if leave.status == 2:
+            leave_status = True    
         leave.status = request.POST.get("leave_status")
         leave.save()
 
         leavedetails = LeaveDetails.objects.filter(leave=leave)
         for leavedetail in leavedetails:
-        
-            LeaveDetails.objects.create(leave=leave, status = request.POST.get("leave_status") ,reason = leavedetail.reason ,created_by=request.user)    
+            if leave_status:
+                leavedetail.status = request.POST.get("leave_status") 
+                leavedetail.save()
+            else:    
+                LeaveDetails.objects.create(leave=leave, status = request.POST.get("leave_status") ,reason = leavedetail.reason ,created_by=request.user)    
         startdate = leave.startdate
         enddate = leave.enddate
         delta = enddate - startdate
@@ -836,6 +844,12 @@ def full_leave_status(request):
         if leave_type=='Half day':
             count = 0.5
         # monthly model update 
+        if int(leave.status) == 3:
+            if leave_status:
+                get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave=count).first()    
+                get_taken_leave.delete()
+            # import pdb;pdb.set_trace()
+
         if int(leave.status) == 2:
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
