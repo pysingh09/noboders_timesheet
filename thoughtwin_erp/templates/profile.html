@@ -17,8 +17,8 @@
 	    
 	    <p>ID :{{ user.profile.employee_id }}</p>
 	    <p>Contact :{{ user.profile.contact_no }}</p>
-	    <p>DOB :{{ user.profile.date_of_birth|attr:"readonly:true" }}</p>
-	    <p>DOJ :{{ user.profile.date_of_joining|attr:"readonly:true"}}</p>
+	    <p>DOB :{{ user.profile.date_of_birth}}</p>
+	    <p>DOJ :{{ user.profile.date_of_joining}}</p>
 	    
 
 	<p>Total Yearly : {% if total_yearly %} {{ total_yearly }} {% else %} 0  {% endif %}</p>

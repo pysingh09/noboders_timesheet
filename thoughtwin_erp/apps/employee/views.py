@@ -833,11 +833,13 @@ def full_leave_status(request):
                     employee_attendence.empatt_leave_status = 7
                 employee_attendence.save()
         
+        if leave_type=='Half day':
+            count = 0.5
         # monthly model update 
         if int(leave.status) == 2:
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
-            
+            # import pdb;pdb.set_trace()
             gettaken = 0
             if get_taken_leave['leave__sum']:
                 gettaken = get_taken_leave['leave__sum']
