@@ -847,7 +847,7 @@ def full_leave_status(request):
         # monthly model update 
         if int(leave.status) == 3:
             if leave_status:
-                get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave=count).first()
+                get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave=count).first()
                 get_taken_leave.delete()
 
         if int(leave.status) == 2:
