@@ -13,3 +13,4 @@ Unipath==1.1
 xlrd
 django-phonenumber-field
 phonenumbers
+django-ses

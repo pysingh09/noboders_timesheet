@@ -532,6 +532,23 @@ div#sidebar-wrapper {
       margin-left: 15%;
   }
 }
+
+
+@media (max-width: 969px) {
+  .calendar-color-text li {
+      display: block !important;
+      margin: 10px 0px !important;
+  }
+}
+
+@media (max-width: 767px) {
+.fc-header-title h2 {
+    font-size: 16px !important;
+    line-height: 36px;
+}
+}
+
+
 @media (min-width: 768px) {
    #wrapper {
       padding-left: 250px;
@@ -591,3 +608,65 @@ label{
   width:180px; margin: 0 20px 20px 20px;
 }
 #datepicker > span:hover{cursor: pointer;}
+
+/*new*/
+.navbar-brand>img{
+  margin-top: 8px;
+}
+.navbar .navbar-toggle .glyphicon {
+  color:#fff;
+}
+.cardleave .form-group label{
+  margin-left: 0px;
+}
+.dropdown .btn-default.dropdown-toggle .caret{
+margin: 8px 0px 0px 9px;
+float: right;
+}
+.calendar-color-text {
+    display: block;
+    margin: 0px 0px 25px 0px;
+}
+.calendar-color-text ul{
+  padding: 0px;
+}
+.calendar-color-text li{
+  list-style: none;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 7px;
+}
+.calendar-color-text li span{
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+.calendar-color-text li.orange span{
+  background: #f86e01;
+  border: 1px solid #f86e01;
+}
+.calendar-color-text li.red span{
+  background: #f70001;
+  border: 1px solid #f70001;
+}
+.calendar-color-text li.grey span{
+  background: #5c5c5c;
+  border: 1px solid #5c5c5c;
+}
+.calendar-color-text li.green span{
+  background: #46dc44;
+  border: 1px solid #46dc44;
+}
+
+/*sidebar dropdown*/
+.nav-drop .dropdown-menu{
+  left: 16px;
+  background: #212121;
+  color: #fff;
+  width: 90%;
+}
+.nav-drop .dropdown-menu a{
+  border-left: 2px solid transparent;
+}

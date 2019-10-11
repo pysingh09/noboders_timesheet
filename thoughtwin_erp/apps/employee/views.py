@@ -67,6 +67,7 @@ def index(request):
         return redirect('employee:profile')
 
 class UserCreateView(PermissionRequiredMixin,CreateView):
+
     permission_required = ('employee.add_profile', )
     raise_exception = True
     form_class = SignUpForm
@@ -137,15 +138,15 @@ class EmployeeProfile(DetailView):
         user = User.objects.get(pk = self.request.user.id)
         if user.user_leaves.all().exists():
             alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
+
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
             get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
-
             available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
             available_leave = (datetime.now().month - alloted_leave.month) + 1
             leave_sum = 0
+
             if get_taken_leave['leave__sum']:
                leave_sum = get_taken_leave['leave__sum']
-
             total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
             remaning_leave = total_available_leave
@@ -835,20 +836,37 @@ def full_leave_status(request):
                     names.add(att.date)
                     result.append(att) 
             for employee_attendence in result:        
-                if leave_status == '2':    
+                if leave.status == '2':    
                     employee_attendence.empatt_leave_status = 6
-                if leave_status == '3':
+                if leave.status == '3':
                     employee_attendence.empatt_leave_status = 7
                 employee_attendence.save()
         
         if leave_type=='Half day':
             count = 0.5
 
-        # monthly model update 
+        # leave reject  
         if int(leave.status) == 3:
+            leaves=[]
             if leave_status:
-                get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave=count).first()
-                get_taken_leave.delete()
+                get_taken_leave_unpaid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave=count).first()
+                if get_taken_leave_unpaid == None:
+                    get_taken_leave_paid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave=count).first()
+                    if get_taken_leave_paid == None:
+                        get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status__in=[1,2])[:2]
+                        for item in get_taken_leave:
+                            item.delete()
+                    else:
+                        get_taken_leave_paid.delete()
+                else:
+                    get_taken_leave_unpaid.delete()
+
+                # get_taken_leave_unpaid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave=count).first()
+                # if get_taken_leave_unpaid == None:
+                #     get_taken_leave_paid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave=count).first()
+                #     get_taken_leave_paid.delete()
+                # else:
+                #     get_taken_leave_unpaid.delete()
 
         if int(leave.status) == 2:
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
@@ -965,7 +983,9 @@ def full_leave_status(request):
 
 
 class FullLeaveListView(PermissionRequiredMixin,ListView):
+
     permission_required = ('employee.can_view_employee_attendance_list',)
+
     raise_exception = True
     model = EmployeeAttendance
     template_name = "fullday_leave_list.html"
@@ -1051,7 +1071,7 @@ def delete_leave(request):
 
     if request.method == 'POST':
         leave_id =request.POST.get("leave_id")
-        leave_status = request.POST.get("leave_status") 
+        leave_status = request.POST.get("leave_status")
         delete_leave = Leave.objects.filter(id = leave_id,status__in=[1,2,3])
         delete_leave.delete()
         start_date =request.POST.get("start_date")
