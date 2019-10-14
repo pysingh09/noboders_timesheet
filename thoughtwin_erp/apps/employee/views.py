@@ -138,13 +138,11 @@ class EmployeeProfile(DetailView):
         user = User.objects.get(pk = self.request.user.id)
         if user.user_leaves.all().exists():
             alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
-
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
             get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
             available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
             available_leave = (datetime.now().month - alloted_leave.month) + 1
             leave_sum = 0
-
             if get_taken_leave['leave__sum']:
                leave_sum = get_taken_leave['leave__sum']
             total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
@@ -808,7 +806,6 @@ def full_leave_status(request):
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
         
-        # 
         leave_status = False
         if leave.status == 2:
             leave_status = True    
@@ -845,15 +842,14 @@ def full_leave_status(request):
         if leave_type=='Half day':
             count = 0.5
 
-        # leave reject  
+        # leave reject
         if int(leave.status) == 3:
-            leaves=[]
             if leave_status:
                 get_taken_leave_unpaid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave=count).first()
                 if get_taken_leave_unpaid == None:
                     get_taken_leave_paid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave=count).first()
                     if get_taken_leave_paid == None:
-                        get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status__in=[1,2])[:2]
+                        get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status__in=[1,2]).order_by('-id')[:2]
                         for item in get_taken_leave:
                             item.delete()
                     else:
