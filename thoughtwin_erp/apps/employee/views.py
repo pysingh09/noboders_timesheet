@@ -695,10 +695,18 @@ class RequestLeaveView(CreateView):
                 email_subject = "Leave Request ||"" "+user+" "'||'" "+'Full Day'" "+"||"" "+str(email_startdate)+"-"+str(email_enddate)
             # email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=mail_list)
             # email.send()
-           
-            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
-            msg.attach_alternative(content, "text/html")
-            msg.send()
+            try:
+                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
+                msg.attach_alternative(content, "text/html")
+                msg.send()
+                          
+            except Exception as e:
+                pass
+                # messages.error(self.request,e)
+                # return HttpResponseRedirect('/leave')  
+
+                                
+            
             
             messages.success(self.request, ' Leave Request Sent Successfully')
             # 'mail_list':mail_list - get mail list
@@ -946,11 +954,20 @@ def full_leave_status(request):
             if leave_type == 'Full day':
                 email_subject = "Leave Rejected " "||"" " +user+  " "'|| Full Day'" "'||' " "+startdate+"-"+enddate
                 content = render_to_string('email/reject_leave_request_mail.html',{'user':user,'accept_user':approve_user_fullname, 'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason,'daytype':leave_type })
-    
-        text_content = strip_tags(content)
-        msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
-        msg.attach_alternative(content, "text/html")
-        msg.send() 
+        # text_content = strip_tags(content)
+        # msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
+        # msg.attach_alternative(content, "text/html")
+        # msg.send() 
+        # import pdb; pdb.set_trace()
+        try:
+            text_content = strip_tags(content)
+            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
+            msg.attach_alternative(content, "text/html")
+            msg.send() 
+                   
+        except Exception as e:
+            print(e)
+            raise
         
         # accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=data_email)
         # accept_email.send()
@@ -964,11 +981,15 @@ def full_leave_status(request):
             if leave_type == 'Full day':
                 email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
-
-            text_content = strip_tags(content)
-            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, email_data)
-            msg.attach_alternative(content, "text/html")
-            msg.send() 
+            try:
+                text_content = strip_tags(content)
+                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, email_data)
+                msg.attach_alternative(content, "text/html")
+                msg.send() 
+                   
+            except Exception as e:
+                raise
+                    
             # email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)
             # email.send()
         # if leave.status == '3':
