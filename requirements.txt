@@ -14,4 +14,3 @@ xlrd
 django-phonenumber-field
 phonenumbers
 django-ses
-boto3

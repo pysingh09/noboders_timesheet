@@ -36,7 +36,6 @@ from django.contrib.auth import update_session_auth_hash
 # this is for file upload
 import xlrd
 from django.conf import settings
-import boto3
 from django.core.files.storage import FileSystemStorage
 fs = FileSystemStorage()
 
