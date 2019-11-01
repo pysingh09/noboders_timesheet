@@ -132,7 +132,6 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
             return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form})
 
 
-
 class EmployeeProfile(DetailView):
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = self.request.user.id)
