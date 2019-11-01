@@ -27,10 +27,10 @@ MEDIA_URL = '/media/'
 
 
 
-# FROM_EMAIL='erp.thoughtwin@gmail.com'
-# EMAIL_BACKEND = 'django_ses.SESBackend'
-# AWS_ACCESS_KEY_ID = 'AKIAQYKYEQYHWH555FXN'
-# AWS_SECRET_ACCESS_KEY = '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'
+FROM_EMAIL='erp.thoughtwin@gmail.com'
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = 'AKIAQYKYEQYHWH555FXN'
+AWS_SECRET_ACCESS_KEY = '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'
 
 
 
