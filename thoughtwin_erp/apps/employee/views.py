@@ -36,6 +36,7 @@ from django.contrib.auth import update_session_auth_hash
 # this is for file upload
 import xlrd
 from django.conf import settings
+import boto3
 from django.core.files.storage import FileSystemStorage
 fs = FileSystemStorage()
 
@@ -693,21 +694,13 @@ class RequestLeaveView(CreateView):
                 email_subject = "Leave Request ||"" "+user+" "'||'" "+'Half Day'+" ""||"" "+str(email_startdate)
             if form.data['leave_type'] == '3':    
                 email_subject = "Leave Request ||"" "+user+" "'||'" "+'Full Day'" "+"||"" "+str(email_startdate)+"-"+str(email_enddate)
-            # email = EmailMessage(email_subject,text_content,settings.FROM_EMAIL,to=mail_list)
-            # email.send()
-            try:
-                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
-                msg.attach_alternative(content, "text/html")
-                msg.send()
-                          
-            except Exception as e:
-                pass
-                # messages.error(self.request,e)
-                # return HttpResponseRedirect('/leave')  
-
-                                
-            
-            
+            for email in mail_list:
+                try:
+                    msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
+                    msg.attach_alternative(content, "text/html")
+                    msg.send()        
+                except Exception as e:
+                    pass
             messages.success(self.request, ' Leave Request Sent Successfully')
             # 'mail_list':mail_list - get mail list
             # return render(self.request,'request_leave.html', {'accept_emails' : mail_lists})
@@ -958,21 +951,16 @@ def full_leave_status(request):
         # msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
         # msg.attach_alternative(content, "text/html")
         # msg.send() 
-        # import pdb; pdb.set_trace()
-        try:
-            text_content = strip_tags(content)
-            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
-            msg.attach_alternative(content, "text/html")
-            msg.send() 
-                   
-        except Exception as e:
-            print(e)
-            raise
-        
+        text_content = strip_tags(content)
+        for email in data_email:
+            try:
+                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
+                msg.attach_alternative(content, "text/html")
+                msg.send()
+            except Exception as e:
+                pass
         # accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=data_email)
         # accept_email.send()
-
-
 
         if leave.status == '2': 
             if leave_type == 'Half day':
@@ -981,14 +969,14 @@ def full_leave_status(request):
             if leave_type == 'Full day':
                 email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
-            try:
                 text_content = strip_tags(content)
-                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, email_data)
-                msg.attach_alternative(content, "text/html")
-                msg.send() 
-                   
-            except Exception as e:
-                raise
+            for email in email_data:
+                try:
+                    msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
+                    msg.attach_alternative(content, "text/html")
+                    msg.send()
+                except Exception as e:
+                    pass
                     
             # email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)
             # email.send()
