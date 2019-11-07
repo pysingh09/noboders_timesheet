@@ -138,12 +138,13 @@ class EmployeeProfile(DetailView):
         if user.user_leaves.all().exists():
             alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
+            get_taken_leave_year = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,status=1).aggregate(Sum('leave'))
             get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
             available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
             available_leave = (datetime.now().month - alloted_leave.month) + 1
             leave_sum = 0
-            if get_taken_leave['leave__sum']:
-               leave_sum = get_taken_leave['leave__sum']
+            if get_taken_leave_year['leave__sum']:
+                leave_sum = get_taken_leave_year['leave__sum']
             total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
             remaning_leave = total_available_leave
@@ -357,6 +358,7 @@ def employee_details(request,id):
 
 
 def show_hour_calender(request):
+   
     attendances_data = EmployeeAttendance.objects.filter(user_id=request.user.id)
     # names = set()
     # result = []
@@ -601,7 +603,6 @@ class RequestLeaveView(CreateView):
     success_url = '/leave/'
 
     def form_valid(self,form,**kwargs):
-          
         try:
             form = self.form_class(data=form.data)
             leave = form.save(commit=False)
@@ -633,7 +634,7 @@ class RequestLeaveView(CreateView):
 
                 leave.starttime = starttime #form.data['starttime']
                 leave.endtime = endtime #form.data['starttime']
-            
+            startdate1 = form.data['startdate']
             startdate = form.data['startdate'].split('-')
             enddate = form.data['enddate'].split('-')
             d1 = date(int(startdate[0]),int(startdate[1]),int(startdate[2])) #startdate
@@ -647,11 +648,13 @@ class RequestLeaveView(CreateView):
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
             leave.leave_type = form.data['leave_type']
             leave.user = self.request.user
-            leave.save()
+            if Leave.objects.filter(startdate=startdate1,user=self.request.profile.user).exists():
+                messages.error(self.request, "Already sent request")
+                return HttpResponseRedirect('/leave') 
+            else:
+                leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
-
             # for MD , HR and teamlead   
-           
             mail_list = []
             default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
             for usr in default_mail_list:
@@ -864,8 +867,10 @@ def full_leave_status(request):
                 #     get_taken_leave_unpaid.delete()
 
         if int(leave.status) == 2:
+
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
+
             gettaken = 0
             if get_taken_leave['leave__sum']:
                 gettaken = get_taken_leave['leave__sum']
@@ -950,7 +955,7 @@ def full_leave_status(request):
         # msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
         # msg.attach_alternative(content, "text/html")
         # msg.send() 
-        text_content = strip_tags(content)
+            text_content = strip_tags(content)
         for email in data_email:
             try:
                 msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
@@ -1041,7 +1046,7 @@ class ForgotPassword(View):
     
     def post(self,request):
         try:
-            if request.method == 'POST':            
+            if request.method == 'POST':           
                 email = request.POST['email']
                 try:
                     user = User.objects.get(email=email)
@@ -1056,24 +1061,25 @@ class ForgotPassword(View):
                 send_mail = EmailMessage("Forgot password",body,settings.FROM_EMAIL,to=[user.email])
                 send_mail.send() 
                 messages.success(self.request, 'Check Your Password In Mail') 
-                return HttpResponseRedirect('/forgot-password/')
+                return HttpResponseRedirect('/login/')
         except Exception as e:
                 raise
 
-        
-
-class ShowLeaveListView(ListView):
-    model = Leave
-    template_name = "leave/fullday_leave.html"   
-    def get_context_data(self, **kwargs):
-        context = super(ShowLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3]).order_by('-created_at')
-        return context
+# class ShowLeaveListView(ListView):
+#     # permission_required = ('employee.can_view_employee_attendance_list',)
+#     # raise_exception = True
+#     model = Leave
+#     template_name = "leave/fullday_leave.html"   
+#     def get_context_data(self, **kwargs):
+#         context = super(ShowLeaveListView, self).get_context_data(**kwargs)
+#         # context['object_list'] = self.model.objects.filter(user=self.request.user,status__in=[1,2,3]).order_by('-created_at')
+#         context['object_list'] = self.model.objects.all().order_by('-created_at')
+#         return context
 
 def delete_leave(request):
-
     if request.method == 'POST':
         leave_id =request.POST.get("leave_id")
+        leave_user_id= request.POST.get("leave_user_id")
         leave_status = request.POST.get("leave_status")
         delete_leave = Leave.objects.filter(id = leave_id,status__in=[1,2,3])
         delete_leave.delete()
@@ -1083,7 +1089,7 @@ def delete_leave(request):
         emp_end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
         delta = emp_end_date - emp_start_date
         for i in range(delta.days + 1):
-            delete_employee_leave = EmployeeAttendance.objects.filter(user=request.profile.user,employee_id = request.profile.employee_id,date =emp_start_date + timedelta(days=i),empatt_leave_status__in=[5,6] )
+            delete_employee_leave = EmployeeAttendance.objects.filter(user_id=leave_user_id,employee_id = request.profile.employee_id,date =emp_start_date + timedelta(days=i),empatt_leave_status__in=[5,6])
             delete_employee_leave.delete()
     return JsonResponse({'status': 'success'})
         

@@ -14,6 +14,7 @@
             <th>Date</th>
             <th>Total Working Hour</th>
             <th>Leave Request</th>
+            <th>sassa</th>
           </tr>
         </thead>
             <tbody>
@@ -23,21 +24,17 @@
                     <td>{{ leave.user }}</td>
                     <td>{{ leave.date|date:'D,d M Y' }}</td>
                     <td>{{ leave.date_time_diffrence }}</td>
-                  
-                  
+
                     <td>
                      {% if leave.empatt_leave_status != 3  %}
                       <button class="leave btn btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}"data-leave_type="3">Approve</button>
                      {% endif %}  
                      {% if leave.empatt_leave_status != 4  %} 
                      <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Reject</button>
+                     <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Delete</button>
                     {% endif %} 
-                      
                        {{ leave.get_empatt_leave_status_display }}
-
-                  </td>
-
-              
+                    </td>
                   </tr>
                 {% endfor %}
             </tbody>

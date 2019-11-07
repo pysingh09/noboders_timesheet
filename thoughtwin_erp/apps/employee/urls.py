@@ -1,4 +1,3 @@
-from django.urls import path
 from employee.views import *
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm,    password_reset_complete
 from django.urls import path, include
@@ -41,10 +40,7 @@ urlpatterns = [
     path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
     path('change-password/', change_password, name='change_password'),
     path('forgot-password/', ForgotPassword.as_view(), name='forgot_password'),
-    path('show-leave-list/',ShowLeaveListView.as_view(),name='show-leave-list'),
+    # path('show-leave-list/',ShowLeaveListView.as_view(),name='show-leave-list'),
     path('delete-leave/',delete_leave,name='del-leave-list'),
-  
-   
-
      
 ]
