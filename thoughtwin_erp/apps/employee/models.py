@@ -29,7 +29,6 @@ MONTH_CHOICES = (
 
     )
 
-
 LEAVE_STATUS = (
     (1, 'Pending'),
     (2, 'Accepted'),

@@ -158,3 +158,20 @@ LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     '/login',
     '/forgot-password',
 )
+
+# CHANNEL_LAYERS = {
+#    "default": {
+#        "BACKEND": "channels_redis.core.RedisChannelLayer",
+#        "CONFIG": {
+#            "hosts": [("localhost", 6379)],
+#        },
+#    },
+# }
+
+# #celery settings
+# CELERY_TASK_ALWAYS_EAGER = True
+# CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+# CELERY_RESULT_BACKEND = 'rpc://guest:guest@localhost:5672//'
+# CELERY_TASK_SERIALIZER = "json"
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_RESULT_SERIALIZER = "json"

@@ -110,7 +110,6 @@
   $(document).ready(function(){
       $(document).on('click', '.dlt-btn', function(e){
         e.preventDefault();
-        // debugger
         var leave_id = $(this).data("leave-id");
         var leave_user_id = $(this).data("leave-user");
         var leave_status = $(this).data("leave_status");
@@ -121,6 +120,7 @@
           'type': "POST",
           data: {
             'leave_id': leave_id,
+            // 'delete' : 'delete',
             'leave_user_id':leave_user_id,
             'leave_status':leave_status,
             'start_date':start_date,

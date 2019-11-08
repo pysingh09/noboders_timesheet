@@ -358,7 +358,6 @@ def employee_details(request,id):
 
 
 def show_hour_calender(request):
-   
     attendances_data = EmployeeAttendance.objects.filter(user_id=request.user.id)
     # names = set()
     # result = []
@@ -704,6 +703,7 @@ class RequestLeaveView(CreateView):
                 except Exception as e:
                     pass
             messages.success(self.request, ' Leave Request Sent Successfully')
+
             # 'mail_list':mail_list - get mail list
             # return render(self.request,'request_leave.html', {'accept_emails' : mail_lists})
             return HttpResponseRedirect('/leave')
@@ -803,7 +803,7 @@ def full_leave(request):
 def full_leave_status(request):
     if request.method == 'POST':
         leave_id =request.POST.get("leave_id")
-        leave_user =request.POST.get("leave_user")
+        # leave_user =request.POST.get("leave_user")
         leave_type =request.POST.get("leave_type")
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
@@ -859,18 +859,10 @@ def full_leave_status(request):
                 else:
                     get_taken_leave_unpaid.delete()
 
-                # get_taken_leave_unpaid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=2,leave=count).first()
-                # if get_taken_leave_unpaid == None:
-                #     get_taken_leave_paid = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave=count).first()
-                #     get_taken_leave_paid.delete()
-                # else:
-                #     get_taken_leave_unpaid.delete()
 
         if int(leave.status) == 2:
-
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
-
             gettaken = 0
             if get_taken_leave['leave__sum']:
                 gettaken = get_taken_leave['leave__sum']
@@ -1089,8 +1081,19 @@ def delete_leave(request):
         emp_end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
         delta = emp_end_date - emp_start_date
         for i in range(delta.days + 1):
-            delete_employee_leave = EmployeeAttendance.objects.filter(user_id=leave_user_id,employee_id = request.profile.employee_id,date =emp_start_date + timedelta(days=i),empatt_leave_status__in=[5,6])
+            delete_employee_leave = EmployeeAttendance.objects.filter(user_id=leave_user_id,date =emp_start_date + timedelta(days=i),empatt_leave_status__in=[5,6])
             delete_employee_leave.delete()
+            get_taken_leave_unpaid = MonthlyTakeLeave.objects.filter(user=leave_user_id,year = emp_start_date.year,month=emp_start_date.month,status=2,leave=1).first()
+            if get_taken_leave_unpaid == None:
+                get_taken_leave_paid = MonthlyTakeLeave.objects.filter(user=leave_user_id,year = emp_start_date.year,month=emp_start_date.month,status=1,leave=1).first()
+                if get_taken_leave_paid == None:
+                    get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave_user_id,year = emp_start_date.year,month=emp_start_date.month,status__in=[1,2]).order_by('-id')[:2]
+                    for item in get_taken_leave:
+                        item.delete()
+                else:
+                    get_taken_leave_paid.delete()
+            else:
+                get_taken_leave_unpaid.delete()
     return JsonResponse({'status': 'success'})
         
 class EmployeeUpdateView(UpdateView):
