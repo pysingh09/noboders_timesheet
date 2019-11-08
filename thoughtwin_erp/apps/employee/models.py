@@ -61,7 +61,7 @@ ROLE_CHOICES = (
     (6 , ('Trainee')),
     (7 , ('QA')),
     (8 , ('Senior Developer')),
-    (9 , ('Junior Developer')),
+    (9 , ('Junior Developer')),  
 )
 
 class BaseModel(models.Model):

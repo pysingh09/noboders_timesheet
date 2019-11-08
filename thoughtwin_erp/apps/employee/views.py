@@ -728,7 +728,6 @@ class RequestLeaveView(CreateView):
         #     mail_list.append(usr.email)
         # context['emails'] = email_data
         
-        
         mail_list = []
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
         for usr in default_mail_list:
@@ -947,7 +946,7 @@ def full_leave_status(request):
         # msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
         # msg.attach_alternative(content, "text/html")
         # msg.send() 
-            text_content = strip_tags(content)
+        text_content = strip_tags(content)
         for email in data_email:
             try:
                 msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
