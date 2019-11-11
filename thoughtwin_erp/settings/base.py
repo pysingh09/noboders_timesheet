@@ -168,7 +168,7 @@ LOGIN_REQUIRED_URLS_EXCEPTIONS = (
 #    },
 # }
 
-# #celery settings
+#celery settings
 # CELERY_TASK_ALWAYS_EAGER = True
 # CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 # CELERY_RESULT_BACKEND = 'rpc://guest:guest@localhost:5672//'

@@ -908,7 +908,6 @@ def full_leave_status(request):
         aaccept_email_data.append(leave.user.profile.teamlead.email)
         aaccept_email_data.append(leave.user.email)
         default_mail_list = User.objects.filter(groups__name__in=['MD','HR']) 
-        
         for usr in default_mail_list:
             aaccept_email_data.append(usr.email)
         data_email = set(aaccept_email_data)
@@ -945,7 +944,7 @@ def full_leave_status(request):
         # text_content = strip_tags(content)
         # msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
         # msg.attach_alternative(content, "text/html")
-        # msg.send() 
+        # msg.send()
         text_content = strip_tags(content)
         for email in data_email:
             try:
@@ -964,7 +963,7 @@ def full_leave_status(request):
             if leave_type == 'Full day':
                 email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
-                text_content = strip_tags(content)
+            text_content = strip_tags(content)
             for email in email_data:
                 try:
                     msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
