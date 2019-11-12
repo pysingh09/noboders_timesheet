@@ -15,4 +15,4 @@ django-phonenumber-field
 phonenumbers
 django-ses
 Celery
-rabbitmq-server
+
