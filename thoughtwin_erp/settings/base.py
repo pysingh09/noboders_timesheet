@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'employee',
-    'phonenumber_field',
 
 ]
 
@@ -122,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -159,19 +158,19 @@ LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     '/forgot-password',
 )
 
-# CHANNEL_LAYERS = {
-#    "default": {
-#        "BACKEND": "channels_redis.core.RedisChannelLayer",
-#        "CONFIG": {
-#            "hosts": [("localhost", 6379)],
-#        },
-#    },
-# }
+    
 
 #celery settings
-# CELERY_TASK_ALWAYS_EAGER = True
 # CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-# CELERY_RESULT_BACKEND = 'rpc://guest:guest@localhost:5672//'
-# CELERY_TASK_SERIALIZER = "json"
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_RESULT_SERIALIZER = "json"
+# CELERY_TIMEZONE = 'Asia/Kolkata'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+
+
+BROKER_URL = 'amqp://localhost'
+CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_RESULT_PERSISTENT = False
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'

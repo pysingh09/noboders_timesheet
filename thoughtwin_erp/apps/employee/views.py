@@ -33,6 +33,8 @@ from django.contrib.auth.models import Group
 # import datetime 
 from django.contrib.auth.forms import UserChangeForm,PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+
+from employee.tasks import send_email_reminder
 # this is for file upload
 import xlrd
 from django.conf import settings
@@ -738,7 +740,7 @@ class RequestLeaveView(CreateView):
 
         email_data = []
         groups_email = []
-    
+        
         for user in User.objects.all():
             if user.email in mail_list:
                 groups_email.append(user.email)               
@@ -914,10 +916,7 @@ def full_leave_status(request):
 
         email_data = []
         for user in User.objects.all():
-            email_data.append(user.email)    
-
-        
-       
+            email_data.append(user.email)         
         full_name = leave.user.first_name +" "+ leave.user.last_name
         user = full_name.title()
         approve_fullname = []
@@ -925,7 +924,7 @@ def full_leave_status(request):
         approve_fullname.append(request.user.last_name)
         approve_user_fullname = approve_fullname[0]+" "+approve_fullname[1]
         startdate = startdate.strftime("%b %d, %Y")
-        enddate = enddate.strftime("%b %d, %Y")        
+        enddate = enddate.strftime("%b %d, %Y")       
         if leave.status == '2':
             if leave_type == 'Half day':
                 email_subject = "Leave Approved " "||"" " +user+  " "'|| Half Day'" "'||' " "+startdate
@@ -964,14 +963,15 @@ def full_leave_status(request):
                 email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
             text_content = strip_tags(content)
-            for email in email_data:
+            # email_data
+            for email in data_email:
                 try:
                     msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
                     msg.attach_alternative(content, "text/html")
                     msg.send()
                 except Exception as e:
                     pass
-                    
+                 
             # email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)
             # email.send()
         # if leave.status == '3':

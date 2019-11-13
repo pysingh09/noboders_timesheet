@@ -34,9 +34,6 @@ AWS_SECRET_ACCESS_KEY = 'JjINkpTpVIeEOHgpXZwjY2BAACqWbAyqGLV86TeP'
 
 
 
-
-
-
 # FROM_EMAIL='erp.thoughtwin@gmail.com'
 # DEFAULT_FROM_EMAIL = 'erp.thoughtwin@gmail.com'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

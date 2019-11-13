@@ -1,0 +1,828 @@
+[2019-11-13 16:37:40,382: INFO/Beat] beat: Starting...
+[2019-11-13 16:37:40,387: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 16:37:40,397: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 16:37:41,417: INFO/MainProcess] mingle: all alone
+[2019-11-13 16:37:41,434: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 16:37:41,434: INFO/MainProcess] celery@Thoughtwin-7 ready.
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 16:39:49,270: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 16:37:40
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7fb49630f588
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+Traceback (most recent call last):
+  File "/home/lenovo/ENV/thoughtwin_erp/bin/celery", line 10, in <module>
+    sys.exit(main())
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/__main__.py", line 16, in main
+    _main()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 496, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 298, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 488, in handle_argv
+    return self.execute(command, argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 420, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 252, in __call__
+    ret = self.run(*args, **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 257, in run
+    **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/worker/worker.py", line 96, in __init__
+    self.app.loader.init_worker()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 114, in init_worker
+    self.import_default_modules()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 108, in import_default_modules
+    raise response
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/utils/dispatch/signal.py", line 288, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 84, in on_import_modules
+    self.worker_fixup.validate_models()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 123, in validate_models
+    run_checks()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/registry.py", line 73, in run_checks
+    new_errors = check(app_configs=app_configs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 40, in check_url_namespaces_unique
+    all_namespaces = _load_all_namespaces(resolver)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 57, in _load_all_namespaces
+    url_patterns = getattr(resolver, 'url_patterns', [])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 540, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 533, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/urls.py", line 39, in <module>
+    path('', include('employee.urls', namespace='employee')),
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/conf.py", line 34, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/urls.py", line 1, in <module>
+    from employee.views import *
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/views.py", line 37, in <module>
+    from employee.tasks import send_email_reminder
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 17, in <module>
+    @periodic_task(run_every=(crontab(seconds=10)), name="send_email_reminder", ignore_result=True)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/schedules.py", line 416, in __init__
+    super(crontab, self).__init__(**kwargs)
+TypeError: __init__() got an unexpected keyword argument 'seconds'
+Traceback (most recent call last):
+  File "/home/lenovo/ENV/thoughtwin_erp/bin/celery", line 10, in <module>
+    sys.exit(main())
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/__main__.py", line 16, in main
+    _main()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 496, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 298, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 488, in handle_argv
+    return self.execute(command, argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 420, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 252, in __call__
+    ret = self.run(*args, **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 257, in run
+    **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/worker/worker.py", line 96, in __init__
+    self.app.loader.init_worker()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 114, in init_worker
+    self.import_default_modules()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 108, in import_default_modules
+    raise response
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/utils/dispatch/signal.py", line 288, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 84, in on_import_modules
+    self.worker_fixup.validate_models()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 123, in validate_models
+    run_checks()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/registry.py", line 73, in run_checks
+    new_errors = check(app_configs=app_configs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 40, in check_url_namespaces_unique
+    all_namespaces = _load_all_namespaces(resolver)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 57, in _load_all_namespaces
+    url_patterns = getattr(resolver, 'url_patterns', [])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 540, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 533, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/urls.py", line 39, in <module>
+    path('', include('employee.urls', namespace='employee')),
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/conf.py", line 34, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/urls.py", line 1, in <module>
+    from employee.views import *
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/views.py", line 37, in <module>
+    from employee.tasks import send_email_reminder
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 17, in <module>
+    @periodic_task(run_every=(crontab(seconds=10)), name="send_email_reminder", ignore_result=True)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/schedules.py", line 416, in __init__
+    super(crontab, self).__init__(**kwargs)
+TypeError: __init__() got an unexpected keyword argument 'seconds'
+Traceback (most recent call last):
+  File "/home/lenovo/ENV/thoughtwin_erp/bin/celery", line 10, in <module>
+    sys.exit(main())
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/__main__.py", line 16, in main
+    _main()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 496, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 298, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 488, in handle_argv
+    return self.execute(command, argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 420, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 252, in __call__
+    ret = self.run(*args, **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 257, in run
+    **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/worker/worker.py", line 96, in __init__
+    self.app.loader.init_worker()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 114, in init_worker
+    self.import_default_modules()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 108, in import_default_modules
+    raise response
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/utils/dispatch/signal.py", line 288, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 84, in on_import_modules
+    self.worker_fixup.validate_models()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 123, in validate_models
+    run_checks()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/registry.py", line 73, in run_checks
+    new_errors = check(app_configs=app_configs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 40, in check_url_namespaces_unique
+    all_namespaces = _load_all_namespaces(resolver)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 57, in _load_all_namespaces
+    url_patterns = getattr(resolver, 'url_patterns', [])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 540, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 533, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/urls.py", line 39, in <module>
+    path('', include('employee.urls', namespace='employee')),
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/conf.py", line 34, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/urls.py", line 1, in <module>
+    from employee.views import *
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/views.py", line 37, in <module>
+    from employee.tasks import send_email_reminder
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 17, in <module>
+    @periodic_task(run_every=(crontab(seconds=10)), name="send_email_reminder", ignore_result=True)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/schedules.py", line 416, in __init__
+    super(crontab, self).__init__(**kwargs)
+TypeError: __init__() got an unexpected keyword argument 'seconds'
+Traceback (most recent call last):
+  File "/home/lenovo/ENV/thoughtwin_erp/bin/celery", line 10, in <module>
+    sys.exit(main())
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/__main__.py", line 16, in main
+    _main()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 322, in main
+    cmd.execute_from_commandline(argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 496, in execute_from_commandline
+    super(CeleryCommand, self).execute_from_commandline(argv)))
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 298, in execute_from_commandline
+    return self.handle_argv(self.prog_name, argv[1:])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 488, in handle_argv
+    return self.execute(command, argv)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/celery.py", line 420, in execute
+    ).run_from_argv(self.prog_name, argv[1:], command=argv[0])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 223, in run_from_argv
+    return self(*args, **options)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/base.py", line 252, in __call__
+    ret = self.run(*args, **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/bin/worker.py", line 257, in run
+    **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/worker/worker.py", line 96, in __init__
+    self.app.loader.init_worker()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 114, in init_worker
+    self.import_default_modules()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/loaders/base.py", line 108, in import_default_modules
+    raise response
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/utils/dispatch/signal.py", line 288, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 84, in on_import_modules
+    self.worker_fixup.validate_models()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py", line 123, in validate_models
+    run_checks()
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/registry.py", line 73, in run_checks
+    new_errors = check(app_configs=app_configs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 40, in check_url_namespaces_unique
+    all_namespaces = _load_all_namespaces(resolver)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/core/checks/urls.py", line 57, in _load_all_namespaces
+    url_patterns = getattr(resolver, 'url_patterns', [])
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 540, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/utils/functional.py", line 36, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/resolvers.py", line 533, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/urls.py", line 39, in <module>
+    path('', include('employee.urls', namespace='employee')),
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/django/urls/conf.py", line 34, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/lenovo/ENV/thoughtwin_erp/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/urls.py", line 1, in <module>
+    from employee.views import *
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/views.py", line 37, in <module>
+    from employee.tasks import send_email_reminder
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 17, in <module>
+    @periodic_task(run_every=(crontab(seconds=10)), name="send_email_reminder", ignore_result=True)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/schedules.py", line 416, in __init__
+    super(crontab, self).__init__(**kwargs)
+TypeError: __init__() got an unexpected keyword argument 'seconds'
+[2019-11-13 16:43:18,349: INFO/Beat] beat: Starting...
+[2019-11-13 16:43:18,368: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:43:18,489: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 16:43:18,504: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 16:43:19,522: INFO/MainProcess] mingle: all alone
+[2019-11-13 16:43:19,541: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 16:43:19,541: INFO/MainProcess] celery@Thoughtwin-7 ready.
+[2019-11-13 16:43:28,357: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:43:28,488: INFO/MainProcess] Received task: send_email_reminder[5eb888c9-3c17-4332-a74f-86b4b314a46b]  
+[2019-11-13 16:43:28,490: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:43:28,491: INFO/ForkPoolWorker-3] Task send_email_reminder[5eb888c9-3c17-4332-a74f-86b4b314a46b] succeeded in 0.0012401099993439857s: None
+[2019-11-13 16:43:38,358: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:43:38,486: INFO/MainProcess] Received task: send_email_reminder[d010ef53-9b0e-4af2-8003-6f03df03f2d9]  
+[2019-11-13 16:43:38,488: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:43:38,489: INFO/ForkPoolWorker-2] Task send_email_reminder[d010ef53-9b0e-4af2-8003-6f03df03f2d9] succeeded in 0.0011081129996455275s: None
+[2019-11-13 16:43:48,358: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:43:48,486: INFO/MainProcess] Received task: send_email_reminder[05862e2a-9e67-478b-b86e-def5956a1caa]  
+[2019-11-13 16:43:48,487: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:43:48,487: INFO/ForkPoolWorker-3] Task send_email_reminder[05862e2a-9e67-478b-b86e-def5956a1caa] succeeded in 0.0002475869987392798s: None
+[2019-11-13 16:43:58,358: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:43:58,487: INFO/MainProcess] Received task: send_email_reminder[76a6d091-3112-46c7-acf0-3fcda78ecf54]  
+[2019-11-13 16:43:58,488: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:43:58,488: INFO/ForkPoolWorker-2] Task send_email_reminder[76a6d091-3112-46c7-acf0-3fcda78ecf54] succeeded in 0.000396321000152966s: None
+[2019-11-13 16:44:08,358: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:44:08,487: INFO/MainProcess] Received task: send_email_reminder[2f48fb99-0b14-4fcd-99c5-edb9fe8390b8]  
+[2019-11-13 16:44:08,488: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:44:08,488: INFO/ForkPoolWorker-3] Task send_email_reminder[2f48fb99-0b14-4fcd-99c5-edb9fe8390b8] succeeded in 0.0003017050003109034s: None
+[2019-11-13 16:44:18,358: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:44:18,487: INFO/MainProcess] Received task: send_email_reminder[ae9d75d6-8e53-49d3-8668-d9460db13039]  
+[2019-11-13 16:44:18,488: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:44:18,489: INFO/ForkPoolWorker-2] Task send_email_reminder[ae9d75d6-8e53-49d3-8668-d9460db13039] succeeded in 0.00041357399823027663s: None
+[2019-11-13 16:44:28,359: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:44:28,487: INFO/MainProcess] Received task: send_email_reminder[f19643c6-7edd-4467-8c9f-cb6d9fe9ff99]  
+[2019-11-13 16:44:28,488: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:44:28,489: INFO/ForkPoolWorker-3] Task send_email_reminder[f19643c6-7edd-4467-8c9f-cb6d9fe9ff99] succeeded in 0.00036632699993788265s: None
+[2019-11-13 16:44:38,359: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:44:38,488: INFO/MainProcess] Received task: send_email_reminder[ed192bae-1587-4ca4-a1f2-415a8cb26d5f]  
+[2019-11-13 16:44:38,489: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:44:38,489: INFO/ForkPoolWorker-2] Task send_email_reminder[ed192bae-1587-4ca4-a1f2-415a8cb26d5f] succeeded in 0.00039333699896815233s: None
+[2019-11-13 16:44:48,359: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:44:48,487: INFO/MainProcess] Received task: send_email_reminder[60010ae1-20a6-4b76-b064-cd64332b0fa7]  
+[2019-11-13 16:44:48,488: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:44:48,489: INFO/ForkPoolWorker-3] Task send_email_reminder[60010ae1-20a6-4b76-b064-cd64332b0fa7] succeeded in 0.00040040900057647377s: None
+[2019-11-13 16:44:58,360: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:44:58,487: INFO/MainProcess] Received task: send_email_reminder[7420a0fe-0858-4201-a014-df09f27ab8f7]  
+[2019-11-13 16:44:58,488: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:44:58,489: INFO/ForkPoolWorker-2] Task send_email_reminder[7420a0fe-0858-4201-a014-df09f27ab8f7] succeeded in 0.00038825199953862466s: None
+[2019-11-13 16:45:08,360: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:45:08,488: INFO/MainProcess] Received task: send_email_reminder[1799fdb7-fee1-4015-9406-1105a2180d56]  
+[2019-11-13 16:45:08,489: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:45:08,489: INFO/ForkPoolWorker-3] Task send_email_reminder[1799fdb7-fee1-4015-9406-1105a2180d56] succeeded in 0.0004059310012962669s: None
+[2019-11-13 16:45:18,360: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:45:18,488: INFO/MainProcess] Received task: send_email_reminder[cfcb2bd7-881f-4def-9006-e6499ef58947]  
+[2019-11-13 16:45:18,489: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:45:18,489: INFO/ForkPoolWorker-2] Task send_email_reminder[cfcb2bd7-881f-4def-9006-e6499ef58947] succeeded in 0.00030875899756210856s: None
+[2019-11-13 16:45:28,360: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:45:28,489: INFO/MainProcess] Received task: send_email_reminder[9275b6e7-7387-4ec6-b9fa-cb05eaf136b2]  
+[2019-11-13 16:45:28,490: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:45:28,490: INFO/ForkPoolWorker-3] Task send_email_reminder[9275b6e7-7387-4ec6-b9fa-cb05eaf136b2] succeeded in 0.00039179700252134353s: None
+[2019-11-13 16:45:38,361: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:45:38,489: INFO/MainProcess] Received task: send_email_reminder[e1c25aa5-b514-45a7-baee-1537eaa7a560]  
+[2019-11-13 16:45:38,490: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:45:38,490: INFO/ForkPoolWorker-2] Task send_email_reminder[e1c25aa5-b514-45a7-baee-1537eaa7a560] succeeded in 0.00040997800169861875s: None
+[2019-11-13 16:45:48,361: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:45:48,489: INFO/MainProcess] Received task: send_email_reminder[167dccb3-0f89-4731-843f-84b4fa34048b]  
+[2019-11-13 16:45:48,490: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:45:48,491: INFO/ForkPoolWorker-3] Task send_email_reminder[167dccb3-0f89-4731-843f-84b4fa34048b] succeeded in 0.0003898759969160892s: None
+[2019-11-13 16:45:58,361: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:45:58,489: INFO/MainProcess] Received task: send_email_reminder[b5173287-0cc9-49af-9afe-0719be0e5df1]  
+[2019-11-13 16:45:58,490: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:45:58,491: INFO/ForkPoolWorker-2] Task send_email_reminder[b5173287-0cc9-49af-9afe-0719be0e5df1] succeeded in 0.0003926270001102239s: None
+[2019-11-13 16:46:08,361: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:46:08,489: INFO/MainProcess] Received task: send_email_reminder[ebd735dc-4459-4276-bfab-f3ae71a4b6a5]  
+[2019-11-13 16:46:08,490: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:46:08,491: INFO/ForkPoolWorker-3] Task send_email_reminder[ebd735dc-4459-4276-bfab-f3ae71a4b6a5] succeeded in 0.00033711200012476183s: None
+[2019-11-13 16:46:18,361: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:46:18,490: INFO/MainProcess] Received task: send_email_reminder[36b8ae79-5903-47f4-805a-187786249272]  
+[2019-11-13 16:46:18,491: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:46:18,491: INFO/ForkPoolWorker-2] Task send_email_reminder[36b8ae79-5903-47f4-805a-187786249272] succeeded in 0.0003924929987988435s: None
+[2019-11-13 16:46:28,362: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:46:28,490: INFO/MainProcess] Received task: send_email_reminder[0059514b-e56f-417b-a931-c1fc1d3aa971]  
+[2019-11-13 16:46:28,491: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:46:28,492: INFO/ForkPoolWorker-3] Task send_email_reminder[0059514b-e56f-417b-a931-c1fc1d3aa971] succeeded in 0.00040188799903262407s: None
+[2019-11-13 16:46:38,362: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:46:38,491: INFO/MainProcess] Received task: send_email_reminder[4753df82-88c7-4e4c-841c-2bb8ef1cb496]  
+[2019-11-13 16:46:38,492: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:46:38,492: INFO/ForkPoolWorker-2] Task send_email_reminder[4753df82-88c7-4e4c-841c-2bb8ef1cb496] succeeded in 0.00039348700011032633s: None
+[2019-11-13 16:46:48,362: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:46:48,491: INFO/MainProcess] Received task: send_email_reminder[78ec06bd-6466-469e-9a45-2886de9f6d91]  
+[2019-11-13 16:46:48,492: WARNING/ForkPoolWorker-3] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:46:48,492: INFO/ForkPoolWorker-3] Task send_email_reminder[78ec06bd-6466-469e-9a45-2886de9f6d91] succeeded in 0.000391368997952668s: None
+[2019-11-13 16:46:58,362: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 16:46:58,365: INFO/MainProcess] Received task: send_email_reminder[36e414af-1d49-4053-aa3f-cac69df9d6db]  
+[2019-11-13 16:46:58,366: WARNING/ForkPoolWorker-2] vdsvvdsvdsvdsvsdvdv
+[2019-11-13 16:46:58,366: INFO/ForkPoolWorker-2] Task send_email_reminder[36e414af-1d49-4053-aa3f-cac69df9d6db] succeeded in 0.0003729370000655763s: None
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 16:46:59,938: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 16:43:18
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7f2e6ad142e8
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 16:47:02,356: INFO/Beat] beat: Starting...
+[2019-11-13 16:47:02,492: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 16:47:02,501: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 16:47:03,520: INFO/MainProcess] mingle: all alone
+[2019-11-13 16:47:03,529: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/kombu/pidbox.py:74: UserWarning: A node named celery@Thoughtwin-7 is already using this process mailbox!
+
+Maybe you forgot to shutdown the other node or did not do so properly?
+Or if you meant to start multiple nodes on the same host please make sure
+you give each node a unique node name!
+
+  warnings.warn(W_PIDBOX_IN_USE.format(node=self))
+[2019-11-13 16:47:03,539: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 16:47:03,539: INFO/MainProcess] celery@Thoughtwin-7 ready.
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 19:13:00,276: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 16:47:02
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7ff887338438
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 19:13:02,687: INFO/Beat] beat: Starting...
+[2019-11-13 19:13:02,824: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 19:13:02,835: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 19:13:03,853: INFO/MainProcess] mingle: all alone
+[2019-11-13 19:13:03,867: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/kombu/pidbox.py:74: UserWarning: A node named celery@Thoughtwin-7 is already using this process mailbox!
+
+Maybe you forgot to shutdown the other node or did not do so properly?
+Or if you meant to start multiple nodes on the same host please make sure
+you give each node a unique node name!
+
+  warnings.warn(W_PIDBOX_IN_USE.format(node=self))
+[2019-11-13 19:13:03,869: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 19:13:03,869: INFO/MainProcess] celery@Thoughtwin-7 ready.
+[2019-11-13 19:14:00,062: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 19:14:00,071: INFO/MainProcess] Received task: send_email_reminder[98932591-e610-424a-85c9-fbbcb3485f73]  
+[2019-11-13 19:14:00,099: WARNING/ForkPoolWorker-3] send OOO on  admin@admin.com
+[2019-11-13 19:14:02,847: ERROR/ForkPoolWorker-3] 400 Bad Request
+[2019-11-13 19:14:02,847: ERROR/ForkPoolWorker-3] <ErrorResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>MessageRejected</Code>
+    <Message>Email address is not verified. The following identities failed the check in region US-EAST-1: admin@admin.com</Message>
+  </Error>
+  <RequestId>8d31b013-0f51-40a2-b1e1-c4c79b13f8a8</RequestId>
+</ErrorResponse>
+
+[2019-11-13 19:14:02,849: WARNING/ForkPoolWorker-3] send OOO on  arpit@thoughtwin.com
+[2019-11-13 19:14:04,269: WARNING/ForkPoolWorker-3] send OOO on  yashdeep@thoughtwin.com
+[2019-11-13 19:14:06,308: WARNING/ForkPoolWorker-3] send OOO on  aarti@thoughtwin.com
+[2019-11-13 19:14:08,380: WARNING/ForkPoolWorker-3] send OOO on  vinod@thoughtwin.com
+[2019-11-13 19:14:10,412: WARNING/ForkPoolWorker-3] send OOO on
+[2019-11-13 19:14:10,412: WARNING/ForkPoolWorker-3] send OOO on  ankita@thoughtwin.com
+[2019-11-13 19:14:12,328: INFO/ForkPoolWorker-3] Task send_email_reminder[98932591-e610-424a-85c9-fbbcb3485f73] succeeded in 12.255385586999182s: None
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 19:33:02,655: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 19:13:02
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7f58161842e8
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 19:33:05,063: INFO/Beat] beat: Starting...
+[2019-11-13 19:33:05,202: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 19:33:05,212: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 19:33:06,231: INFO/MainProcess] mingle: all alone
+[2019-11-13 19:33:06,249: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 19:33:06,249: INFO/MainProcess] celery@Thoughtwin-7 ready.
+[2019-11-13 19:34:00,054: INFO/MainProcess] Received task: send_email_reminder[969b7ce8-dcd3-4e9c-b384-3d6c40fce6ed]  
+[2019-11-13 19:34:00,058: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 19:34:00,081: WARNING/ForkPoolWorker-3] send OOO on  admin@admin.com
+[2019-11-13 19:34:02,953: ERROR/ForkPoolWorker-3] 400 Bad Request
+[2019-11-13 19:34:02,953: ERROR/ForkPoolWorker-3] <ErrorResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>MessageRejected</Code>
+    <Message>Email address is not verified. The following identities failed the check in region US-EAST-1: admin@admin.com</Message>
+  </Error>
+  <RequestId>6190d895-d73f-4438-a98e-04b515a06056</RequestId>
+</ErrorResponse>
+
+[2019-11-13 19:34:02,955: WARNING/ForkPoolWorker-3] send OOO on  arpit@thoughtwin.com
+[2019-11-13 19:34:04,366: WARNING/ForkPoolWorker-3] send OOO on  yashdeep@thoughtwin.com
+[2019-11-13 19:34:06,324: WARNING/ForkPoolWorker-3] send OOO on  aarti@thoughtwin.com
+[2019-11-13 19:34:08,454: WARNING/ForkPoolWorker-3] send OOO on  vinod@thoughtwin.com
+[2019-11-13 19:34:10,396: WARNING/ForkPoolWorker-3] send OOO on
+[2019-11-13 19:34:10,396: WARNING/ForkPoolWorker-3] send OOO on  ankita@thoughtwin.com
+[2019-11-13 19:34:12,409: INFO/ForkPoolWorker-3] Task send_email_reminder[969b7ce8-dcd3-4e9c-b384-3d6c40fce6ed] succeeded in 12.353320008998708s: None
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 19:50:00,370: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 19:33:05
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7fc1d0e8b2e8
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 19:50:02,902: INFO/Beat] beat: Starting...
+[2019-11-13 19:50:02,910: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 19:50:02,919: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 19:50:03,937: INFO/MainProcess] mingle: all alone
+[2019-11-13 19:50:03,958: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 19:50:03,959: INFO/MainProcess] celery@Thoughtwin-7 ready.
+[2019-11-13 19:51:00,058: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 19:51:00,066: INFO/MainProcess] Received task: send_email_reminder[3ec06f41-c2dd-4814-994f-7d645c305f82]  
+[2019-11-13 19:51:00,096: WARNING/ForkPoolWorker-3] send OOO on  admin@admin.com
+[2019-11-13 19:51:02,846: ERROR/ForkPoolWorker-3] 400 Bad Request
+[2019-11-13 19:51:02,846: ERROR/ForkPoolWorker-3] <ErrorResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>MessageRejected</Code>
+    <Message>Email address is not verified. The following identities failed the check in region US-EAST-1: admin@admin.com</Message>
+  </Error>
+  <RequestId>00c6e63c-af14-44a0-b783-eef03d1f1c3f</RequestId>
+</ErrorResponse>
+
+[2019-11-13 19:51:02,848: WARNING/ForkPoolWorker-3] send OOO on  arpit@thoughtwin.com
+[2019-11-13 19:51:05,183: WARNING/ForkPoolWorker-3] send OOO on  yashdeep@thoughtwin.com
+[2019-11-13 19:51:07,312: WARNING/ForkPoolWorker-3] send OOO on  aarti@thoughtwin.com
+[2019-11-13 19:51:09,343: WARNING/ForkPoolWorker-3] send OOO on  vinod@thoughtwin.com
+[2019-11-13 19:51:11,331: WARNING/ForkPoolWorker-3] send OOO on
+[2019-11-13 19:51:11,332: WARNING/ForkPoolWorker-3] send OOO on  ankita@thoughtwin.com
+[2019-11-13 19:51:13,363: INFO/ForkPoolWorker-3] Task send_email_reminder[3ec06f41-c2dd-4814-994f-7d645c305f82] succeeded in 13.295200909000414s: None
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 19:59:51,170: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 19:50:02
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7f2c2faa1588
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 19:59:54,586: INFO/Beat] beat: Starting...
+[2019-11-13 19:59:54,724: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 19:59:54,735: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 19:59:55,762: INFO/MainProcess] mingle: all alone
+[2019-11-13 19:59:55,779: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/kombu/pidbox.py:74: UserWarning: A node named celery@Thoughtwin-7 is already using this process mailbox!
+
+Maybe you forgot to shutdown the other node or did not do so properly?
+Or if you meant to start multiple nodes on the same host please make sure
+you give each node a unique node name!
+
+  warnings.warn(W_PIDBOX_IN_USE.format(node=self))
+[2019-11-13 19:59:55,784: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 19:59:55,784: INFO/MainProcess] celery@Thoughtwin-7 ready.
+[2019-11-13 20:01:00,035: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 20:01:00,076: INFO/MainProcess] Received task: send_email_reminder[6f6aa00f-cd60-4639-a63d-e745fe6843ba]  
+[2019-11-13 20:01:00,103: WARNING/ForkPoolWorker-3] send OOO on  admin@admin.com
+[2019-11-13 20:01:02,794: ERROR/ForkPoolWorker-3] 400 Bad Request
+[2019-11-13 20:01:02,794: ERROR/ForkPoolWorker-3] <ErrorResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>MessageRejected</Code>
+    <Message>Email address is not verified. The following identities failed the check in region US-EAST-1: admin@admin.com</Message>
+  </Error>
+  <RequestId>54634383-4d0c-45c3-9523-d18984a72654</RequestId>
+</ErrorResponse>
+
+[2019-11-13 20:01:02,796: WARNING/ForkPoolWorker-3] send OOO on  arpit@thoughtwin.com
+[2019-11-13 20:01:04,306: WARNING/ForkPoolWorker-3] send OOO on  yashdeep@thoughtwin.com
+[2019-11-13 20:01:06,305: WARNING/ForkPoolWorker-3] send OOO on  vinod@thoughtwin.com
+[2019-11-13 20:01:08,345: WARNING/ForkPoolWorker-3] send OOO on
+[2019-11-13 20:01:08,346: WARNING/ForkPoolWorker-3] send OOO on  ankita@thoughtwin.com
+[2019-11-13 20:01:10,398: INFO/ForkPoolWorker-3] Task send_email_reminder[6f6aa00f-cd60-4639-a63d-e745fe6843ba] succeeded in 10.320918302000791s: None
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 20:05:41,937: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 19:59:54
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7f4b4dcb72e8
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 20:05:44,353: INFO/Beat] beat: Starting...
+[2019-11-13 20:05:44,493: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 20:05:44,503: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 20:05:45,537: INFO/MainProcess] mingle: all alone
+[2019-11-13 20:05:45,550: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/kombu/pidbox.py:74: UserWarning: A node named celery@Thoughtwin-7 is already using this process mailbox!
+
+Maybe you forgot to shutdown the other node or did not do so properly?
+Or if you meant to start multiple nodes on the same host please make sure
+you give each node a unique node name!
+
+  warnings.warn(W_PIDBOX_IN_USE.format(node=self))
+[2019-11-13 20:05:45,553: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 20:05:45,553: INFO/MainProcess] celery@Thoughtwin-7 ready.
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 20:07:55,914: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 20:05:44
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7fe360a84588
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 20:07:58,319: INFO/Beat] beat: Starting...
+[2019-11-13 20:07:58,458: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 20:07:58,467: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 20:07:59,491: INFO/MainProcess] mingle: all alone
+[2019-11-13 20:07:59,507: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 20:07:59,507: INFO/MainProcess] celery@Thoughtwin-7 ready.
+[2019-11-13 20:08:00,013: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 20:08:00,021: INFO/MainProcess] Received task: send_email_reminder[48181d45-c947-4fb6-aa56-758e5baf577b]  
+[2019-11-13 20:08:00,039: WARNING/ForkPoolWorker-3] > /home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py(29)send_email_reminder_method()
+-> objects = Leave.objects.filter(startdate=datetime.now(), status=2)
+[2019-11-13 20:08:00,040: WARNING/ForkPoolWorker-3] (Pdb)
+[2019-11-13 20:08:00,042: ERROR/ForkPoolWorker-3] Task send_email_reminder[48181d45-c947-4fb6-aa56-758e5baf577b] raised unexpected: BdbQuit()
+Traceback (most recent call last):
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/app/trace.py", line 385, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/app/trace.py", line 648, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 19, in send_email_reminder
+    send_email_reminder_method()
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 29, in send_email_reminder_method
+    objects = Leave.objects.filter(startdate=datetime.now(), status=2)
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 29, in send_email_reminder_method
+    objects = Leave.objects.filter(startdate=datetime.now(), status=2)
+  File "/usr/lib/python3.6/bdb.py", line 51, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/usr/lib/python3.6/bdb.py", line 70, in dispatch_line
+    if self.quitting: raise BdbQuit
+bdb.BdbQuit
+
+worker: Warm shutdown (MainProcess)
+[2019-11-13 20:34:45,753: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@Thoughtwin-7 v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Linux-4.13.0-36-generic-x86_64-with-Ubuntu-16.04-xenial 2019-11-13 20:07:58
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         thoughtwin_erp:0x7f04633ce2e8
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     rpc://
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . send_email_reminder
+  . thoughtwin_erp.celery.debug_task
+
+[2019-11-13 20:34:48,158: INFO/Beat] beat: Starting...
+[2019-11-13 20:34:48,299: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-11-13 20:34:48,309: INFO/MainProcess] mingle: searching for neighbors
+[2019-11-13 20:34:49,328: INFO/MainProcess] mingle: all alone
+[2019-11-13 20:34:49,335: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/kombu/pidbox.py:74: UserWarning: A node named celery@Thoughtwin-7 is already using this process mailbox!
+
+Maybe you forgot to shutdown the other node or did not do so properly?
+Or if you meant to start multiple nodes on the same host please make sure
+you give each node a unique node name!
+
+  warnings.warn(W_PIDBOX_IN_USE.format(node=self))
+[2019-11-13 20:34:49,349: WARNING/MainProcess] /home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-11-13 20:34:49,349: INFO/MainProcess] celery@Thoughtwin-7 ready.
+[2019-11-13 20:35:00,018: INFO/Beat] Scheduler: Sending due task send_email_reminder (send_email_reminder)
+[2019-11-13 20:35:00,025: INFO/MainProcess] Received task: send_email_reminder[3c37f745-cce1-45a1-aba6-e4204c1dc7c4]  
+[2019-11-13 20:35:00,030: WARNING/ForkPoolWorker-3] > /home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py(27)send_email_reminder_method()
+-> for user in User.objects.all():
+[2019-11-13 20:35:00,030: WARNING/ForkPoolWorker-3] (Pdb)
+[2019-11-13 20:35:00,031: ERROR/ForkPoolWorker-3] Task send_email_reminder[3c37f745-cce1-45a1-aba6-e4204c1dc7c4] raised unexpected: BdbQuit()
+Traceback (most recent call last):
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/app/trace.py", line 385, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/home/lenovo/ENV/thoughtwin_erp/local/lib/python3.6/site-packages/celery/app/trace.py", line 648, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 19, in send_email_reminder
+    send_email_reminder_method()
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 27, in send_email_reminder_method
+    for user in User.objects.all():
+  File "/home/lenovo/Projects/django/thoughtwin_erp/thoughtwin_erp/thoughtwin_erp/apps/employee/tasks.py", line 27, in send_email_reminder_method
+    for user in User.objects.all():
+  File "/usr/lib/python3.6/bdb.py", line 51, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/usr/lib/python3.6/bdb.py", line 70, in dispatch_line
+    if self.quitting: raise BdbQuit
+bdb.BdbQuit
