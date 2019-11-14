@@ -661,13 +661,13 @@ class RequestLeaveView(CreateView):
             for usr in default_mail_list:
                 # emails.append(usr.email)
                 mail_list.append(usr.email)
-            request_user = self.request.user.email            
+            request_user = self.request.user.email
             mail_list.append(request_user)
             mail_list.append(self.request.user.profile.teamlead.email)
 
             emails = self.request.POST.get('emails').split(',')
             for email in emails:
-                mail_list.append(email)
+                mail_list.append(email)   
             mail_list = set(mail_list)
 
 
@@ -737,6 +737,7 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
+        mail_list.append('ashutosh@thoughtwin.com') 
 
         email_data = []
         groups_email = []
@@ -758,20 +759,35 @@ class RequestLeaveView(CreateView):
 
         return context
 
-# class EmpLeaveListView(PermissionRequiredMixin,ListView):
-class EmpLeaveListView(ListView):    
+# this function show all leave list to HR or MD
+class AllEmpLeaveListView(ListView):
+    # class EmpLeaveListView(PermissionRequiredMixin,ListView):
     # permission_required = ('employee.can_view_leave_list',)
     # raise_exception = True
     model = Leave
-    template_name = "leave/leave_list.html"
+    template_name = "leave/all_leave_list.html"
     ordering = ['-created_at']
     def get_context_data(self, **kwargs):
-        context = super(EmpLeaveListView, self).get_context_data(**kwargs)
+        context = super(AllEmpLeaveListView, self).get_context_data(**kwargs)
         if self.request.user.groups.exists():
             group_name = self.request.user.groups.first().name
             if group_name == 'HR' or group_name == 'MD':
                 return context
 
+        # usr = User.objects.filter(email=self.request.user.email)
+        # profiles = Profile.objects.filter(teamlead=usr[0])
+        # users =[]
+        # for profile in profiles:
+        #     users.append(profile.user)
+        # context['object_list'] = self.model.objects.filter(user__in=users)
+        # return context
+
+class EmpLeaveListView(ListView):    
+    model = Leave
+    template_name = "leave/leave_list.html"
+    ordering = ['-created_at']
+    def get_context_data(self, **kwargs):
+        context = super(EmpLeaveListView, self).get_context_data(**kwargs)
         usr = User.objects.filter(email=self.request.user.email)
         profiles = Profile.objects.filter(teamlead=usr[0])
         users =[]
@@ -779,8 +795,7 @@ class EmpLeaveListView(ListView):
             users.append(profile.user)
         context['object_list'] = self.model.objects.filter(user__in=users)
         return context
-
-
+        
 def full_leave(request):
     try:
         if request.method == 'POST':

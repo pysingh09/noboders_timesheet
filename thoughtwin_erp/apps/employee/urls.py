@@ -36,7 +36,10 @@ urlpatterns = [
     path('leave/status', LeaveStatusView.as_view(), name='approved_leave' ),
     path('full/leave/status', full_leave_status , name='full-leave-status' ),
     path('leave', RequestLeaveView.as_view(), name='request-full-leave' ),
+
+    path('all/leave/list',AllEmpLeaveListView.as_view(), name = 'all-leave-list'),
     path('leave/list',EmpLeaveListView.as_view(), name = 'leave-list'),
+
     path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
     path('change-password/', change_password, name='change_password'),
     path('forgot-password/', ForgotPassword.as_view(), name='forgot_password'),
