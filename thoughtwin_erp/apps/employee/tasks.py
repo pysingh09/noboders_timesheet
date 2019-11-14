@@ -14,7 +14,7 @@ from django.conf import settings
 logger = get_task_logger(__name__)
 
 # Gets weather data from Darksky API (third-party api)
-@periodic_task(run_every=(crontab(minute=35, hour=20)), name="send_email_reminder", ignore_result=True)
+@periodic_task(run_every=(crontab(minute=0, hour=10)), name="send_email_reminder", ignore_result=True)
 def send_email_reminder():
     send_email_reminder_method()
 
@@ -22,13 +22,9 @@ def send_email_reminder():
 
 def send_email_reminder_method():
 
-    email_data = []
-    for user in User.objects.all():
-        email_data.append(user.email)
-
     objects = Leave.objects.filter(startdate=datetime.now(), status=2)
     if objects != []:
-        count = 0
+
         for obj in objects:
             leavedetail = LeaveDetails.objects.filter(leave=obj).first()
             startdate = obj.startdate.strftime("%b %d, %Y")
@@ -39,12 +35,12 @@ def send_email_reminder_method():
             if obj.leave_type == 3:
                 email_subject = "OOO ||"" "+obj.user.profile.full_name+" "'||'" "+obj.get_leave_type_display()+" "'||'" "+startdate+"-"+enddate
                 content = render_to_string('email/ooo_email_content.html',{'user':obj.user.profile.full_name,'startdate':obj.startdate,'enddate':obj.enddate,'reason':leavedetail.reason})
-        text_content = strip_tags(content)
-        for email in email_data:
+            text_content = strip_tags(content)
+        for user in User.objects.all():
             try:
-                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
+                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [user.email])
                 msg.attach_alternative(content, "text/html")
-                print("send OOO on  " + email)
+                print("send OOO on  " + user.email)
                 msg.send()
             except Exception as e:
                 pass
