@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
+    
     <h3 class="employeehead">Leaves</h3><br>
     <div class="search-container">
 
@@ -73,7 +73,6 @@
       e.preventDefault();
       $(".lds-dual-ring").show();
       
-
       var leave_id = $(this).data("leave-id");
       var leave_status = $(this).data("leave_status");
       var leave_user = $(this).data("leave-user");

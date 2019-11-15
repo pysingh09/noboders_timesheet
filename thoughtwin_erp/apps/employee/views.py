@@ -304,8 +304,7 @@ def file_upload(request):
                 in_time = datetime.strptime(in_time ,'%H:%M')
                 out_time = datetime.strptime(out_time ,'%H:%M')
 
-            
-            
+
             profile = Profile.objects.filter(employee_id=employee_id)
             if profile.exists():
                 profile = Profile.objects.get(employee_id=employee_id)   
