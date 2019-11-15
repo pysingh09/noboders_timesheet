@@ -764,15 +764,19 @@ class AllEmpLeaveListView(ListView):
     # permission_required = ('employee.can_view_leave_list',)
     # raise_exception = True
     model = Leave
+    queryset = Leave.objects.all()
     template_name = "leave/all_leave_list.html"
     ordering = ['-created_at']
     def get_context_data(self, **kwargs):
         context = super(AllEmpLeaveListView, self).get_context_data(**kwargs)
+        context['object_list'] = Leave.objects.filter(status=1)
         if self.request.user.groups.exists():
             group_name = self.request.user.groups.first().name
-            if group_name == 'HR' or group_name == 'MD':
+            if 'leave' in self.request.GET:
+                context['object_list'] = self.queryset.filter(status=2)
                 return context
-
+            else:
+                return context
         # usr = User.objects.filter(email=self.request.user.email)
         # profiles = Profile.objects.filter(teamlead=usr[0])
         # users =[]

@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    
+    <div class="tab">
+      <button><a  href="{% url 'employee:all-leave-list' %}?leave=approved">Approved Leave</a></button>
+      <button><a  href="{% url 'employee:all-leave-list' %}">All Leaves</a></button>
+      <button><a  href="{% url 'employee:leave-list' %}">My Team Leaves</a></button>
+    </div>
     <h3 class="employeehead">Leaves</h3><br>
     <div class="search-container">
 
