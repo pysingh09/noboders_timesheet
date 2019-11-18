@@ -24,7 +24,6 @@ def send_email_reminder_method():
 
     objects = Leave.objects.filter(startdate=datetime.now(), status=2)
     if objects != []:
-
         for obj in objects:
             leavedetail = LeaveDetails.objects.filter(leave=obj).first()
             startdate = obj.startdate.strftime("%b %d, %Y")

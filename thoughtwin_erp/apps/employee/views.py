@@ -291,23 +291,24 @@ def file_upload(request):
             out_time = sheet.cell_value(i+4,sheet.ncols-1) #sheet.cell_value(i+4,3)
             dat = sheet.cell_value(0,7).split('/')
        
-
             # in_time = datetime.strptime(in_time ,'%H:%M')
             # out_time = datetime.strptime(out_time ,'%H:%M')
+
             if in_time =='--:--' and out_time =='--:--':
                 in_time = datetime.strptime('00:00' ,'%H:%M')
                 out_time = datetime.strptime('00:00' ,'%H:%M')
             elif out_time =='--:--':
                 in_time = datetime.strptime(in_time ,'%H:%M')
-                out_time = datetime.strptime('23:59' ,'%H:%M')
+                # out_time = datetime.strptime(in_time ,'%H:%M')
+                out_time=in_time
             else:
                 in_time = datetime.strptime(in_time ,'%H:%M')
                 out_time = datetime.strptime(out_time ,'%H:%M')
 
-
             profile = Profile.objects.filter(employee_id=employee_id)
             if profile.exists():
-                profile = Profile.objects.get(employee_id=employee_id)   
+                profile = Profile.objects.get(employee_id=employee_id)
+
                 emp, created = EmployeeAttendance.objects.update_or_create(
                     user=profile.user,
                     employee_id = profile.employee_id,
@@ -317,11 +318,21 @@ def file_upload(request):
                 emp.empatt_leave_status = 1
                 emp.save()
                 if emp:
-                    detail = EmployeeAttendanceDetail.objects.update_or_create(
-                    employee_attendance=emp,
-                    in_time = in_time,
-                    out_time = out_time,
-                    )
+                    emp_details = EmployeeAttendanceDetail.objects.filter(employee_attendance=emp)
+                    if emp_details.exists():
+                        emp_details[0].delete()
+                        detail = EmployeeAttendanceDetail.objects.update(
+                        employee_attendance=emp,
+                        in_time = in_time,
+                        out_time = out_time,
+                        )
+                    else:
+                        detail = EmployeeAttendanceDetail.objects.update_or_create(
+                        employee_attendance=emp,
+                        in_time = in_time,
+                        out_time = out_time,
+                        )
+
 
         messages.success(request, ' File Successfully Uploaded.')
         return render(request,template)
@@ -736,7 +747,7 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
-        mail_list.append('ashutosh@thoughtwin.com') 
+        # mail_list.append('ashutosh@thoughtwin.com') 
 
         email_data = []
         groups_email = []
@@ -769,7 +780,7 @@ class AllEmpLeaveListView(ListView):
     ordering = ['-created_at']
     def get_context_data(self, **kwargs):
         context = super(AllEmpLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = Leave.objects.filter(status=1)
+        # context['object_list'] = Leave.objects.filter(status=1)
         if self.request.user.groups.exists():
             group_name = self.request.user.groups.first().name
             if 'leave' in self.request.GET:
@@ -784,6 +795,7 @@ class AllEmpLeaveListView(ListView):
         #     users.append(profile.user)
         # context['object_list'] = self.model.objects.filter(user__in=users)
         # return context
+
 
 class EmpLeaveListView(ListView):    
     model = Leave
@@ -902,6 +914,8 @@ def full_leave_status(request):
                     
                     alloted_leave.available_bonus_leave = alloted_available_bonus_leave
                     alloted_leave.save()
+
+
                     # remaining_count = count-available_bonus_leave
                 # else:
             else:
@@ -972,23 +986,23 @@ def full_leave_status(request):
                 pass
         # accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=data_email)
         # accept_email.send()
-
-        if leave.status == '2': 
-            if leave_type == 'Half day':
-                email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate
-                content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'reason':leavedetail.reason  })
-            if leave_type == 'Full day':
-                email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
-                content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
-            text_content = strip_tags(content)
-            # email_data
-            for email in data_email:
-                try:
-                    msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
-                    msg.attach_alternative(content, "text/html")
-                    msg.send()
-                except Exception as e:
-                    pass
+        if leave.status == '2':
+            if leave.startdate == datetime.now().date():
+                if leave_type == 'Half day':
+                    email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate
+                    content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'reason':leavedetail.reason  })
+                if leave_type == 'Full day':
+                    email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
+                    content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
+                text_content = strip_tags(content)
+                # email_data
+                for email in email_data:
+                    try:
+                        msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
+                        msg.attach_alternative(content, "text/html")
+                        msg.send()
+                    except Exception as e:
+                        pass
                  
             # email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)
             # email.send()
