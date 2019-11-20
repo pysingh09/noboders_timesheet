@@ -48,12 +48,17 @@
                     <td>{{ leave.get_leave_type_display }}</td>
                     <td>{{ leave.get_status_display }}</td>
                     <td>
-                    {% if leave.status != 2  %}  
-                    <button type="button btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="2" data-type="{{ leave.get_leave_type_display }}" class="leave btn btn-success ">Approve</button>
-                    {% endif %}  
-                     {% if leave.status != 3  %} 
-                    <button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="3" data-type="{{ leave.get_leave_type_display }}" class="leave btn btn-danger ">Reject</button>
-                    {% endif %} 
+                        {% if leave.status != 2  %}  
+                            <button type="button btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="2" data-type="{{ leave.get_leave_type_display }}" class="leave btn btn-success ">Approve</button>
+                        {% endif %}
+                        {% if leave.status != 3  %} 
+                            <button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="3" data-type="{{ leave.get_leave_type_display }}" class="leave btn btn-danger ">Reject</button>
+                        {% endif %} 
+
+                        {% if  not leave.is_ooo_send and leave.status == 3 %}
+                            <button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_status="{{ leave.status }}"  data-type="{{ leave.get_leave_type_display }}" class="btn btn-danger" id="ooo_leave">send mail</button>
+                        {% endif %} 
+
                     </td>
                     <td><button type="button btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user.id}}" data-leave_status="{{ leave.status }}" data-start_date="{{leave.startdate|date:'Y-m-d'}}" data-end_date="{{leave.enddate|date:'Y-m-d'}}" id="leave" class="dlt-btn  btn btn-danger">Delete</button></td>
                     </td>
@@ -76,9 +81,9 @@
     $(".leave").on('click', function (e) {
       e.preventDefault();
       $(".lds-dual-ring").show();
-      
       var leave_id = $(this).data("leave-id");
       var leave_status = $(this).data("leave_status");
+      var send_ooo = $(this).data("send_ooo");
       var leave_user = $(this).data("leave-user");
       var leave_type = $(this).data("type");
       $.ajax({
@@ -88,6 +93,7 @@
           'leave_id': leave_id,
           'leave_status':leave_status,
           'leave_user':leave_user,
+          // 'send_ooo':send_ooo,
           'leave_type':leave_type,
           'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
@@ -110,6 +116,48 @@
       });
 
     });
+
+
+    $(".lds-dual-ring").hide();
+    $("#ooo_leave").on('click', function (e) {
+      e.preventDefault();
+      $(".lds-dual-ring").show();
+      var leave_id = $(this).data("leave-id");
+      var leave_status = $(this).data("leave_status");
+      // var send_ooo = $(this).data("send_ooo");
+      var leave_user = $(this).data("leave-user");
+      var leave_type = $(this).data("type");
+      $.ajax({
+        url: "{% url 'employee:send-ooo-on-reject' %}",
+        type: "POST",
+        data: {
+          'leave_id': leave_id,
+          'leave_user':leave_user,
+          'leave_status':leave_status,
+          'leave_type':leave_type,
+          'csrfmiddlewaretoken': '{{ csrf_token }}',
+        },
+      success: function(response) {
+           if(response.status=="success"){
+              if(leave_status == 2){
+                alert("Leave Request For "+leave_user+ " Is Accepted" )
+                location.reload();
+                }
+              else{
+                alert("Are You Sure "+leave_user+ " Is Not Available")
+                location.reload();
+                }
+              $(".lds-dual-ring").hide();
+              }
+
+           
+            }
+      });
+
+    });
+
+
+ 
   $(document).ready(function(){
       $(document).on('click', '.dlt-btn', function(e){
         e.preventDefault();

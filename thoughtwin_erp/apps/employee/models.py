@@ -179,7 +179,7 @@ class EmployeeAttendanceDetail(models.Model):
         dateTimeOut = datetime.datetime.combine(datetime.date.today(), self.out_time)
         dateTimeDifference = dateTimeOut - dateTimeIn
         return dateTimeDifference
-    
+
 class Leave(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fullday_leave_user')
     startdate = models.DateField(verbose_name=_('Start Date'))
@@ -188,6 +188,7 @@ class Leave(BaseModel):
     endtime = models.TimeField(null=True,blank=True, verbose_name=_('Time Out'))
     leave_type = models.IntegerField(choices=LEAVE_TYPE)
     status = models.IntegerField(choices=LEAVE_STATUS, default=1)
+    is_ooo_send = models.BooleanField(default=False)
  
     def __str__(self):
         return self.user.username

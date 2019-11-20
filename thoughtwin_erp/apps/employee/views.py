@@ -747,7 +747,7 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
-        mail_list.append('ashutosh@thoughtwin.com') 
+        # mail_list.append('ashutosh@thoughtwin.com')
 
         email_data = []
         groups_email = []
@@ -810,7 +810,19 @@ class EmpLeaveListView(ListView):
             users.append(profile.user)
         context['object_list'] = self.model.objects.filter(user__in=users)
         return context
-        
+
+
+class MyLiveListView(ListView):
+    model = Leave
+    queryset = Leave.objects.all()
+    template_name = "leave/my_leave_list.html"
+    def get_context_data(self, **kwargs):
+        context = super(MyLiveListView, self).get_context_data(**kwargs)
+        usr = self.request.user.id
+        context['object_list'] = self.queryset.filter(user = usr)
+        return context
+
+            
 def full_leave(request):
     try:
         if request.method == 'POST':
@@ -838,10 +850,9 @@ def full_leave_status(request):
         leave_type =request.POST.get("leave_type")
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
-        
         leave_status = False
         if leave.status == 2:
-            leave_status = True    
+            leave_status = True   
         leave.status = request.POST.get("leave_status")
         leave.save()
 
@@ -956,7 +967,7 @@ def full_leave_status(request):
         approve_fullname.append(request.user.last_name)
         approve_user_fullname = approve_fullname[0]+" "+approve_fullname[1]
         startdate = startdate.strftime("%b %d, %Y")
-        enddate = enddate.strftime("%b %d, %Y")       
+        enddate = enddate.strftime("%b %d, %Y") 
         if leave.status == '2':
             if leave_type == 'Half day':
                 email_subject = "Leave Approved " "||"" " +user+  " "'|| Half Day'" "'||' " "+startdate
@@ -976,7 +987,7 @@ def full_leave_status(request):
         # msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
         # msg.attach_alternative(content, "text/html")
         # msg.send()
-        text_content = strip_tags(content)
+            text_content = strip_tags(content)
         for email in data_email:
             try:
                 msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
@@ -986,24 +997,27 @@ def full_leave_status(request):
                 pass
         # accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=data_email)
         # accept_email.send()
-        if leave.status == '2':
+        if leave.status == '2' and leave.is_ooo_send == False:
             if leave.startdate == datetime.now().date():
-                if leave_type == 'Half day':
+                if leave_type == 2:
                     email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate
                     content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'reason':leavedetail.reason  })
-                if leave_type == 'Full day':
+                if leave_type == 3:
                     email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
                     content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
-                text_content = strip_tags(content)
                 # email_data
+                text_content = strip_tags(content)
                 for email in email_data:
                     try:
                         msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
                         msg.attach_alternative(content, "text/html")
                         msg.send()
+                        leave.is_ooo_send = True
+                        leave.save()
                     except Exception as e:
                         pass
-                 
+
+        
             # email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)
             # email.send()
         # if leave.status == '3':
@@ -1011,6 +1025,37 @@ def full_leave_status(request):
         #     email.send()                
     return JsonResponse({'status': 'success'})
 
+
+def send_ooo_on_reject(request):
+    if request.method == 'POST':
+        leave_id =request.POST.get("leave_id")
+        leave_user =request.POST.get("leave_user")
+        leave_type =request.POST.get("leave_type")
+        leave = Leave.objects.get(id=request.POST.get("leave_id"))
+        get_leave_obj = Leave.objects.get(id=leave_id)
+        startdate = leave.startdate.strftime("%b %d, %Y")
+        enddate = leave.enddate.strftime("%b %d, %Y")
+        leavedetail = LeaveDetails.objects.filter(leave=get_leave_obj)
+        for mail in leavedetail:
+            if mail.status == 3 and leave.is_ooo_send == False:
+                if leave.leave_type == 2:
+                    email_subject = "OOO ||"" "+leave.user.profile.full_name+" "'||'" "+leave.get_leave_type_display()+" "'||'" "+startdate
+                    content = render_to_string('email/ooo_email_content.html',{'user':leave.user,'startdate':startdate,'reason':mail.reason  })
+                if leave.leave_type == 3:
+                    email_subject = "OOO ||"" "+leave.user.profile.full_name+" "'||'" "+leave.get_leave_type_display()+" "'||'" "+startdate+"-"+enddate
+                    content = render_to_string('email/ooo_email_content.html',{'user':leave.user,'startdate':startdate,'enddate':enddate,'reason':mail.reason  })
+                # email_data
+                text_content = strip_tags(content)
+                for user in User.objects.all():
+                    try:
+                        msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [user.email])
+                        msg.attach_alternative(content, "text/html")
+                        msg.send()
+                        leave.is_ooo_send = True
+                        leave.save()
+                    except Exception as e:
+                        pass
+    return JsonResponse({'status': 'success'})
 
 class FullLeaveListView(PermissionRequiredMixin,ListView):
 
