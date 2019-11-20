@@ -16,6 +16,7 @@
         <p>Contact :{{ employee.profile.contact_no }}</p>
         <p>DOB :{{ employee.profile.date_of_birth }}</p>
         <p>DOJ :{{ employee.profile.date_of_joining}}</p>
+
         
 
     <p>Total Yearly : {% if total_yearly %} {{ total_yearly }} {% else %} 0  {% endif %}</p>
@@ -23,5 +24,52 @@
     <p>Total Paid Leave : {% if get_taken_leave.leave__sum %} {{ get_taken_leave.leave__sum }}{% else %} 0  {% endif %}</p>
     <p>Total UnPaid Leave : {% if get_taken_unpaid_leave.leave__sum %} {{ get_taken_unpaid_leave.leave__sum }}{% else %}  0 {% endif %}</p>
     
+
+    
+    <div class="search-container">
+
+    <div class="card">
+      <div class="table-responsive">
+        <div class="lds-dual-ring"></div>
+     <table class = "table table-striped" id="myTable1">
+        <thead>
+          <tr>
+            <th>Sno.</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>reason</th>
+          </tr>
+        </thead>
+            <tbody>
+                {% for leave in leave_list %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>   
+                    <td>{{ leave.startdate|date:'D,d M Y' }}</td>
+                    <td>{{ leave.enddate|date:'D,d M Y' }}</td>
+                    {% if leave.starttime %}
+                      <td>{{ leave.starttime }}</td>
+                    {% else %}
+                      <td>11.00 a.m.</td>
+                    {% endif %}
+                    {% if leave.endtime %}
+                    <td>{{ leave.endtime }}</td>
+                    {% else %}
+                      <td>8.00 p.m.</td>
+                    {% endif %}
+                    
+                    <td>{{ leave.get_leave_type_display }}</td>
+                    <td>{{ leave.get_status_display }}</td>
+                    <td>{{ leave.leavedetails.first.reason }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+      </table>
+    </div>
+    </div>
+    </div>
 </div>
 {% endblock %}

@@ -178,6 +178,8 @@ class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
             get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
 
+            leave_list = Leave.objects.filter(user=user)
+
             available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
             available_leave = (datetime.now().month - alloted_leave.month) + 1
             leave_sum = 0
@@ -186,7 +188,9 @@ class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
             total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
             remaning_leave = total_available_leave
-            return render(request,'employee_profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
+
+
+            return render(request,'employee_profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave,'leave_list':leave_list})    
         else:
             return render(request,'employee_profile.html',{'employee' : user})
     
@@ -747,7 +751,7 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
-        # mail_list.append('ashutosh@thoughtwin.com')
+        mail_list.append('ashutosh@thoughtwin.com')
 
         email_data = []
         groups_email = []
