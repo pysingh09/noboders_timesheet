@@ -991,7 +991,7 @@ def full_leave_status(request):
         # msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, data_email)
         # msg.attach_alternative(content, "text/html")
         # msg.send()
-            text_content = strip_tags(content)
+        text_content = strip_tags(content)
         for email in data_email:
             try:
                 msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
@@ -1003,17 +1003,17 @@ def full_leave_status(request):
         # accept_email.send()
         if leave.status == '2' and leave.is_ooo_send == False:
             if leave.startdate == datetime.now().date():
-                if leave_type == 2:
+                if leave_type == 'Half day':
                     email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate
                     content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'reason':leavedetail.reason  })
-                if leave_type == 3:
+                if leave_type == 'Full day':
                     email_subject = "OOO ||"" "+user+" "'||'" "+leave_type+" "'||'" "+startdate+"-"+enddate
                     content = render_to_string('email/ooo_email_content.html',{'user':user,'startdate':startdate,'enddate':enddate,'reason':leavedetail.reason  })
                 # email_data
                 text_content = strip_tags(content)
                 for email in email_data:
                     try:
-                        msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
+                        msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL,[email])
                         msg.attach_alternative(content, "text/html")
                         msg.send()
                         leave.is_ooo_send = True

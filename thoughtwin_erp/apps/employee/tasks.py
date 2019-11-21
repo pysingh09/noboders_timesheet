@@ -21,7 +21,6 @@ def send_email_reminder():
 # @periodic_task(run_every=timedelta(seconds=2), name="get_weather_data_for_store_task", ignore_result=True)
 
 def send_email_reminder_method():
-
     objects = Leave.objects.filter(startdate=datetime.now(), status=2)
     if objects != []:
         for obj in objects:
