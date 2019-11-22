@@ -12,11 +12,13 @@
         <thead>
           <tr>
             <th>Sno.</th>
+            <th>Request Date</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Start Time</th>
             <th>End Time</th>
             <th>Type</th>
+            <th>Selected Leave</th>
             <th>Status</th>
             <th>reason</th>
           </tr>
@@ -24,7 +26,8 @@
             <tbody>
                 {% for leave in object_list %}
                   <tr>
-                    <td>{{ forloop.counter }}</td>   
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{leave.created_at|date:'D,d M Y'}}</td>   
                     <td>{{ leave.startdate|date:'D,d M Y' }}</td>
                     <td>{{ leave.enddate|date:'D,d M Y' }}</td>
                     {% if leave.starttime %}
@@ -39,6 +42,7 @@
                     {% endif %}
                     
                     <td>{{ leave.get_leave_type_display }}</td>
+                    <td>{{ leave.get_select_leave_display }}</td>
                     <td>{{ leave.get_status_display }}</td>
                     <td>{{ leave.leavedetails.first.reason }}</td>
                 </tr>

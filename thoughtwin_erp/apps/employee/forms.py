@@ -134,6 +134,7 @@ for x in range(1,24):
     HOUR_CHOICES.append((x+':30',y+':30 '+fmt))
 
 class LeaveCreateForm(forms.ModelForm):
+    select_leave = forms.ChoiceField(choices=[('', '----'),(1, 'Casual Leave'),(2, 'Urgent Leave'),])
     leave_type = forms.ChoiceField(choices=[('', '----'),(2, 'Half Day'),(3, 'Full Day'),])
     reason = forms.CharField(required=True,widget=forms.Textarea(attrs={'rows':4}))
     starttime = forms.ChoiceField(required=False,choices=HOUR_CHOICES)

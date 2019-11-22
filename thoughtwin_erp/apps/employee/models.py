@@ -29,6 +29,11 @@ MONTH_CHOICES = (
 
     )
 
+SELECT_LEAVE = (
+    (1, 'Casual Leave'),
+    (2, 'Urgent Leave'),
+    )
+
 LEAVE_STATUS = (
     (1, 'Pending'),
     (2, 'Accepted'),
@@ -189,7 +194,7 @@ class Leave(BaseModel):
     leave_type = models.IntegerField(choices=LEAVE_TYPE)
     status = models.IntegerField(choices=LEAVE_STATUS, default=1)
     is_ooo_send = models.BooleanField(default=False)
- 
+    select_leave = models.IntegerField(choices=SELECT_LEAVE,default=1)
     def __str__(self):
         return self.user.username
 

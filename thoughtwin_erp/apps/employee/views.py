@@ -623,7 +623,8 @@ class RequestLeaveView(CreateView):
             leave = form.save(commit=False)
             leave_date = form.data['startdate'].split('-')
             year = int(leave_date[0])
-            # alloated_leave = AllottedLeave.objects.get(user = self.request.user)
+            import pdb; pdb.set_trace()
+            alloated_leave = AllottedLeave.objects.get(user = self.request.user)
             # leave_year =  alloated_leave.year
         
             # if year == datetime.datetime.now().year:
@@ -662,14 +663,16 @@ class RequestLeaveView(CreateView):
                 if leave_type == '3':
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
             leave.leave_type = form.data['leave_type']
+            leave.select_leave = form.data['select_leave']
             leave.user = self.request.user
             if Leave.objects.filter(startdate=startdate1,user=self.request.profile.user).exists():
                 messages.error(self.request, "Already sent request")
                 return HttpResponseRedirect('/leave') 
             else:
+
                 leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
-            # for MD , HR and teamlead   
+            # for MD , HR and teamlead
             mail_list = []
             default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
             for usr in default_mail_list:
@@ -718,7 +721,7 @@ class RequestLeaveView(CreateView):
                     msg.send()        
                 except Exception as e:
                     pass
-            messages.success(self.request, ' Leave Request Sent Successfully')
+            messages.success(self.request, 'Leave Request Sent Successfully')
 
             # 'mail_list':mail_list - get mail list
             # return render(self.request,'request_leave.html', {'accept_emails' : mail_lists})
@@ -908,6 +911,9 @@ def full_leave_status(request):
 
         if int(leave.status) == 2:
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first()
+            # if alloted_leave == None:
+                # messages.error(request, 'You Not Alloted Any leave To This User') 
+            # return HttpResponseRedirect('/all/leave/list') 
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
             gettaken = 0
             if get_taken_leave['leave__sum']:
@@ -921,7 +927,7 @@ def full_leave_status(request):
             if total_available_leave >= count:
                 monthly_take_leave = MonthlyTakeLeave.objects.create(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1,leave = count)
                 
-                if available_bonus_leave > 0 :
+                if available_bonus_leave > 0:
                     if available_bonus_leave >= count:
                         alloted_available_bonus_leave = alloted_leave.available_bonus_leave + count
                     else:
