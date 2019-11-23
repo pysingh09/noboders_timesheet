@@ -14,7 +14,7 @@ from django.conf import settings
 logger = get_task_logger(__name__)
 
 # Gets weather data from Darksky API (third-party api)
-@periodic_task(run_every=(crontab(minute=5, hour=14)), name="send_email_reminder", ignore_result=True)
+@periodic_task(run_every=(crontab(minute=10, hour=14)), name="send_email_reminder", ignore_result=True)
 def send_email_reminder():
     print('aaaaaaaa')
     send_email_reminder_method()
