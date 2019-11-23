@@ -128,7 +128,7 @@
       var leave_user = $(this).data("leave-user");
       var leave_type = $(this).data("type");
       $.ajax({
-        url: "{% url 'employee:send-ooo-on-reject' %}",
+        url: "{% url "employee:send-ooo-on-reject" %}",
         type: "POST",
         data: {
           'leave_id': leave_id,

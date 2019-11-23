@@ -1006,6 +1006,7 @@ def full_leave_status(request):
                 pass
         # accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=data_email)
         # accept_email.send()
+        
         if leave.status == '2' and leave.is_ooo_send == False:
             if leave.startdate == datetime.now().date():
                 if leave_type == 'Half day':

@@ -14,15 +14,18 @@ from django.conf import settings
 logger = get_task_logger(__name__)
 
 # Gets weather data from Darksky API (third-party api)
-@periodic_task(run_every=(crontab(minute=0, hour=10)), name="send_email_reminder", ignore_result=True)
+@periodic_task(run_every=(crontab(minute=5, hour=14)), name="send_email_reminder", ignore_result=True)
 def send_email_reminder():
+    print('aaaaaaaa')
     send_email_reminder_method()
 
 # @periodic_task(run_every=timedelta(seconds=2), name="get_weather_data_for_store_task", ignore_result=True)
 
 def send_email_reminder_method():
     objects = Leave.objects.filter(startdate=datetime.now(), status=2)
+    print('bbbbbbbbb')
     if objects != []:
+        print('cccccccccccc')
         for obj in objects:
             if obj.is_ooo_send == False:
                 leavedetail = LeaveDetails.objects.filter(leave=obj).first()
