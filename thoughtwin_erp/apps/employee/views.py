@@ -1134,7 +1134,8 @@ class ForgotPassword(View):
                 messages.success(self.request, 'Check Your Password In Mail') 
                 return HttpResponseRedirect('/login/')
         except Exception as e:
-                raise
+                messages.error(request, 'Today Mail Sending Limit Exceeded Try After 24 Hours')
+                return HttpResponseRedirect('/forgot-password/')
 
 # class ShowLeaveListView(ListView):
 #     # permission_required = ('employee.can_view_employee_attendance_list',)
