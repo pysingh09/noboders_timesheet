@@ -5,6 +5,7 @@ from celery.decorators import periodic_task
 from celery.task import periodic_task
 from celery.utils.log import get_task_logger
 from datetime import timedelta, datetime
+import time
 from employee.models import Leave, User, LeaveDetails
 from django.core.mail import EmailMessage,send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -14,7 +15,7 @@ from django.conf import settings
 logger = get_task_logger(__name__)
 
 # Gets weather data from Darksky API (third-party api)
-@periodic_task(run_every=(crontab(minute=30, hour=14)), name="send_email_reminder", ignore_result=True)
+@periodic_task(run_every=(crontab(minute=0, hour=10)), name="send_email_reminder", ignore_result=True)
 def send_email_reminder():
     print('aaaaaaaa')
     send_email_reminder_method()
@@ -23,9 +24,8 @@ def send_email_reminder():
 
 def send_email_reminder_method():
     objects = Leave.objects.filter(startdate=datetime.now(), status=2)
-    print('bbbbbbbbb')
+
     if objects != []:
-        print('cccccccccccc')
         for obj in objects:
             if obj.is_ooo_send == False:
                 leavedetail = LeaveDetails.objects.filter(leave=obj).first()
@@ -44,7 +44,8 @@ def send_email_reminder_method():
                     msg.attach_alternative(content, "text/html")
                     print("send OOO on  " + user.email)
                     msg.send()
-                    objects.is_ooo_send = True
-                    objects.save()
+                    time.sleep(10)
+                    obj.is_ooo_send = True
+                    obj.save()
                 except Exception as e:
                     pass

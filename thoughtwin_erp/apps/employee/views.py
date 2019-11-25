@@ -1006,7 +1006,7 @@ def full_leave_status(request):
                 pass
         # accept_email = EmailMessage("Leave Response",message,settings.FROM_EMAIL,to=data_email)
         # accept_email.send()
-        
+
         if leave.status == '2' and leave.is_ooo_send == False:
             if leave.startdate == datetime.now().date():
                 if leave_type == 'Half day':
@@ -1026,13 +1026,7 @@ def full_leave_status(request):
                         leave.save()
                     except Exception as e:
                         pass
-
-        
-            # email = EmailMessage("Leave ",text_content,settings.FROM_EMAIL,to=email_data)
-            # email.send()
-        # if leave.status == '3':
-        #     email = EmailMessage("Leave",text_content,settings.FROM_EMAIL,to=aaccept_email_data)
-        #     email.send()                
+              
     return JsonResponse({'status': 'success'})
 
 
