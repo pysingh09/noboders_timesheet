@@ -623,7 +623,6 @@ class RequestLeaveView(CreateView):
             leave = form.save(commit=False)
             leave_date = form.data['startdate'].split('-')
             year = int(leave_date[0])
-            import pdb; pdb.set_trace()
             alloated_leave = AllottedLeave.objects.get(user = self.request.user)
             # leave_year =  alloated_leave.year
         
