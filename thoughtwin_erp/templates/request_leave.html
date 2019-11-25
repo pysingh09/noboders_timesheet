@@ -30,8 +30,6 @@
     </ul>
 {% endif %}
 
-
-
     <h2 class="employeehead">Leave</h2>
         {% if form.errors %}
             {% for field in form %}
@@ -205,6 +203,8 @@
 
         });
  $(document).on('change', '#id_select_leave', function(){ 
+            $( "#id_startdate" ).datepicker('setDate', null);
+            $( "#id_enddate" ).datepicker('setDate', null);
             var leave = $(this).val()
                 if(leave==='1'){
 
