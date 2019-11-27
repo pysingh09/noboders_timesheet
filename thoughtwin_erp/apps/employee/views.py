@@ -26,6 +26,7 @@ from django.utils.html import strip_tags
 from django.utils.dateparse import parse_date
 from django.urls import reverse, reverse_lazy
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 # permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.template import loader
@@ -379,7 +380,6 @@ def show_hour_calender(request):
     #     if not att.date in names:
     #         names.add(att.date)
     #         result.append(att)
-
     return render(request,'fullcalendar.html', {'attendances_data' : attendances_data})
 
 def show_calendar(request,id):
@@ -621,9 +621,13 @@ class RequestLeaveView(CreateView):
             leave = form.save(commit=False)
             leave_date = form.data['startdate'].split('-')
             year = int(leave_date[0])
-            alloated_leave = AllottedLeave.objects.get(user = self.request.user)
+            try:
+                alloated_leave = AllottedLeave.objects.get(user = self.request.user)
+            except ObjectDoesNotExist:
+                messages.error(self.request, 'You Have Not Allotted Any Leave') 
+                return HttpResponseRedirect('/leave')
+                
             # leave_year =  alloated_leave.year
-        
             # if year == datetime.datetime.now().year:
             if 'starttime' in form.data:
                 starttime = form.data['starttime']
