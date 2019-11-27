@@ -9,12 +9,33 @@
   <tbody class="my-popup">
 
     {% for emp_att in employee_attendence.employee_attendance.all %}
-      
     <tr>
-        <td data-toggle="modal" data-target="#myModal"><p>{{ emp_att.in_time }}</p></td>
-        <td><p>{{ emp_att.out_time }}</p></td>
-        <td>{{ emp_att.date_time_diffrence }}</td>
+        <td style="text-align: center;"data-toggle="modal" data-target="#myModal"><p>
+          {% if emp_att.in_time|time:"H:i" == '00:00' %}--:--{% else %}{{ emp_att.in_time }}{% endif %}</p>
+        </td>
+        <td style="text-align: center;">
+            <p>{% if  emp_att.in_time|time:"H:i" == '00:00' %}
+                    --:--
+                {% elif emp_att.in_time == emp_att.out_time %}
+                    Punch Out Missing
+                {% else %}
+                    {{ emp_att.out_time }}
+                {% endif %}
+            </p>
+        </td>
+        <td style="text-align: center;">{% if emp_att.in_time == emp_att.out_time %}--:--{% else %}{{ emp_att.date_time_diffrence }}{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+
+    
+
+
+
+    <!--<tr>
+        <td data-toggle="modal" data-target="#myModal"><p>{{ emp_att.in_time }}</p></td>
+        <td><p>{{ emp_att.out_time }}</p></td>
+        <td>{{ emp_att.date_time_diffrence }}</td>
+    </tr>-->

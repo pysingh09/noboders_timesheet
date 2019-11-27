@@ -297,7 +297,6 @@ def file_upload(request):
        
             # in_time = datetime.strptime(in_time ,'%H:%M')
             # out_time = datetime.strptime(out_time ,'%H:%M')
-
             if in_time =='--:--' and out_time =='--:--':
                 in_time = datetime.strptime('00:00' ,'%H:%M')
                 out_time = datetime.strptime('00:00' ,'%H:%M')
@@ -312,7 +311,6 @@ def file_upload(request):
             profile = Profile.objects.filter(employee_id=employee_id)
             if profile.exists():
                 profile = Profile.objects.get(employee_id=employee_id)
-
                 emp, created = EmployeeAttendance.objects.update_or_create(
                     user=profile.user,
                     employee_id = profile.employee_id,
@@ -325,13 +323,13 @@ def file_upload(request):
                     emp_details = EmployeeAttendanceDetail.objects.filter(employee_attendance=emp)
                     if emp_details.exists():
                         emp_details[0].delete()
-                        detail = EmployeeAttendanceDetail.objects.update(
+                        detail = EmployeeAttendanceDetail.objects.update_or_create(
                         employee_attendance=emp,
                         in_time = in_time,
                         out_time = out_time,
                         )
                     else:
-                        detail = EmployeeAttendanceDetail.objects.update_or_create(
+                        detail = EmployeeAttendanceDetail.objects.create(
                         employee_attendance=emp,
                         in_time = in_time,
                         out_time = out_time,
@@ -671,6 +669,7 @@ class RequestLeaveView(CreateView):
 
                 leave.save()
             leaveDetail = LeaveDetails.objects.create(leave=leave,reason=form.data['reason'],created_by=self.request.user)
+
             # for MD , HR and teamlead
             mail_list = []
             default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
@@ -692,7 +691,6 @@ class RequestLeaveView(CreateView):
             request_list = User.objects.filter(groups__name__in=['MD','HR'])
             for usr in request_list:
                 # emails.append(usr.email)
-
                 request_send_list.append(usr.first_name +" "+ usr.last_name)            
             request_send_list.append( self.request.user.profile.teamlead.first_name+" "+self.request.user.profile.teamlead.last_name)
             request_send_list = set(request_send_list)
@@ -824,8 +822,14 @@ class MyLiveListView(ListView):
     template_name = "leave/my_leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(MyLiveListView, self).get_context_data(**kwargs)
+        count=0
         usr = self.request.user.id
         context['object_list'] = self.queryset.filter(user = usr)
+        select_leaves = self.queryset.filter(user = usr)
+        # for leave in select_leaves:
+        #     if leave.select_leave == 2:
+        #         count+=1
+        # print(count)
         return context
 
             
