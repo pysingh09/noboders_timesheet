@@ -1,5 +1,12 @@
 $(document).ready(function(){
-  $('#myTable1').DataTable({
+  var table = $('#myTable1').DataTable({
+    stateSave: true,
+    stateSaveCallback: function(settings,data) {
+      localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
+    },
+  stateLoadCallback: function(settings) {
+    return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
+    }
   });
 });
     
@@ -28,8 +35,15 @@ $(document).ready(function() {
  
     var table = $('#myTable2').DataTable( {
         orderCellsTop: true,
-        ixedHeader: true
-    } );
+        ixedHeader: true,
+         stateSave: true,
+        stateSaveCallback: function(settings,data) {
+          localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
+        },
+        stateLoadCallback: function(settings) {
+        return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
+        }
+    });
 } );
  
 $(document).ready(function(){

@@ -121,7 +121,6 @@ class EmployeeAttendance(BaseModel):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True , related_name='attendance_created_by')
     leave_day_time = models.FloatField(default=0)
  
-
     class Meta:
         unique_together = ('user', 'date',)
 
@@ -133,7 +132,9 @@ class EmployeeAttendance(BaseModel):
     def __str__(self):
         return str(self.employee_id)
 
-
+    def urgent_leave_count(self):
+        return self.user.fullday_leave_user.filter(select_leave=2).count()
+        
     def date_time_diffrence(self):
         dateTimeDifference = datetime.timedelta(0, 0)
         for emp_detail in self.employee_attendance.all():

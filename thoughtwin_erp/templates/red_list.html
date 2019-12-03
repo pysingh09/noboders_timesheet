@@ -77,7 +77,6 @@
     <div class="table-responsive">
         <table class = "table" id="myTable1">
           <thead>
-            
             <tr>
               <th>Sno.</th>
               <th>Date</th>
@@ -142,43 +141,47 @@
     <script>
       function checkrow() {
         var leaveRequestArr =[];
-         if (!$("input:checkbox").is(":checked"))  {
+
+        if (!$("input:checkbox").is(":checked")){
             
                 alert("Please tick checkbox if you want to send leave request");
                 location.reload();
                 return false;
-                }
-                 
-                  else($(document)).on("click","#checkrow",function(e){
-                     
-                      e.preventDefault();
-                      var emails = Array.from( new Set(email)) 
-                      $(".chkboxs:checked").each(function () {
-                        leaveRequestArr.push($(this).val());
+            }
 
-                           });
-                         $.ajax({
-                         'url': '/request/leave/',
-                         'type': "POST",
-                         'dataType': 'json',
-                         'data': {
-                             'leaveRequestArr': leaveRequestArr,
-                             'emails[]': emails ,
-                             'csrfmiddlewaretoken': '{{ csrf_token }}',
-                         },
-                         success: function(response) {
-                            if(response.status=="success"){
-                                alert("Request leave successfull")
-                                location.reload();
-                                }
+        
+        else($(document)).on("click","#checkrow",function(e){    
+          e.preventDefault();
+          var emails = Array.from( new Set(email))
 
-                            }                    
-                                                           
-                           
-                        });
+          $(".chkboxs:checked").each(function () {
+            leaveRequestArr.push($(this).val());
+            });
+             $.ajax({
+             'url': "{% url "employee:request_leave" %}",
+             'type': "POST",
+             'dataType': 'json',
+             'data': {
+                 'leaveRequestArr': leaveRequestArr,
+                 'emails[]': emails ,
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+             },
+             success: function(response) {
+                if(response.status=="success"){
+                    alert("Request leave successfull")
+                    location.reload();
+                    }
+                if(response.status=="error"){
+                    alert("Request Sent but email not sent due to Limit is exceeded.")
+                    location.reload();
+                    }            
 
-                      }) 
-              } 
+                }                    
+                                                 
+            });
+
+        }) 
+    } 
        
 
          var email = [] ;
@@ -212,30 +215,21 @@
               add_email();
             });
 
-          $(document).ready(function() {
-            $('#checkrow').hide();
-              $('.chkboxs').mouseup(function() {
-                  $('input[type="checkbox"]').click(function(){
-                  if($('input[type="checkbox"]:checked').length > 0)
-                    $('#checkrow').show();
-                  else
-                    $('#checkrow').hide();
-
-              });
-          });
+            $(document).on('change', ".chkboxs", function(){
+              if($('input[type="checkbox"]:checked').length > 0){
+                $('#checkrow').show();
+                $('#email-button').show();
+                }
+              else{
+                $('#checkrow').hide();
+                $('#email-button').hide();
+                }
+            });
+        $(document).ready(function() {
+            
         });
-         $(document).ready(function() {
-            $('#email-button').hide();
-              $('.chkboxs').mouseup(function() {
-                  $('input[type="checkbox"]').click(function(){
-                  if($('input[type="checkbox"]:checked').length > 0)
-                    $('#email-button').show();
-                  else
-                    $('#email-button').hide();
-
-              });
-          });
-        });
+        $('#checkrow').hide();
+        $('#email-button').hide();
 
         /* When the user clicks on the button,
         toggle between hiding and showing the dropdown content */

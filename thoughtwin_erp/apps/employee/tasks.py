@@ -15,6 +15,8 @@ from django.conf import settings
 logger = get_task_logger(__name__)
 
 # Gets weather data from Darksky API (third-party api)
+
+# Run (send_email_reminder_method) when get all approved_leaves of particular date on 10 am.  
 @periodic_task(run_every=(crontab(minute=0, hour=10)), name="send_email_reminder", ignore_result=True)
 def send_email_reminder():
     send_email_reminder_method()

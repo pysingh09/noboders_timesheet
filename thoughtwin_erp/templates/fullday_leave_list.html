@@ -69,9 +69,11 @@
                 alert("Leave Request For "+leave_user+ " Is Rejected")
                 location.reload();
                   }
-                
               }
-
+            else if(response.status=="error"){
+                    alert("Your Response Sent to "+leave_user+" but email not sent due to Limit is exceeded.")
+                    location.reload();
+                    }    
             }
       });
 

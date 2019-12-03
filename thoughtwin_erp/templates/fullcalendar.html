@@ -25,6 +25,7 @@
   </ul>
 </div>
 <!-- Modal -->
+
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
     
@@ -69,53 +70,66 @@ $(document).ready(function() {
             events: 
             [
 
-              {% for attendance in attendances_data %}
-                {
-                'title':"{{ attendance.date_time_diffrence }} {% if attendance.empatt_leave_status == 5 %} Absent {% elif attendance.empatt_leave_status == 6 %} Leave {% elif attendance.empatt_leave_status == 7 %} NA {% endif %}",
-                'date':"{{ attendance.date}}",
-                'test':"{{ attendance.empatt_leave_status }}",
-                'id':"{{ attendance.id }}",
-               }
-                {% if not forloop.last %},{% endif %}
+                {% for attendance in attendances_data %}
+                    {
+                    'title':"{{ attendance.date_time_diffrence }} {% if attendance.empatt_leave_status == 5 %} Absent {% elif attendance.empatt_leave_status == 6 %} Leave {% elif attendance.empatt_leave_status == 7 %} NA {% endif %}",
+                    'date':"{{ attendance.date}}",
+                    'test':"{{ attendance.empatt_leave_status }}",
+                    'id':"{{ attendance.id }}",
+                    // 'urgent_leave':"{{attendance.urgent_leave_count}}",
+                   }
+                    {% if not forloop.last %},{% endif %}
                 {% endfor %}
             ],
-                  eventRender: function (event, element, view) {
-                       var test = event.test;
-                       var title = event.title.split(":");
-                       var total_hour = parseFloat(title[0]);
-                       var calculation = parseFloat("9:00");
-                       var id = event.id;
-                       console.log(test + " __" + title +" __" + total_hour +" : " +id);
-                       if (test==5) {
+            eventRender: function (event, element, view) {
+                var test = event.test;
+                var title = event.title.split(":");
+                var total_hour = parseFloat(title[0]);
+                var calculation = parseFloat("9:00");
+                var id = event.id;
 
-                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#5d5d5d').append().attr("id",id).attr("class","demo");
-                            }
-                        if (test==6) {
-                           
-                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff6e00').append().attr("id",id).attr("class","demo");
-                            }
-                        if (test==7) {
-                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","demo");
-                            }        
+                console.log(test + " __" + title +" __" + total_hour +" : " +id);
+                // var urgent_leave_count = event.urgent_leave;
+                // var count = 0;
 
-                       else if (total_hour >=calculation || test==3) {
-                           
-                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
-                            }
-                          
-                       else {
-                          var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
-                            }  
-                   }
+                // if (test==6){
+                //     for (i = 0; i < urgent_leave_count; i++){
+                //         if(count<4){
+                //             var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                //             view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff6e00').append().attr("id",id).attr("class","demo");
+                //         }else{
+                //             var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                //             $('#' + id).css("background-color","#ff6666");
+                //         }
+                //         count+=1
+                //     }
+                // }
+                
+                if (test==5) {
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
 
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#5d5d5d').append().attr("id",id).attr("class","demo");
+                }
+
+                if (test==6){
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff6e00').append().attr("id",id).attr("class","demo");
+                }
+                if (test==7) {
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","demo");
+                }
+                else if (total_hour >=calculation || test==3) {
+
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
+                }else {
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
+                }
+            }
          
-           });
+        });
     });
 
 
