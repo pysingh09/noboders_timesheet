@@ -290,14 +290,13 @@ def file_upload(request):
         wb = xlrd.open_workbook(file_url)
         sheet = wb.sheet_by_index(0) 
 
-        for i in range(sheet.nrows-4):
+        for i in range(sheet.nrows-3):
             if i == sheet.nrows-1: # row-1 
                 break
-            name = sheet.cell_value(i+4,1)
-            
-            employee_id = sheet.cell_value(i+4,0)
-            in_time = sheet.cell_value(i+4,3)    
-            out_time = sheet.cell_value(i+4,sheet.ncols-1) #sheet.cell_value(i+4,3)
+            name = sheet.cell_value(i+3,1)
+            employee_id = sheet.cell_value(i+3,0)
+            in_time = sheet.cell_value(i+3,3)    
+            out_time = sheet.cell_value(i+3,sheet.ncols-1) #sheet.cell_value(i+4,3)
             dat = sheet.cell_value(0,7).split('/')
        
             # in_time = datetime.strptime(in_time ,'%H:%M')
