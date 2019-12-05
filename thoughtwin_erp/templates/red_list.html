@@ -80,7 +80,7 @@
             <tr>
               <th>Sno.</th>
               <th>Date</th>
-              <th>Calculation</th>
+              <th>Login Hours</th>
               <th>In/Out Requests</th> 
               <th>Status</th>
             </tr>
@@ -148,8 +148,6 @@
                 location.reload();
                 return false;
             }
-
-        
         else($(document)).on("click","#checkrow",function(e){    
           e.preventDefault();
           var emails = Array.from( new Set(email))

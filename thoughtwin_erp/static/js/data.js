@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var table = $('#myTable1').DataTable({
+    $('#myTable1').DataTable({
     stateSave: true,
     stateSaveCallback: function(settings,data) {
       localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )

@@ -299,8 +299,6 @@ def file_upload(request):
             out_time = sheet.cell_value(i+3,sheet.ncols-1) #sheet.cell_value(i+4,3)
             dat = sheet.cell_value(0,7).split('/')
        
-            # in_time = datetime.strptime(in_time ,'%H:%M')
-            # out_time = datetime.strptime(out_time ,'%H:%M')
             if in_time =='--:--' and out_time =='--:--':
                 in_time = datetime.strptime('00:00' ,'%H:%M')
                 out_time = datetime.strptime('00:00' ,'%H:%M')
@@ -321,24 +319,15 @@ def file_upload(request):
                     date = dat[2]+'-'+dat[1]+'-'+dat[0],
                     created_by=profile.user,
                 )
-                emp.empatt_leave_status = 1
-                emp.save()
                 if emp:
                     emp_details = EmployeeAttendanceDetail.objects.filter(employee_attendance=emp)
                     if emp_details.exists():
-                        emp_details[0].delete()
-                        detail = EmployeeAttendanceDetail.objects.update_or_create(
-                        employee_attendance=emp,
-                        in_time = in_time,
-                        out_time = out_time,
-                        )
-                    else:
-                        detail = EmployeeAttendanceDetail.objects.create(
-                        employee_attendance=emp,
-                        in_time = in_time,
-                        out_time = out_time,
-                        )
-
+                        emp_details.delete()
+                    detail, created = EmployeeAttendanceDetail.objects.update_or_create(
+                    employee_attendance=emp,
+                    in_time = in_time,
+                    out_time = out_time,
+                    )
 
         messages.success(request, ' File Successfully Uploaded.')
         return render(request,template)
@@ -478,9 +467,10 @@ class LeaveRequestView(View):
                 email_subject = "Leave Request For Less Hour ||"" "+user+" "'||'" "+ subject_date
                 
                 text_content = strip_tags(content)
-                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
-                msg.attach_alternative(content, "text/html")
-                msg.send()
+                for email in mail_list:
+                    msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
+                    msg.attach_alternative(content, "text/html")
+                    msg.send()
                 return JsonResponse({'status': 'success'})
 
         except Exception as e:
@@ -586,7 +576,7 @@ class LeaveStatusView(View):
             default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
             for usr in default_mail_list:
                 mail_list.append(usr.email)
-            request_user = self.request.user.email            
+            request_user = employee_attendance.user.email           
             mail_list.append(request_user)
             mail_list.append(employee_attendance.user.profile.teamlead.email)
             mail_list = set(mail_list)
@@ -602,9 +592,11 @@ class LeaveStatusView(View):
                 email_subject = "Leave Rejected For Less Hour ||"" "+user+" "'||'" "+email_date              
                 content = render_to_string('email/reject_less_leave.html',{'approved_user':approved_user,'user':user,'date':email_date,'date_time_diffrence': employee_attendance.date_time_diffrence })
             text_content = strip_tags(content)
-            msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, mail_list)
-            msg.attach_alternative(content, "text/html")
-            msg.send()
+
+            for email in mail_list:
+                msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL,[email])
+                msg.attach_alternative(content, "text/html")
+                msg.send()  
             return JsonResponse({'status': 'success'}) 
         except Exception as e:
             print(str(e)) 
@@ -746,11 +738,6 @@ class RequestLeaveView(CreateView):
         except IntegrityError:
             messages.error(self.request, 'Leave Request Already Send') 
             return HttpResponseRedirect('/leave')  
-
-        # except Exception as alloated_leave :
-    
-        #     messages.error(self.request,'Leave Are Not Alloted')
-        #     return HttpResponseRedirect('/leave')
 
     def get_context_data(self, **kwargs):
         context = super(RequestLeaveView, self).get_context_data(**kwargs)
