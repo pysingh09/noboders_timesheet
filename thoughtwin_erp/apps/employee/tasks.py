@@ -44,7 +44,7 @@ def send_email_reminder_method():
                     msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [user.email])
                     msg.attach_alternative(content, "text/html")
                     print("send OOO on  " + user.email)
-                    msg.send()
+                    # msg.send()
                     time.sleep(10)
                     obj.is_ooo_send = True
                     obj.save()

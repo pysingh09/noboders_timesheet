@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-           <h3 class="employeehead">Allot Leaves Of The Year</h3>
+  <h3 class="employeehead">Allot Leaves Of The Year</h3>
 
 <div class="card cardalot">
   <div class="row justify-content-center">
     <div class="col=8">
       <div class="card-body">
+        <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
           {{leave_form.errors}}
           
-          <form method="post" novalidate >
+            <form method="post" novalidate >
                 {% csrf_token %}
 
                 {% if form.errors %}
@@ -34,7 +35,7 @@
                 
                 
                 <button class="background_colorbtn" type="submit">Submit</button>
-          </form>
+            </form>
       </div>
     </div>
   </div>

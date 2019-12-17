@@ -73,6 +73,7 @@
       <!-- <p class = "no_record_in_table"></p> -->
 
         <div class="card">
+        <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
     <div class="search-container">
     <div class="table-responsive">
         <table class = "table" id="myTable1">
@@ -97,7 +98,7 @@
                 
                  <td> 
                   {% if attendance.empatt_leave_status == 1 %}
-                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" >
+                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-leave-time="{{attendance.date_time_diffrence}}">
                   {% endif %}
                  </td>
                 
@@ -141,6 +142,7 @@
     <script>
       function checkrow() {
         var leaveRequestArr =[];
+        var loginHour =[];
 
         if (!$("input:checkbox").is(":checked")){
             
@@ -148,12 +150,14 @@
                 location.reload();
                 return false;
             }
+
         else($(document)).on("click","#checkrow",function(e){    
           e.preventDefault();
           var emails = Array.from( new Set(email))
 
           $(".chkboxs:checked").each(function () {
             leaveRequestArr.push($(this).val());
+            loginHour.push($(this).data("leave-time"));
             });
              $.ajax({
              'url': "{% url "employee:request_leave" %}",
@@ -162,6 +166,7 @@
              'data': {
                  'leaveRequestArr': leaveRequestArr,
                  'emails[]': emails ,
+                 'loginHour':loginHour,
                  'csrfmiddlewaretoken': '{{ csrf_token }}',
              },
              success: function(response) {

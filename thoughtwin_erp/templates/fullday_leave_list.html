@@ -5,7 +5,8 @@
 
     <!-- <p class ="no_record_in_table"></p> -->
     <div class="search-container">
-      <div class="card"> 
+      <div class="card">
+        <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
         <div class="table-responsive">
      <table class = "table table-stripped" id="myTable1">
         <thead>
@@ -14,7 +15,8 @@
             <th>User</th>
             <th>Date</th>
             <th>Login Hours</th>
-            <th>Leave Request</th>
+            <th>Status</th>
+            <th>Check&Approve</th>
           </tr>
         </thead>
             <tbody>
@@ -24,15 +26,11 @@
                     <td>{{ leave.user }}</td>
                     <td>{{ leave.date|date:'D,d M Y' }}</td>
                     <td>{{leave.date_time_diffrence}}</td>
+                    <td>{{ leave.get_empatt_leave_status_display }}</td>
                     <td>
-                     {% if leave.empatt_leave_status != 3  %}
-                      <button class="leave btn btn-success" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}"data-leave_type="3">Approve</button>
-                     {% endif %}  
-                     {% if leave.empatt_leave_status != 4  %} 
-                     <button class="leave btn btn-danger" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" data-leave_type="4">Reject</button>
-                    {% endif %} 
-                       {{ leave.get_empatt_leave_status_display }}
-
+                      {% if leave.empatt_leave_status == 2  %}
+                      <input type="checkbox" class="chkboxs" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" value="{{ leave.date|date:'Y-m-d'}}" data-leave-time="{{leave.date_time_diffrence}}">
+                      {% endif %}
                   </td>
               
                   </tr>
@@ -42,43 +40,99 @@
     </div>
   </div>
   </div>
+<button class="btn btn-success submit-email-btn btnsuccess1" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>
 
 {% endblock %}
 {% block extra_js%}
 {{block.super}}
-<script>
-    $(".leave").on('click', function (e) {
-      e.preventDefault();
-      var leave_id = $(this).data("leave-id");
-      var leave_type = $(this).data("leave_type");
-      var leave_user = $(this).data("leave-user");
-      $.ajax({
-        url: "{% url "employee:approved_leave" %}",
-        'type': "POST",
-        data: {
-          'leave_id': leave_id,
-          'leave_type':leave_type,
-          'csrfmiddlewaretoken': '{{ csrf_token }}',
-        },
-      success: function(response) {
-           
-            if(response.status=="success"){
-              if(leave_type==3){
-                alert("Leave Request For "+leave_user+ " Is Accepted")
+ <script>
+    function checkrow() {
+        var leaveRequestArr =[];
+        var leave_id =[];
+        var loginHour =[];
+        var leave_user
+     
+        if (!$("input:checkbox").is(":checked")){
+            
+                alert("Please tick checkbox if you want to send leave request");
                 location.reload();
-                }
-              else{
-                alert("Leave Request For "+leave_user+ " Is Rejected")
-                location.reload();
-                  }
-              }
-            else if(response.status=="error"){
-                    alert("Your Response Sent to "+leave_user+" but email not sent due to Limit is exceeded.")
-                    location.reload();
-                    }    
+                return false;
             }
-      });
+        else($(document)).on("click","#checkrow",function(e){    
+          e.preventDefault();
+          // var emails = Array.from( new Set(email))
+          $(".chkboxs:checked").each(function () {
+            leaveRequestArr.push($(this).val());
+            loginHour.push($(this).data("leave-time"));
+            leave_id.push($(this).data("leave-id"));
+            leave_user = $(this).data("leave-user");
+        })
+             $.ajax({
+             'url': "{% url "employee:approved_leave" %}",
+             'type': "POST",
+             'dataType': 'json',
+             'data': {
+                 'leave_id': leave_id,
+                 'leaveRequestArr': leaveRequestArr,
+                 'loginHour':loginHour,
+                 'leave_user':leave_user,
+                 // 'emails[]': emails ,
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+             },
+             success: function(response) {
+                if(response.status=="success"){
+                    alert("Request leave successfull")
+                    location.reload();
+                    }
+                if(response.status=="error"){
+                    alert("Request Sent but email not sent due to Limit is exceeded.")
+                    location.reload();
+                    }            
 
-    });
-  </script>
+                }                    
+                                                 
+            });
+
+            });
+        // }) 
+    } 
+
+
+
+
+
+//     $(".leave").on('click', function (e) {
+//       e.preventDefault();
+//       var leave_id = $(this).data("leave-id");
+//       var leave_type = $(this).data("leave_type");
+//       var leave_user = $(this).data("leave-user");
+//       $.ajax({
+//         url: "{% url "employee:approved_leave" %}",
+//         'type': "POST",
+//         data: {
+//           'leave_id': leave_id,
+//           'leave_type':leave_type,
+//           'csrfmiddlewaretoken': '{{ csrf_token }}',
+//         },
+//       success: function(response) {
+           
+//             if(response.status=="success"){
+//               if(leave_type==3){
+//                 alert("Leave Request For "+leave_user+ " Is Accepted")
+//                 location.reload();
+//                 }
+//               else{
+//                 alert("Leave Request For "+leave_user+ " Is Rejected")
+//                 location.reload();
+//                   }
+//               }
+//             else if(response.status=="error"){
+//                     alert("Your Response Sent to "+leave_user+" but email not sent due to Limit is exceeded.")
+//                     location.reload();
+//                     }    
+//             }
+//       });
+
+//     });
+   </script>
 {% endblock extra_js%}

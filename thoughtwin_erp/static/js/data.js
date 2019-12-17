@@ -4,13 +4,15 @@ $(document).ready(function(){
     stateSaveCallback: function(settings,data) {
       localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
     },
-  stateLoadCallback: function(settings) {
+    stateLoadCallback: function(settings) {
     return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
     }
   });
-});
-    
-$(document).ready(function() {
+  // let pathName = window.location.pathname;
+  
+  // if(pathName!=="/employeelist/"){
+  //   $('#myTable1').datatable().localStorage.clear()
+  // }
     // Setup - add a text input to each footer cell
     // $('#myTable2 thead tr').clone(true).appendTo( '#myTable2 thead ' );
     // $('#myTable2 thead tr:eq(1) th').each( function (i) {
@@ -32,20 +34,26 @@ $(document).ready(function() {
     //         }
     //     } );
     // } );
- 
     var table = $('#myTable2').DataTable( {
         orderCellsTop: true,
         ixedHeader: true,
-         stateSave: true,
-        stateSaveCallback: function(settings,data) {
-          localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
+        stateSave: true,
+        stateSaveCallback: function(settings,data){
+        localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data))
+        // var pathName = window.location.pathname;
+        
+        // if('' !== '/employeelist/'){
+        //     $('.dataTables_filter input').val('').change();
+        //   }
         },
         stateLoadCallback: function(settings) {
         return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
         }
     });
-} );
+});
  
+
+
 $(document).ready(function(){
     $('#myTable2').on('click','.deactivateEmployee', function (event) {
     // $('.deactivateEmployee').click(function (event) {

@@ -46,6 +46,8 @@ urlpatterns = [
     
 
     path('fullday/leave/list', FullLeaveListView.as_view(), name = 'fullday-list'),
+    path('team/request', InOutTimeListView.as_view(), name = 'in-out-request-list'),
+
 
     path('change-password/', change_password, name='change_password'),
     path('forgot-password/', ForgotPassword.as_view(), name='forgot_password'),

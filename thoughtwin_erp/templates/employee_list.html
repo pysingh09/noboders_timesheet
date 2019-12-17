@@ -2,10 +2,9 @@
 {% load static %}
 {% block content %} 
     <h3 class="employeehead">Company Employee Details</h3>  
-
+ 
     <div class="card">
-  
-
+    <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
     <div class="table-responsive">
         <table class="table table-striped" id="myTable2">
         <thead>
@@ -24,7 +23,7 @@
       
         </thead>
         <tbody>
-            {% for profile in object_list %}
+            {% for profile in active_users %}
               <tr>
                 <td>{{ forloop.counter }}</td>  
                 <td>{{ profile.user }}</td>  
@@ -53,12 +52,11 @@
                       <a href="{% url 'employee:show_calendar' profile.user.id %}" class="sameicon calendaricon"><span class="glyphicon glyphicon-calendar"> </span></a> 
                       <a href="{% url 'employee:employee_details' profile.user.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-time"></span> </a>
                     </td>
-               
-                
               </tr>
           {% endfor %}
         </tbody>
             </table>
+                <a type="button" class="btn btn-success" href="{% url 'employee:signup' %}">Add User</a>
           </div>
           </div>
         </div>
