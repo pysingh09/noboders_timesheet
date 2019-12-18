@@ -47,10 +47,10 @@
                     
                 </td>
                     <td>
-                      <a href="{% url 'employee:update' profile.pk %}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" ></span></a>
-                      <a href="{% url 'employee:profile_list' profile.user.id %}" class="sameicon eyeicon"><span class="glyphicon glyphicon-eye-open" ></span></a>
-                      <a href="{% url 'employee:show_calendar' profile.user.id %}" class="sameicon calendaricon"><span class="glyphicon glyphicon-calendar"> </span></a> 
-                      <a href="{% url 'employee:employee_details' profile.user.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-time"></span> </a>
+                      <a href="{% url 'employee:update' profile.pk %}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit" ></span></a>
+                      <a href="{% url 'employee:profile_list' profile.user.id %}" class="sameicon eyeicon"><span class="glyphicon glyphicon-eye-open" title="View" ></span></a>
+                      <a href="{% url 'employee:show_calendar' profile.user.id %}" class="sameicon calendaricon"><span class="glyphicon glyphicon-calendar" title="Calendar"></span></a> 
+                      <a href="{% url 'employee:employee_details' profile.user.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-time" title="Login"></span></a>
                     </td>
               </tr>
           {% endfor %}

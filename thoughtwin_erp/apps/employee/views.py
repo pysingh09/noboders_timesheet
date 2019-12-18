@@ -1,4 +1,7 @@
 import json,csv,io
+from datetime import datetime, date, timedelta
+import datetime as only_datetime
+
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
 from django.views.generic import View,ListView,TemplateView,UpdateView,DetailView
@@ -12,7 +15,7 @@ from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCrea
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime, date, timedelta
+
 from django.db.models import Count
 from time import sleep
 from django.db.models import Sum
@@ -20,22 +23,23 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import login, logout
 from django.core.mail import EmailMessage,send_mail, EmailMultiAlternatives
-import datetime as only_datetime
+
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.dateparse import parse_date
 from django.urls import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import MultipleObjectsReturned
 # permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.template import loader
 from django.contrib.auth.models import Group
-# import datetime 
+
 from django.contrib.auth.forms import UserChangeForm,PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-
 from employee.tasks import send_email_reminder
+
 # this is for file upload
 import xlrd
 from django.conf import settings
@@ -139,25 +143,30 @@ class EmployeeProfile(DetailView):
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = self.request.user.id)
         if user.user_leaves.all().exists():
-            alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
+            try:
+                alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
 
-            get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
+                get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
 
-            get_taken_leave_year = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,status=1).aggregate(Sum('leave'))
+                get_taken_leave_year = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,status=1).aggregate(Sum('leave'))
 
-            get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
+                get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
 
-            available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
-            available_leave = (datetime.now().month - alloted_leave.month) + 1
-            leave_sum = 0
-            if get_taken_leave_year['leave__sum']:
-                leave_sum = get_taken_leave_year['leave__sum']
-            total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
+                available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
+                available_leave = (datetime.now().month - alloted_leave.month) + 1
+                leave_sum = 0
+                if get_taken_leave_year['leave__sum']:
+                    leave_sum = get_taken_leave_year['leave__sum']
+                    total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
-            remaning_leave = total_available_leave
-            return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
-        else:
-            return render(request,'profile.html',{'employee' : user})
+                    remaning_leave = total_available_leave
+                    return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
+                else:
+                    return render(request,'profile.html',{'employee' : user})
+            except AllottedLeave.DoesNotExist:
+                return render(request,'profile.html',{'employee' : user})
+
+                      
                 
 
 class EmployeeListView(PermissionRequiredMixin,ListView):
@@ -500,7 +509,7 @@ class LeaveListView(PermissionRequiredMixin,ListView):
 
 
 def attendence_request_list(request):
-    attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,])
+    attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,5,6])
     result = []
     email_data = []
     for attendance in attendances:
@@ -636,7 +645,7 @@ class RequestLeaveView(CreateView):
             leave_date = form.data['startdate'].split('-')
             year = int(leave_date[0])
             try:
-                alloated_leave = AllottedLeave.objects.get(user = self.request.user)
+                alloated_leave = AllottedLeave.objects.get(user = self.request.user,year=datetime.now().year)
             except ObjectDoesNotExist:
                 messages.error(self.request, 'You Have Not Allotted Any Leave') 
                 return HttpResponseRedirect('/leave')
@@ -763,7 +772,7 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
-        mail_list.append('ashutosh@thoughtwin.com')
+        # mail_list.append('ashutosh@thoughtwin.com')
 
         email_data = []
         groups_email = []
@@ -1083,10 +1092,14 @@ class InOutTimeListView(ListView):
         context = super(InOutTimeListView, self).get_context_data(**kwargs)
         usr = User.objects.filter(email=self.request.user.email)
         profiles = Profile.objects.filter(teamlead=usr[0])
-        users =[]
+        
+        object_list = []
         for profile in profiles:
-            users.append(profile.user)
-        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user__in=users)
+            less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user).order_by('-id')[:2]
+            for last_two_user in less_time_objects: 
+                object_list.append(last_two_user)
+
+        context['object_list'] = object_list
         return context
 
 def change_password(request):
