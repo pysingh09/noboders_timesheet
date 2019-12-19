@@ -772,7 +772,7 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
-        # mail_list.append('ashutosh@thoughtwin.com')
+        mail_list.append('ashutosh@thoughtwin.com')
 
         email_data = []
         groups_email = []
