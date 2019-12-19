@@ -140,10 +140,11 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
 
 
 class EmployeeProfile(DetailView):
+
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = self.request.user.id)
-        if user.user_leaves.all().exists():
-            try:
+        try:
+            if user.user_leaves.all().exists():
                 alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
 
                 get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
@@ -161,10 +162,10 @@ class EmployeeProfile(DetailView):
 
                     remaning_leave = total_available_leave
                     return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
-                else:
-                    return render(request,'profile.html',{'employee' : user})
-            except AllottedLeave.DoesNotExist:
+            else:
                 return render(request,'profile.html',{'employee' : user})
+        except AllottedLeave.DoesNotExist:
+            return render(request,'profile.html',{'employee' : user})
 
                       
                 
