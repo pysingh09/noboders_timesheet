@@ -143,10 +143,10 @@ class EmployeeProfile(DetailView):
 
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = self.request.user.id)
-                                                                                                                                                                                                    
         if user.user_leaves.all().exists():
             try:
                 alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
+
                 get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
 
                 get_taken_leave_year = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,status=1).aggregate(Sum('leave'))
@@ -158,16 +158,15 @@ class EmployeeProfile(DetailView):
                 leave_sum = 0
                 if get_taken_leave_year['leave__sum']:
                     leave_sum = get_taken_leave_year['leave__sum']
-                    total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
+                total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
-                    remaning_leave = total_available_leave
-                    return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})    
-                else:
-                    return render(request,'profile.html',{'employee' : user})
+                remaning_leave = total_available_leave
+                return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})
+
             except AllottedLeave.DoesNotExist:
-                return render(request,'profile.html',{'employee' : user})
+                return render(request,'profile.html',{'employee' : user})   
         else:
-            return render(request,'profile.html',{'employee' : user})          
+            return render(request,'profile.html',{'employee' : user})
                 
 
 class EmployeeListView(PermissionRequiredMixin,ListView):
@@ -192,24 +191,25 @@ class AllEmployeeProfile(PermissionRequiredMixin,DetailView):
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk = kwargs['pk'])
         if user.user_leaves.all().exists():
-            user = User.objects.get(pk = kwargs['pk'])
-            alloted_leave =  user.user_leaves.get(user=user, year=datetime.now().year)
-            get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
-            get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
+            try:
+                user = User.objects.get(pk = kwargs['pk'])
+                alloted_leave =  user.user_leaves.get(user=user, year=datetime.now().year)
+                get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
+                get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
 
-            leave_list = Leave.objects.filter(user=user)
+                leave_list = Leave.objects.filter(user=user)
 
-            available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
-            available_leave = (datetime.now().month - alloted_leave.month) + 1
-            leave_sum = 0
-            if get_taken_leave['leave__sum']:
-               leave_sum = get_taken_leave['leave__sum']
-            total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
+                available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
+                available_leave = (datetime.now().month - alloted_leave.month) + 1
+                leave_sum = 0
+                if get_taken_leave['leave__sum']:
+                   leave_sum = get_taken_leave['leave__sum']
+                total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
-            remaning_leave = total_available_leave
-
-
-            return render(request,'employee_profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave,'leave_list':leave_list})    
+                remaning_leave = total_available_leave
+                return render(request,'employee_profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave,'leave_list':leave_list})
+            except AllottedLeave.DoesNotExist:
+                return render(request,'employee_profile.html',{'employee' : user})   
         else:
             return render(request,'employee_profile.html',{'employee' : user})
     
@@ -773,7 +773,7 @@ class RequestLeaveView(CreateView):
         request_user = self.request.user.email            
         mail_list.append(request_user)
         mail_list.append(self.request.user.profile.teamlead.email)
-        mail_list.append('ashutosh@thoughtwin.com')
+        # mail_list.append('ashutosh@thoughtwin.com')
 
         email_data = []
         groups_email = []
@@ -1093,14 +1093,33 @@ class InOutTimeListView(ListView):
         context = super(InOutTimeListView, self).get_context_data(**kwargs)
         usr = User.objects.filter(email=self.request.user.email)
         profiles = Profile.objects.filter(teamlead=usr[0])
-        
+        # currunt_month = only_datetime.datetime.now().month  
+        # last_month = currunt_month-1 if currunt_month > 1 else 12
         object_list = []
+        
+        # for profile in profiles:
+        #     count = 0
+        #     less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user)
+        #     for last_two_user in less_time_objects:
+        #         if last_two_user.date.month == last_month or currunt_month:
+        #             if last_two_user.empatt_leave_status == 2:
+        #                 if count < 2:
+        #                     object_list.append(last_two_user)
+        #                     count +=1
+        #                 else:
+        #                     pass
+        #             elif last_two_user.empatt_leave_status == 3:
+        #                 object_list.append(last_two_user)
+        #             else:
+        #                 pass
+
         for profile in profiles:
             less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user).order_by('-id')[:2]
-            for last_two_user in less_time_objects: 
+            for last_two_user in less_time_objects:
                 object_list.append(last_two_user)
 
         context['object_list'] = object_list
+
         return context
 
 def change_password(request):

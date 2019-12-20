@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    // debugger
     $('#myTable1').DataTable({
     stateSave: true,
     stateSaveCallback: function(settings,data) {
@@ -38,22 +39,10 @@ $(document).ready(function(){
         orderCellsTop: true,
         ixedHeader: true,
         stateSave: true,
-        stateSaveCallback: function(settings,data){
-        localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data))
-        // var pathName = window.location.pathname;
-        
-        // if('' !== '/employeelist/'){
-        //     $('.dataTables_filter input').val('').change();
-        //   }
-        },
-        stateLoadCallback: function(settings) {
-        return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
-        }
+
     });
 });
  
-
-
 $(document).ready(function(){
     $('#myTable2').on('click','.deactivateEmployee', function (event) {
     // $('.deactivateEmployee').click(function (event) {
