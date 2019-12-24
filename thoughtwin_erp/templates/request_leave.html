@@ -54,44 +54,44 @@
         {% endif %} -->
         <form action="" method="POST"  >
         {% csrf_token %}
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="form-group col-sm-12 input_widthdiv">
+            <div class="col-md-6 col-sm-6 col-xs-12 pr-l0">
+                <div class="form-group col-sm-12 pr-l0 input_widthdiv">
                   <label for="sel1">Select leave :</label>
                   {{ form.select_leave|add_class:"form-control" }}
                 </div>
 
-                <div class="form-group col-sm-12 input_widthdiv">
+                <div class="form-group col-sm-12 pr-l0 input_widthdiv">
                   <label for="sel1">Select leave type :</label>
                   {{ form.leave_type|add_class:"form-control" }}
                 </div>
 
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="startdate">
+                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="startdate">
                   <label for="sel1">Start Date:</label>
                   {{ form.startdate|add_class:"form-control"|attr:"readonly:readonly"}}
                   
                 </div>
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="starttime">
+                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="starttime">
                   <label for="sel1">Time:</label>
                   {{ form.starttime|add_class:"form-control" }}
                 </div>
 
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="enddate">
+                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="enddate">
                   <label for="sel1">End Date:</label>
                   {{ form.enddate|add_class:"form-control"|attr:"readonly:readonly" }}
                 </div>
 
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 input_widthdiv" id="endtime">
+                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="endtime">
                   <label for="sel1">Time:</label>
                   {{ form.endtime|add_class:"form-control"|attr:"disabled:true" }}
                 </div>
 
-                <div class="form-group col-md-12 col-sm-12 col-xs-12 input_widthdiv" id="reason">
+                <div class="form-group col-md-12 col-sm-12 col-xs-12 pr-l0 input_widthdiv" id="reason">
                   <label for="sel1">Reason:</label>
                   {{ form.reason|add_class:"form-control" }}
                 </div>
             
                 <input type="hidden" id="emails" value="" name="emails">
-                <div class="form-group col-md-12 col-sm-12 col-xs-12 mailhide" id="selectemail">
+                <div class="form-group col-md-12 col-sm-12 col-xs-12 pr-l0 mailhide" id="selectemail">
                     {% for email in mail_list %}   
                         <div style="margin: 2px;" class="btn btn-primary">{{ email }}</div>
                     {% endfor %}
@@ -102,7 +102,7 @@
                 </div>
 
             </div> <!--end of col sm 6-->
-            <div class = "dropdown col-md-6 text-right">
+            <div class = "dropdown email-drop col-md-6 text-right">
              
                 <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
                     <div id="myDropdown" class = "dropdown-menu drop pull-right" role = "menu">

@@ -2,11 +2,14 @@
 {% load static %}
 {% block content %}
     <h3 class="employeehead">In/Out Time Requests List</h3>
+     <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+       Back
+      </span>
 
     <!-- <p class ="no_record_in_table"></p> -->
     <div class="search-container">
       <div class="card">
-        <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
+        
         <div class="table-responsive">
      <table class = "table table-stripped" id="myTable1">
         <thead>
@@ -40,7 +43,7 @@
     </div>
   </div>
   </div>
-<button class="btn btn-success submit-email-btn btnsuccess1" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>
+<button class="background_colorbtn submit-email-btn btnsuccess1" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>
 
 {% endblock %}
 {% block extra_js%}

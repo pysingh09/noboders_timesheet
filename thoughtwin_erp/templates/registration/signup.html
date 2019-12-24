@@ -4,8 +4,11 @@
 {% block content %}
 
   <h3 class="employeehead">Create New Employee</h3>
+  <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+       Back
+      </span>
     <div class="card">
-    <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
+    
     <form class="form-horizontal signup_form sign_form1" method="POST" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">   
       {% csrf_token %}
 
@@ -42,63 +45,63 @@
             {% endfor %}
         {% endif %}
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
               <label>Username</label>
               {{ form.username }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
               <label>Email</label>
               {{ form.email }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
               <label>Password</label>
               {{ form.password1 }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
               <label>Confirm Password</label>
               {{ form.password2 }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
               <label>First Name</label>
               {{ form.first_name }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
               <label>Last Name</label>
               {{ form.last_name }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
             <label>Employee Id</label>
             {{ form2.employee_id }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
             <label>Contact</label>
             {{ form2.contact_no }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
             <label>Designation</label>
             {{ form2.designation }}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
             <label>Date of Birth</label>
             {{ form2.date_of_birth|attr:"readonly:true" }}
              <p>NOTE : Date Format :YYYY-MM-DD</p>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
             <label>Date of Joining</label>
             {{ form2.date_of_joining|attr:"readonly:true"}}
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 pr-l0">
             <label>Team Lead</label>
             {{ form2.teamlead }}
           </div>

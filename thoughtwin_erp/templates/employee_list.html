@@ -2,9 +2,11 @@
 {% load static %}
 {% block content %} 
     <h3 class="employeehead">Company Employee Details</h3>  
- 
+    <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+       Back
+      </span>
     <div class="card">
-    <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
+    
     <div class="table-responsive">
         <table class="table table-striped" id="myTable2">
         <thead>
@@ -56,7 +58,7 @@
           {% endfor %}
         </tbody>
             </table>
-                <a type="button" class="btn btn-success" href="{% url 'employee:signup' %}">Add User</a>
+                <a type="button" class="background_colorbtn" href="{% url 'employee:signup' %}">Add User</a>
           </div>
           </div>
         </div>

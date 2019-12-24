@@ -154,6 +154,7 @@ a.attendence_datetime {
     font-weight: 600;
     color: #000;
     font-size: 21px;
+    display: inline-block;
 }
 .table-striped>tbody>tr:nth-of-type(odd){
   background: #fff !important;
@@ -317,7 +318,7 @@ a.attendence_datetime {
 .cardalot .card-body {
     padding: 0px 20px;
 }
-.background_colorbtn{
+.background_colorbtn, .background_colorbtn:hover{
       background: linear-gradient(to right,rgba(239,110,59,1) 0,rgba(213,63,168,1) 100%);
       border: none;
       padding: 10px 30px;
@@ -507,18 +508,37 @@ div#sidebar-wrapper {
     position: fixed;
     height: 100%;
 }
-.main_contentdiv{
+/*.main_contentdiv{
   padding: 0;
-}
+}*/
 .col-lg-12.col-md-12.col-sm-12.col-xs-12.filecard{
   padding: 0!important;
 }
+.back-button{
+    display: inline-block;
+    background: #337ab7 !important;
+    color: #fff !important;
+    border:1px solid #337ab7;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+.back-button:hover{
+    background: #fff !important;
+    color: #337ab7 !important;
+    border-color:#337ab7;
+}
+.nav-stacked>li+li{
+  width: 100%;
+}
+
 /*responsive*/
 @media only screen and (min-width: 200px) and (max-width: 1400px){
 
   .card{
-    padding: 15px;
+    padding: 0px;
     margin: 10px 0px;
+    box-shadow: none;
+    border: none;
   }
   .table tr th {
     vertical-align: top !important;
@@ -545,6 +565,31 @@ div#sidebar-wrapper {
 .fc-header-title h2 {
     font-size: 16px !important;
     line-height: 36px;
+}
+.background_colorbtn{
+    margin: 13px 26%;
+}
+.dataTable th.sorting, .table>thead>tr>th {
+    padding: 10px 19px 10px 6px !important;
+    font-size: 12px;
+}
+.employeehead {
+    margin: 8px 0 26px;
+    font-size: 16px;
+}
+.pr-l0{
+  padding: 0px;
+}
+.email-drop{
+  position: absolute !important;
+  top: 0;
+  right: 0;
+}
+.fc-header td {
+    padding: 15px 3px 0px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled{
+      margin-bottom: 20px;
 }
 }
 
