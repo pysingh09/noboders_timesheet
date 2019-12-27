@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+  <h3 class="employeehead">Update Alloted Leave</h3>
+  <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+       Back
+      </span>
 <div class="card cardalot">
   <div class="row justify-content-center">
     <div class="col=8">
         <div class="card-body">
-          <h2>Update Alloted Leave</h2>
           <form method="post" class="leave-form1">
             {% csrf_token %}
               {% if form.errors %}
