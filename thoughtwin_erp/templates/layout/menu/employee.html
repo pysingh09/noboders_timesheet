@@ -1,16 +1,16 @@
 <div id="sidebar-wrapper">
     <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
-        <li class="active">
+        <li class="{% if request.resolver_match.view_name == 'employee:home' %}active{% endif %}">
             <a href="{% url 'employee:home' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>Home</a>
       
-                <li><a href="{% url 'employee:attendence-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>In/Out Request</a></li>
-                <li><a href="{% url 'employee:request-full-leave' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Leave Request</a></li>
-                <li><a href="{% url 'employee:leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Leaves Status</a></li>
-                
-                <li><a href="{% url 'employee:in-out-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>All In/Out Requests</a></li>
+                <li class="{% if request.resolver_match.view_name == 'employee:attendence-request-list' %}active{% endif %}"><a href="{% url 'employee:attendence-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>In/Out Request</a></li>
+                <li class="{% if request.resolver_match.view_name == 'employee:request-full-leave' %}active{% endif %}" ><a href="{% url 'employee:request-full-leave' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Leave Request</a></li>
+                <li class="{% if request.resolver_match.view_name == 'employee:leave-list' %}active{% endif %}" ><a href="{% url 'employee:leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Leaves Status</a></li>
+
+                <li class="{% if request.resolver_match.view_name == 'employee:in-out-request-list' %}active{% endif %}" ><a href="{% url 'employee:in-out-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>All In/Out Requests</a></li>
                 <!--<li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Show All Leave</a></li>  --> 
-                <li><a href="{% url 'employee:my-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>My Leaves</a></li>     
-                <li class="cal_btn"><a href="{% url 'employee:show-hour-calender' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Calendar</a></li>
+                <li class="{% if request.resolver_match.view_name == 'employee:my-leave-list' %}active{% endif %}" ><a href="{% url 'employee:my-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>My Leaves</a></li>     
+                <li class="{% if request.resolver_match.view_name == 'employee:show-hour-calender' %}active{% endif %} cal_btn"><a href="{% url 'employee:show-hour-calender' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Calendar</a></li>
        
         </li>
     </ul>    

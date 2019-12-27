@@ -85,7 +85,6 @@ class Profile(BaseModel):
     profile_image = models.ImageField(upload_to = 'pic_folder/', default = 'avatar-mini-2.jpg')
     teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'), related_name='teamlead')
     designation = models.IntegerField(choices=ROLE_CHOICES, default=7, verbose_name=_('Designation'))
-
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile_created_by')
 
     def __str__(self):

@@ -146,19 +146,24 @@ class EmployeeProfile(DetailView):
         if user.user_leaves.all().exists():
             try:
                 alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
+
                 get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
 
-                get_taken_leave_year = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,status=1).aggregate(Sum('leave'))
-
+                # get_taken_leave_year = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,status=1).aggregate(Sum('leave'))
                 get_taken_unpaid_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=2).aggregate(Sum('leave'))
 
                 available_bonus_leave = alloted_leave.bonusleave - alloted_leave.available_bonus_leave
-                available_leave = (datetime.now().month - alloted_leave.month) + 1
-                leave_sum = 0
-                if get_taken_leave_year['leave__sum']:
-                    leave_sum = get_taken_leave_year['leave__sum']
-                total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
 
+                available_leave = (datetime.now().month - alloted_leave.month) + 1
+
+                leave_sum = 0
+                if get_taken_leave['leave__sum']:
+                    leave_sum = get_taken_leave['leave__sum']
+                    # available_leave = (datetime.now().month - alloted_leave.month)
+               
+                total_available_leave = available_bonus_leave + available_leave - (leave_sum - alloted_leave.available_bonus_leave)
+                # if total_available_leave <= 0:
+                #     total_available_leave = 0
                 remaning_leave = total_available_leave
                 return render(request,'profile.html',{'employee' : user,'alloted_leave':alloted_leave,'total_available_leave':total_available_leave,'total_yearly':(alloted_leave.leave+alloted_leave.bonusleave),'get_taken_leave':get_taken_leave,'get_taken_unpaid_leave':get_taken_unpaid_leave})
 
@@ -579,7 +584,6 @@ class LeaveStatusView(View):
                 approved_user = approved_full_name.title()
                 
                 user_data.append({"emp":employee_attendance.user.email,"emp_tl":employee_attendance.user.profile.teamlead.email,'emp_date':less_hour_date,'login_time':time_diff,'name':user,'approved_user':approved_user})
-
 
             dt_list = []
             tm_list = []
@@ -1092,23 +1096,23 @@ class InOutTimeListView(ListView):
         context = super(InOutTimeListView, self).get_context_data(**kwargs)
         usr = User.objects.filter(email=self.request.user.email)
         profiles = Profile.objects.filter(teamlead=usr[0])
-        # currunt_month = only_datetime.datetime.now().month  
-        # last_month = currunt_month-1 if currunt_month > 1 else 12
+        currunt_month = only_datetime.datetime.now().month  
+        last_month = currunt_month-1 if currunt_month > 1 else 12
         object_list = []
         
         # for profile in profiles:
         #     count = 0
         #     less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user)
         #     for last_two_user in less_time_objects:
-                
-        #         if last_two_user.date.month == last_month or currunt_month:
+        #         if count >= 2:
+        #             break;
+        #         elif last_two_user.date.month == last_month or currunt_month:
         #             if last_two_user.empatt_leave_status == 2:
         #                 if count < 2:
         #                     object_list.append(last_two_user)
         #                     count +=1
         #                 else:
         #                     break
-
         #             elif last_two_user.empatt_leave_status == 3:
         #                 object_list.append(last_two_user)
         #             else:
