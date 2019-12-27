@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
   <h3 class="employeehead">Allot Leaves Of The Year</h3>
+  <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+       Back
+      </span>
 
 <div class="card cardalot">
   <div class="row justify-content-center">
     <div class="col=8">
       <div class="card-body">
-        <i class="fa fa-chevron-circle-left" style="font-size:36px" onClick="javascript:history.go(-1);"></i>
           {{leave_form.errors}}
           
-            <form method="post" novalidate >
+            <form method="post" novalidate class="leave-form1">
                 {% csrf_token %}
 
                 {% if form.errors %}
@@ -24,7 +26,7 @@
                     <div class="fieldWrapper col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         {% if field.name == 'month' %}
                             {{ field.errors }}
-                            <b>Start Month</b> {{ field }}
+                            <label>Start Month</label> {{ field }}
                         {% else %}
                         
                             {{ field.errors }}
@@ -32,9 +34,12 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                
-                
-                <button class="background_colorbtn" type="submit">Submit</button>
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <button class="background_colorbtn" type="submit">Submit</button>
+                </div>
+              </div>
             </form>
       </div>
     </div>
@@ -45,7 +50,7 @@
       <table class = "table table-stripped leavetable" id="myTable1">
         <thead>
           <tr>
-            <th>S.no.</th>
+            <th>S.No.</th>
             <th>Username</th>
             <th>Year</th>
             <th>Start month</th>

@@ -499,7 +499,7 @@ nav.navbar.navbar-default.no-margin {
   width: 100%;
   border: none;
   border-radius: 0;
-  z-index: 999;
+  z-index: 9999;
 }
 div#wrapper{
   margin-top: 50px;
@@ -530,7 +530,28 @@ div#sidebar-wrapper {
 .nav-stacked>li+li{
   width: 100%;
 }
-
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+.leave-form1 .fieldWrapper select, .fieldWrapper input {
+    width: 75%;
+}
+.leave-form1 label {
+    width: 16%;
+}
+.leave-form1 button{
+  margin: 10px 0px 10px 20px;
+}
+#myTable1_wrapper {
+    margin-top: 20px;
+}
+.profile-card1 label{
+  margin: 10px 0px 10px 5px;
+}
+.table-responsive.scrollnone{
+  height: auto;
+  overflow-x:inherit!important;
+}
 /*responsive*/
 @media only screen and (min-width: 200px) and (max-width: 1400px){
 
@@ -562,35 +583,52 @@ div#sidebar-wrapper {
 }
 
 @media (max-width: 767px) {
-.fc-header-title h2 {
-    font-size: 16px !important;
-    line-height: 36px;
-}
-.background_colorbtn{
-    margin: 13px 26%;
-}
-.dataTable th.sorting, .table>thead>tr>th {
-    padding: 10px 19px 10px 6px !important;
-    font-size: 12px;
-}
-.employeehead {
-    margin: 8px 0 26px;
-    font-size: 16px;
-}
-.pr-l0{
-  padding: 0px;
-}
-.email-drop{
-  position: absolute !important;
-  top: 0;
-  right: 0;
-}
-.fc-header td {
-    padding: 15px 3px 0px;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled{
-      margin-bottom: 20px;
-}
+  .fc-header-title h2 {
+      font-size: 16px !important;
+      line-height: 36px;
+  }
+  .background_colorbtn{
+      margin: 13px 26%;
+  }
+  .dataTable th.sorting, .table>thead>tr>th {
+      padding: 10px 19px 10px 6px !important;
+      font-size: 12px;
+  }
+  .employeehead {
+      margin: 8px 0 26px;
+      font-size: 16px;
+  }
+  .pr-l0{
+    padding: 0px;
+  }
+  .email-drop{
+    position: absolute !important;
+    top: 0;
+    right: 0;
+  }
+  .fc-header td {
+      padding: 15px 3px 0px;
+  }
+  .dataTables_wrapper .dataTables_paginate .paginate_button.disabled{
+        margin-bottom: 20px;
+  }
+  div#myTable1_length{
+    float: none;
+  }
+  .fieldWrapper{
+    margin: 0px;
+  }
+  .leave-form1 label {
+    width: 100%;
+    margin-left: 0px;
+  }
+  .leave-form1 .fieldWrapper select, .fieldWrapper input {
+    width: 100%;
+    margin: 0px;
+  }
+  .leave-form1 button{
+    margin: 10px 0px 10px 0px;
+  }
 }
 
 
