@@ -45,8 +45,10 @@ nav.navbar.navbar-default {
 div#myTable1_length {
     float: left;
 }
-
-
+.exchangeicon{
+  transform: rotate(90deg);
+    margin: -4px 6px;
+}
 .selectParent {
   width: 80px;
   overflow: hidden;
@@ -59,6 +61,9 @@ div#myTable1_length {
 .dataTables_length{
     margin-bottom: 20px;
       padding-left: 4px;
+}
+.dataTables_length label{
+  margin-left: 0px;
 }
 .navimg{
     border-radius: 50px;
@@ -240,11 +245,15 @@ a.attendence_datetime {
   border: 1px solid #8c8b8b !important;
 }
 .card-upload {
-    padding: 40px 0px 40px;
+    padding: 30px 0px 5px;
 }
 .card-upload .form-group label{
   font-size: 17px;
   line-height: 20px;
+  text-align: left;
+}
+button.upload.background_colorbtn {
+    margin-left: 20px;
 }
 .card-upload .form-group .form-control {
     height: 45px;
@@ -292,7 +301,7 @@ a.attendence_datetime {
 }
 .fieldWrapper{
     padding: 10px 0px;
-    margin: 10px 0px;
+    margin: 0px;
 }
 .leavetable{
     margin: 20px 2px;
@@ -350,6 +359,7 @@ textarea:focus{
 }
 .card_width label{
   width: 130px;
+  margin:0px;
 }
 .form-group.formmargin_none {
     margin: 0 0 15px 0!important;
@@ -499,7 +509,7 @@ nav.navbar.navbar-default.no-margin {
   width: 100%;
   border: none;
   border-radius: 0;
-  z-index: 999;
+  z-index: 9999;
 }
 div#wrapper{
   margin-top: 50px;
@@ -530,7 +540,57 @@ div#sidebar-wrapper {
 .nav-stacked>li+li{
   width: 100%;
 }
-
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+.leave-form1 .fieldWrapper select, .fieldWrapper input {
+    width: 75%;
+}
+.leave-form1 label {
+    width: 16%;
+    margin: 0px;
+}
+.leave-form1 button{
+  margin: 10px 0px 10px 0px;
+}
+ul.errorlist {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    color: red;
+    position: absolute;
+    left: 20%;
+    top: -9px;
+}
+#myTable1_wrapper {
+    margin-top: 20px;
+}
+.profile-card1 label{
+  margin: 10px 0px 6px 5px;
+}
+.table-responsive.scrollnone{
+  height: auto;
+  overflow-x:inherit!important;
+}
+.profile-card1 .row span {
+    display: block;
+    padding: 10px 0px;
+}
+.mobres{
+  display: none;
+}
+.mt-20{
+  margin-top: 20px;
+}
+.mt-0{
+  margin-top: 0px;
+}
+.pt-0{
+  padding-top: 0px;
+}
+.pl-0{
+  padding-left: 0px;
+}
 /*responsive*/
 @media only screen and (min-width: 200px) and (max-width: 1400px){
 
@@ -548,8 +608,19 @@ div#sidebar-wrapper {
 
 
 @media only screen and (min-width: 768px) and (max-width: 1000px){
-  .filecard{
-      margin-left: 15%;
+  .dataTable th.sorting, .table>thead>tr>th{
+    padding:12px 5px !important;
+  }
+  .cardleave .pr-l0{
+    padding:0px !important;
+  }
+  button.upload.background_colorbtn{
+    margin: 0px;
+  }
+  .table-responsive.scrollnone{
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    height: 100%;
   }
 }
 
@@ -562,35 +633,72 @@ div#sidebar-wrapper {
 }
 
 @media (max-width: 767px) {
-.fc-header-title h2 {
-    font-size: 16px !important;
-    line-height: 36px;
-}
-.background_colorbtn{
-    margin: 13px 26%;
-}
-.dataTable th.sorting, .table>thead>tr>th {
-    padding: 10px 19px 10px 6px !important;
+  .fc-header-title h2 {
+      font-size: 16px !important;
+      line-height: 36px;
+  }
+  .background_colorbtn{
+      margin: 13px auto;
+  }
+  .dataTable th.sorting, .table>thead>tr>th {
+      padding: 10px 19px 10px 6px !important;
+      font-size: 12px;
+  }
+  .employeehead {
+      margin: 8px 0 26px;
+      font-size: 16px;
+  }
+  .pr-l0{
+    padding: 0px;
+  }
+  .email-drop{
+    position: absolute !important;
+    top: 0;
+    right: 0;
+  }
+  .fc-header td {
+      padding: 15px 3px 0px;
+  }
+  .dataTables_wrapper .dataTables_paginate .paginate_button.disabled{
+        margin-bottom: 20px;
+  }
+  div#myTable1_length{
+    float: none;
+  }
+  .fieldWrapper{
+    margin: 0px;
+  }
+  .leave-form1 label {
+    width: 100%;
+    margin-left: 0px;
+  }
+  .leave-form1 .fieldWrapper select, .fieldWrapper input {
+    width: 100%;
+    margin: 0px;
+  }
+  .leave-form1 button{
+    margin: 10px 0px 10px 0px;
+  }
+  .plmob-0{
+    padding: 0px 0px 0px 10px;
+  }
+  .prmob-0{
+    padding: 0px 10px 0px 0px;
+  }
+  .mobres{
+    display: block;
+  }
+  .card_width input{
+    width: 100%;
+  }
+  .profile-card1 label {
+    margin: 10px 15px 6px 5px;
     font-size: 12px;
-}
-.employeehead {
-    margin: 8px 0 26px;
-    font-size: 16px;
-}
-.pr-l0{
-  padding: 0px;
-}
-.email-drop{
-  position: absolute !important;
-  top: 0;
-  right: 0;
-}
-.fc-header td {
-    padding: 15px 3px 0px;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled{
-      margin-bottom: 20px;
-}
+  }
+  ul.errorlist{
+    position: relative;
+    left: 0px;
+  }
 }
 
 

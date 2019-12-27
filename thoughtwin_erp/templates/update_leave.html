@@ -1,20 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col=8">
-            <div class="card">
-                <div class="card-body">
-
-                    <h2>Update Alloted Leave</h2>
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <input class="background_colorbtn" type="submit" value="Update">
-                        </form>
-                </div>
+  <h3 class="employeehead">Update Alloted Leave</h3>
+  <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+       Back
+      </span>
+<div class="card cardalot">
+  <div class="row justify-content-center">
+    <div class="col=8">
+        <div class="card-body">
+          <form method="post" class="leave-form1">
+            {% csrf_token %}
+              {% if form.errors %}
+                {% for error in form.non_field_errors %}
+                  <div class="alert alert-danger">
+                      <strong>{{ error|escape }}</strong>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% for field in form %}
+              <div class="fieldWrapper col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                {% if field.name == 'month' %}
+                    {{ field.errors }}
+                    <label>Start Month</label> {{ field }}
+                {% else %}
+                
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }} 
+                {% endif %}
+              </div>
+            {% endfor %}    
+            <div class="row">
+              <div class="col-md-12">
+                <button class="background_colorbtn" type="submit">Submit</button>
+              </div>
             </div>
-        </div>
+        </form>
+      </div>
     </div>
+  </div>
+</div>
 {% endblock %}
 
 
