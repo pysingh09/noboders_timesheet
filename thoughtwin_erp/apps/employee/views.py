@@ -146,7 +146,6 @@ class EmployeeProfile(DetailView):
         if user.user_leaves.all().exists():
             try:
                 alloted_leave =  user.user_leaves.get(user=request.user, year=datetime.now().year)
-
                 get_taken_leave = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,month=datetime.now().month,status=1).aggregate(Sum('leave'))
 
                 get_taken_leave_year = MonthlyTakeLeave.objects.filter(user=user,year = datetime.now().year,status=1).aggregate(Sum('leave'))
@@ -1101,13 +1100,15 @@ class InOutTimeListView(ListView):
         #     count = 0
         #     less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user)
         #     for last_two_user in less_time_objects:
+                
         #         if last_two_user.date.month == last_month or currunt_month:
         #             if last_two_user.empatt_leave_status == 2:
         #                 if count < 2:
         #                     object_list.append(last_two_user)
         #                     count +=1
         #                 else:
-        #                     pass
+        #                     break
+
         #             elif last_two_user.empatt_leave_status == 3:
         #                 object_list.append(last_two_user)
         #             else:
