@@ -95,7 +95,7 @@ class ProfileForm(forms.ModelForm):
     email =  forms.EmailField()
     class Meta:
         model = Profile
-        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name','email')
+        fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name','email','working_time',)
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor

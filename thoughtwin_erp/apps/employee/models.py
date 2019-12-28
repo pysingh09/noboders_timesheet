@@ -68,7 +68,12 @@ ROLE_CHOICES = (
     (8 , ('Senior Developer')),
     (9 , ('Junior Developer')),  
 )
-
+WORKING_TIME_CHOICES = ( 
+    (6, ('6')),
+    (7, ('7')),
+    (8, ('8')),
+    (9 , ('9')),
+)
 class BaseModel(models.Model):
    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
    modified_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -85,6 +90,7 @@ class Profile(BaseModel):
     profile_image = models.ImageField(upload_to = 'pic_folder/', default = 'avatar-mini-2.jpg')
     teamlead = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Teamlead'), related_name='teamlead')
     designation = models.IntegerField(choices=ROLE_CHOICES, default=7, verbose_name=_('Designation'))
+    working_time = models.IntegerField(choices=WORKING_TIME_CHOICES,default=9, verbose_name=_('Working Time'))
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile_created_by')
 
     def __str__(self):

@@ -355,6 +355,7 @@ def file_upload(request):
         return render(request,template)
 
 def home(request):
+    
     attendances_data = EmployeeAttendance.objects.filter(user=request.user)
     names = set()
     result = []
@@ -400,7 +401,6 @@ def show_hour_calender(request):
     #     if leave.select_leave == 2:
     #             count+=1
     # urgrnt_leave = count
-
     return render(request,'fullcalendar.html', {'attendances_data' : attendances_data})
 
 def show_calendar(request,id):
@@ -411,7 +411,7 @@ def show_calendar(request,id):
         if not att.date in names:
             names.add(att.date)
             result.append(att)
-
+    
     return render(request,'fullcalendar.html', {'attendances_data' : result})
 
 # @csrf_exempt
@@ -518,7 +518,10 @@ def attendence_request_list(request):
     result = []
     email_data = []
     for attendance in attendances:
-        if attendance.date_time_diffrence() < timedelta(hours=9) and attendance.date_time_diffrence() != timedelta(hours=0):
+        
+        if attendance.user.profile.working_time == 9 and attendance.date_time_diffrence() < timedelta(hours=9) and attendance.date_time_diffrence() != timedelta(hours=0):
+            result.append(attendance)
+        elif attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(hours=7) and attendance.date_time_diffrence() != timedelta(hours=0):
             result.append(attendance)
     mail_list = []
     default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])

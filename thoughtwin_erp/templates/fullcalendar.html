@@ -73,6 +73,7 @@ $(document).ready(function() {
                 {% for attendance in attendances_data %}
                     {
                     'title':"{{ attendance.date_time_diffrence }} {% if attendance.empatt_leave_status == 5 %} Absent {% elif attendance.empatt_leave_status == 6 %} Leave {% elif attendance.empatt_leave_status == 7 %} NA {% endif %}",
+                    'working_time':"{{attendance.user.profile.working_time}}",
                     'date':"{{ attendance.date}}",
                     'test':"{{ attendance.empatt_leave_status }}",
                     'id':"{{ attendance.id }}",
@@ -82,10 +83,13 @@ $(document).ready(function() {
                 {% endfor %}
             ],
             eventRender: function (event, element, view) {
+    
                 var test = event.test;
                 var title = event.title.split(":");
                 var total_hour = parseFloat(title[0]);
-                var calculation = parseFloat("9:00");
+                var working_hour = event.working_time;
+                var nine_hours = parseFloat("9:00");
+                var seven_hours = parseFloat("7:00");
                 var id = event.id;
 
                 console.log(test + " __" + title +" __" + total_hour +" : " +id);
@@ -127,9 +131,23 @@ $(document).ready(function() {
                 //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                 //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
                 // }
+                
+                // if (working_hour == 7 && total_hour >=seven_hours || test==3)
+                // if (working_hour == 9 && total_hour >=nine_hours || test==3)
+                // if (working_hour == 9 && total_hour >=nine_hours)
+                // if (working_hour == 7 && total_hour >=seven_hours)   
 
-                if (total_hour >=calculation || test==3) {
+                // if (total_hour >=nine_hours || test==3)
+                // if (test==5)
+                // if (test==6)
+                // if (test==7)
+                // if (total_hour <=nine_hours)
+                if (working_hour == 7 && total_hour >=seven_hours || test==3) {
 
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
+                }
+                else if (working_hour == 9 && total_hour >=nine_hours || test==3) {
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
                 }
@@ -147,8 +165,12 @@ $(document).ready(function() {
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","demo");
                 }
-                if (total_hour <=calculation) {
+                if (working_hour == 9 && total_hour >=nine_hours) {
 
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
+                }
+                else if (working_hour == 7 && total_hour >=seven_hours){
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
                 }
@@ -156,6 +178,36 @@ $(document).ready(function() {
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
                 }
+
+                
+                // if (total_hour >=nine_hours || test==3) {
+
+                //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
+                // }
+                // if (test==5) {
+                //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+
+                //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#5d5d5d').append().attr("id",id).attr("class","demo");
+                // }
+
+                // if (test==6){
+                //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff6e00').append().attr("id",id).attr("class","timedetail");
+                // }
+                // if (test==7) {
+                //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","demo");
+                // }
+                // if (total_hour <=nine_hours) {
+
+                //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
+                // }
+                // else {
+                //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
+                // }
                 
             }
          
