@@ -445,7 +445,7 @@ class LeaveRequestView(View):
                 for attendance in attendance_request_list:
                     # emails = request.POST.getlist('emails[]')
                     attendance.empatt_leave_status = 2
-                    attendance.save()
+                    # attendance.save()
                 
                 mail_list = []
                 default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
@@ -487,6 +487,7 @@ class LeaveRequestView(View):
                 email_subject = "Leave Request For Less Hour ||"" "+user+" "'||'" "+ subject_date
                 
                 text_content = strip_tags(content)
+
                 for email in mail_list:
                     msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL, [email])
                     msg.attach_alternative(content, "text/html")
@@ -520,6 +521,7 @@ def attendence_request_list(request):
     email_data = []
     for attendance in attendances:
         # and attendance.date_time_diffrence() != timedelta(hours=0)
+        
         if attendance.user.profile.working_time == 9 and attendance.date_time_diffrence() < timedelta(hours=9):
 
             result.append(attendance)
@@ -590,7 +592,7 @@ class LeaveStatusView(View):
                 time_diff = employee_attendance.date_time_diffrence()
                 
                 employee_attendance.empatt_leave_status = '3'
-                employee_attendance.save()
+                # employee_attendance.save()
                 # email_date = employee_attendance.date.strftime("%b %d, %Y")
                 full_name = employee_attendance.user.first_name+" "+employee_attendance.user.last_name
                 user = full_name.title()
@@ -663,6 +665,10 @@ class RequestLeaveView(CreateView):
             leave_date = form.data['startdate'].split('-')
             year = int(leave_date[0])
             try:
+                next_year = date.today().year + 1
+                if year == next_year:
+                    messages.error(self.request, 'You Have Not Allotted Any Leave of this year') 
+                    return HttpResponseRedirect('/leave')
                 alloated_leave = AllottedLeave.objects.get(user = self.request.user,year=datetime.now().year)
             except ObjectDoesNotExist:
                 messages.error(self.request, 'You Have Not Allotted Any Leave') 
@@ -945,6 +951,7 @@ def full_leave_status(request):
 
 
         if int(leave.status) == 2:
+
             alloted_leave = leave.user.user_leaves.filter(year=leave.startdate.year).first() 
             get_taken_leave = MonthlyTakeLeave.objects.filter(user=leave.user,year = leave.startdate.year,month=leave.startdate.month,status=1).aggregate(Sum('leave'))
             gettaken = 0
