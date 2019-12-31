@@ -591,7 +591,7 @@ class LeaveStatusView(View):
                 time_diff = employee_attendance.date_time_diffrence()
                 
                 employee_attendance.empatt_leave_status = '3'
-                # employee_attendance.save()
+                employee_attendance.save()
                 # email_date = employee_attendance.date.strftime("%b %d, %Y")
                 full_name = employee_attendance.user.first_name+" "+employee_attendance.user.last_name
                 user = full_name.title()
@@ -631,7 +631,7 @@ class LeaveStatusView(View):
             text_content = strip_tags(content)
             
             msg = EmailMultiAlternatives(email_subject, text_content, settings.FROM_EMAIL,mail_list)
-           
+            
             msg.attach_alternative(content, "text/html")
             msg.send() 
             return JsonResponse({'status': 'success'}) 
