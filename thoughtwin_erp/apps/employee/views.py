@@ -445,7 +445,7 @@ class LeaveRequestView(View):
                 for attendance in attendance_request_list:
                     # emails = request.POST.getlist('emails[]')
                     attendance.empatt_leave_status = 2
-                    # attendance.save()
+                    attendance.save()
                 
                 mail_list = []
                 default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
@@ -521,7 +521,6 @@ def attendence_request_list(request):
     email_data = []
     for attendance in attendances:
         # and attendance.date_time_diffrence() != timedelta(hours=0)
-        
         if attendance.user.profile.working_time == 9 and attendance.date_time_diffrence() < timedelta(hours=9):
 
             result.append(attendance)
