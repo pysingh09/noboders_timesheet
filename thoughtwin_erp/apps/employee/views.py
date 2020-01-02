@@ -666,7 +666,7 @@ class RequestLeaveView(CreateView):
             try:
                 next_year = date.today().year + 1
                 if year == next_year:
-                    messages.error(self.request, 'You Have Not Allotted Any Leave of this year') 
+                    messages.error(self.request, 'You Have Not Allotted Any Leave of this year please contact to HR') 
                     return HttpResponseRedirect('/leave')
                 alloated_leave = AllottedLeave.objects.get(user = self.request.user,year=datetime.now().year)
             except ObjectDoesNotExist:
@@ -1107,6 +1107,16 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
+        # object_list = []
+        # less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
+        # currunt_month = only_datetime.datetime.now().month  
+        # last_month = currunt_month-1 if currunt_month > 1 else 12
+        # for less_hour in less_time_objects:
+        #     if less_hour.date.month == (last_month or currunt_month):
+        #         object_list.append(less_hour)
+        #     else:
+        #         pass
+        # context['object_list'] = object_list
         return context
 
 class InOutTimeListView(ListView):
