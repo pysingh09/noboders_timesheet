@@ -516,11 +516,12 @@ class LeaveListView(PermissionRequiredMixin,ListView):
 
 
 def attendence_request_list(request):
-    attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,5,6])
+    attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,5,6]).exclude(employee_attendance__in_time='00:00:00').order_by('-created_at')
     result = []
     email_data = []
     for attendance in attendances:
         # and attendance.date_time_diffrence() != timedelta(hours=0)
+        # if attendance.empatt_leave_status == 6 or attendance.empatt_leave_status == 5
         if attendance.user.profile.working_time == 9 and attendance.date_time_diffrence() < timedelta(hours=9):
 
             result.append(attendance)
@@ -535,6 +536,17 @@ def attendence_request_list(request):
             
             result.append(attendance)
 
+    object_list = []
+
+    currunt_month = only_datetime.datetime.now().month  
+    last_month = currunt_month-1 if currunt_month > 1 else 12
+    for less_hour in result:
+        if less_hour.date.month == (last_month or currunt_month):
+            object_list.append(less_hour)
+        else:
+            pass
+    # context['object_list'] = object_list
+   
     mail_list = []
     default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
     for usr in default_mail_list:
@@ -552,7 +564,7 @@ def attendence_request_list(request):
     #         email_data.append(user.email)  
     #         email_data.sort() 
     # return render(request,'red_list.html', {'attendance_data' : result,'emails':mail_list,'aaccept_email_data':aaccept_email_data})
-    return render(request,'red_list.html', {'attendance_data' : result,'mail_list':mail_list})
+    return render(request,'red_list.html', {'attendance_data' : object_list,'mail_list':mail_list})
 
 
 # def leave_status(request): # reject/accept leave hour
@@ -1106,17 +1118,17 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
     template_name = "fullday_leave_list.html"
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
-        # object_list = []
-        # less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
-        # currunt_month = only_datetime.datetime.now().month  
-        # last_month = currunt_month-1 if currunt_month > 1 else 12
-        # for less_hour in less_time_objects:
-        #     if less_hour.date.month == (last_month or currunt_month):
-        #         object_list.append(less_hour)
-        #     else:
-        #         pass
-        # context['object_list'] = object_list
+        # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
+        object_list = []
+        less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
+        currunt_month = only_datetime.datetime.now().month  
+        last_month = currunt_month-1 if currunt_month > 1 else 12
+        for less_hour in less_time_objects:
+            if less_hour.date.month == (last_month or currunt_month):
+                object_list.append(less_hour)
+            else:
+                pass
+        context['object_list'] = object_list
         return context
 
 class InOutTimeListView(ListView):
