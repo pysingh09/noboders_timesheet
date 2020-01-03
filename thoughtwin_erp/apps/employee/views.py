@@ -516,19 +516,32 @@ class LeaveListView(PermissionRequiredMixin,ListView):
 
 
 def attendence_request_list(request):
+
     attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,5,6]).exclude(employee_attendance__in_time='00:00:00').order_by('-created_at')
     result = []
     email_data = []
+    # and attendance.date_time_diffrence() != timedelta(hours=0)
     for attendance in attendances:
-        # and attendance.date_time_diffrence() != timedelta(hours=0)
-        # if attendance.empatt_leave_status == 6 or attendance.empatt_leave_status == 5
+        
         if attendance.user.profile.working_time == 9 and attendance.date_time_diffrence() < timedelta(hours=9):
 
             result.append(attendance)
+            # in_out_time = EmployeeAttendanceDetail.objects.filter(employee_attendance = attendance)
+            # for time_detail in in_out_time:
+            #     if time_detail.in_time == time_detail.out_time:
+            #         result.append(time_detail)
+            #     else:
+            #         pass
+            # aaa = attendance.employee_attendance.filter()
+            # print(aaa)
+            # for time_detail in aaa :
+            #     if time_detail.in_time == time_detail.out_time:
+            #         result.append(time_detail)
+            #     else:
+            #         pass
         elif attendance.user.profile.working_time == 8 and attendance.date_time_diffrence() < timedelta(hours=8):
             
             result.append(attendance)
-            
         elif attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(hours=7):
 
             result.append(attendance)
@@ -537,7 +550,6 @@ def attendence_request_list(request):
             result.append(attendance)
 
     object_list = []
-
     currunt_month = only_datetime.datetime.now().month  
     last_month = currunt_month-1 if currunt_month > 1 else 12
     for less_hour in result:
