@@ -53,8 +53,8 @@
             {{ form.working_time }}
           </div>
         <div class="col-md-6">
-          <label>DOB       :</label>
-          {{ form.date_of_birth|attr:"readonly:true" }}
+          <label>DOB:</label>
+          {{ form.date_of_birth}} <!--|attr:"readonly:true" -->
         </div>
         <div class="col-md-6">
           <label>Email Address:</label>
@@ -62,7 +62,7 @@
         </div>
         <div class="col-md-6">
           <label>DOJ       :</label>
-          {{ form.date_of_joining|attr:"readonly:true"}}
+          {{ form.date_of_joining}} <!--|attr:"readonly:true" -->
         </div>
         <div class="col-md-6">
           <label>Team lead   :</label>
@@ -89,7 +89,7 @@
         autoclose: true, 
         todayHighlight: true,
         format: 'yyyy-mm-dd',
-  }).datepicker('update', new Date());
+  }).datepicker('update');
 });
 
 $(function () {
@@ -97,7 +97,7 @@ $(function () {
         autoclose: true, 
         todayHighlight: true,
         format: 'yyyy-mm-dd',
-  }).datepicker('update', new Date());
+  }).datepicker('update');
 });
 
   </script>

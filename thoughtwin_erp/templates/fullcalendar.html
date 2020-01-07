@@ -83,23 +83,25 @@ $(document).ready(function() {
                 {% endfor %}
             ],
             eventRender: function (event, element, view) {
-            
+
                 var test = event.test;
-                var title = event.title.includes('Leave') || event.title.includes('Absent') ? event.title.slice(0,7) : event.title
-                var total_hour = title.trim('')
-                // var title = event.title.split(":");
-                // var total_hour = parseFloat(title[0]);
+                var title = event.title.includes(' ') || event.title.includes('NA') || event.title.includes('Leave') || event.title.includes('Absent') ? event.title.slice(0,7) : event.title
+                // this.title.split(':')[0].length === 1 ? `0${this.title}` : this.title
+                var total_hour = title
+                var a = total_hour.split(':');
+                var total_hour = (+a[0]) * 60 + (+a[1]);
                 var working_hour = event.working_time;
-                var nine_hours  = "9:00:00";
-                var eight_hours = "8:00:00";
-                var seven_hours = "7:00:00";
-                var six_hours   = "6:00:00";
-                var eight_N_half_hours = "8:30:00";
-                var seven_N_half_hours = "7:30:00";
-                var six_N_half_hours   = "6:30:00";
+                var nine_hours  = 540;  // "9:00:00"
+                var eight_hours = 480;  // "8:00:00"
+                var seven_hours = 420;  // "7:00:00"
+                var six_hours   = 360;  // "6:00:00"
+                var eight_N_half_hours = 510; // "8:30:00"
+                var seven_N_half_hours = 450; // "7:30:00"
+                var six_N_half_hours   = 390; // "6:30:00"
                 var id = event.id;
-                total_hour = total_hour.includes('0:00:00') ? parseInt(total_hour) : total_hour;
-                console.log(test + " __" + title +" __" + total_hour +" : " +id);
+
+                // total_hour = total_hour.includes('0:00:00') ? parseInt(total_hour) : total_hour;
+                // console.log(test + " __" + title +" __" + total_hour +" : " +id);
                 // var urgent_leave_count = event.urgent_leave;
                 // var count = 0;
 
@@ -144,7 +146,7 @@ $(document).ready(function() {
                 // if (test==6)
                 // if (test==7)
                 // if (total_hour <=nine_hours)
-                // debugger
+              
                 if (working_hour == 7 && total_hour >=nine_hours || test==3) {
 
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
