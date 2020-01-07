@@ -83,17 +83,22 @@ $(document).ready(function() {
                 {% endfor %}
             ],
             eventRender: function (event, element, view) {
-    
+            
                 var test = event.test;
-                var title = event.title.split(":");
-                var total_hour = parseFloat(title[0]);
+                var title = event.title.includes('Leave') || event.title.includes('Absent') ? event.title.slice(0,7) : event.title
+                var total_hour = title.trim('')
+                // var title = event.title.split(":");
+                // var total_hour = parseFloat(title[0]);
                 var working_hour = event.working_time;
-                var nine_hours  = parseFloat("9:00");
-                var eight_hours = parseFloat("8:00");
-                var seven_hours = parseFloat("7:00");
-                var six_hours   = parseFloat("6:00");
+                var nine_hours  = "9:00:00";
+                var eight_hours = "8:00:00";
+                var seven_hours = "7:00:00";
+                var six_hours   = "6:00:00";
+                var eight_N_half_hours = "8:30:00";
+                var seven_N_half_hours = "7:30:00";
+                var six_N_half_hours   = "6:30:00";
                 var id = event.id;
-
+                total_hour = total_hour.includes('0:00:00') ? parseInt(total_hour) : total_hour;
                 console.log(test + " __" + title +" __" + total_hour +" : " +id);
                 // var urgent_leave_count = event.urgent_leave;
                 // var count = 0;
@@ -134,38 +139,50 @@ $(document).ready(function() {
                 //     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
                 // }
                 
-                // if (working_hour == 7 && total_hour >=seven_hours || test==3)
-                // if (working_hour == 9 && total_hour >=nine_hours || test==3)
-                // if (working_hour == 9 && total_hour >=nine_hours)
-                // if (working_hour == 7 && total_hour >=seven_hours)   
-
                 // if (total_hour >=nine_hours || test==3)
                 // if (test==5)
                 // if (test==6)
                 // if (test==7)
                 // if (total_hour <=nine_hours)
-                if (working_hour == 9 && total_hour >=nine_hours || test==3) {
+                // debugger
+                if (working_hour == 7 && total_hour >=nine_hours || test==3) {
 
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
                 }
 
-                else if (working_hour == 8 && total_hour >=eight_hours || test==3) {
+                else if (working_hour == 6 && total_hour >=eight_N_half_hours || test==3) {
+
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
                 }
 
-                else if (working_hour == 7 && total_hour >=seven_hours || test==3) {
+                else if (working_hour == 5 && total_hour >=eight_hours || test==3) {
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
                 }
 
-                else if (working_hour == 6 && total_hour >=six_hours || test==3) {
+                else if (working_hour == 4 && total_hour >=seven_N_half_hours || test==3) {
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
                 }
 
+                else if (working_hour == 3 && total_hour >=seven_hours || test==3) {
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
+                }
+
+                else if (working_hour == 2 && total_hour >=six_N_half_hours || test==3) {
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
+                }
+
+                else if (working_hour == 1 && total_hour >=six_hours || test==3) {
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append().attr("id",id).attr("class","timedetail");
+                }
                 else if (test==5 && total_hour == 0) {
+                 
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
 
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#5d5d5d').append().attr("id",id).attr("class","demo");
@@ -179,20 +196,35 @@ $(document).ready(function() {
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","demo");
                 }
-                else if (working_hour == 9 && total_hour <= nine_hours) {
+                else if (working_hour == 7 && total_hour <= nine_hours) {
 
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
                 }
-                else if (working_hour == 8 && total_hour <= eight_hours){
+                // eight_N_half_hours
+                // seven_N_half_hours
+                // six_N_half_hours
+                else if (working_hour == 6 && total_hour <= eight_N_half_hours){
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
                 }
-                else if (working_hour == 7 && total_hour <= seven_hours){
+                else if (working_hour == 5 && total_hour <= eight_hours){
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
                 }
-                else if (working_hour == 6 && total_hour <= six_hours){
+                else if (working_hour == 4 && total_hour <= seven_N_half_hours){
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
+                }
+                else if (working_hour == 3 && total_hour <= seven_hours){
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
+                }
+                else if (working_hour == 2 && total_hour <= six_N_half_hours){
+                    var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                    view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
+                }
+                else if (working_hour == 1 && total_hour <= six_hours){
                     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').append().attr("id",id).attr("class","timedetail");
                 }
@@ -201,7 +233,8 @@ $(document).ready(function() {
                     view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000').attr("id",id).attr("class","timedetail");
                 }
 
-                
+                // previous code, belove code is before adding working_hour. 
+
                 // if (total_hour >=nine_hours || test==3) {
 
                 //     var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
@@ -232,10 +265,8 @@ $(document).ready(function() {
                 // }
                 
             }
-         
         });
     });
-
 
     $(document).ready(function(){
       $(document).on('click', '.timedetail', function(e){
