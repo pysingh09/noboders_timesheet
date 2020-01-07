@@ -1,6 +1,7 @@
 import json,csv,io
 from datetime import datetime, date, timedelta
 import datetime as only_datetime
+from dateutil import relativedelta
 
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
@@ -272,6 +273,7 @@ class EditProfileView(PermissionRequiredMixin,UpdateView):
         except Exception as e:
             raise
 
+
 @csrf_exempt
 def delete_record(request):
     try:    
@@ -516,14 +518,15 @@ class LeaveListView(PermissionRequiredMixin,ListView):
 
 
 def attendence_request_list(request):
-
+    
     attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,5,6]).exclude(employee_attendance__in_time='00:00:00').order_by('-created_at')
     result = []
     email_data = []
     # and attendance.date_time_diffrence() != timedelta(hours=0)
+
     for attendance in attendances:
-        
-        if attendance.user.profile.working_time == 9 and attendance.date_time_diffrence() < timedelta(hours=9):
+
+        if attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(hours=9):
 
             result.append(attendance)
             # in_out_time = EmployeeAttendanceDetail.objects.filter(employee_attendance = attendance)
@@ -539,21 +542,34 @@ def attendence_request_list(request):
             #         result.append(time_detail)
             #     else:
             #         pass
-        elif attendance.user.profile.working_time == 8 and attendance.date_time_diffrence() < timedelta(hours=8):
-            
-            result.append(attendance)
-        elif attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(hours=7):
+
+        elif attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(hours=8):
 
             result.append(attendance)
-        elif attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(hours=6):
+        elif attendance.user.profile.working_time == 3 and attendance.date_time_diffrence() < timedelta(hours=7):
+
+            result.append(attendance)
+        elif attendance.user.profile.working_time == 1 and attendance.date_time_diffrence() < timedelta(hours=6):
+
+            result.append(attendance)
+        elif attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(hours=8, minutes=30):
             
+            result.append(attendance)
+        elif attendance.user.profile.working_time == 4 and attendance.date_time_diffrence() < timedelta(hours=7, minutes=30):
+
+            result.append(attendance)
+        elif attendance.user.profile.working_time == 2 and attendance.date_time_diffrence() < timedelta(hours=6, minutes=30):
+
             result.append(attendance)
 
     object_list = []
+    
     currunt_month = only_datetime.datetime.now().month  
     last_month = currunt_month-1 if currunt_month > 1 else 12
     for less_hour in result:
-        if less_hour.date.month == (last_month or currunt_month):
+        if less_hour.date.month == last_month:
+            object_list.append(less_hour)
+        elif less_hour.date.month == currunt_month:
             object_list.append(less_hour)
         else:
             pass
@@ -854,11 +870,23 @@ class AllEmpLeaveListView(ListView):
         # context['object_list'] = Leave.objects.filter(status=1)
         if self.request.user.groups.exists():
             group_name = self.request.user.groups.first().name
-            if 'leave' in self.request.GET:
-                context['object_list'] = self.queryset.filter(status=2)
-                return context
+            currunt_date = only_datetime.datetime.now()
+            cr_year = only_datetime.datetime.now().year
+            cr_month = only_datetime.datetime.now().month
+            cr_eleventh_day = only_datetime.datetime(year=cr_year, month=cr_month, day=11)
+            cr_first_day = only_datetime.datetime(year=cr_year, month=cr_month, day=1)
+            nextmonth_eleventh_day = date.today() + relativedelta.relativedelta(months=1,day=11)
+            lastmonth_first_day = date.today() - relativedelta.relativedelta(months=1,day=1)
+
+            if currunt_date < cr_eleventh_day:
+                context['object_list'] =self.queryset.filter(status__in=[1,2,3],created_at__range=(lastmonth_first_day, cr_eleventh_day))
             else:
-                return context
+                context['object_list'] =self.queryset.filter(status__in=[1,2,3],created_at__range=(cr_first_day, nextmonth_eleventh_day))
+            return context
+            # last_month = currunt_month-1 if currunt_month > 1 else 12
+            # last_year = now.year - 1
+            # currunt_date = str(currunt_month).split(' ')
+            
         # usr = User.objects.filter(email=self.request.user.email)
         # profiles = Profile.objects.filter(teamlead=usr[0])
         # users =[]
@@ -1136,10 +1164,13 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
         currunt_month = only_datetime.datetime.now().month  
         last_month = currunt_month-1 if currunt_month > 1 else 12
         for less_hour in less_time_objects:
-            if less_hour.date.month == (last_month or currunt_month):
+            if less_hour.date.month == last_month:
+                object_list.append(less_hour)
+            elif less_hour.date.month == currunt_month:
                 object_list.append(less_hour)
             else:
                 pass
+                
         context['object_list'] = object_list
         return context
 
