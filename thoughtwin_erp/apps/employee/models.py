@@ -182,8 +182,9 @@ class AllottedLeave(BaseModel):
         except Exception as e:
              return self.user.user_leaves.filter(user=self.user, year=datetime.datetime.now().year).aggregate(Sum('leave'))['leave__sum']
 
-class EmployeeAttendanceDetail(models.Model):
+class EmployeeAttendanceDetail(BaseModel):
     employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE, related_name='employee_attendance')
+    date = models.DateField(blank=True, verbose_name=_('Date'))
     in_time = models.TimeField(blank=True, verbose_name=_('Time In')) 
     out_time = models.TimeField(blank=True, verbose_name=_('Time Out'))
 

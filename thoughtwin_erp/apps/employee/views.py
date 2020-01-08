@@ -317,7 +317,7 @@ def file_upload(request):
             employee_id = sheet.cell_value(i+3,0)
             in_time = sheet.cell_value(i+3,3)    
             out_time = sheet.cell_value(i+3,sheet.ncols-1) #sheet.cell_value(i+4,3)
-            dat = sheet.cell_value(0,7).split('/')
+            date = sheet.cell_value(0,7).split('/')
        
 
             if in_time =='--:--' and out_time =='--:--':
@@ -337,10 +337,9 @@ def file_upload(request):
                 emp, created = EmployeeAttendance.objects.update_or_create(
                     user=profile.user,
                     employee_id = profile.employee_id,
-                    date = dat[2]+'-'+dat[1]+'-'+dat[0],
+                    date = date[2]+'-'+date[1]+'-'+date[0],
                     created_by=profile.user,
                 )
-
                 if emp:
                     emp_details = EmployeeAttendanceDetail.objects.filter(employee_attendance=emp)
                     if emp_details.exists():
@@ -349,7 +348,8 @@ def file_upload(request):
                     employee_attendance=emp,
                     in_time = in_time,
                     out_time = out_time,
-                    )
+                    date = date[2]+'-'+date[1]+'-'+date[0],
+                )
         messages.success(request, ' File Successfully Uploaded.')
         return render(request,template)
     except Exception as e:
@@ -358,15 +358,26 @@ def file_upload(request):
 
 def home(request):
     
-    attendances_data = EmployeeAttendance.objects.filter(user=request.user)
-    names = set()
-    result = []
+    attendances_data = EmployeeAttendance.objects.filter(user=request.user).order_by('-created_at')
+    names = set(); object_list = []; result = [];
+
     for att in attendances_data:
         if not att.date in names and att.date_time_diffrence() != timedelta(hours=0):
             names.add(att.date)
             result.append(att)
 
-    return render(request,'home.html', {'attendances_data' : result})
+    currunt_month = only_datetime.datetime.now().month  
+    last_month = currunt_month-1 if currunt_month > 1 else 12
+    
+    for login_hour in result:
+        if login_hour.date.month == last_month:
+            object_list.append(login_hour)
+        elif login_hour.date.month == currunt_month:
+            object_list.append(login_hour)
+        else:
+            pass
+
+    return render(request,'home.html', {'attendances_data' : object_list})
 
 def date_time_attendence_view(request):
     attendance = EmployeeAttendance.objects.get(id = request.POST.get("attendance_id"))
@@ -523,26 +534,11 @@ def attendence_request_list(request):
     result = []
     email_data = []
     # and attendance.date_time_diffrence() != timedelta(hours=0)
-
     for attendance in attendances:
 
         if attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(hours=9):
 
             result.append(attendance)
-            # in_out_time = EmployeeAttendanceDetail.objects.filter(employee_attendance = attendance)
-            # for time_detail in in_out_time:
-            #     if time_detail.in_time == time_detail.out_time:
-            #         result.append(time_detail)
-            #     else:
-            #         pass
-            # aaa = attendance.employee_attendance.filter()
-            # print(aaa)
-            # for time_detail in aaa :
-            #     if time_detail.in_time == time_detail.out_time:
-            #         result.append(time_detail)
-            #     else:
-            #         pass
-
         elif attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(hours=8):
 
             result.append(attendance)
