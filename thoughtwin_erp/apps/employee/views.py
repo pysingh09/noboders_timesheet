@@ -89,7 +89,8 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
             context['form2'] = self.second_form_class()
         return context
 
-    def form_invalid(self, form,**kwargs): 
+    def form_invalid(self, form,**kwargs):
+       
         # context['form'] = super().form_invalid(form)
         context = self.get_context_data(**kwargs)
         context['form2'] = self.second_form_class(self.request.POST)
@@ -898,6 +899,7 @@ class EmpLeaveListView(ListView):
     ordering = ['-created_at']
     def get_context_data(self, **kwargs):
         context = super(EmpLeaveListView, self).get_context_data(**kwargs)
+       
         usr = User.objects.filter(email=self.request.user.email)
         profiles = Profile.objects.filter(teamlead=usr[0])
         users =[]
@@ -1182,7 +1184,7 @@ class InOutTimeListView(ListView):
         object_list = []
         
         # for profile in profiles:
-        #     count = 0
+        #     count = 0    
         #     less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user)
         #     for last_two_user in less_time_objects:
         #         if count >= 2:

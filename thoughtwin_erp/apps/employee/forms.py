@@ -49,7 +49,7 @@ class SignUpForm(UserCreationForm):
        # if not password == re_password:
        #     raise ValidationError('Passwords must match')
     # def clean_password1(self):
-    #     import pdb; pdb.set_trace()
+   
     #     validate_password(self.cleaned_data.get('password1'))
 ROLE_CHOICES = ( 
     (1, ('MD')),
