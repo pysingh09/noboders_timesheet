@@ -93,9 +93,11 @@ class ProfileForm(forms.ModelForm):
     date_of_joining = forms.DateField(input_formats=['%Y-%m-%d'])
     contact_no = forms.IntegerField()
     email =  forms.EmailField()
+    teamlead = forms.ModelChoiceField(queryset=User.objects.all().order_by('username'))
     class Meta:
         model = Profile
         fields = ('employee_id','contact_no','designation','date_of_birth','date_of_joining','teamlead', 'first_name', 'last_name','email','working_time',)
+
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor

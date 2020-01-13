@@ -125,9 +125,6 @@ class UserCreateView(PermissionRequiredMixin,CreateView):
                     profile_form = ProfileForm()
                     messages.error(self.request,'Fields Fill Correctly')
                     return render(self.request, 'registration/signup.html',{'form': user_form, 'form2': profile_form}) 
-
-                    
-
             else:
                 user_form = SignUpForm()
                 profile_form = ProfileForm()
@@ -531,7 +528,7 @@ class LeaveListView(PermissionRequiredMixin,ListView):
 
 def attendence_request_list(request):
     
-    attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,2,3,4,5,6]).exclude(employee_attendance__in_time='00:00:00').order_by('-created_at')
+    attendances = EmployeeAttendance.objects.filter(user=request.user,empatt_leave_status__in=[1,3,4,5,6]).exclude(employee_attendance__in_time='00:00:00').order_by('-created_at')
     result = []
     email_data = []
     # and attendance.date_time_diffrence() != timedelta(hours=0)
@@ -1158,7 +1155,7 @@ class FullLeaveListView(PermissionRequiredMixin,ListView):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
         object_list = []
-        less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
+        less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,]).order_by('-created_at')
         currunt_month = only_datetime.datetime.now().month  
         last_month = currunt_month-1 if currunt_month > 1 else 12
         for less_hour in less_time_objects:
@@ -1202,7 +1199,7 @@ class InOutTimeListView(ListView):
         #                 pass
 
         for profile in profiles:
-            less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user).order_by('-id')[:2]
+            less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,],user=profile.user).order_by('-id')[:2]
             for last_two_user in less_time_objects:
                 object_list.append(last_two_user)
 
