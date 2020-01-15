@@ -115,7 +115,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#settings.py
 
+AUTHENTICATION_BACKENDS = (
+    'thoughtwin_erp.apps.employee.auth_email_backend.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 

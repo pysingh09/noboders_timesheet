@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 
 from employee.models import MonthlyTakeLeave,Profile, EmployeeAttendance, AllottedLeave,EmployeeAttendanceDetail,Leave,LeaveDetails
-from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm,ProfileEditForm 
+from employee.forms import SignUpForm, ProfileForm, AllottedLeavesForm,LeaveCreateForm,UserProfileForm,changePassForm,ProfileEditForm,CustomAuthForm
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -22,6 +22,7 @@ from time import sleep
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+
 from django.contrib.auth.views import login, logout
 from django.core.mail import EmailMessage,send_mail, EmailMultiAlternatives
 
@@ -51,22 +52,20 @@ fs = FileSystemStorage()
 def login_view(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
-            form = AuthenticationForm(data=request.POST)
+            form = CustomAuthForm(data=request.POST)
             if form.is_valid():
                 user = form.get_user()
                 login(request,user)
                 return redirect('employee:profile')
             else:
-
                 return render(request,'registration/login.html',{ 'form':form})
-
         else:
-            form = AuthenticationForm()
+            form = CustomAuthForm()
             messages.error(request,'')
         return render(request,'registration/login.html',{ 'form':form})
     else:
         return redirect('employee:profile')
-            
+       
 
 def index(request):
     if not request.user.is_authenticated:

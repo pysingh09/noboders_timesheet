@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import auth
 from django.forms import ValidationError
 from django.contrib.auth.password_validation import CommonPasswordValidator
+from django.forms import CharField, Form, PasswordInput
 # from phonenumber_field.formfields import PhoneNumberField
 
 # class SignUpForm(forms.ModelForm):
@@ -25,6 +26,11 @@ from django.contrib.auth.password_validation import CommonPasswordValidator
 #         if email and SignUp.objects.filter(email=email).exclude(username=username).exists():
 #             raise forms.ValidationError('Email address already exist.')
 #         return email
+
+
+class CustomAuthForm(AuthenticationForm):
+    username = forms.CharField(max_length=75, label='Email/username')
+    password = forms.CharField(widget=PasswordInput(attrs={'class': 'span2','placeholder':'Password'}))
 
 class SignUpForm(UserCreationForm):
     class Meta:
