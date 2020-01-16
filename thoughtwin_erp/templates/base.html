@@ -39,6 +39,8 @@
         <div id="wrapper">
             {% if request.user|has_group:"HR" or request.user|has_group:"MD" %}
                 {% include "layout/menu/admin.html" %}
+            {% elif request.user|has_group:"TeamLead" %}
+                {% include "layout/menu/team_lead.html" %}
             {% else %}
                 {% include "layout/menu/employee.html" %}
             {% endif %}
