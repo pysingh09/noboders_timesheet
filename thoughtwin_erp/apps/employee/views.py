@@ -739,9 +739,18 @@ class RequestLeaveView(CreateView):
             leave_type = form.data['leave_type']
             for i in range(delta.days + 1):
                 if leave_type == '2':
+                    #delete existing obj if file uploaded before leave request.
+                    leave_obj = EmployeeAttendance.objects.filter(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = startdate1)
+                    leave_obj.delete()
+
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
+
                 if leave_type == '3':
+                    leave_obj = EmployeeAttendance.objects.filter(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = startdate1)
+                    leave_obj.delete()
+
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
+
             leave.leave_type = form.data['leave_type']
             leave.select_leave = form.data['select_leave']
             leave.user = self.request.user
@@ -1178,7 +1187,6 @@ class InOutTimeListView(ListView):
         currunt_month = only_datetime.datetime.now().month  
         last_month = currunt_month-1 if currunt_month > 1 else 12
         object_list = []
-        
         # for profile in profiles:
         #     count = 0    
         #     less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,3,4],user=profile.user)
@@ -1196,11 +1204,13 @@ class InOutTimeListView(ListView):
         #                 object_list.append(last_two_user)
         #             else:
         #                 pass
-
         for profile in profiles:
             less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,],user=profile.user).order_by('-id')[:2]
-            for last_two_user in less_time_objects:
-                object_list.append(last_two_user)
+            for login_time in less_time_objects:
+                if login_time.date.month == last_month:
+                    object_list.append(login_time)
+                elif login_time.date.month == currunt_month:
+                    object_list.append(login_time)
 
         context['object_list'] = object_list
 
@@ -1314,7 +1324,6 @@ class EmployeeUpdateView(UpdateView):
     form_class = ProfileEditForm
     template_name = 'edit_form.html'
     success_url = reverse_lazy('')
-
     def form_valid(self, form, *args, **kwargs):
         profile = self.object
         profile.user.first_name = form.data['first_name']
