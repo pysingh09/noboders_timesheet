@@ -739,16 +739,13 @@ class RequestLeaveView(CreateView):
             leave_type = form.data['leave_type']
             for i in range(delta.days + 1):
                 if leave_type == '2':
-                    #delete existing obj if file uploaded before leave request.
+                    #delete existing obj if file uploaded before leave request only in halfday case.
                     leave_obj = EmployeeAttendance.objects.filter(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = startdate1)
                     leave_obj.delete()
 
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '0.5')
 
                 if leave_type == '3':
-                    leave_obj = EmployeeAttendance.objects.filter(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = startdate1)
-                    leave_obj.delete()
-
                     emp, created = EmployeeAttendance.objects.update_or_create(user=self.request.profile.user,employee_id = self.request.profile.employee_id,date = d1 + timedelta(days=i),created_by=self.request.user,empatt_leave_status=5,leave_day_time = '1.0')
 
             leave.leave_type = form.data['leave_type']
@@ -1266,13 +1263,13 @@ class ForgotPassword(View):
                 except Exception as e:
                     messages.error(self.request, 'Email Not Exist')
                     return HttpResponseRedirect('/forgot-password/')
-                    
+                
                 password = User.objects.make_random_password(length=8, allowed_chars='123456789')
                 user.set_password(password)
                 user.save()
                 body = "Hi there. \n You have requested a new password for your account on Testing.\nYour temporary password is "+password+""
                 send_mail = EmailMessage("Forgot password",body,settings.FROM_EMAIL,to=[user.email])
-                send_mail.send() 
+                send_mail.send()
                 messages.success(self.request, 'Check Your Password In Mail') 
                 return HttpResponseRedirect('/login/')
         except Exception as e:

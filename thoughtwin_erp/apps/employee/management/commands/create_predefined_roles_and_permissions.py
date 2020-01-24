@@ -9,6 +9,7 @@ class Command(BaseCommand):
 
         predefined_roles = ['MD','Project Manager','BDE','HR','TeamLead','Trainee','QA','Senior Developer','Junior Developer']
         for role in predefined_roles:
+            
             group, created = Group.objects.get_or_create(name=role)
             
         self.stdout.write(self.style.SUCCESS('Successfully Done'))

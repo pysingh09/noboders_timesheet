@@ -37,9 +37,9 @@
     <body>
         {% include "layout/menu.html" %}
         <div id="wrapper">
-            {% if request.user|has_group:"HR" or request.user|has_group:"MD" %}
+            {% if request.user.groups.first.name == "HR" or request.user.groups.first.name == "MD" %}
                 {% include "layout/menu/admin.html" %}
-            {% elif request.user|has_group:"TeamLead" %}
+            {% elif request.user.groups.first.name == "TeamLead" %}
                 {% include "layout/menu/team_lead.html" %}
             {% else %}
                 {% include "layout/menu/employee.html" %}
