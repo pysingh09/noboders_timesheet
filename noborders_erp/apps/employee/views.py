@@ -1261,6 +1261,7 @@ class ForgotPassword(View):
                 try:
                     user = User.objects.get(email=email)
                 except Exception as e:
+                    
                     messages.error(self.request, 'Email Not Exist')
                     return HttpResponseRedirect('/forgot-password/')
                 
@@ -1325,15 +1326,14 @@ class EmployeeUpdateView(UpdateView):
         profile = self.object
         profile.user.first_name = form.data['first_name']
         profile.user.last_name = form.data['last_name']     
-        if form.files.get('profile_image')==None:   
+        if form.files.get('profile_image')==None: 
             pass
         else:
             profile.profile_image = form.files.get('profile_image')
         profile.contact_no = form.data['contact_no']
         profile.user.save()
         profile.save()
-        return redirect('employee:profile')
-        
+        return redirect('employee:profile')  
 
 
 

@@ -25,7 +25,7 @@
   </ul>
 </div>
 <!-- Modal -->
-
+    
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
     
@@ -60,7 +60,6 @@
   {{block.super}}
 
 <script>
-    
 $(document).ready(function() {
     var geodata = "{{ attendances_data | safe }}";
     $('#calendar').fullCalendar({
@@ -268,6 +267,7 @@ $(document).ready(function() {
                 
             }
         });
+
     });
 
     $(document).ready(function(){
