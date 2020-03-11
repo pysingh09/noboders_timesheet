@@ -3,7 +3,7 @@ import os
 import sys
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "thoughtwin_erp.settings.production")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "noborders_erp_erp.settings.production")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

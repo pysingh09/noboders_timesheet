@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block content %}
+{%if request.user.is_superuser%}
+ <h1>Project Information Dashboard</h1>
+ <table border="5">
+ <thead >
+ <th> Employe name</th>
+ <th>Project name</th>
+ <th>Actions</th>
+ </thead>
+ {% for assigns in assign %}
+ <tr>
+ <td>{{assigns.employe.username}}</td>
+ <td>{{assigns.project.project_name}}</td>
+ <td> <a href="/assign_project_update/{{assigns.id}}">UPDATE</a> <a href="/assign_project_delete/{{assigns.id}}">DELETE</a></td>
+ </tr>
+ {% endfor %}
+ </table><br>
+ <a href="/assign_project" class="btn btn-success btn-lg">INSERT NEW PROJECT</a>
+  {% endif %}
+  {% endblock %}	

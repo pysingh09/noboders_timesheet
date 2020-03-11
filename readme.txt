@@ -1,0 +1,1 @@
+leave/list = confirm leave status by superuser

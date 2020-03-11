@@ -7,7 +7,7 @@ ALLOWED_HOSTS = ["*"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "thoughtwin_erp",
+        "NAME": "noborders_erp",
         "USER": "ashutosh",
         "PASSWORD": "adminadmin",
         "HOST": "localhost",

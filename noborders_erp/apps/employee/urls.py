@@ -19,7 +19,7 @@ urlpatterns = [
     path("profile/", EmployeeProfile.as_view(), name="profile"),
     path("deactivate/<int:pk>/", deactivate_user, name="deactivate-user"),
     path("delete_record/", delete_record, name="delete_record"),
-    path("update/<int:pk>/", EditProfileView.as_view(), name="update"),
+    path("update_leave/<int:pk>/", EditProfileView.as_view(), name="update"),
     path(
         "profile_update/<int:pk>/", EmployeeUpdateView.as_view(), name="profile_update"
     ),
@@ -49,7 +49,7 @@ urlpatterns = [
     path("send/ooo", send_ooo_on_reject, name="send-ooo-on-reject"),
     path("leave", RequestLeaveView.as_view(), name="request-full-leave"),
     path("all/leave/list", AllEmpLeaveListView.as_view(), name="all-leave-list"),
-    path("leave/list", EmpLeaveListView.as_view(), name="leave-list"),
+    path("                                                                                                                                                            leave/list", EmpLeaveListView.as_view(), name="leave-list"),
     path("myleave/list", MyLiveListView.as_view(), name="my-leave-list"),
     path("fullday/leave/list", FullLeaveListView.as_view(), name="fullday-list"),
     path("team/request", InOutTimeListView.as_view(), name="in-out-request-list"),
@@ -57,4 +57,24 @@ urlpatterns = [
     path("forgot-password/", ForgotPassword.as_view(), name="forgot_password"),
     # path('show-leave-list/',ShowLeaveListView.as_view(),name='show-leave-list'),
     path("delete-leave/", delete_leave, name="del-leave-list"),
+    path('project_detail/', project_index, name='project-detail'),
+    path('project_lead_detail/', lead_index, name='lead-detail'),
+    path('create_project/',create_projectview),
+    path('delete_project/<int:pk>/', project_delete_view),
+    path('update_project/<int:pk>/', project_update_view),
+    path('client_detail/',client_index, name='client-detail'),
+    path('create_client/',create_client_view),
+    path('delete_client/<int:pk>/', client_delete_view),
+    path('update_client/<int:pk>/', client_update_view),
+
+    path('assign', assign, name='assign'),
+    path('assign_project/', assign_project_view, name='assign-project'),
+    path('assign_project_delete/<int:pk>/', assign_delete_view),
+    path('assign_project_update/<int:pk>/', assign_update_view),
+    path('daily_update/', allemployedailyupdates, name='daily-update'),
+    path('employedaily_update', employedailyupdate, name='employe-dailyupdate'),
+    #path('employe_project_update/',employeprojectupdate)
+    
+
+
 ]

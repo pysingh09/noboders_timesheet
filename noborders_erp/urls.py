@@ -35,7 +35,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('admin/', admin.site.urls),
-    # path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', include('employee.urls', namespace='employee')),
     # path('login/', auth_views.login, name='login'),
     

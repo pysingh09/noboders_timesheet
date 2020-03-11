@@ -1,5 +1,5 @@
 """
-WSGI config for thoughtwin_erp project.
+WSGI config for noborders_erp project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

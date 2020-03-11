@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block content %}
+
+<!DOCTYPE html>
+      <form method="post">
+       {% csrf_token %}
+       Client Name :<input type="text" name="client_name" value="{{client.client_name}}"><br>
+       Client Refrences  :<input type="text" name="client_refrences" value="{{client.client_refrences}}"><br><hr><hr><hr>
+       <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
+   </form>
+{% endblock %}

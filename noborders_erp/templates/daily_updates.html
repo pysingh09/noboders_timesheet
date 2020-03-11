@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block content %}
+{%if request.user.is_superuser%}
+ <h1>Project Information Dashboard</h1>
+ <table border="5">
+ <thead >
+ <th>employe name</th>
+ <th>Project name</th>
+ <th>Project billiable summary</th>
+ <th>Project billiable time</th>
+ <th>Project non-billiable summary</th>
+ <th>Project non-billiable time</th>
+ 
+ </thead>
+ {% for daily_updates in daily_update %}
+ <tr>
+ <td>{{daily_updates.project_name.employe.username}}</td>
+ <td>{{daily_updates.project_name.project.project_name}}</td>
+ <td>{{daily_updates.billable_summary}}</td>
+ <td>{{daily_updates.billable_time}}</td>
+ <td>{{daily_updates.non_billable_summary}}</td>
+ <td>{{daily_updates.non_billable_time}}</td>
+{% endfor %}
+{%endif%}
+ {% endblock %}
+
+
+
+
+

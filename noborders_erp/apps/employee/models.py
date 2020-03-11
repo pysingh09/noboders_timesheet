@@ -130,7 +130,6 @@ class Profile(BaseModel):
     )
 
     def __str__(self):
-
         return self.user.username
 
     class Meta:
@@ -297,6 +296,12 @@ class LeaveDetails(models.Model):
     )
 
 
+LEAVE_MONTH_STATUS_CHOICES = (
+    (1, "Paid"),
+    (2, "Unpaid"),
+)
+
+
 class MonthlyTakeLeave(BaseModel):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_take_leaves"
@@ -313,3 +318,35 @@ class MonthlyTakeLeave(BaseModel):
         null=True,
         related_name="monthy_leave_created_by",
     )
+class Client(BaseModel):
+    client_name=models.CharField(max_length=250)
+    client_refrences=models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.client_name
+
+
+class Project(BaseModel):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='client')
+    project_name = models.CharField(max_length=20)
+    project_description  = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.project_name
+
+        
+class AssignProject(BaseModel):
+    employe = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Assign_employee')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='Assign_Project')
+
+    def __str__(self):
+        return self.project.project_name
+
+
+class EmployeeDailyUpdate(BaseModel):
+    project_name = models.ForeignKey(AssignProject, on_delete=models.CASCADE, related_name='Assign_Project')
+    billable_summary = models.TextField()
+    billable_time = models.TimeField(auto_now=False)
+    non_billable_summary = models.TextField()
+    non_billable_time = models.TimeField(auto_now=False)
+   

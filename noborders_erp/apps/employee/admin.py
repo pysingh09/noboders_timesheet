@@ -9,6 +9,10 @@ from .models import (
     EmployeeAttendanceDetail,
     Leave,
     LeaveDetails,
+    Client,
+    Project,
+    AssignProject,
+    EmployeeDailyUpdate
 )
 
 
@@ -27,3 +31,7 @@ admin.site.register(EmployeeAttendanceDetail)
 admin.site.register(Leave)
 admin.site.register(LeaveDetails)
 admin.site.register(MonthlyTakeLeave)
+admin.site.register(Client)
+admin.site.register(Project)
+admin.site.register(AssignProject)
+admin.site.register(EmployeeDailyUpdate)

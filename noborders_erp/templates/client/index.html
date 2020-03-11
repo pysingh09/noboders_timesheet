@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block content %}
+{%if request.user.is_superuser%}
+ <h1>client Information Dashboard</h1>
+ <table border="5">
+ <thead >
+ <th>client name</th>
+ <th>client refrences</th>
+ <th>Actions</th>
+ </thead>
+ {% for clients in client %}
+ <tr>
+ <td>{{clients.client_name}}</td>
+ <td>{{clients.client_refrences}}</td>
+ <td> <a href="/update_client/{{clients.id}}">UPDATE</a> <a href="/delete_client/{{clients.id}}">DELETE</a></td>
+ </tr>
+ {% endfor %}
+ </table><br>
+ <a href="/create_client" class="btn btn-success btn-lg">INSERT NEW client</a>
+  {% endif %}
+  {% endblock %}
+

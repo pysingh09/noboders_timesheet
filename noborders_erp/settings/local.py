@@ -4,9 +4,9 @@ from .base import *
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "thoughtwin_erp",
-        "USER": "ashutosh",
-        "PASSWORD": "adminadmin",
+        "NAME": "erp_db",
+        "USER": "erp_user",
+        "PASSWORD": "erp1234",
         "HOST": "localhost",
         "PORT": 5432,
     }
@@ -47,3 +47,4 @@ FROM_EMAIL = "erp.thoughtwin@gmail.com"
 # EMAIL_HOST_PASSWORD = 'BAcOL3xrj69nRiRw0ncjvnYPkAhotCdgvh5qy7igQ6UX'
 # EMAIL_PORT = 465
 # EMAIL_USE_TLS = True
+TLS = True
