@@ -63,17 +63,21 @@ urlpatterns = [
     path("delete-leave/", delete_leave, name="del-leave-list"),
     path("project_detail/", project_index, name="project-detail"),
     path("project_lead_detail/", lead_index, name="lead-detail"),
+    #########
     path("create_project/", create_projectview),
     path("delete_project/<int:pk>/", project_delete_view),
     path("update_project/<int:pk>/", project_update_view),
+   ######
     path("client_detail/", client_index, name="client-detail"),
     path("create_client/", create_client_view),
     path("delete_client/<int:pk>/", client_delete_view),
     path("update_client/<int:pk>/", client_update_view),
+   #########
     path("assign", assign, name="assign"),
     path("assign_project/", assign_project_view, name="assign-project"),
     path("assign_project_delete/<int:pk>/", assign_delete_view),
     path("assign_project_update/<int:pk>/", assign_update_view),
+    ###########
     path("daily_update/", allemployedailyupdates, name="daily-update"),
     path("employedaily_update", employedailyupdate, name="employe-dailyupdate"),
     path("check_daily_update", checkdailyupdate, name="check-daily-update"),

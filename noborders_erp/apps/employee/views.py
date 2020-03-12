@@ -1,5 +1,5 @@
 import json, csv, io
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, tzinfo, timezone
 import datetime as only_datetime
 from dateutil import relativedelta
 
@@ -1958,16 +1958,21 @@ def checkdailyupdate(request):
 
 def editdailyreport(request, pk):
     edit_report = EmployeeDailyUpdate.objects.get(id=pk)
-    form = EditDailyUpdateForm(request.POST or None, instance=edit_report)
-    if request.method == "POST":
-        import pdb; pdb.set_trace()
-        if form.is_valid():
-            form.save()
-        else:
-            print("data not valid")
-        return redirect("/")
+    #import pdb; pdb.set_trace()
+    date = edit_report.date
+    final_time = date + timedelta(days=0 ,seconds=0, microseconds=0, milliseconds=0, minutes=0)
+    day =  datetime.now(timezone.utc)-final_time 
+    print(day)
+    if day.days < 7:
+        form = EditDailyUpdateForm(request.POST or None, instance=edit_report)
+        if request.method == "POST":
+            if form.is_valid():
+               form.save()
+            return redirect("/")
 
-    return render(request, "employe/edit_report.html", {"edit_report": edit_report})
+        return render(request, "employe/edit_report.html", {"edit_report": edit_report})
+    else:
+        return HttpResponse("you can't edit this")
 
 
 def deletedailyreport(request, pk):

@@ -340,10 +340,10 @@ class Project(BaseModel):
 
 class AssignProject(BaseModel):
     employe = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="Assign_employee"
+        User, on_delete=models.CASCADE, related_name="assign_employee"
     )
     project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, related_name="Assign_Project"
+        Project, on_delete=models.CASCADE, related_name="assign_Project"
     )
 
     def __str__(self):
