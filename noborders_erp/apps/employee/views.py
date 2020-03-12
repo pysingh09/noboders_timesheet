@@ -37,6 +37,7 @@ from employee.forms import (
     ClientForm,
     AssignForm,
     EmployeeDailyUpdateForm,
+    EditDailyUpdateForm,
 )
 
 from django.contrib.auth.models import User
@@ -1946,28 +1947,30 @@ def employedailyupdate(request):
         form = EmployeeDailyUpdateForm(request.user, request.POST)
         if form.is_valid():
             form.save()
-        else:
-            form = form_class(request.user)
         return redirect("/")
     return render(request, "assign/employe_create.html", {"form": form})
 
 
-# def employedailyupdate(request):
-#     ProductFormSet = modelformset_factory(EmployeeDailyUpdate, fields='__all___', extra=0)
-#     data = request.POST or None
-#     formset = EmployeeDailyUpdateForm(data=data, queryset=EmployeeDailyUpdate.objects.filter(user=request.user))
-#     for form in formset:
-#         form.fields['project_name'].queryset = AssignProject.objects.filter(user=request.user)
-
-#     if request.method == 'POST' and formset.is_valid():
-#         formset.save()
-#         return redirect('products_list')
-
-#     return render(request, 'products/products_formset.html', {'formset': formset})
+def checkdailyupdate(request):
+    report = EmployeeDailyUpdate.objects.filter(project_name__employe=request.user)
+    return render(request, "employe/myreport.html", {"report": report})
 
 
-# def employeprojectupdate(request):
-#     import pdb;pdb.set_trace()
-#     username=request.user
-#     user = AssignProject.objects.filter(employe__user=request.user)
-#     print(user)
+def editdailyreport(request, pk):
+    edit_report = EmployeeDailyUpdate.objects.get(id=pk)
+    form = EditDailyUpdateForm(request.POST or None, instance=edit_report)
+    if request.method == "POST":
+        import pdb; pdb.set_trace()
+        if form.is_valid():
+            form.save()
+        else:
+            print("data not valid")
+        return redirect("/")
+
+    return render(request, "employe/edit_report.html", {"edit_report": edit_report})
+
+
+def deletedailyreport(request, pk):
+    assign = EmployeeDailyUpdate.objects.get(id=pk)
+    assign.delete()
+    return redirect("/")

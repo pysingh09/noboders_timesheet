@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block content %}
+ <h1>Project Information Dashboard</h1>
+ <table border="5">
+ <thead >
+ <th>Date</th>	
+ <th>employe name</th>
+ <th>Project name</th>
+ <th>Project billiable summary</th>
+ <th>Project billiable time</th>
+ <th>Project non-billiable summary</th>
+ <th>Project non-billiable time</th>
+ <th>Action</th>
+ </thead>
+ {% for reports in report %}
+ <tr>
+ <td>{{reports.date}}</td>
+ <td>{{reports.project_name.employe.username}}</td>
+ <td>{{reports.project_name.project.project_name}}</td>
+ <td>{{reports.billable_summary}}</td>
+ <td>{{reports.billable_hour}}</td>
+ <td>{{reports.non_billable_summary}}</td>
+ <td>{{reports.non_billable_hour}}</td>
+ 
+ <td> <a href="/edit_daily_update/{{reports.id}}" class="btn btn-primary btn-lg">edit report</a> <a href="/delete_daily_update/{{reports.id}}" class="btn btn-primary btn-lg">Delete</a> </td>
+ 
+{% endfor %}
+ {% endblock %}
+

@@ -12,7 +12,7 @@ from .models import (
     Client,
     Project,
     AssignProject,
-    EmployeeDailyUpdate
+    EmployeeDailyUpdate,
 )
 
 

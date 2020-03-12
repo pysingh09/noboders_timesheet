@@ -9,12 +9,7 @@ from django.contrib import auth
 from django.forms import ValidationError
 from django.contrib.auth.password_validation import CommonPasswordValidator
 from django.forms import CharField, Form, PasswordInput
-from employee.models import (
-    Project, 
-    Client, 
-    AssignProject,
-    EmployeeDailyUpdate
-    )
+from employee.models import Project, Client, AssignProject, EmployeeDailyUpdate
 
 # from phonenumber_field.formfields import PhoneNumberField
 
@@ -35,34 +30,40 @@ from employee.models import (
 #         return email
 class ProjectForm(forms.ModelForm):
     class Meta:
-        model=Project
-        fields='__all__'
+        model = Project
+        fields = "__all__"
 
 
 class ClientForm(forms.ModelForm):
     class Meta:
-        model=Client
-        fields='__all__'
+        model = Client
+        fields = "__all__"
 
 
 class AssignForm(forms.ModelForm):
     class Meta:
-        model=AssignProject
-        fields='__all__'
-
+        model = AssignProject
+        fields = "__all__"
 
 
 class EmployeeDailyUpdateForm(forms.ModelForm):
-    
     class Meta:
-        model=EmployeeDailyUpdate
-        fields='__all__'
+        model = EmployeeDailyUpdate
+        fields = "__all__"
 
-    def __init__(self, user, *args, **kwargs):   
+    def __init__(self, user, *args, **kwargs):
         super(EmployeeDailyUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['project_name'].queryset = AssignProject.objects.filter(employe=user) 
+        self.fields["project_name"].queryset = AssignProject.objects.filter(
+            employe=user
+        )
 
-#.objects.filter(project_name__employe__user=User.username)
+
+class EditDailyUpdateForm(forms.ModelForm):
+    class Meta:
+        model = EmployeeDailyUpdate
+        fields = "__all__"
+# .objects.filter(project_name__employe__user=User.username)
+
 
 class CustomAuthForm(AuthenticationForm):
     username = forms.CharField(max_length=75, label="Email/username")

@@ -9,6 +9,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import Sum
 from datetime import datetime, date
 import datetime
+from django.utils import timezone
 
 # from phonenumber_field.modelfields import PhoneNumberField
 
@@ -318,35 +319,43 @@ class MonthlyTakeLeave(BaseModel):
         null=True,
         related_name="monthy_leave_created_by",
     )
+
+
 class Client(BaseModel):
-    client_name=models.CharField(max_length=250)
-    client_refrences=models.CharField(max_length=250)
+    client_name = models.CharField(max_length=250)
+    client_refrences = models.CharField(max_length=250)
 
     def __str__(self):
         return self.client_name
 
 
 class Project(BaseModel):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='client')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="client")
     project_name = models.CharField(max_length=20)
-    project_description  = models.CharField(max_length=100)
+    project_description = models.CharField(max_length=100)
 
     def __str__(self):
         return self.project_name
 
-        
+
 class AssignProject(BaseModel):
-    employe = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Assign_employee')
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='Assign_Project')
+    employe = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="Assign_employee"
+    )
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="Assign_Project"
+    )
 
     def __str__(self):
         return self.project.project_name
 
 
 class EmployeeDailyUpdate(BaseModel):
-    project_name = models.ForeignKey(AssignProject, on_delete=models.CASCADE, related_name='Assign_Project')
+    date = models.DateTimeField(auto_now_add= True)
+    project_name = models.ForeignKey(
+        AssignProject, on_delete=models.CASCADE, related_name="Assign_Project"
+    )
     billable_summary = models.TextField()
-    billable_time = models.TimeField(auto_now=False)
+    billable_hour = models.IntegerField()
     non_billable_summary = models.TextField()
-    non_billable_time = models.TimeField(auto_now=False)
-   
+    non_billable_hour = models.IntegerField()
