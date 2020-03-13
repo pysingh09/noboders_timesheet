@@ -10,6 +10,9 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View, ListView, TemplateView, CreateView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
+from django.urls import reverse
+from django.forms import ValidationError
+
 
 from employee.models import (
     MonthlyTakeLeave,
@@ -1832,33 +1835,48 @@ class EmployeeUpdateView(UpdateView):
         return redirect("employee:profile")
 
 
-def project_index(request):
-    project = Project.objects.all()
-    return render(request, "project/index.html", {"project": project})
-
-
 def lead_index(request):
     project = Project.objects.all()
     return render(request, "project/lead_index.html", {"project": project})
 
 
+def project_index(request):
+    """
+    used this to show project detail 
+    """
+   
+    project = Project.objects.all()
+    return render(request, "project/index.html", {"project": project})
+
+
 def create_projectview(request):
+    """
+    used this to create a new project 
+    """
+    
     form = ProjectForm()
     if request.method == "POST":
         form = ProjectForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect("/")
+        return HttpResponseRedirect("/project_detail")
     return render(request, "project/create.html", {"form": form})
 
 
 def project_delete_view(request, pk):
+    """
+    used this to delete a partular project 
+    """
+   
     project = Project.objects.get(id=pk)
     project.delete()
-    return redirect("/")
+    return HttpResponseRedirect("/project_detail")
 
 
 def project_update_view(request, pk):
+    """
+    used this to update a particular project 
+    """
     project = get_object_or_404(Project, id=pk)
     form = ProjectForm(request.POST or None, instance=project)
     if request.method == "POST":
@@ -1866,32 +1884,45 @@ def project_update_view(request, pk):
             form.save()
         else:
             print("data not valid")
-        return redirect("/")
+        return HttpResponseRedirect("/project_detail")
     return render(request, "project/project_update.html", {"project": project})
 
 
 def client_index(request):
+    """
+    used to show the client detail here 
+    """
     client = Client.objects.all()
     return render(request, "client/index.html", {"client": client})
 
 
 def create_client_view(request):
+    """
+    used to create a new client 
+    """
     form = ClientForm()
     if request.method == "POST":
         form = ClientForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect("/")
+        return HttpResponseRedirect("/client_detail")
     return render(request, "client/create.html", {"form": form})
 
 
 def client_delete_view(request, pk):
+    """
+    used to delete a particular client 
+    """
+   
     client = Client.objects.get(id=pk)
     client.delete()
-    return redirect("/")
+    return HttpResponseRedirect("/client_detail")
 
 
 def client_update_view(request, pk):
+    """
+     used to update a particular client 
+    """
     client = get_object_or_404(Client, id=pk)
     form = ClientForm(request.POST or None, instance=client)
     if request.method == "POST":
@@ -1899,83 +1930,123 @@ def client_update_view(request, pk):
             form.save()
         else:
             print("data not valid")
-        return redirect("/")
+        return HttpResponseRedirect("/client_detail")
     return render(request, "client/client_update.html", {"client": client})
 
 
 def assign(request):
-    assign = AssignProject.objects.all()
-    return render(request, "assign/assign_index.html", {"assign": assign})
+    """
+    used to show all assigned project to user
+    """
+    if request.user.is_superuser:
+        assign = AssignProject.objects.all()
+        return render(request, "assign/assign_index.html", {"assign": assign})
 
 
 def assign_project_view(request):
-    form = AssignForm()
-    if request.method == "POST":
-        form = AssignForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect("/")
-    return render(request, "assign/create.html", {"form": form})
+    """
+    used to assign project from Hr to employee
+    """
+    if request.user.is_superuser:
+        form = AssignForm()
+        if request.method == "POST":
+            form = AssignForm(request.POST)
+            if form.is_valid():
+                form.save()
+            return HttpResponseRedirect("/assign")
+        return render(request, "assign/create.html", {"form": form})
+
 
 
 def assign_delete_view(request, pk):
-    assign = AssignProject.objects.get(id=pk)
-    assign.delete()
-    return redirect("/")
+    """
+    use this to delete a assign project
+    """
+    if request.user.is_superuser:
+        assign = AssignProject.objects.get(id=pk)
+        assign.delete()
+        return HttpResponseRedirect("/assign")
 
 
 def assign_update_view(request, pk):
-    assign = get_object_or_404(AssignProject, id=pk)
-    form = AssignForm(request.POST or None, instance=assign)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-        else:
-            print("data not valid")
-        return redirect("/")
-    return render(request, "assign/assign_update.html", {"assign": assign})
+    """
+    use this to update a assign project
+    """
+    if request.user.is_superuser:
+        assign = get_object_or_404(AssignProject, id=pk)
+        form = AssignForm(request.POST or None, instance=assign)
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+            else:
+                print("data not valid")
+            return HttpResponseRedirect("/assign")
+        return render(request, "assign/assign_update.html", {"assign": assign})
 
 
 def allemployedailyupdates(request):
-    daily_update = EmployeeDailyUpdate.objects.all()
-    return render(request, "daily_updates.html", {"daily_update": daily_update})
+    """
+    use this to check all employe daily report
+    """
+    if request.user.is_superuser:
+
+        daily_update = EmployeeDailyUpdate.objects.all()
+        return render(request, "daily_updates.html", {"daily_update": daily_update})
 
 
 def employedailyupdate(request):
+    """
+    use this to create a report
+    """
     form = EmployeeDailyUpdateForm(request.user)
     if request.method == "POST":
         form = EmployeeDailyUpdateForm(request.user, request.POST)
         if form.is_valid():
             form.save()
-        return redirect("/")
-    return render(request, "assign/employe_create.html", {"form": form})
+        return HttpResponseRedirect("/check_daily_update")
+    return render(request, "employe/create_report.html", {"form": form})
 
 
 def checkdailyupdate(request):
+    """
+    use this to check  our all daily report
+    """
+    
+    #import pdb; pdb.set_trace(); 
+    if request.method == 'POST':
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+        search_report = EmployeeDailyUpdate.objects.filter(date__range=[start_date, end_date],
+            project_name__employe=request.user)
+        return render(request, "employe/myreport.html", {"report": search_report})
+    
     report = EmployeeDailyUpdate.objects.filter(project_name__employe=request.user)
     return render(request, "employe/myreport.html", {"report": report})
 
-
 def editdailyreport(request, pk):
+    """
+    used this to edit report
+    """
     edit_report = EmployeeDailyUpdate.objects.get(id=pk)
-    #import pdb; pdb.set_trace()
-    date = edit_report.date
-    final_time = date + timedelta(days=0 ,seconds=0, microseconds=0, milliseconds=0, minutes=0)
-    day =  datetime.now(timezone.utc)-final_time 
-    print(day)
-    if day.days < 7:
-        form = EditDailyUpdateForm(request.POST or None, instance=edit_report)
-        if request.method == "POST":
-            if form.is_valid():
-               form.save()
-            return redirect("/")
+    report_date = edit_report.date
+    report_week = report_date.isocalendar()[1] 
+    current_date = datetime.now()
+    current_week = current_date.isocalendar()[1]
+    
+    form = EditDailyUpdateForm(request.POST or None, instance=edit_report)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect("/check_daily_update")
 
-        return render(request, "employe/edit_report.html", {"edit_report": edit_report})
-    else:
-        return HttpResponse("you can't edit this")
+    return render(request, "employe/edit_report.html", {"edit_report": edit_report,
+          'report_week':report_week, 'current_week':current_week})
 
 
 def deletedailyreport(request, pk):
-    assign = EmployeeDailyUpdate.objects.get(id=pk)
-    assign.delete()
-    return redirect("/")
+    """
+    used this to delete report
+    """
+    report = EmployeeDailyUpdate.objects.get(id=pk)
+    report.delete()
+    return HttpResponseRedirect("/check_daily_update")

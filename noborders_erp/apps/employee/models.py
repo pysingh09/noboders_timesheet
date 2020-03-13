@@ -351,7 +351,7 @@ class AssignProject(BaseModel):
 
 
 class EmployeeDailyUpdate(BaseModel):
-    date = models.DateTimeField(auto_now_add= True)
+    date = models.DateField(_("Date"), auto_now_add=True)
     project_name = models.ForeignKey(
         AssignProject, on_delete=models.CASCADE, related_name="Assign_Project"
     )

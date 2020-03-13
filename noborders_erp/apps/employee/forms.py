@@ -62,6 +62,8 @@ class EditDailyUpdateForm(forms.ModelForm):
     class Meta:
         model = EmployeeDailyUpdate
         fields = "__all__"
+
+
 # .objects.filter(project_name__employe__user=User.username)
 
 

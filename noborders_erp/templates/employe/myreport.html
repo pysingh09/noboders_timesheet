@@ -2,11 +2,20 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
- <h1>Project Information Dashboard</h1>
+ <h1>my daily reports</h1>
  <table border="5">
  <thead >
+ 	 <form method="post">
+       {% csrf_token %}
+   Start date :<input type="date" name="start_date" class="form-control"
+                                      placeholder=date / required="">
+   Start date :<input type="date" name="end_date" class="form-control"
+                                      placeholder=date / required="">
+  <input type="submit"class="btn btn-primary btn-lg"   value="search">
+</form>
+
+<h5>{{error}}</h5>
  <th>Date</th>	
- <th>employe name</th>
  <th>Project name</th>
  <th>Project billiable summary</th>
  <th>Project billiable time</th>
@@ -17,7 +26,6 @@
  {% for reports in report %}
  <tr>
  <td>{{reports.date}}</td>
- <td>{{reports.project_name.employe.username}}</td>
  <td>{{reports.project_name.project.project_name}}</td>
  <td>{{reports.billable_summary}}</td>
  <td>{{reports.billable_hour}}</td>

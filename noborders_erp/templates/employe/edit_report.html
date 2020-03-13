@@ -2,16 +2,22 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
-
-<!DOCTYPE html>
-      <form method="post">
-      {% csrf_token %}
-      date:<input type="text" name="date" value="{{edit_report.date}}"><br>
-      project_name:<input type="text" name="project_name" value="{{edit_report.project_name.id}}"><br>
-      billable_summary:<input type="text" name="billable_summary" value="{{edit_report.billable_summary}}"><br>
-      billable_hour:<input type="text" name="billable_hour" value="{{edit_report.billable_hour}}"><br>
-      non_billable_summary:<input type="text" name="non_billable_summary" value="{{edit_report.non_billable_summary}}"><br>
-      non_billable_hour :<input type="text" name="non_billable_hour" value="{{edit_report.non_billable_hour}}"><br>
-       <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
-   </form>
+{% if report_week == current_week %}
+<form method="post">
+   {% csrf_token %}
+   date:<input type="text" name="date" value="{{edit_report.date}}"><br>
+   project_name:<input type="text" name="project_name" value="{{edit_report.project_name.id}}"><br>
+   billable_summary:<input type="text" name="billable_summary" value="{{edit_report.billable_summary}}"><br>
+   billable_hour:<input type="text" name="billable_hour" value="{{edit_report.billable_hour}}"><br>
+   non_billable_summary:<input type="text" name="non_billable_summary" value="{{edit_report.non_billable_summary}}"><br>
+   non_billable_hour :<input type="text" name="non_billable_hour" value="{{edit_report.non_billable_hour}}"><br>
+   <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
+</form>
+{% else %}
+<script type="text/javascript">
+   alert("you can't edit this report");
+   window.history.back();
+   
+</script>
+{% endif %}
 {% endblock %}
