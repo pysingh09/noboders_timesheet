@@ -4,7 +4,7 @@
 {% block content %}
 {%if request.user.is_superuser%}
  <h1>Project Information Dashboard</h1>
- <table border="5">
+ <table border="5" class="table dataTable ">
  <thead >
  <th>Client</th>
  <th>Project name</th>
@@ -16,7 +16,7 @@
  <td>{{projects.client}}</td>
  <td>{{projects.project_name}}</td>
  <td>{{projects.project_description}}</td>
- <td> <a href="/update_project/{{projects.id}}">UPDATE</a> <a href="/delete_project/{{projects.id}}">DELETE</a>
+ <td> <a class="sameicon pencilicon " href="/update_project/{{projects.id}}"><span class="glyphicon glyphicon-pencil" title="UPDATE"></span></a> <a class="delete " href="/delete_project/{{projects.id}}"><span class="glyphicon glyphicon-trash" title="DELETE"></span></a>
   
  
   
