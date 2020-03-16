@@ -23,7 +23,11 @@
                   <a class="dropdown-item" href="{% url 'employee:leave-list' %}">My Team Leaves</a>
                </li>
 
-               <li class="{% if request.resolver_match.view_name == 'employee:my-leave-list' %}active{% endif %}"><a href="{% url 'employee:my-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span>My Leaves</a></li> 
+               <li class="{% if request.resolver_match.view_name == 'employee:my-leave-list' %}active{% endif %}"><a href="{% url 'employee:my-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span>My Leaves</a></li>
+
+               <li class="{% if request.resolver_match.view_name == 'employee:leaves' %}active{% endif %}"><a href="{% url 'employee:leaves' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span>Allot Leaves for the Employee</a></li> 
+
+
                
                 <li class="{% if request.resolver_match.view_name == 'employee:project-detai' %}active{% endif %} cal_btn"><a href="{% url 'employee:project-detail' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>Project</a></li>
 

@@ -403,9 +403,11 @@ def deactivate_user(request, pk):
     return JsonResponse({"status": "success"})
 
 
+import pandas as pd
 @permission_required("employee.add_employeeattendance", raise_exception=True)
 def file_upload(request):
     try:
+        import pdb;pdb.set_trace()
         template = "file_upload.html"
         prompt = {
             "order": "order of csv should be employee_no, in_time, out_time, date"
@@ -415,10 +417,24 @@ def file_upload(request):
 
         excel_file = request.FILES["excel_file"]
         filename = fs.save(excel_file.name, excel_file)
-        file_url = settings.PROJECT_APPS + fs.url(
-            filename
-        )  # project app url + filename
+        print(filename)
+        file_url = settings.PROJECT_APPS + fs.url(filename) # project app url + filename
+        # reader = csv.reader(file_url)
+        # for row in reader:
+        #     print(row)
+        # file = xlrd.open_workbook("WSnotof.xls")
+        # sheet = file.sheets()[0]
+        # WSnotof = sheet.col_values(2, 1)
+        # data = pd.read_excel (r'/home/lenovo/Downloads/file Monthly_Datewise_Performance_Report_February 2020.xls')
+        #df = pd.DataFrame(data)
+        print (df)
+        df = pd.read_excel(file_url)
+        print(df)
+        df.head(10)
+        print(file_url)
         wb = xlrd.open_workbook(file_url)
+        for wb in wb:
+            print(wb)
         sheet = wb.sheet_by_index(0)
 
         for i in range(sheet.nrows - 3):

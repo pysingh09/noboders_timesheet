@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% block content %}
 {%if request.user.is_superuser%}
- <h1> Assign Project Information </h1>
+ <h1>Assign Project Information Dashboard</h1>
  <table border="5">
  <thead >
  <th> Employe name</th>
@@ -18,6 +18,6 @@
  </tr>
  {% endfor %}
  </table><br>
- <a href="/assign_project" class="btn btn-success btn-lg">ASSIGN PROJECT</a>
- {% endif %}
- {% endblock %}	
+ <a href="/assign_project" class="btn btn-success btn-lg">INSERT NEW PROJECT</a>
+  {% endif %}
+  {% endblock %}	
