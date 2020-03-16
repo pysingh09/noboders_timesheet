@@ -1546,9 +1546,7 @@ def send_ooo_on_reject(request):
         get_leave_obj = Leave.objects.get(id=leave_id)
         startdate = leave.startdate.strftime("%b %d, %Y")
         enddate = leave.enddate.strftime("%b %d, %Y")
-        import pdb
-
-        pdb.set_trace()
+        #import pdb; pdb.set_trace();
         leavedetail = LeaveDetails.objects.filter(leave=get_leave_obj)
         for mail in leavedetail:
             if mail.status == 3 and leave.is_ooo_send == False:
@@ -1812,7 +1810,7 @@ def delete_leave(request):
                     get_taken_leave_paid.delete()
             else:
                 get_taken_leave_unpaid.delete()
-    return JsonResponse({"status": "success"})
+    return JsonResponse+({"status": "success"})
 
 
 class EmployeeUpdateView(UpdateView):
@@ -1844,7 +1842,7 @@ def project_index(request):
     """
     used this to show project detail 
     """
-   
+
     project = Project.objects.all()
     return render(request, "project/index.html", {"project": project})
 
@@ -1853,7 +1851,7 @@ def create_projectview(request):
     """
     used this to create a new project 
     """
-    
+
     form = ProjectForm()
     if request.method == "POST":
         form = ProjectForm(request.POST)
@@ -1867,7 +1865,7 @@ def project_delete_view(request, pk):
     """
     used this to delete a partular project 
     """
-   
+
     project = Project.objects.get(id=pk)
     project.delete()
     return HttpResponseRedirect("/project_detail")
@@ -1913,7 +1911,7 @@ def client_delete_view(request, pk):
     """
     used to delete a particular client 
     """
-   
+
     client = Client.objects.get(id=pk)
     client.delete()
     return HttpResponseRedirect("/client_detail")
@@ -1957,7 +1955,6 @@ def assign_project_view(request):
         return render(request, "assign/create.html", {"form": form})
 
 
-
 def assign_delete_view(request, pk):
     """
     use this to delete a assign project
@@ -1989,9 +1986,27 @@ def allemployedailyupdates(request):
     use this to check all employe daily report
     """
     if request.user.is_superuser:
-
+        if request.method == "POST":
+            import pdb; pdb.set_trace();
+            # project_name = request.POST["project_name__project"]
+            employe_name = request.POST["value"]
+            if project_name:
+                daily_update = EmployeeDailyUpdate.objects.filter(
+                    project_name__project__project_name=project_name
+                )
+            else:
+                daily_update = EmployeeDailyUpdate.objects.filter(
+                    project_name__employe__username=employe_name
+                )
+            return render(request, "daily_updates.html", {"daily_update": daily_update})
+       #import pdb; pdb.set_trace();
         daily_update = EmployeeDailyUpdate.objects.all()
-        return render(request, "daily_updates.html", {"daily_update": daily_update})
+        employe_name = []
+        for daily_updates in daily_update:
+            if daily_updates.project_name.employe.username not in employe_name:
+                    employe_name.append(daily_updates.project_name.employe.username)
+       # import pdb; pdb.set_trace();
+        return render(request, "daily_updates.html", {"daily_update": daily_update, 'employe_name':employe_name})
 
 
 def employedailyupdate(request):
@@ -2011,17 +2026,19 @@ def checkdailyupdate(request):
     """
     use this to check  our all daily report
     """
-    
-    #import pdb; pdb.set_trace(); 
-    if request.method == 'POST':
-        start_date = request.POST['start_date']
-        end_date = request.POST['end_date']
-        search_report = EmployeeDailyUpdate.objects.filter(date__range=[start_date, end_date],
-            project_name__employe=request.user)
+
+    # import pdb; pdb.set_trace();
+    if request.method == "POST":
+        start_date = request.POST["start_date"]
+        end_date = request.POST["end_date"]
+        search_report = EmployeeDailyUpdate.objects.filter(
+            date__range=[start_date, end_date], project_name__employe=request.user
+        )
         return render(request, "employe/myreport.html", {"report": search_report})
-    
+
     report = EmployeeDailyUpdate.objects.filter(project_name__employe=request.user)
     return render(request, "employe/myreport.html", {"report": report})
+
 
 def editdailyreport(request, pk):
     """
@@ -2029,18 +2046,25 @@ def editdailyreport(request, pk):
     """
     edit_report = EmployeeDailyUpdate.objects.get(id=pk)
     report_date = edit_report.date
-    report_week = report_date.isocalendar()[1] 
+    report_week = report_date.isocalendar()[1]
     current_date = datetime.now()
     current_week = current_date.isocalendar()[1]
-    
+
     form = EditDailyUpdateForm(request.POST or None, instance=edit_report)
     if request.method == "POST":
         if form.is_valid():
             form.save()
         return HttpResponseRedirect("/check_daily_update")
 
-    return render(request, "employe/edit_report.html", {"edit_report": edit_report,
-          'report_week':report_week, 'current_week':current_week})
+    return render(
+        request,
+        "employe/edit_report.html",
+        {
+            "edit_report": edit_report,
+            "report_week": report_week,
+            "current_week": current_week,
+        },
+    )
 
 
 def deletedailyreport(request, pk):

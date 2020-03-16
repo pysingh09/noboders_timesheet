@@ -7,19 +7,17 @@
                 <li class="{% if request.resolver_match.view_name == 'employee:attendence-request-list' %}active{% endif %}"><a href="{% url 'employee:attendence-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-exchange fa-stack-1x exchangeicon "></i></span>In/Out Request</a></li>
                 
                 <li class="{% if request.resolver_match.view_name == 'employee:request-full-leave' %}active{% endif %}" ><a href="{% url 'employee:request-full-leave' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>Leave Request</a></li>
-                <li class="{% if request.resolver_match.view_name == 'employee:leave-list' %}active{% endif %}" ><a href="{% url 'employee:leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span>Leaves Status</a></li>
+
+                <li class="{% if request.resolver_match.view_name == 'employee:leave-list' %}active{% endif %}" ><a href="{% url 'employee:leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span> My team Leave Status</a></li>
 
                 <li class="{% if request.resolver_match.view_name == 'employee:in-out-request-list' %}active{% endif %}" ><a href="{% url 'employee:in-out-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-clock-o fa-stack-1x "></i></span>All In/Out Requests</a></li>
-                <!--<li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Show All Leave</a></li>  --> 
+
+
 
                 <li class="{% if request.resolver_match.view_name == 'employee:my-leave-list' %}active{% endif %}" ><a href="{% url 'employee:my-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span>My Leaves</a></li> 
 
                  <li class="{% if request.resolver_match.view_name == 'employee:employe-dailyupdate' %}active{% endif %} cal_btn"><a href="{% url 'employee:employe-dailyupdate' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>employe daily update</a></li>
   
-
-
-                <li class="{% if request.resolver_match.view_name == 'employee:lead-detail' %}active{% endif %}" ><a href="{% url 'employee:lead-detail' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span>project</a></li> 
-
 
 
 
