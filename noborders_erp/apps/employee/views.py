@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.forms import ValidationError
-
+from django.template.loader import render_to_string
 
 from employee.models import (
     MonthlyTakeLeave,
@@ -1985,9 +1985,11 @@ def allemployedailyupdates(request):
     """
     use this to check all employe daily report
     """
+
+         
     if request.user.is_superuser:
         if request.method == "POST":
-            import pdb; pdb.set_trace();
+            # import pdb; pdb.set_trace();
             # project_name = request.POST["project_name__project"]
             employe_name = request.POST["value"]
             if project_name:
@@ -2074,3 +2076,15 @@ def deletedailyreport(request, pk):
     report = EmployeeDailyUpdate.objects.get(id=pk)
     report.delete()
     return HttpResponseRedirect("/check_daily_update")
+
+
+def ajax_filter_employe_daily_report(request):
+    name = request.GET.get('name')
+    daily_updates = EmployeeDailyUpdate.objects.filter(
+                        project_name__employe__username=name
+                    )
+    html = render_to_string('new.html', {'daily_updates': daily_updates})
+    return HttpResponse(html)
+
+
+    

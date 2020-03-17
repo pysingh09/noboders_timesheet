@@ -3,49 +3,62 @@
 {% load staticfiles %}
 {% block content %}
 {%if request.user.is_superuser%}
- <h3 class="top-heading">All employe daily report</h3>
- <table border="5" class="table datatable">
- <thead >
- <th class="sorting_asc">Date</th> 	
- <th class="sorting">employe name</th>
- <th class="sorting">Project name</th>
- <th class="sorting">Project billiable summary</th>
- <th class="sorting">Project billiable time</th>
- <th class="sorting">Project non-billiable summary</th>
- <th class="sorting">Project non-billiable time</th>
- 
- </thead>
- {% for daily_updates in daily_update %}
- <tr>
-
- <td>{{daily_updates.date}}</td>
- <td>{{daily_updates.project_name.employe.username}}</td>
- <td>{{daily_updates.project_name.project.project_name}}</td>
- <td>{{daily_updates.billable_summary}}</td>
- <td>{{daily_updates.billable_hour}}</td>
- <td>{{daily_updates.non_billable_summary}}</td>
- <td>{{daily_updates.non_billable_hour}}</td>
-
-{% endfor %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
+<h3 class="top-heading">All employe daily report</h3>
+<label>Select name</label>
+<select id ='myselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
+   <option value="">Select name</option>
+   {% for name in employe_name %}
+   <option id="{{ name }}" value="{{ name }}">
+      {{ name }}
+   </option>
+   s
+   {% endfor %}
+</select>
+<table id ='selectemp' border="5" class="table datatable">
+   <thead >
+      <th class="sorting_asc">Date</th>
+      <th class="sorting">employe name</th>
+      <th class="sorting">Project name</th>
+      <th class="sorting">Project billiable summary</th>
+      <th class="sorting">Project billiable time</th>
+      <th class="sorting">Project non-billiable summary</th>
+      <th class="sorting">Project non-billiable time</th>
+   </thead>
+   {% for daily_updates in daily_update %}
+   <tr>
+      <td>{{daily_updates.date}}</td>
+      <td>{{daily_updates.project_name.employe.username}}</td>
+      <td>{{daily_updates.project_name.project.project_name}}</td>
+      <td>{{daily_updates.billable_summary}}</td>
+      <td>{{daily_updates.billable_hour}}</td>
+      <td>{{daily_updates.non_billable_summary}}</td>
+      <td>{{daily_updates.non_billable_hour}}</td>
+   </tr>
+   {% endfor %}
+</table>
 {%endif%}
-  employe_name:<select id="select_dropdown">
-	{% for names in employe_name %}
-   \ <option >{{names}}</option>
-  {% endfor %}
- </select>
-
-
-		<script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
-		<script type="text/javascript">
-			debugger;
-			$(document).ready(function(){
-				var country = ["Australia", "Bangladesh", "Denmark", "Hong Kong", "Indonesia", "Netherlands", "New Zealand", "South Africa"];
-				$("#country").select2({
-				  data: country
-				});
-			});
-		</script>
-
- {% endblock %}
+{% endblock %}
+{% block extra_js %}
+<script type="text/javascript">
+   $("#myselection").change(function(){
+   name = $(this).val();
+   $.ajax({
+          url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+          type: 'GET',
+          data : {"name":name},
+          success: function(res) 
+          {	
+          	$('#selectemp').html(res);    
+          },
+          error: function (jqXHR, exception) {
+          	alert(exception);
+          }
+      });
+   });
+   
+</script> 
+{% endblock extra_js%}

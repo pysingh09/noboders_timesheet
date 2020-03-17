@@ -83,6 +83,7 @@ urlpatterns = [
     path("check_daily_update", checkdailyupdate, name="check-daily-update"),
     path('edit_daily_update/<int:pk>/', editdailyreport, name='edit-daily-update'),
     path('delete_daily_update/<int:pk>/', deletedailyreport, name='delete-daily-update'),
+    path('ajax_filter_employe_daily_report/', ajax_filter_employe_daily_report, name='ajax_filter_employe_daily_report'),
     # path('search_daily_update/', searchdailyreport, name='search-daily-update'),
         # path('employe_project_update/',employeprojectupdate)
 ]
