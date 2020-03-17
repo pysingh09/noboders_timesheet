@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% block content %}
 <!DOCTYPE html>
-     <h1>Employee Insertion Form</h1><hr>
+     <h3 class="top-heading">Employee Insertion Form</h3><hr>
      <form method="post">
        {{form.as_p}}
        {% csrf_token %}

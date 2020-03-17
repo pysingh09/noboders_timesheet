@@ -4,7 +4,7 @@
 {% block content %}
 
 <!DOCTYPE html>
-     <h1>Project Information Update Form</h1>
+     <h3 class="top-heading">Project Information Update Form</h3>
      <form method="post">
        {% csrf_token %}
        Client :<input type="text" name="client" value="{{project.client.id}}"><br>
