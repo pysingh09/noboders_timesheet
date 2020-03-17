@@ -15,6 +15,7 @@ urlpatterns = [
     path("signup/", UserCreateView.as_view(), name="signup"),
     path("home/", home, name="home"),
     path("file/", file_upload, name="file_upload"),
+    #path("file/", simple_upload, name="file_upload"),
     path("employeelist/", EmployeeListView.as_view(), name="employee_list"),
     path("profile/", EmployeeProfile.as_view(), name="profile"),
     path("deactivate/<int:pk>/", deactivate_user, name="deactivate-user"),

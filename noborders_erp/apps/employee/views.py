@@ -404,50 +404,36 @@ def deactivate_user(request, pk):
 
 
 import pandas as pd
+import xlrd
+import csv
 @permission_required("employee.add_employeeattendance", raise_exception=True)
 def file_upload(request):
     try:
-        import pdb;pdb.set_trace()
-        template = "file_upload.html"
+        #import pdb;pdb.set_trace()
+        template = "file_upload.html"     
         prompt = {
             "order": "order of csv should be employee_no, in_time, out_time, date"
         }
         if request.method == "GET":
             return render(request, template, prompt)
-
         excel_file = request.FILES["excel_file"]
         filename = fs.save(excel_file.name, excel_file)
         print(filename)
-        file_url = settings.PROJECT_APPS + fs.url(filename) # project app url + filename
-        # reader = csv.reader(file_url)
-        # for row in reader:
-        #     print(row)
-        # file = xlrd.open_workbook("WSnotof.xls")
-        # sheet = file.sheets()[0]
-        # WSnotof = sheet.col_values(2, 1)
-        # data = pd.read_excel (r'/home/lenovo/Downloads/file Monthly_Datewise_Performance_Report_February 2020.xls')
-        #df = pd.DataFrame(data)
-        print (df)
-        df = pd.read_excel(file_url)
-        print(df)
-        df.head(10)
-        print(file_url)
-        wb = xlrd.open_workbook(file_url)
-        for wb in wb:
-            print(wb)
+        file_url = settings.PROJECT_APPS + fs.url(filename)  # project app url + filename
+        wb = xlrd.open_workbook('/home/lenovo/workspace/timesheet/noboders_timesheet/noborders_erp/media/test.xls')
+        #import pdb;pdb.set_trace()
         sheet = wb.sheet_by_index(0)
-
         for i in range(sheet.nrows - 3):
             if i == sheet.nrows - 1:  # row-1
                 break
             name = sheet.cell_value(i + 3, 1)
-            employee_id = sheet.cell_value(i + 3, 0)
-            in_time = sheet.cell_value(i + 3, 3)
-            out_time = sheet.cell_value(
-                i + 3, sheet.ncols - 1
-            )  # sheet.cell_value(i+4,3)
-            date = sheet.cell_value(0, 7).split("/")
-
+            #employee_id = sheet.cell_value(i + 3, 0)
+            employee_id =sheet.cell_value(i + 2, 1)
+            #in_time = sheet.cell_value(i + 3, 3)
+            in_time=sheet.cell_value(i + 4, 3)
+            out_time = sheet.cell_value(i + 4,7)
+            #out_time = sheet.cell_value(i + 4, sheet.ncols - 1) # sheet.cell_value(i+4,3)
+            date = sheet.cell_value(i+4, 0).split("/")
             if in_time == "--:--" and out_time == "--:--":
                 in_time = datetime.strptime("00:00", "%H:%M")
                 out_time = datetime.strptime("00:00", "%H:%M")
@@ -458,7 +444,6 @@ def file_upload(request):
             else:
                 in_time = datetime.strptime(in_time, "%H:%M")
                 out_time = datetime.strptime(out_time, "%H:%M")
-
             profile = Profile.objects.filter(employee_id=employee_id)
             if profile.exists():
                 profile = Profile.objects.get(employee_id=employee_id)
@@ -2066,3 +2051,6 @@ def deletedailyreport(request, pk):
     report = EmployeeDailyUpdate.objects.get(id=pk)
     report.delete()
     return HttpResponseRedirect("/check_daily_update")
+
+
+

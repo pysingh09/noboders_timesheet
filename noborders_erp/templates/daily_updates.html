@@ -3,16 +3,16 @@
 {% load staticfiles %}
 {% block content %}
 {%if request.user.is_superuser%}
- <h1>All employe daily report</h1>
- <table border="5">
+ <h3 class="top-heading">All employe daily report</h3>
+ <table border="5" class="table datatable">
  <thead >
- <th>Date</th> 	
- <th>employe name</th>
- <th>Project name</th>
- <th>Project billiable summary</th>
- <th>Project billiable time</th>
- <th>Project non-billiable summary</th>
- <th>Project non-billiable time</th>
+ <th class="sorting_asc">Date</th> 	
+ <th class="sorting">employe name</th>
+ <th class="sorting">Project name</th>
+ <th class="sorting">Project billiable summary</th>
+ <th class="sorting">Project billiable time</th>
+ <th class="sorting">Project non-billiable summary</th>
+ <th class="sorting">Project non-billiable time</th>
  
  </thead>
  {% for daily_updates in daily_update %}

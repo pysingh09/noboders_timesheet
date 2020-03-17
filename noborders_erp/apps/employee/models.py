@@ -363,3 +363,15 @@ class EmployeeDailyUpdate(BaseModel):
     billable_hour = models.IntegerField()
     non_billable_summary = models.TextField()
     non_billable_hour = models.IntegerField()
+
+class Attendance(models.Model):
+    pass
+    # date = models.DateField(blank=True, verbose_name=_("Date"))
+    # day = models.CharField(max_length=50, verbose_name=_("Day"))
+    # shift = models.CharField(max_length=50, verbose_name=_("Shift"))
+    # In = models.TimeField(blank=True, verbose_name=_("IN"))
+    # Out= models.TimeField(blank=True, verbose_name=_("OUT"))
+    # work = models.TimeField(blank=True, verbose_name=_("Work"))
+    # ot = models.TimeField(blank=True, verbose_name=_("OT"))
+    # status = models.CharField(max_length=50, verbose_name=_("Status"))
+    # remark = models.CharField(max_length=50, verbose_name=_("Remark"))

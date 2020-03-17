@@ -13,7 +13,14 @@ from .models import (
     Project,
     AssignProject,
     EmployeeDailyUpdate,
+    Attendance
 )
+
+from import_export.admin import ImportExportModelAdmin
+
+@admin.register(Attendance)
+class AttendanceAdmin(ImportExportModelAdmin):
+    pass
 
 
 class EmployeeAttendanceModelAdmin(admin.ModelAdmin):

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django_filters",
     "django_extensions",
     "employee",
+    "import_export",
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,5 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "Asia/Kolkata"
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True

@@ -4,10 +4,10 @@
 {% block content %}
 
 <!DOCTYPE html>
-      <form method="post">
+      <form method="post" class="client_update">
        {% csrf_token %}
-       Client Name :<input type="text" name="client_name" value="{{client.client_name}}"><br>
-       Client Refrences  :<input type="text" name="client_refrences" value="{{client.client_refrences}}"><br><hr><hr><hr>
+      <b>Client Name :</b><input type="text" name="client_name" class="form-control" value="{{client.client_name}}"><br>
+      <b>Client Refrences :</b><input type="text" name="client_refrences" class="form-control" value="{{client.client_refrences}}"><br>
        <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
    </form>
 {% endblock %}

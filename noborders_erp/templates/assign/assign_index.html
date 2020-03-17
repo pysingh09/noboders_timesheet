@@ -3,8 +3,13 @@
 {% load staticfiles %}
 {% block content %}
 {%if request.user.is_superuser%}
+<<<<<<< HEAD
  <h1>Assign Project Information Dashboard</h1>
  <table border="5">
+=======
+ <h3 class="top-heading"> Assign Project Information </h3>
+ <table border="5" class="table table-stripped dataTable no-footer">
+>>>>>>> dev-vinod
  <thead >
  <th> Employe name</th>
  <th>Project name</th>
@@ -14,7 +19,7 @@
  <tr>
  <td>{{assigns.employe.username}}</td>
  <td>{{assigns.project.project_name}}</td>
- <td> <a href="/assign_project_update/{{assigns.id}}">UPDATE</a> <a href="/assign_project_delete/{{assigns.id}}">DELETE</a></td>
+ <td> <a class="btn btn-primary " href="/assign_project_update/{{assigns.id}}">UPDATE</a>  <a class="btn btn-primary " href="/assign_project_delete/{{assigns.id}}">DELETE</a></td>
  </tr>
  {% endfor %}
  </table><br>
