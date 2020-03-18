@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.forms import ValidationError
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 from employee.models import (
     MonthlyTakeLeave,
@@ -1546,7 +1547,7 @@ def send_ooo_on_reject(request):
         get_leave_obj = Leave.objects.get(id=leave_id)
         startdate = leave.startdate.strftime("%b %d, %Y")
         enddate = leave.enddate.strftime("%b %d, %Y")
-        #import pdb; pdb.set_trace();
+        # import pdb; pdb.set_trace();
         leavedetail = LeaveDetails.objects.filter(leave=get_leave_obj)
         for mail in leavedetail:
             if mail.status == 3 and leave.is_ooo_send == False:
@@ -1810,7 +1811,7 @@ def delete_leave(request):
                     get_taken_leave_paid.delete()
             else:
                 get_taken_leave_unpaid.delete()
-    return JsonResponse+({"status": "success"})
+    return JsonResponse + ({"status": "success"})
 
 
 class EmployeeUpdateView(UpdateView):
@@ -1986,7 +1987,6 @@ def allemployedailyupdates(request):
     use this to check all employe daily report
     """
 
-         
     if request.user.is_superuser:
         if request.method == "POST":
             # import pdb; pdb.set_trace();
@@ -2001,14 +2001,25 @@ def allemployedailyupdates(request):
                     project_name__employe__username=employe_name
                 )
             return render(request, "daily_updates.html", {"daily_update": daily_update})
-       #import pdb; pdb.set_trace();
+        # import pdb; pdb.set_trace();
         daily_update = EmployeeDailyUpdate.objects.all()
         employe_name = []
+        project_name = []
         for daily_updates in daily_update:
             if daily_updates.project_name.employe.username not in employe_name:
-                    employe_name.append(daily_updates.project_name.employe.username)
-       # import pdb; pdb.set_trace();
-        return render(request, "daily_updates.html", {"daily_update": daily_update, 'employe_name':employe_name})
+                employe_name.append(daily_updates.project_name.employe.username)
+            if daily_updates.project_name.project.project_name not in project_name:
+                project_name.append(daily_updates.project_name.project.project_name)
+        # import pdb; pdb.set_trace();
+        return render(
+            request,
+            "daily_updates.html",
+            {
+                "daily_update": daily_update,
+                "employe_name": employe_name,
+                "project_name": project_name,
+            },
+        )
 
 
 def employedailyupdate(request):
@@ -2028,15 +2039,18 @@ def checkdailyupdate(request):
     """
     use this to check  our all daily report
     """
-
-    # import pdb; pdb.set_trace();
-    if request.method == "POST":
-        start_date = request.POST["start_date"]
-        end_date = request.POST["end_date"]
-        search_report = EmployeeDailyUpdate.objects.filter(
-            date__range=[start_date, end_date], project_name__employe=request.user
-        )
-        return render(request, "employe/myreport.html", {"report": search_report})
+    # if request.method == "POST":
+    #     start_date = request.GET.get("start_date")
+    #     import pdb; pdb.set_trace();
+    #     #end_date = request.POST["end_date"]
+    #     search_report = EmployeeDailyUpdate.objects.filter(
+    #         date__range=[start_date, end_date], project_name__employe=request.user
+    #     )
+    #     return render(
+    #         request,
+    #         "employe/myreport.html",
+    #         {"report": search_report, "start_date": start_date, "end_date": end_date},
+    #     )
 
     report = EmployeeDailyUpdate.objects.filter(project_name__employe=request.user)
     return render(request, "employe/myreport.html", {"report": report})
@@ -2079,12 +2093,38 @@ def deletedailyreport(request, pk):
 
 
 def ajax_filter_employe_daily_report(request):
-    name = request.GET.get('name')
-    daily_updates = EmployeeDailyUpdate.objects.filter(
-                        project_name__employe__username=name
-                    )
-    html = render_to_string('new.html', {'daily_updates': daily_updates})
+    employe_name = request.GET.get("ename")
+    project_name = request.GET.get("pname")
+   # import pdb; pdb.set_trace();
+    if project_name and employe_name:
+        search_both = EmployeeDailyUpdate.objects.filter(
+            project_name__employe__username=employe_name
+        ).filter(project_name__project__project_name=project_name)
+        html = render_to_string("filter_data.html", {"daily_updates": search_both})
+    elif employe_name:
+        search_by_name = EmployeeDailyUpdate.objects.filter(
+            project_name__employe__username=employe_name
+        )
+        html = render_to_string("filter_data.html", {"daily_updates": search_by_name},)
+
+    elif project_name:
+        search_by_project = EmployeeDailyUpdate.objects.filter(
+            project_name__project__project_name=project_name
+        )
+        html = render_to_string(
+            "filter_data.html", {"daily_updates": search_by_project},
+        )
     return HttpResponse(html)
 
 
-    
+def filter_by_date(request): 
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    search_report = EmployeeDailyUpdate.objects.filter(
+            date__range=[start_date, end_date], project_name__employe=request.user
+        )
+    import pdb; pdb.set_trace();
+    html = render_to_string(
+            "filter_date.html", {"report": search_report},
+        )
+    return HttpResponse(html)

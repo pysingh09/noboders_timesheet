@@ -2,38 +2,62 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
- <h1>my daily reports</h1>
- <table border="5">
- <thead >
- 	 <form method="post">
-       {% csrf_token %}
-   Start date :<input type="date" name="start_date" class="form-control"
-                                      placeholder=date / required="">
-   Start date :<input type="date" name="end_date" class="form-control"
-                                      placeholder=date / required="">
-  <input type="submit"class="btn btn-primary btn-lg"   value="search">
-</form>
+<h1>my daily reports</h1>
+<table border="5">
+<thead >
+   <form method="post">
+      {% csrf_token %}
+      Start date :<input type="date" name="start_date" id='start' class="form-control"
+         placeholder=date / required="" value='{{start_date}}'  class="validDate">
+      End date :<input type="date" name="end_date"  id ='end'class="form-control"
+         placeholder=date / required="" value="{{end_date}}"  class="validDate">
+      <button type="submit" onclick='search_date()'class="btn btn-primary btn-lg" value="search">search</button>
+   </form>
+   {% block extra_js %}
+   <script type="text/javascript">
+      function search_date(){
+         start_date = $('#start').val();
+         end_date = $('#end').val();
+         $.ajax({
 
-<h5>{{error}}</h5>
- <th>Date</th>	
- <th>Project name</th>
- <th>Project billiable summary</th>
- <th>Project billiable time</th>
- <th>Project non-billiable summary</th>
- <th>Project non-billiable time</th>
- <th>Action</th>
- </thead>
- {% for reports in report %}
- <tr>
- <td>{{reports.date}}</td>
- <td>{{reports.project_name.project.project_name}}</td>
- <td>{{reports.billable_summary}}</td>
- <td>{{reports.billable_hour}}</td>
- <td>{{reports.non_billable_summary}}</td>
- <td>{{reports.non_billable_hour}}</td>
- 
- <td> <a href="/edit_daily_update/{{reports.id}}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit Report"></span></a> <a href="/delete_daily_update/{{reports.id}}" class="delete"><span class="glyphicon glyphicon-trash" title="Delete"></span></a> </td>
- 
-{% endfor %}
- {% endblock %}
+             url: "{% url 'employee:filter_by_date' %}",
+             type: 'GET',
+             data : {"start_date":start_date,"end_date":end_date},
+             success: function(res) 
+           {
+            $('#selectemp').html(res);    
+          },
+             error: function (jqXHR, exception) {
+              debugger;
+             alert(exception);
+             }
+         });
+      };
+      
+   </script>
+   {% endblock extra_js %}
+<table id ='selectemp' border="5" class="table datatable">
+<thead>
+   <h5>{{error}}</h5>
+   <th>Date</th>
+   <th>Project name</th>
+   <th>Project billiable summary</th>
+   <th>Project billiable time</th>
+   <th>Project non-billiable summary</th>
+   <th>Project non-billiable time</th>
+   <th>Action</th>
+</thead>
+{% for reports in report %}
+<tr>
+   <td>{{reports.date}}</td>
+   <td>{{reports.project_name.project.project_name}}</td>
+   <td>{{reports.billable_summary}}</td>
+   <td>{{reports.billable_hour}}</td>
+   <td>{{reports.non_billable_summary}}</td>
+   <td>{{reports.non_billable_hour}}</td>
+   <td> <a href="/edit_daily_update/{{reports.id}}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit Report"></span></a> <a href="/delete_daily_update/{{reports.id}}" class="delete"><span class="glyphicon glyphicon-trash" title="Delete"></span></a> </td>
+  </tr>
 
+   {% endfor %}
+</table>
+   {% endblock %}
