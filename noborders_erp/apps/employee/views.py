@@ -1845,7 +1845,23 @@ def project_index(request):
     """
 
     project = Project.objects.all()
-    return render(request, "project/index.html", {"project": project})
+    project_name_list = []
+    for project_name in project:
+        if project_name.project_name not in project_name_list:
+            project_name_list.append(project_name.project_name)
+    return render(
+        request,
+        "project/index.html",
+        {"project": project, "project_name_list": project_name_list},
+    )
+
+
+def ajax_filter_project_detail(request):
+    project_name = request.GET.get("project_name")
+    project_name = Project.objects.filter(project_name=project_name)
+    html = render_to_string("project/filter_data.html", {"project": project_name},)
+
+    return HttpResponse(html)
 
 
 def create_projectview(request):
@@ -1891,8 +1907,25 @@ def client_index(request):
     """
     used to show the client detail here 
     """
+
     client = Client.objects.all()
-    return render(request, "client/index.html", {"client": client})
+    client_name_list = []
+    for client_name in client:
+        if client_name.client_name not in client_name_list:
+            client_name_list.append(client_name)
+    # import pdb; pdb.set_trace();
+    return render(
+        request,
+        "client/index.html",
+        {"client": client, "client_name": client_name_list},
+    )
+
+
+def ajax_filter_client_detail(request):
+    cname = request.GET.get("cname")
+    client = Client.objects.filter(client_name=cname)
+    html = render_to_string("client/filter_data.html", {"client": client},)
+    return HttpResponse(html)
 
 
 def create_client_view(request):
@@ -1939,7 +1972,48 @@ def assign(request):
     """
     if request.user.is_superuser:
         assign = AssignProject.objects.all()
-        return render(request, "assign/assign_index.html", {"assign": assign})
+        project_name_list = []
+        employe_name_list = []
+        for project_name in assign:
+            if project_name.project.project_name not in project_name_list:
+                project_name_list.append(project_name.project.project_name)
+        for employe_name in assign:
+            if employe_name.employe.username not in employe_name_list:
+                employe_name_list.append(employe_name.employe.username)
+        return render(
+            request,
+            "assign/assign_index.html",
+            {
+                "assign": assign,
+                "project_name": project_name_list,
+                "employe_name": employe_name_list,
+            },
+        )
+
+
+def ajax_filter_assign_project_detail(request):
+    assign_project_name = request.GET.get("assign_project_name")
+    assign_employe_name = request.GET.get("assign_employe_name")
+    if assign_project_name:
+        assign_project_name = AssignProject.objects.filter(
+            project__project_name=assign_project_name
+        )
+        html = render_to_string(
+            "assign/filter_data.html", {"assign": assign_project_name}
+        )
+    else:
+        assign_employe_name = AssignProject.objects.filter(
+            employe__username=assign_employe_name
+        )
+        html = render_to_string(
+            "assign/filter_data.html", {"assign": assign_employe_name}
+        )
+
+        # import pdb; pdb.set_trace();
+    return HttpResponse(html)
+
+
+#    import pdb; pdb.set_trace();
 
 
 def assign_project_view(request):
@@ -2039,21 +2113,17 @@ def checkdailyupdate(request):
     """
     use this to check  our all daily report
     """
-    # if request.method == "POST":
-    #     start_date = request.GET.get("start_date")
-    #     import pdb; pdb.set_trace();
-    #     #end_date = request.POST["end_date"]
-    #     search_report = EmployeeDailyUpdate.objects.filter(
-    #         date__range=[start_date, end_date], project_name__employe=request.user
-    #     )
-    #     return render(
-    #         request,
-    #         "employe/myreport.html",
-    #         {"report": search_report, "start_date": start_date, "end_date": end_date},
-    #     )
-
+    daily_update = EmployeeDailyUpdate.objects.all()
+    project_name = []
+    for daily_updates in daily_update:
+        if daily_updates.project_name.project.project_name not in project_name:
+            project_name.append(daily_updates.project_name.project.project_name)
     report = EmployeeDailyUpdate.objects.filter(project_name__employe=request.user)
-    return render(request, "employe/myreport.html", {"report": report})
+    return render(
+        request,
+        "employe/myreport.html",
+        {"report": report, "project_name": project_name},
+    )
 
 
 def editdailyreport(request, pk):
@@ -2095,12 +2165,22 @@ def deletedailyreport(request, pk):
 def ajax_filter_employe_daily_report(request):
     employe_name = request.GET.get("ename")
     project_name = request.GET.get("pname")
-   # import pdb; pdb.set_trace();
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    # import pdb; pdb.set_trace();
     if project_name and employe_name:
         search_both = EmployeeDailyUpdate.objects.filter(
             project_name__employe__username=employe_name
         ).filter(project_name__project__project_name=project_name)
         html = render_to_string("filter_data.html", {"daily_updates": search_both})
+
+    elif project_name and start_date and end_date:
+        # import pdb; pdb.set_trace();
+        search_both = EmployeeDailyUpdate.objects.filter(
+            project_name__employe__username=employe_name
+        ).filter(date__range=[start_date, end_date])
+        html = render_to_string("filter_data.html", {"daily_updates": search_both})
+
     elif employe_name:
         search_by_name = EmployeeDailyUpdate.objects.filter(
             project_name__employe__username=employe_name
@@ -2114,17 +2194,45 @@ def ajax_filter_employe_daily_report(request):
         html = render_to_string(
             "filter_data.html", {"daily_updates": search_by_project},
         )
+    else:
+        search_date = EmployeeDailyUpdate.objects.filter(
+            date__range=[start_date, end_date]
+        )
+        html = render_to_string("filter_data.html", {"daily_updates": search_date},)
+        # import pdb; pdb.set_trace();
     return HttpResponse(html)
 
 
-def filter_by_date(request): 
+def filter_by_date(request):
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
-    search_report = EmployeeDailyUpdate.objects.filter(
+    project_name = request.GET.get("pname")
+    # import pdb; pdb.set_trace();
+    if project_name:
+        search_by_project = EmployeeDailyUpdate.objects.filter(
+            project_name__project__project_name=project_name,
+            project_name__employe=request.user,
+        )
+        html = render_to_string(
+            "employe/filter_date.html", {"report": search_by_project},
+        )
+    elif start_date and end_date:
+        search_report = EmployeeDailyUpdate.objects.filter(
             date__range=[start_date, end_date], project_name__employe=request.user
         )
-    import pdb; pdb.set_trace();
-    html = render_to_string(
-            "filter_date.html", {"report": search_report},
-        )
+        html = render_to_string("employe/filter_date.html", {"report": search_report},)
+
+    return HttpResponse(html)
+
+
+def filter_by_date_and_project(request):
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    project_name = request.GET.get("pname")
+    # import pdb; pdb.set_trace();
+    search_both = EmployeeDailyUpdate.objects.filter(
+        project_name__project__project_name=project_name,
+        project_name__employe=request.user,
+    ).filter(date__range=[start_date, end_date], project_name__employe=request.user)
+    html = render_to_string("employe/filter_date.html", {"report": search_both})
     return HttpResponse(html)

@@ -1,0 +1,15 @@
+ <table border="5" id='selectemp' class="table datatable">
+   <thead >
+      <th>Client Name</th>
+      <th>Client Refrences</th>
+      <th>Actions</th>
+   </thead>
+   {% for clients in client %}
+   <tr>
+      <td>{{clients.client_name}}</td>
+      <td>{{clients.client_refrences}}</td>
+      <td> <a class="sameicon pencilicon" href="/update_client/{{clients.id}}"><span class="glyphicon glyphicon-pencil" title="Update"></span></a> <a  class="sameicon delete" href="/delete_client/{{clients.id}}"><span class="glyphicon glyphicon-trash" title="Delete"></span></a></td>
+   </tr>
+   {% endfor %}
+</table>
+<br>

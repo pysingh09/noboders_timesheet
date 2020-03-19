@@ -2,22 +2,88 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
 {%if request.user.is_superuser%}
- <h3 class="top-heading"> Assign Project Information </h3>
- <table border="5" class="table table-stripped dataTable no-footer">
- <thead >
- <th> Employe name</th>
- <th>Project name</th>
- <th>Actions</th>
- </thead>
- {% for assigns in assign %}
- <tr>
- <td>{{assigns.employe.username}}</td>
- <td>{{assigns.project.project_name}}</td>
- <td> <a class="btn btn-primary " href="/assign_project_update/{{assigns.id}}">UPDATE</a>  <a class="btn btn-primary " href="/assign_project_delete/{{assigns.id}}">DELETE</a></td>
- </tr>
- {% endfor %}
- </table><br>
- <a href="/assign_project" class="btn btn-success btn-lg">ASSIGN PROJECT</a>
- {% endif %}
- {% endblock %}	
+<label>Select project</label>
+<select id ='projectselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
+   <option value="{{project_name}}">Select project</option>
+   {% for name in project_name %}
+   <option id="{{ name }}" value="{{ name }}">
+      {{ name }}
+   </option>
+   {% endfor %}
+</select>
+<label>Select employe</label>
+<select id ='nameselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
+   <option value="{{employe_name}}">Select employe</option>
+   {% for name in employe_name %}
+   <option id="{{ name }}" value="{{ name }}">
+      {{ name }}
+   </option>
+   {% endfor %}
+</select>
+<h3 class="top-heading"> Assign Project Information </h3>
+<button onclick="refresh()" class="btn btn-primary btn-lg">refresh</button>
+<table border="5" id ='selectemp' class="table table-stripped dataTable no-footer">
+   <thead >
+      <th> Employe name</th>
+      <th>Project name</th>
+      <th>Actions</th>
+   </thead>
+   {% for assigns in assign %}
+   <tr>
+      <td>{{assigns.employe.username}}</td>
+      <td>{{assigns.project.project_name}}</td>
+      <td> <a class="btn btn-primary " href="/assign_project_update/{{assigns.id}}">UPDATE</a>  <a class="btn btn-primary " href="/assign_project_delete/{{assigns.id}}">DELETE</a></td>
+   </tr>
+   {% endfor %}
+</table>
+<br>
+<a href="/assign_project" class="btn btn-primary btn-lg">ASSIGN PROJECT</a>
+{% endif %}
+{% endblock %}	
+{% block extra_js %}
+<script type="text/javascript">
+   $('#projectselection').change(function()
+   {  assign_project_name = $(this).val(); 
+     
+    $.ajax({
+           url: "{% url 'employee:ajax_filter_assign_project_detail' %}",
+           type: 'GET',
+           data : {"assign_project_name":assign_project_name},
+           success: function(res) 
+           { 
+             $('#selectemp').html(res);    
+           },
+           error: function (jqXHR, exception) {
+             debugger;
+           }
+       });
+    }); 
+   
+   $('#nameselection').change(function()
+   {  assign_employe_name = $(this).val(); 
+     
+    $.ajax({
+           url: "{% url 'employee:ajax_filter_assign_project_detail' %}",
+           type: 'GET',
+           data : {"assign_employe_name":assign_employe_name},
+           success: function(res) 
+           { 
+             $('#selectemp').html(res);    
+           },
+           error: function (jqXHR, exception) {
+             debugger;
+           }
+       });
+    }); 
+   
+   function refresh(){
+   location.reload();
+   };
+    
+</script>
+{% endblock extra_js%}

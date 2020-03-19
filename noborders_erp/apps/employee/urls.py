@@ -90,17 +90,32 @@ urlpatterns = [
         ajax_filter_employe_daily_report,
         name="ajax_filter_employe_daily_report",
     ),
+    path("filter_by_date/", filter_by_date, name="filter_by_date",),
     path(
-        "filter_by_date/",
-        filter_by_date,
-        name="filter_by_date",
+        "filter_by_date_and_project/",
+        filter_by_date_and_project,
+        name="filter_by_date_and_project",
+    ),
+    path(
+        "ajax_filter_client_detail/",
+        ajax_filter_client_detail,
+        name="ajax_filter_client_detail",
+    ),
+    path(
+        "ajax_filter_assign_project_detail/",
+        ajax_filter_assign_project_detail,
+        name="ajax_filter_assign_project_detail",
+    ),
+    path(
+        "ajax_filter_project_detail/",
+        ajax_filter_project_detail,
+        name="ajax_filter_project_detail",
     ),
     # path(
     #     "ajax_filter_project_daily_report/",
     #     ajax_filter_project_daily_report,
     #     name="ajax_filter_project_daily_report",
     # ),
-    
     # path(
     #     "ajax_filter_employe_project_daily_report/",
     #     ajax_filter_employe_project_daily_report,

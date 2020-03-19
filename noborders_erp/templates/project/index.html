@@ -3,27 +3,63 @@
 {% load staticfiles %}
 {% block content %}
 {%if request.user.is_superuser%}
- <h1>Project Information Dashboard</h1>
- <table border="5" class="table dataTable ">
- <thead >
- <th>Client</th>
- <th>Project name</th>
- <th>Project description</th>
- <th>Actions</th>
- </thead>
- {% for projects in project %}
- <tr>
- <td>{{projects.client}}</td>
- <td>{{projects.project_name}}</td>
- <td>{{projects.project_description}}</td>
- <td> <a class="sameicon pencilicon " href="/update_project/{{projects.id}}"><span class="glyphicon glyphicon-pencil" title="UPDATE"></span></a> <a class="delete " href="/delete_project/{{projects.id}}"><span class="glyphicon glyphicon-trash" title="DELETE"></span></a>
-  
- 
-  
- </td>
- </tr>
- {% endfor %}
- </table><br>
- <a href="/create_project" class="btn btn-success btn-lg">INSERT NEW PROJECT</a>
-  {% endif %}
-  {% endblock %}	
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
+<label>Select project</label>
+<select id ='projectselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
+   <option value="{{project_name_list}}">Select project</option>
+   {% for name in project_name_list %}
+   <option id="{{ name }}" value="{{ name }}">
+      {{ name }}
+   </option>
+   {% endfor %}
+</select>
+<h1>Project Information Dashboard</h1>
+<button onclick="refresh()" class="btn btn-primary btn-lg">refresh</button>
+<table id ='selectemp' border="5" class="table dataTable ">
+   <thead >
+      <th>Client</th>
+      <th>Project name</th>
+      <th>Project description</th>
+      <th>Actions</th>
+   </thead>
+   {% for projects in project %}
+   <tr>
+      <td>{{projects.client}}</td>
+      <td>{{projects.project_name}}</td>
+      <td>{{projects.project_description}}</td>
+      <td> <a class="sameicon pencilicon " href="/update_project/{{projects.id}}"><span class="glyphicon glyphicon-pencil" title="UPDATE"></span></a> <a class="delete " href="/delete_project/{{projects.id}}"><span class="glyphicon glyphicon-trash" title="DELETE"></span></a>
+      </td>
+   </tr>
+   {% endfor %}
+</table>
+<br>
+<a href="/create_project" class="btn btn-success btn-lg">INSERT NEW PROJECT</a>
+{% endif %}
+{% endblock %}	
+{% block extra_js %}
+<script type="text/javascript">
+   $('#projectselection').change(function()
+   { project_name = $(this).val(); 
+     
+    $.ajax({
+           url: "{% url 'employee:ajax_filter_project_detail' %}",
+           type: 'GET',
+           data : {"project_name":project_name},
+           success: function(res) 
+           { 
+             $('#selectemp').html(res);    
+           },
+           error: function (jqXHR, exception) {
+             debugger;
+           }
+       });
+    }); 
+   
+   function refresh(){
+   location.reload();
+   };
+</script>
+{% endblock extra_js%}
