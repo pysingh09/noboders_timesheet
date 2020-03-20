@@ -323,7 +323,7 @@ class MonthlyTakeLeave(BaseModel):
 
 class Client(BaseModel):
     client_name = models.CharField(max_length=250)
-    client_refrences = models.CharField(max_length=250)
+    client_reference = models.CharField(max_length=250)
 
     def __str__(self):
         return self.client_name
@@ -359,3 +359,40 @@ class EmployeeDailyUpdate(BaseModel):
     billable_hour = models.IntegerField()
     non_billable_summary = models.TextField()
     non_billable_hour = models.IntegerField()
+
+
+class EmpMonthlyAttendance(BaseModel):
+    emp = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee_attendance_record')
+    dept_name = models.CharField(max_length=100)
+    emp_code = models.CharField(max_length=50, null=True)
+    emp_name = models.CharField(max_length=50, null=True)
+    report_month = models.CharField(max_length=20, null=True)
+
+
+class AttendanceDetails(BaseModel):
+    emp = models.ForeignKey(EmpMonthlyAttendance, on_delete=models.CASCADE, related_name='employee_attendance_record_details')
+    date = models.CharField(max_length=10, null=True)
+    day = models.CharField(max_length=15, null=True)
+    shift = models.CharField(max_length=2, null=True)
+    in_time = models.CharField(max_length=10, null=True)
+    out_time = models.CharField(max_length=10, null=True)
+    working_hrs = models.CharField(max_length=5, null=True)
+    ot = models.CharField(max_length=5, null=True)
+    status = models.CharField(max_length=3, null=True)
+    remark = models.CharField(max_length=10, null=True)
+
+
+class EmpAttMtM(EmpMonthlyAttendance):
+    attendance_details = models.ManyToManyField(AttendanceDetails)
+
+
+class EmployeeTotalAttendanceStatus(BaseModel):
+    emp = models.ForeignKey(EmpMonthlyAttendance, on_delete=models.CASCADE, related_name='employee_total_attendance_record')
+    total_present = models.IntegerField(default=0)
+    total_abs = models.IntegerField(default=0)
+    total_working_hrs = models.IntegerField(default=0)
+    total_wo = models.IntegerField(default=0)
+    total_ot_hrs = models.IntegerField(default=0)
+    
+    
+

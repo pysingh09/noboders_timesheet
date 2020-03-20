@@ -4,9 +4,9 @@ from .base import *
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "erp_db",
-        "USER": "erp_user",
-        "PASSWORD": "erp1234",
+        "NAME": "thoughtwin_erp",
+        "USER": "eshan",
+        "PASSWORD": "eshan",
         "HOST": "localhost",
         "PORT": 5432,
     }
