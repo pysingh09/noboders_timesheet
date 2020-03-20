@@ -4,7 +4,7 @@ from .base import *
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "erp_db",
+        "NAME": "timesheet",
         "USER": "erp_user",
         "PASSWORD": "erp1234",
         "HOST": "localhost",

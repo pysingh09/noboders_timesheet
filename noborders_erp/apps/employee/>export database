@@ -1,0 +1,9 @@
+>export database
+pg_dump -U <username> -h localhost <databasename> >> <sqlfile.sql>
+
+
+
+> Import database
+psql -U <db_user> <db_name> < <dump_name.sql>
+
+

@@ -403,73 +403,6 @@ def deactivate_user(request, pk):
     return JsonResponse({"status": "success"})
 
 
-import pandas as pd
-import xlrd
-import csv
-@permission_required("employee.add_employeeattendance", raise_exception=True)
-def file_upload(request):
-    try:
-        #import pdb;pdb.set_trace()
-        template = "file_upload.html"     
-        prompt = {
-            "order": "order of csv should be employee_no, in_time, out_time, date"
-        }
-        if request.method == "GET":
-            return render(request, template, prompt)
-        excel_file = request.FILES["excel_file"]
-        filename = fs.save(excel_file.name, excel_file)
-        print(filename)
-        file_url = settings.PROJECT_APPS + fs.url(filename)  # project app url + filename
-        wb = xlrd.open_workbook('/home/lenovo/workspace/timesheet/noboders_timesheet/noborders_erp/media/test.xls')
-        #import pdb;pdb.set_trace()
-        sheet = wb.sheet_by_index(0)
-        for i in range(sheet.nrows - 3):
-            if i == sheet.nrows - 1:  # row-1
-                break
-            name = sheet.cell_value(i + 3, 1)
-            #employee_id = sheet.cell_value(i + 3, 0)
-            employee_id =sheet.cell_value(i + 2, 1)
-            #in_time = sheet.cell_value(i + 3, 3)
-            in_time=sheet.cell_value(i + 4, 3)
-            out_time = sheet.cell_value(i + 4,7)
-            #out_time = sheet.cell_value(i + 4, sheet.ncols - 1) # sheet.cell_value(i+4,3)
-            date = sheet.cell_value(i+4, 0).split("/")
-            if in_time == "--:--" and out_time == "--:--":
-                in_time = datetime.strptime("00:00", "%H:%M")
-                out_time = datetime.strptime("00:00", "%H:%M")
-            elif out_time == "--:--":
-                in_time = datetime.strptime(in_time, "%H:%M")
-                # out_time = datetime.strptime(in_time ,'%H:%M')
-                out_time = in_time
-            else:
-                in_time = datetime.strptime(in_time, "%H:%M")
-                out_time = datetime.strptime(out_time, "%H:%M")
-            profile = Profile.objects.filter(employee_id=employee_id)
-            if profile.exists():
-                profile = Profile.objects.get(employee_id=employee_id)
-                emp, created = EmployeeAttendance.objects.update_or_create(
-                    user=profile.user,
-                    employee_id=profile.employee_id,
-                    date=date[2] + "-" + date[1] + "-" + date[0],
-                    created_by=profile.user,
-                )
-                if emp:
-                    emp_details = EmployeeAttendanceDetail.objects.filter(
-                        employee_attendance=emp
-                    )
-                    if emp_details.exists():
-                        emp_details.delete()
-                    detail, created = EmployeeAttendanceDetail.objects.update_or_create(
-                        employee_attendance=emp,
-                        in_time=in_time,
-                        out_time=out_time,
-                        date=date[2] + "-" + date[1] + "-" + date[0],
-                    )
-        messages.success(request, " File Successfully Uploaded.")
-        return render(request, template)
-    except Exception as e:
-        messages.error(request, "File Upload Failed")
-        return render(request, template)
 
 
 def home(request):
@@ -2051,6 +1984,178 @@ def deletedailyreport(request, pk):
     report = EmployeeDailyUpdate.objects.get(id=pk)
     report.delete()
     return HttpResponseRedirect("/check_daily_update")
+
+
+import pandas as pd
+import xlrd
+import csv
+@permission_required("employee.add_employeeattendance", raise_exception=True)
+def attendance_file_upload(request):
+    try:
+        template = "file_upload.html"     
+        prompt = {
+            "order": "order of csv should be employee_no, in_time, out_time, date"
+        }
+        if request.method == "GET":
+            return render(request, template, prompt)
+        excel_file = request.FILES["excel_file"]
+        filename = fs.save(excel_file.name, excel_file)
+        file_url = settings.PROJECT_APPS  + fs.url(filename)  
+        wb = xlrd.open_workbook(file_url)
+        #import pdb;pdb.set_trace()
+        sheet = wb.sheet_by_index(0)
+        list=[]
+        for k in range(3,sheet.nrows -3,39):
+            list.append(sheet.cell_value(k-1 , 1))
+        # for j in range(1,sheet.nrows -3):
+        #     emp_id =sheet.cell_value(j + 1, 1)
+        #     print(emp_id)
+            k=0
+            a=list[k]
+            for i in range(sheet.nrows - 3):
+                if i == sheet.nrows - 1:
+                    break
+                #department_name = sheet.cell_value(i + 1, 1)
+                #report_month = sheet.cell_value(i + 1, 9)
+                employee_id =a
+                #name = sheet.cell_value(i + 2, 6)
+                date = sheet.cell_value(i+4, 0).split("/")
+                day = sheet.cell_value(i + 4, 1)
+                shift = sheet.cell_value(i + 4, 2)
+                in_time=sheet.cell_value(i + 4, 3)
+                l_start = sheet.cell_value(i + 4, 4)
+                l_end = sheet.cell_value(i + 4, 5)
+                out_time = sheet.cell_value(i + 4,7)
+                work  = sheet.cell_value(i + 4, 7)
+                ot   = sheet.cell_value(i + 4, 8)
+                status  = sheet.cell_value(i + 4, 9)
+                remark = sheet.cell_value(i + 4, 10)
+                #import pdb;pdb.set_trace()
+                if in_time == "--:--" and out_time == "--:--":
+                    in_time = datetime.strptime("00:00", "%H:%M")
+                    out_time = datetime.strptime("00:00", "%H:%M")
+                elif out_time == "--:--":
+                    out_time = datetime.strptime("00:00", "%H:%M")
+                    # out_time = in_time
+                elif in_time == "--:--":
+                    in_time = datetime.strptime("00:00", "%H:%M")
+                else:
+                    in_time = datetime.strptime(in_time, "%H:%M")
+                    out_time = datetime.strptime(out_time, "%H:%M")
+                profile = Profile.objects.filter(employee_id=employee_id)
+                if profile.exists():
+                    profile = Profile.objects.get(employee_id=employee_id)
+                    emp, created = EmployeeAttendance.objects.update_or_create(
+                        user=profile.user,
+                        employee_id=profile.employee_id,
+                        date=date[2] + "-" + date[1] + "-" + date[0],
+                        created_by=profile.user,
+                    )
+                    if emp:
+                        emp_details = EmployeeAttendanceDetail.objects.filter(
+                            employee_attendance=emp
+                        )
+                        if emp_details.exists():
+                            emp_details.delete()
+                        detail, created = EmployeeAttendanceDetail.objects.update_or_create(
+                            employee_attendance=emp,
+                            in_time=in_time,
+                            out_time=out_time,
+                            date=date[2] + "-" + date[1] + "-" + date[0],
+                        )
+            
+        messages.success(request, "SUCCESSFULLY UPLOADED YOUR FILE.")
+        return render(request, template)
+    except Exception as e:
+        messages.error(request, "FILE UPLOAD FAILED")
+        return render(request, template)
+
+
+
+# import pandas as pd
+# import xlrd
+# import csv
+# @permission_required("employee.add_employeeattendance", raise_exception=True)
+# def attendance_file_upload(request):
+#     try:
+#         template = "file_upload.html"     
+#         prompt = {
+#             "order": "order of csv should be employee_no, in_time, out_time, date"
+#         }
+#         if request.method == "GET":
+#             return render(request, template, prompt)
+#         excel_file = request.FILES["excel_file"]
+#         filename = fs.save(excel_file.name, excel_file)
+#         file_url = settings.PROJECT_APPS  + fs.url(filename)  
+#         wb = xlrd.open_workbook(file_url)
+#         #import pdb;pdb.set_trace()
+#         sheet = wb.sheet_by_index(0)
+#         list=[]
+#         for k in range(3,sheet.nrows -3,39):
+#             list.append(sheet.cell_value(k-1 , 1))
+#         print(list)
+#         # for j in range(1,sheet.nrows -3):
+#         #     emp_id =sheet.cell_value(j + 1, 1)
+#         #     print(emp_id)
+#             #import pdb;pdb.set_trace()
+#             for i in range(sheet.nrows - 3):
+#                 if i == sheet.nrows - 1:
+#                     break
+#                 #department_name = sheet.cell_value(i + 1, 1)
+#                 #report_month = sheet.cell_value(i + 1, 9)
+#                 employee_id =emp_id
+#                 #name = sheet.cell_value(i + 2, 6)
+#                 date = sheet.cell_value(i+4, 0).split("/")
+#                 day = sheet.cell_value(i + 4, 1)
+#                 shift = sheet.cell_value(i + 4, 2)
+#                 in_time=sheet.cell_value(i + 4, 3)
+#                 l_start = sheet.cell_value(i + 4, 4)
+#                 l_end = sheet.cell_value(i + 4, 5)
+#                 out_time = sheet.cell_value(i + 4,7)
+#                 work  = sheet.cell_value(i + 4, 7)
+#                 ot   = sheet.cell_value(i + 4, 8)
+#                 status  = sheet.cell_value(i + 4, 9)
+#                 remark = sheet.cell_value(i + 4, 10)
+#                 #import pdb;pdb.set_trace()
+#                 if in_time == "--:--" and out_time == "--:--":
+#                     in_time = datetime.strptime("00:00", "%H:%M")
+#                     out_time = datetime.strptime("00:00", "%H:%M")
+#                 elif out_time == "--:--":
+#                     out_time = datetime.strptime("00:00", "%H:%M")
+#                     # out_time = in_time
+#                 elif in_time == "--:--":
+#                     in_time = datetime.strptime("00:00", "%H:%M")
+#                 else:
+#                     in_time = datetime.strptime(in_time, "%H:%M")
+#                     out_time = datetime.strptime(out_time, "%H:%M")
+#                 profile = Profile.objects.filter(employee_id=employee_id)
+#                 if profile.exists():
+#                     profile = Profile.objects.get(employee_id=employee_id)
+#                     emp, created = EmployeeAttendance.objects.update_or_create(
+#                         user=profile.user,
+#                         employee_id=profile.employee_id,
+#                         date=date[2] + "-" + date[1] + "-" + date[0],
+#                         created_by=profile.user,
+#                     )
+#                     if emp:
+#                         emp_details = EmployeeAttendanceDetail.objects.filter(
+#                             employee_attendance=emp
+#                         )
+#                         if emp_details.exists():
+#                             emp_details.delete()
+#                         detail, created = EmployeeAttendanceDetail.objects.update_or_create(
+#                             employee_attendance=emp,
+#                             in_time=in_time,
+#                             out_time=out_time,
+#                             date=date[2] + "-" + date[1] + "-" + date[0],
+#                         )
+#         messages.success(request, "SUCCESSFULLY UPLOADED YOUR FILE.")
+#         return render(request, template)
+#     except Exception as e:
+#         messages.error(request, "FILE UPLOAD FAILED")
+#         return render(request, template)
+
+
 
 
 

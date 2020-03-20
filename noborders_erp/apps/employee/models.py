@@ -203,12 +203,23 @@ class EmployeeAttendance(BaseModel):
 
 
 class EmployeeAttendanceDetail(BaseModel):
-    employee_attendance = models.ForeignKey(
-        EmployeeAttendance, on_delete=models.CASCADE, related_name="employee_attendance"
-    )
+    employee_attendance = models.ForeignKey(EmployeeAttendance, on_delete=models.CASCADE, related_name="employee_attendance")
     date = models.DateField(blank=True, verbose_name=_("Date"))
     in_time = models.TimeField(blank=True, verbose_name=_("Time In"))
     out_time = models.TimeField(blank=True, verbose_name=_("Time Out"))
+    # employee_eno =models.IntegerField(null=True, blank=True)
+    # department_name = models.CharField(max_length=50, null=True, blank=True)
+    # remark = models.CharField(max_length=50, null=True, blank=True)
+    # ot = models.TimeField(null=True, blank=True)
+    # work = models.TimeField(null=True, blank=True)
+    # name = models.CharField(max_length=100, null=True, blank=True)
+    # day = models.CharField(max_length=50, null=True, blank=True)
+    # shift = models.CharField(max_length=50, null=True, blank=True)
+    # status = models.CharField(max_length=50, null=True, blank=True)
+    # l_start = models.CharField(max_length=50, null=True, blank=True)
+    # l_end = models.CharField(max_length=50, null=True, blank=True)
+
+    
 
     def date_time_diffrence(self):
         dateTimeDifference = datetime.timedelta(0, 0)

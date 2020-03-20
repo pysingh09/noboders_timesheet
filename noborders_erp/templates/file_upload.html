@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{% load staticfiles %}
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
@@ -46,26 +46,24 @@
             </div>
             <div class="form-group nomargiform">                    
                 <div class="col-md-3 col-sm-4 col-sm-offset-1 col-md-offset-1 col-xs-12" style="margin-bottom:10px;">
-                    <button class="upload background_colorbtn"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload</button> 
+                    <button class="btn btn-primary btn-lg"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload</button>
+                </div>
+
+                <div style="margin-bottom:10px;">
+                    <button onclick="picture()" class="btn btn-primary btn-lg"> Before upload, Check the file structure</button>
+                    <img id="file_structure" src="file_structure" style="display:none;"/>
                 </div> 
             </div>
         </form>
     </div>
 </div>
 
-<script>
-//      $(document).ready(function(){
-//     $(document).on("click",".upload",function(){
-//          onSuccess:function()
-//     {
-//         alert("File Uploaded successfully");
-//     },
-//         onError: function()
-//     {       
-//         alert("Upload Failed");
-//     }
-// });
-// });
+<script type="text/javascript">
+        function picture(){ 
+        var pic = "{% static "img/file_structure.png" %}"
+        document.getElementById('file_structure').src = pic.replace('90x90', '225x225');
+        document.getElementById('file_structure').style.display='block';
+        }
 </script>
-
 {% endblock %}
+
