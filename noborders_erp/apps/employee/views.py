@@ -8,13 +8,13 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.generic import View, ListView, TemplateView, UpdateView, DetailView
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View, ListView, TemplateView, CreateView
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.forms import ValidationError
 
 
-from employee.models import (
+from .models import (
     MonthlyTakeLeave,
     Profile,
     EmployeeAttendance,
@@ -26,8 +26,12 @@ from employee.models import (
     Client,
     AssignProject,
     EmployeeDailyUpdate,
+    EmpMonthlyAttendance,
+    AttendanceDetails,
+    EmployeeTotalAttendanceStatus,
+    EmpAttMtM
 )
-from employee.forms import (
+from .forms import (
     SignUpForm,
     ProfileForm,
     AllottedLeavesForm,
@@ -70,7 +74,7 @@ from django.contrib.auth.models import Group
 
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from employee.tasks import send_email_reminder
+from .tasks import send_email_reminder
 
 # this is for file upload
 import xlrd
@@ -78,6 +82,200 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
 fs = FileSystemStorage()
+
+
+def emp_wise_attendance(request):
+    if request.method == 'POST':
+        emp_name = request.POST.get('emp_name', '')
+        detailed_object = EmpMonthlyAttendance.objects.get(emp_name=emp_name)
+        emp_details = AttendanceDetails.objects.filter(emp=detailed_object)
+        return render(request, 'employee_wise_attendance.html', {'emp_basic': detailed_object,
+                                                                 'emp_detail': emp_details})
+    else:
+        return render(request, 'show_attendance.html', {})
+
+
+def uploadExcel(request):
+    if request.method == "POST":
+        # import pdb;pdb.set_trace()
+        file = request.FILES["upload_excel"]
+        workbook = xlrd.open_workbook(file_contents=file.read())
+        dept_name, emp_name, report_month, emp_code, date, day, shift = None, None, None, None, None, None, None
+        in_time, out_time, wrk_hrs, ot, status, remark, total_present = None, None, None, None, None, None, None
+        total_abs, total_wo, total_wkr_hrs, total_ot_hrs, emp_att = None, None, None, None, None
+
+        sheet = workbook.sheet_by_index(0)
+        for j in range(sheet.nrows):
+            if sheet.cell_value(j, 0) == 'No Borders ':
+                dept_name = sheet.cell_value(j + 1, 1)
+                report_month = sheet.cell_value(j + 1, 9)
+                emp_code = sheet.cell_value(j + 2, 1)
+                emp_name = sheet.cell_value(j + 2, 6)
+                print(dept_name, report_month, emp_code, emp_name)
+
+                try:
+                    emp = Profile.objects.get(employee_id=emp_code)
+                except:
+                    pass
+
+                print("*********** ", emp.user)
+                if emp:
+                    EmpMonthlyAttendance.objects.update_or_create(emp=emp.user, dept_name=dept_name, 
+                        emp_code=emp_code, emp_name=emp_name, report_month=report_month)
+
+                for k in range(j + 4, sheet.nrows):
+                    k = k - j
+                    print("@@@@   k = ", k, "  j = ", j, "  ", sheet.nrows, "   ", sheet.cell_value(k, 0))
+                    if sheet.cell_value(k, 0) == 'Total Present':
+                        j = j + k
+                        break
+
+                    date = sheet.cell_value(k, 0)
+                    day = sheet.cell_value(k, 1)
+                    shift = sheet.cell_value(k, 2)
+                    in_time = sheet.cell_value(k, 3)
+                    out_time = sheet.cell_value(k, 6)
+                    wrk_hrs = sheet.cell_value(k, 7)
+                    ot = sheet.cell_value(k, 8)
+                    status = sheet.cell_value(k, 9)
+                    remark = sheet.cell_value(k, 10)
+                    
+                    emp_att = EmpMonthlyAttendance.objects.get(emp_code=emp_code)
+
+                    if emp_att:
+                        AttendanceDetails.objects.update_or_create(emp=emp_att, date=date, day=day, shift=shift, in_time=in_time, 
+                            out_time=out_time, working_hrs=wrk_hrs, ot=ot, status=status, remark=remark)
+
+                print("   Hi   There I am J   ", j)
+                total_present = sheet.cell_value(j, 1)
+                total_abs = sheet.cell_value(j, 4)
+                total_wo = sheet.cell_value(j, 7)
+                total_wkr_hrs = sheet.cell_value(j + 1, 1)
+                total_ot_hrs = sheet.cell_value(j + 1, 4)
+                if emp_att:
+                    EmployeeTotalAttendanceStatus.objects.update_or_create(
+                        emp=emp_att, 
+                        total_present=int(total_present) if total_present.strip() else 0, 
+                        total_abs=int(total_abs) if total_present.strip() else 0, 
+                        total_working_hrs=int(total_wkr_hrs) if total_present.strip() else 0, 
+                        total_wo=int(total_wo) if total_present.strip() else 0, 
+                        total_ot_hrs=int(total_ot_hrs) if total_present.strip() else 0
+                    )
+        basic_emp_attendance = EmpMonthlyAttendance.objects.all()
+        detailed_attendance = AttendanceDetails.objects.all()
+
+        return render(request, 'show_attendance.html', {'basic_list': basic_emp_attendance,
+                                                        'detail_list': detailed_attendance})
+    return render(request, 'upload_excel.html', {})
+
+
+def new_emp_wise_attendance(request):
+    if request.method == 'POST':
+        emp_name = request.POST.get('emp_name', '')
+        detailed_object = EmpMonthlyAttendance.objects.get(emp_name=emp_name)
+        emp_details = AttendanceDetails.objects.filter(emp=detailed_object)
+        return render(request, 'employee_wise_attendance.html', {'emp_basic': detailed_object,
+                                                                 'emp_detail': emp_details})
+    else:
+        return render(request, 'show_attendance.html', {})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def new_uploadExcel(request):
+    if request.method == "POST":
+        # import pdb;pdb.set_trace()
+        file = request.FILES["upload_excel"]
+        workbook = xlrd.open_workbook(file_contents=file.read())
+        dept_name, emp_name, report_month, emp_code, date, day, shift = None, None, None, None, None, None, None
+        in_time, out_time, wrk_hrs, ot, status, remark, total_present = None, None, None, None, None, None, None
+        total_abs, total_wo, total_wkr_hrs, total_ot_hrs, emp_att = None, None, None, None, None
+
+        sheet = workbook.sheet_by_index(0)
+        for j in range(sheet.nrows):
+            if sheet.cell_value(j, 0) == 'No Borders ':
+                dept_name = sheet.cell_value(j + 1, 1)
+                report_month = sheet.cell_value(j + 1, 9)
+                emp_code = sheet.cell_value(j + 2, 1)
+                emp_name = sheet.cell_value(j + 2, 6)
+                print(dept_name, report_month, emp_code, emp_name)
+
+                try:
+                    emp = Profile.objects.get(employee_id=emp_code)
+                except:
+                    pass
+
+                print("*********** ", emp.user)
+                if emp:
+                    EmployeeAttendance.objects.update_or_create(user=emp.user, employee_id=emp_code)
+
+                for k in range(j + 4, sheet.nrows):
+                    k = k - j
+                    print("@@@@   k = ", k, "  j = ", j, "  ", sheet.nrows, "   ", sheet.cell_value(k, 0))
+                    if sheet.cell_value(k, 0) == 'Total Present':
+                        j = j + k
+                        break
+
+                    date = sheet.cell_value(k, 0)
+                    if date == "":
+                        continue
+                    date = datetime.strptime(date, "%d/%m/%Y")
+                    print("***********       ", date)
+                    day = sheet.cell_value(k, 1)
+                    shift = sheet.cell_value(k, 2)
+                    in_time = sheet.cell_value(k, 3)
+                    if in_time == "--:--":
+                        in_time = datetime.strptime("00:00", "%H:%M")
+                    elif in_time == "":
+                        in_time = datetime.strptime("00:00", "%H:%M")
+                    else:
+                        in_time = datetime.strptime(in_time, "%H:%M")
+                    out_time = sheet.cell_value(k, 6)
+                    if out_time == "--:--":
+                        out_time = datetime.strptime("00:00", "%H:%M")
+                    elif out_time == "":
+                        out_time = datetime.strptime("00:00", "%H:%M")
+                    else:
+                        out_time = datetime.strptime(out_time, "%H:%M")
+
+                    wrk_hrs = sheet.cell_value(k, 7)
+                    ot = sheet.cell_value(k, 8)
+                    status = sheet.cell_value(k, 9)
+                    remark = sheet.cell_value(k, 10)
+
+                    emp_att = EmployeeAttendance.objects.get(employee_id=emp_code)
+
+                    if emp_att:
+                        EmployeeAttendanceDetail.objects.update_or_create(employee_attendance=emp_att, date=date,
+                                                                   in_time=in_time,
+                                                                   out_time=out_time)
+
+                print("   Hi   There I am J   ", j)
+                # total_present = sheet.cell_value(j, 1)
+                # total_abs = sheet.cell_value(j, 4)
+                # total_wo = sheet.cell_value(j, 7)
+                # total_wkr_hrs = sheet.cell_value(j + 1, 1)
+                # total_ot_hrs = sheet.cell_value(j + 1, 4)
+                # if emp_att:
+                #     EmployeeTotalAttendanceStatus.objects.update_or_create(
+                #         emp=emp_att,
+                #         total_present=int(total_present) if total_present.strip() else 0,
+                #         total_abs=int(total_abs) if total_present.strip() else 0,
+                #         total_working_hrs=int(total_wkr_hrs) if total_present.strip() else 0,
+                #         total_wo=int(total_wo) if total_present.strip() else 0,
+                #         total_ot_hrs=int(total_ot_hrs) if total_present.strip() else 0
+                #     )
+        basic_emp_attendance = EmployeeAttendance.objects.all()
+        detailed_attendance = EmployeeAttendanceDetail.objects.all()
+
+        return render(request, 'new_attendance.html', {'basic_list': basic_emp_attendance,
+                                                        'detail_list': detailed_attendance})
+    return render(request, 'new_upload_excel.html', {})
+
+
+
+
+
 
 
 def login_view(request):
@@ -401,6 +599,7 @@ def deactivate_user(request, pk):
         profile.user.is_active = request.POST.get("is_active")
         profile.user.save()
     return JsonResponse({"status": "success"})
+
 
 
 @permission_required("employee.add_employeeattendance", raise_exception=True)
