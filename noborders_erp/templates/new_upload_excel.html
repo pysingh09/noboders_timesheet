@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Select excel file</h1>
+
+<form action="{% url 'employee:new_upload_excel' %}" method="post", enctype="multipart/form-data">
+	{% csrf_token %}
+
+	<input type="file" name="upload_excel">
+	<input type="submit" value="Upload">
+	
+</form>
+{% endblock %}

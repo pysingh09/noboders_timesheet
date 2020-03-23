@@ -2,7 +2,7 @@ media/
 *.pyc
 subl/
 collected_static/
-thoughtwin_erp/settings/local.py
+local.py
 **/migrations
 log/
 celerybeat-schedule.db
