@@ -1076,9 +1076,26 @@ class RequestLeaveView(CreateView):
                 except Exception as e:
                     pass
             messages.success(self.request, "Leave Request Sent Successfully")
+            current_user_mail = self.request.user.email
+            # import pdb; pdb.set_trace();
+            #mail_list.remove('utkarsh.webllisto@gmail.com')
+            mail_list = list(mail_list)
+            import smtplib
+            #import pdb;pfb.set_trace()
+            for emails in range(len(mail_list)):
+                if mail_list[emails] == '':
+                    continue
+                s = smtplib.SMTP("smtp.gmail.com", 587)
+                s.starttls()
+                """
+                type company mail here 
+                """
+                s.login("utkarsh.webllisto@gmail.com", "rathore1999")
+                message = f"{self.request.user} send you a message on timesheet for leave request please check it "
+            #    import pdb; pdb.set_trace();
+                s.sendmail("utkarsh.webllisto@gmail.com",mail_list[emails], message)
+                s.quit()
 
-            # 'mail_list':mail_list - get mail list
-            # return render(self.request,'request_leave.html', {'accept_emails' : mail_lists})
             return HttpResponseRedirect("/leave")
             # else:
             #     messages.error(self.request, 'Leave Are Not Alloted In This Year')
