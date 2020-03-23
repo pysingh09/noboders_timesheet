@@ -14,6 +14,8 @@ from django.urls import reverse
 from django.forms import ValidationError
 from django.template.loader import render_to_string
 from django.db.models import Q
+import smtplib
+
 
 from employee.models import (
     MonthlyTakeLeave,
@@ -1080,7 +1082,6 @@ class RequestLeaveView(CreateView):
             # import pdb; pdb.set_trace();
             #mail_list.remove('utkarsh.webllisto@gmail.com')
             mail_list = list(mail_list)
-            import smtplib
             #import pdb;pfb.set_trace()
             for emails in range(len(mail_list)):
                 if mail_list[emails] == '':
@@ -1256,6 +1257,23 @@ def full_leave_status(request):
         leave_type = request.POST.get("leave_type")
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
+        leave_user = request.POST.get('leave_user')
+        #import pdb; pdb.set_trace();
+        s = smtplib.SMTP("smtp.gmail.com", 587)
+        s.starttls()
+        """
+        type company mail here 
+        """
+        s.login("utkarsh.webllisto@gmail.com", "rathore1999")
+        #import pdb;pdb.set_trace()
+        user = User.objects.get(username=leave_user)
+        user_email =user.email
+        if leave_status == '2':
+            message = f"{leave_user} your leave request is accepted "
+        elif leave_status == '3':
+            message = f"{leave_user} your leave request is rejected "
+        s.sendmail("utkarsh.webllisto@gmail.com",user_email, message)
+        s.quit()
         leave_status = False
         if leave.status == 2:
             leave_status = True
