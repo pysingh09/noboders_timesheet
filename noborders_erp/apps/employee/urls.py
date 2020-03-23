@@ -13,7 +13,10 @@ app_name = "employee"
 
 urlpatterns = [
     path("employee_wise_attendance/", emp_wise_attendance, name="employee_wise_attendance"),
-    path("upload_excel/", uploadExcel, name="upload_excel"),
+    #path("upload_excel/", uploadExcel, name="upload_excel"),
+
+    path("new_upload_excel/", new_uploadExcel, name="new_upload_excel"),
+
     path("signup/", UserCreateView.as_view(), name="signup"),
     path("home/", home, name="home"),
     path("file/", file_upload, name="file_upload"),

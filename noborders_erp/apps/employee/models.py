@@ -166,7 +166,7 @@ class EmployeeAttendance(BaseModel):
         User, on_delete=models.CASCADE, related_name="employee_user"
     )
     employee_id = models.IntegerField(verbose_name=_("Employee ID"))
-    date = models.DateField(blank=True, verbose_name=_("Date"))
+    date = models.DateField(blank=True, null=True, verbose_name=_("Date"))
     leave_type = models.IntegerField(choices=LEAVE_TYPE, default=1)
     empatt_leave_status = models.IntegerField(choices=EMPATT_LEAVE_STATUS, default=1)
     created_by = models.ForeignKey(
