@@ -1,0 +1,18 @@
+<table id ='selectemp' border="5" class="table dataTable ">
+   <thead >
+      <th>Client</th>
+      <th>Project Name</th>
+      <th>Project Description</th>
+      <th>Actions</th>
+   </thead>
+   {% for projects in project %}
+   <tr>
+      <td>{{projects.client}}</td>
+      <td>{{projects.project_name}}</td>
+      <td>{{projects.project_description}}</td>
+      <td> <a class="sameicon pencilicon " href="/update_project/{{projects.id}}"><span class="glyphicon glyphicon-pencil" title="UPDATE"></span></a> <a class="delete " href="/delete_project/{{projects.id}}"><span class="glyphicon glyphicon-trash" title="DELETE"></span></a>
+      </td>
+   </tr>
+   {% endfor %}
+</table>
+<br>

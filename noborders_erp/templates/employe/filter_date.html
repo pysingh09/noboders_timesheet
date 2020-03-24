@@ -1,0 +1,22 @@
+<table id ='selectemp' border="5" class="table datatable">
+   <thead>
+      <th>Date</th>
+      <th>Project Name</th>
+      <th>Project Billiable Summary</th>
+      <th>Project Billiable Time</th>
+      <th>Project Non-billiable Summary</th>
+      <th>Project Non-billiable Time</th>
+      <th>Action</th>
+   </thead>
+   {% for reports in report %}
+   <tr>
+      <td>{{reports.date}}</td>
+      <td>{{reports.project_name.project.project_name}}</td>
+      <td>{{reports.billable_summary}}</td>
+      <td>{{reports.billable_hour}}</td>
+      <td>{{reports.non_billable_summary}}</td>
+      <td>{{reports.non_billable_hour}}</td>
+      <td> <a href="/edit_daily_update/{{reports.id}}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit Report"></span></a> <a href="/delete_daily_update/{{reports.id}}" class="delete"><span class="glyphicon glyphicon-trash" title="Delete"></span></a> </td>
+   </tr>
+   {% endfor %}
+</table>

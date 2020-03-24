@@ -7,9 +7,9 @@ ALLOWED_HOSTS = ["*"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "noborders_erp",
-        "USER": "ashutosh",
-        "PASSWORD": "adminadmin",
+        "NAME": "erp_db",
+        "USER": "erp_user",
+        "PASSWORD": "erp123",
         "HOST": "localhost",
         "PORT": 5432,
     }

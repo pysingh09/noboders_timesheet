@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load static %}
+{% load staticfiles %}
 {% block content %}
 
-<div class="card profile-card1">
+<div class="col-12 card profile-card1">
+	<div class="col-md-4 col-lg-3 left-image">
+	<label class="content-left-label">Your Profile Photo</label>
 	 {% if user.profile %}	
 		<a href="{% url 'employee:profile_update' user.profile.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-pencil"></span></a>
-        <img src="{{ request.profile.profile_image.url }}" class="imgnav">
+        <img class="img-fluid" src="{{ request.profile.profile_image.url }}" class="imgnav">
      {% else %}
-        <img src="{% static 'img/avatar-mini-2.jpg' %}">
+        <img class="img-fluid" src="{% static 'img/avatar-mini-2.jpg' %}">
      {% endif %}  
-	 	<h2>Welcome : {{ user.username }}</h2>
-
+ 	</div>
+ 	<div class="col-md-8 col-lg-9 mg-t-30 mg-md-t-0">
+	 	<label class="content-left-label">Personal Information</label>
+		<div class="bg-gray-200 bd-0">
+	 	<h2>Welcome : {{ user.username }}</h2> 	
 	 	<div class="row">
 	 		<label class="col-xs-4 col-md-2 plmob-0">
 	 			<b> Username:</b>
@@ -135,7 +141,8 @@
 	<p>Available Leave (Current Month) : {% if total_available_leave %} {{ total_available_leave }}{% else %} 0  {% endif %}</p>
 	<p>Total Paid Leave : {% if get_taken_leave.leave__sum %} {{ get_taken_leave.leave__sum }}{% else %} 0  {% endif %}</p>
 	<p>Total UnPaid Leave : {% if get_taken_unpaid_leave.leave__sum %} {{ get_taken_unpaid_leave.leave__sum }}{% else %}  0 {% endif %}</p>-->
-	
+	</div>	
+</div>
 </div>
 {% endblock %}
 

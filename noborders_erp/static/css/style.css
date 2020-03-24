@@ -851,3 +851,70 @@ h3.top-heading {
     font-weight: 600;
     margin-bottom: 30px;
 }
+img.img-fluid {
+    width: 100%;
+}
+#ref{
+  margin-bottom: 10px;
+
+}
+.ref{
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.content-left-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: #2B7CFB;
+    color: #fff;
+    padding: 10px 15px;
+    display: block;
+    margin-bottom: 1px;
+}
+.profile-card1 label {
+    margin: 10px 0px 0px 0px;
+}
+.bg-gray-200 {
+    background-color: #f5f5f5;
+        padding: 30px
+}
+.bg-gray-200 h2 {
+    margin-top: 0px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+.profile-card1 .row span {
+    display: block;
+    padding: 10px 10px;
+    border: 1px solid;
+    width: 300px;
+    margin-bottom: 30px;
+    height: 40px;
+}
+p{
+  font-family: Nunito Sans,Black;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6, p{
+  font-family: Nunito Sans,Black !important;
+}
+label b {
+    color: #6A6A6A;
+  }
+.btn-primary{
+  background: transparent linear-gradient(90deg, #0767FC 0%, #5E9CFF 100%) 0% 0% no-repeat padding-box !important;
+
+}
+.btn-group.bootstrap-select {
+    width: 185px !important;
+}
+.btn-group-lg>.btn, .btn-lg {
+    padding: 5px 16px !important;
+    font-size: 16px !important;
+    }
+button.right-btn {
+    float: right;
+}
+.bottom_search{
+  margin-bottom: 20px;
+}

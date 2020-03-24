@@ -13,6 +13,9 @@ from .models import (
     Project,
     AssignProject,
     EmployeeDailyUpdate,
+    EmpMonthlyAttendance,
+    AttendanceDetails,
+    EmployeeTotalAttendanceStatus
 )
 
 
@@ -35,3 +38,6 @@ admin.site.register(Client)
 admin.site.register(Project)
 admin.site.register(AssignProject)
 admin.site.register(EmployeeDailyUpdate)
+admin.site.register(EmpMonthlyAttendance)
+admin.site.register(AttendanceDetails)
+admin.site.register(EmployeeTotalAttendanceStatus)

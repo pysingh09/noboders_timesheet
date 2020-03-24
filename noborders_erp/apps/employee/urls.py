@@ -12,6 +12,11 @@ app_name = "employee"
 
 
 urlpatterns = [
+    path("employee_wise_attendance/", emp_wise_attendance, name="employee_wise_attendance"),
+    #path("upload_excel/", uploadExcel, name="upload_excel"),
+
+    path("new_upload_excel/", new_uploadExcel, name="new_upload_excel"),
+
     path("signup/", UserCreateView.as_view(), name="signup"),
     path("home/", home, name="home"),
     path("file/", file_upload, name="file_upload"),
@@ -67,12 +72,12 @@ urlpatterns = [
     path("create_project/", create_projectview),
     path("delete_project/<int:pk>/", project_delete_view),
     path("update_project/<int:pk>/", project_update_view),
-   ######
+    ######
     path("client_detail/", client_index, name="client-detail"),
     path("create_client/", create_client_view),
     path("delete_client/<int:pk>/", client_delete_view),
     path("update_client/<int:pk>/", client_update_view),
-   #########
+    #########
     path("assign", assign, name="assign"),
     path("assign_project/", assign_project_view, name="assign-project"),
     path("assign_project_delete/<int:pk>/", assign_delete_view),
@@ -80,9 +85,47 @@ urlpatterns = [
     ###########
     path("daily_update/", allemployedailyupdates, name="daily-update"),
     path("employedaily_update", employedailyupdate, name="employe-dailyupdate"),
-    path("check_daily_update", checkdailyupdate, name="check-daily-update"),
-    path('edit_daily_update/<int:pk>/', editdailyreport, name='edit-daily-update'),
-    path('delete_daily_update/<int:pk>/', deletedailyreport, name='delete-daily-update'),
+    path("check_daily_update", checkdailyupdate, name="check_daily_update"),
+    path("edit_daily_update/<int:pk>/", editdailyreport, name="edit-daily-update"),
+    path(
+        "delete_daily_update/<int:pk>/", deletedailyreport, name="delete-daily-update"
+    ),
+    path(
+        "ajax_filter_employe_daily_report/",
+        ajax_filter_employe_daily_report,
+        name="ajax_filter_employe_daily_report",
+    ),
+    path("filter_by_date/", filter_by_date, name="filter_by_date",),
+    path(
+        "filter_by_date_and_project/",
+        filter_by_date_and_project,
+        name="filter_by_date_and_project",
+    ),
+    path(
+        "ajax_filter_client_detail/",
+        ajax_filter_client_detail,
+        name="ajax_filter_client_detail",
+    ),
+    path(
+        "ajax_filter_assign_project_detail/",
+        ajax_filter_assign_project_detail,
+        name="ajax_filter_assign_project_detail",
+    ),
+    path(
+        "ajax_filter_project_detail/",
+        ajax_filter_project_detail,
+        name="ajax_filter_project_detail",
+    ),
+    # path(
+    #     "ajax_filter_project_daily_report/",
+    #     ajax_filter_project_daily_report,
+    #     name="ajax_filter_project_daily_report",
+    # ),
+    # path(
+    #     "ajax_filter_employe_project_daily_report/",
+    #     ajax_filter_employe_project_daily_report,
+    #     name="ajax_filter_employe_project_daily_report",
+    # ),
     # path('search_daily_update/', searchdailyreport, name='search-daily-update'),
-        # path('employe_project_update/',employeprojectupdate)
+    # path('employe_project_update/',employeprojectupdate)
 ]

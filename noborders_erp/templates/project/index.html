@@ -3,27 +3,148 @@
 {% load staticfiles %}
 {% block content %}
 {%if request.user.is_superuser%}
- <h3 class="top-heading">Project Information Dashboard</h3>
- <table border="5" class="table dataTable ">
- <thead >
- <th>Client</th>
- <th>Project name</th>
- <th>Project description</th>
- <th>Actions</th>
- </thead>
- {% for projects in project %}
- <tr>
- <td>{{projects.client}}</td>
- <td>{{projects.project_name}}</td>
- <td>{{projects.project_description}}</td>
- <td> <a class="sameicon pencilicon " href="/update_project/{{projects.id}}"><span class="glyphicon glyphicon-pencil" title="UPDATE"></span></a> <a class="delete " href="/delete_project/{{projects.id}}"><span class="glyphicon glyphicon-trash" title="DELETE"></span></a>
-  
- 
-  
- </td>
- </tr>
- {% endfor %}
- </table><br>
- <a href="/create_project" class="btn btn-success btn-lg">INSERT NEW PROJECT</a>
-  {% endif %}
-  {% endblock %}	
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
+<div class="col-12">
+  <div class="row">
+      <div class="col-md-6">
+        <h3 class="top-heading">All Employe Daily Report</h3>.
+      </div>
+      <div class="col-md-6">
+      <button onclick="refresh()" class="btn btn-primary btn-lg right-btn">Refresh</button>
+      </div>
+  </div>    
+</div>
+<div class="col-12">
+  <div class="row">
+    <div class="col-md-4"> 
+      <label>Select Name :</label>
+      <select id ='nameselection' class="selectpicker from-control" data-show-subtext="true" data-live-search="true">
+         <option value="">Select Name</option>
+         {% for name in employe_name %}
+         <option id="{{ name }}" value="{{ name }}">
+            {{ name }}
+         </option>
+         {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label>Select Project :</label>
+      <select id ='projectselection' class="selectpicker from-control" data-show-subtext="true" data-live-search="true">
+         <option value="{{project_name}}">Select Project</option>
+         {% for name in project_name %}
+         <option id="{{ name }}" value="{{ name }}">
+            {{ name }}
+         </option>
+         {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4"> 
+     <button onclick="search_all()" class="btn btn-primary btn-lg">Search all</button>
+    </div>
+  </div>
+</div>     
+<br>
+<table id ='selectemp' border="5" class="table datatable">
+   <thead >
+      <th class="sorting_asc">Date</th>
+      <th class="sorting">Employe Name</th>
+      <th class="sorting">Project Name</th>
+      <th class="sorting">Project Billiable Summary</th>
+      <th class="sorting">Project Billiable Time</th>
+      <th class="sorting">Project Non-billiable Summary</th>
+      <th class="sorting">Project Non-billiable Time</th>
+   </thead>
+   {% for daily_updates in daily_update %}
+   <tr>
+      <td>{{daily_updates.date}}</td>
+      <td>{{daily_updates.project_name.employe.username}}</td>
+      <td>{{daily_updates.project_name.project.project_name}}</td>
+      <td>{{daily_updates.billable_summary}}</td>
+      <td>{{daily_updates.billable_hour}}</td>
+      <td>{{daily_updates.non_billable_summary}}</td>
+      <td>{{daily_updates.non_billable_hour}}</td>
+   </tr>
+   {% endfor %}
+</table>
+{%endif%}
+{% endblock %}
+{% block extra_js %}
+<script type="text/javascript">
+ $('#nameselection').change(function()
+  {  ename = $(this).val();
+   $.ajax({
+          url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+          type: 'GET',
+          data : {"ename":ename},
+          success: function(res)
+          { 
+            $('#selectemp').html(res);
+          },
+          error: function (jqXHR, exception) {
+            alert(exception);
+          }
+      });
+   });
+</script>
+<script type="text/javascript">
+  $('#projectselection').change(function()
+  {  pname = $(this).val();
+   $.ajax({
+          url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+          type: 'GET',
+          data : {"pname":pname},
+          success: function(res)
+          {
+            $('#selectemp').html(res);
+          },
+          error: function (jqXHR, exception) {
+            debugger;
+          }
+      });
+   });
+</script>
+<script type="text/javascript">
+function search_all(){
+    ename = $('#nameselection').val();
+    pname = $('#projectselection').val();
+    data = {'ename':ename,'pname':pname};
+    debugger;
+     $.ajax({
+          url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+          type: 'GET',
+          data : data,
+          success: function(res)
+          { debugger
+            $('#selectemp').html(res);
+          },
+          error: function (jqXHR, exception) {
+            debugger;
+            alert(exception);
+          }
+      });
+   };
+function refresh(){
+location.reload();
+};
+      function search_date(){
+         start_date = $('#start').val();
+         end_date = $('#end').val();
+         $.ajax({
+             url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+             type: 'GET',
+             data : {"start_date":start_date,"end_date":end_date},
+             success: function(res)
+           {debugger;
+            $('#selectemp').html(res);
+          },
+             error: function (jqXHR, exception) {
+              debugger;
+             alert(exception);
+             }
+         });
+      };
+</script>
+{% endblock extra_js%}
