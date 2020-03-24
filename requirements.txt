@@ -20,3 +20,5 @@ gunicorn==19.6.0
 Markdown==2.6.6
 bleach==1.4.3
 whitenoise==3.2
+daphne==0.8.1
+config
