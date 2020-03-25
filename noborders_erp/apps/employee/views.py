@@ -221,16 +221,16 @@ def new_uploadExcel(request):
                         continue
                     date = datetime.strptime(date, "%d/%m/%Y")
                     print("***********       ", date)
-                    day = sheet.cell_value(k, 1)
-                    shift = sheet.cell_value(k, 2)
-                    in_time = sheet.cell_value(k, 3)
+                    day = sheet.cell_value(k + j, 1)
+                    shift = sheet.cell_value(k + j, 2)
+                    in_time = sheet.cell_value(k + j, 3)
                     if in_time == "--:--":
                         in_time = datetime.strptime("00:00", "%H:%M")
                     elif in_time == "":
                         in_time = datetime.strptime("00:00", "%H:%M")
                     else:
                         in_time = datetime.strptime(in_time, "%H:%M")
-                    out_time = sheet.cell_value(k, 6)
+                    out_time = sheet.cell_value(k + j, 6)
                     if out_time == "--:--":
                         out_time = datetime.strptime("00:00", "%H:%M")
                     elif out_time == "":
@@ -244,7 +244,7 @@ def new_uploadExcel(request):
                     remark = sheet.cell_value(k, 10)
 
                     emp_att = EmployeeAttendance.objects.get(employee_id=emp_code)
-
+                    print(in_time, "  ", out_time, "  They are in_time, out_time")
                     if emp_att:
                         EmployeeAttendanceDetail.objects.update_or_create(employee_attendance=emp_att, date=date,
                                                                    in_time=in_time,
