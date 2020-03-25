@@ -4,6 +4,8 @@ import os,sys
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+# DEBUG = False
+# ALLOWED_HOSTS =  ['localhost', '127.0.0.1:8000']
 
 DATABASES = {
     'default': {

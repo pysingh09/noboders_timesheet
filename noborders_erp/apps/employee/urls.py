@@ -11,12 +11,20 @@ from django.contrib.auth import views as auth_views
 app_name = "employee"
 
 
+handler400 = 'employee.views.error_400'
+handler401 = 'employee.views.error_401'
+handler403 = 'employee.views.error_403'
+handler404 = 'employee.views.error_404'
+handler500 = 'employee.views.error_500'
+handler502 = 'employee.views.error_502'
+handler503 = 'employee.views.error_503'
+handler504 = 'employee.views.error_504'
+
+
 urlpatterns = [
     path("employee_wise_attendance/", emp_wise_attendance, name="employee_wise_attendance"),
-    #path("upload_excel/", uploadExcel, name="upload_excel"),
-
     path("new_upload_excel/", new_uploadExcel, name="new_upload_excel"),
-
+    #path("file_upload/", attendance_file_upload, name="file_upload"),
     path("signup/", UserCreateView.as_view(), name="signup"),
     path("home/", home, name="home"),
     path("file/", file_upload, name="file_upload"),
@@ -128,4 +136,6 @@ urlpatterns = [
     # ),
     # path('search_daily_update/', searchdailyreport, name='search-daily-update'),
     # path('employe_project_update/',employeprojectupdate)
+
+
 ]
