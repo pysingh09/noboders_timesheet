@@ -23,8 +23,8 @@
               
               <!-- <th>User</th> -->
               <!-- <th>Employee ID</th> -->
-              <th>Today's Date</th>
-              <th>Today Timing</th>
+              <th>Date</th>
+            <!--   <th>Timing</th> -->
               <th>In/Out Details</th>  
             </tr>
           </thead>
@@ -41,7 +41,7 @@
                 <!-- <td><p>{{ attendance.user }}</p></td> -->
                 <!-- <td>{{ attendance.employee_id }}</td> -->
                 <td>{{ attendance.date|date:'D,d M Y' }}</td>
-                <td><p>{{ attendance.date_time_diffrence }}</p></td> 
+                <!-- <td><p>{{ attendance.date_time_diffrence }}</p></td>  -->
                  <td><a class="attendence_datetime" href="" data-id="{{ attendance.id }}">View</a></td>
 
               </tr>

@@ -10,16 +10,22 @@ from django.contrib.auth import views as auth_views
 
 app_name = "employee"
 
+# handler404 = 'employee.views.error_404'
+# handler500 = 'employee.views.error_500'
+# handler403 = 'employee.views.error_403'
+# handler400 = 'employee.views.error_400'
 
 urlpatterns = [
-    path("employee_wise_attendance/", emp_wise_attendance, name="employee_wise_attendance"),
-    #path("upload_excel/", uploadExcel, name="upload_excel"),
-
+    path(
+        "employee_wise_attendance/",
+        emp_wise_attendance,
+        name="employee_wise_attendance",
+    ),
+    # path("upload_excel/", uploadExcel, name="upload_excel"),
     path("new_upload_excel/", new_uploadExcel, name="new_upload_excel"),
-
     path("signup/", UserCreateView.as_view(), name="signup"),
     path("home/", home, name="home"),
-    path("file/", file_upload, name="file_upload"),
+   # path("file/", file_upload, name="file_upload"),
     path("employeelist/", EmployeeListView.as_view(), name="employee_list"),
     path("profile/", EmployeeProfile.as_view(), name="profile"),
     path("deactivate/<int:pk>/", deactivate_user, name="deactivate-user"),

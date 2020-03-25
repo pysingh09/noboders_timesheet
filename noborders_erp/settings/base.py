@@ -36,7 +36,7 @@ SECRET_KEY = "b6ehjxx)la#yrzhlt$e!+to=$p$#%uz4coa!0*9bxeu9w&-zm0"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+#DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -81,6 +81,25 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+TEMPLATES = [
+    {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [TEMPLATE_DIR, ],
+    'APP_DIRS': True,
+    'OPTIONS': {
+    'context_processors': [
+    'django.template.context_processors.debug',
+    'django.template.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+],
+},
+},
 ]
 
 WSGI_APPLICATION = "noborders_erp.wsgi.application"

@@ -3,20 +3,14 @@
 		<th class="sorting_asc">Date</th> 	
 		<th class="sorting">employe name</th>
 		<th class="sorting">Project name</th>
-		<th class="sorting">Project billiable summary</th>
-		<th class="sorting">Project billiable time</th>
-		<th class="sorting">Project non-billiable summary</th>
-		<th class="sorting">Project non-billiable time</th>
+		<th class="sorting">Day summary</th>
 	</thead>
 	{% for daily_update in daily_updates %}
 		<tr>
 			<td>{{daily_update.date}}</td>
 			<td>{{daily_update.project_name.employe.username}}</td>
 			<td>{{daily_update.project_name.project.project_name}}</td>
-			<td>{{daily_update.billable_summary}}</td>
-			<td>{{daily_update.billable_hour}}</td>
-			<td>{{daily_update.non_billable_summary}}</td>
-			<td>{{daily_update.non_billable_hour}}</td>
+			<td>{{daily_update.project_summary}}</td>
 		</tr>
 	{% endfor %}
 </table>

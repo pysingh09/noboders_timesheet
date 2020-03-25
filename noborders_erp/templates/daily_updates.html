@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
-
+<button onclick="refresh()" class="btn btn-primary btn-lg">refresh</button>
+ 
 <h3 class="top-heading">All employe daily report</h3>
 <label>Select name</label>
 <select id ='nameselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
@@ -43,20 +44,15 @@
       <th class="sorting_asc">Date</th>
       <th class="sorting">employe name</th>
       <th class="sorting">Project name</th>
-      <th class="sorting">Project billiable summary</th>
-      <th class="sorting">Project billiable time</th>
-      <th class="sorting">Project non-billiable summary</th>
-      <th class="sorting">Project non-billiable time</th>
+      <th class="sorting">Day summary</th>
    </thead>
    {% for daily_updates in daily_update %}
    <tr>
       <td>{{daily_updates.date}}</td>
       <td>{{daily_updates.project_name.employe.username}}</td>
       <td>{{daily_updates.project_name.project.project_name}}</td>
-      <td>{{daily_updates.billable_summary}}</td>
-      <td>{{daily_updates.billable_hour}}</td>
-      <td>{{daily_updates.non_billable_summary}}</td>
-      <td>{{daily_updates.non_billable_hour}}</td>
+      <td>{{daily_updates.project_summary}}</td>
+    
    </tr>
    {% endfor %}
 </table>

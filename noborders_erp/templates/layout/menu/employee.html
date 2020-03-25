@@ -4,13 +4,13 @@
         <li class="{% if request.resolver_match.view_name == 'employee:home' %}active{% endif %}">
             <a href="{% url 'employee:home' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>Dashboard</a>
       
-                <li class="{% if request.resolver_match.view_name == 'employee:attendence-request-list' %}active{% endif %}"><a href="{% url 'employee:attendence-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-exchange fa-stack-1x exchangeicon "></i></span>In/Out Request</a></li>
+<!--                 <li class="{% if request.resolver_match.view_name == 'employee:attendence-request-list' %}active{% endif %}"><a href="{% url 'employee:attendence-request-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-exchange fa-stack-1x exchangeicon "></i></span>In/Out Request</a></li>
                 
                 <li class="{% if request.resolver_match.view_name == 'employee:request-full-leave' %}active{% endif %}" ><a href="{% url 'employee:request-full-leave' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>Leave Request</a></li>
                 <li class="{% if request.resolver_match.view_name == 'employee:my-leave-list' %}active{% endif %}" ><a href="{% url 'employee:my-leave-list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar-o fa-stack-1x "></i></span>My Leaves</a></li>  
 
                 <li class="{% if request.resolver_match.view_name == 'employee:show-hour-calender' %}active{% endif %} cal_btn"><a href="{% url 'employee:show-hour-calender' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>Calendar</a></li>
-
+ -->
                 <li class="{% if request.resolver_match.view_name == 'employee:employe-dailyupdate' %}active{% endif %} cal_btn"><a href="{% url 'employee:employe-dailyupdate' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>employe daily update</a></li>
   
 
