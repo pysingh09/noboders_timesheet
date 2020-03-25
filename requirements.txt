@@ -22,3 +22,4 @@ bleach==1.4.3
 whitenoise==3.2
 daphne==0.8.1
 config
+python-dateutil
