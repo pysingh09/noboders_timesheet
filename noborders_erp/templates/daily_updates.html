@@ -31,9 +31,14 @@
    </option>
    {% endfor %}
 </select>
-
-<br>
 <button onclick="search_all()" class="btn btn-primary btn-lg">search all</button>
+<br>
+   Start date :<input type="date" name="start_date" id='start' class="form-control"
+      placeholder=date / required="" value='{{start_date}}' required="" >
+   End date :<input type="date" name="end_date"  id ='end'class="form-control"
+      placeholder=date / required="" value="{{end_date}}" required="">
+   <button type="submit" onclick='search_date()'class="btn btn-primary btn-lg">search date</button>
+<br>
 <br>
 
   
@@ -45,6 +50,7 @@
       <th class="sorting">employe name</th>
       <th class="sorting">Project name</th>
       <th class="sorting">Day summary</th>
+      <th class="sorting">Time taken</th>
    </thead>
    {% for daily_updates in daily_update %}
    <tr>
@@ -52,6 +58,8 @@
       <td>{{daily_updates.project_name.employe.username}}</td>
       <td>{{daily_updates.project_name.project.project_name}}</td>
       <td>{{daily_updates.project_summary}}</td>
+      <td>{{daily_updates.time_taken}}</td>
+  
     
    </tr>
    {% endfor %}

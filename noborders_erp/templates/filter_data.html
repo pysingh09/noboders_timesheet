@@ -4,6 +4,7 @@
 		<th class="sorting">employe name</th>
 		<th class="sorting">Project name</th>
 		<th class="sorting">Day summary</th>
+		<th class="sorting">Time taken</th>
 	</thead>
 	{% for daily_update in daily_updates %}
 		<tr>
@@ -11,6 +12,8 @@
 			<td>{{daily_update.project_name.employe.username}}</td>
 			<td>{{daily_update.project_name.project.project_name}}</td>
 			<td>{{daily_update.project_summary}}</td>
+			<td>{{daily_update.time_taken}}</td>
+
 		</tr>
 	{% endfor %}
 </table>

@@ -2465,14 +2465,20 @@ def employedailyupdate(request):
     """
     use this to create a report
     """
-    form = EmployeeDailyUpdateForm(request.user)
+    form = AssignProject.objects.filter(employe__username=request.user)
     if request.method == "POST":
-        form = EmployeeDailyUpdateForm(request.user, request.POST)
-        if form.is_valid():
-            form.save()
+        project_name = request.POST['project_name']
+        project_summary = request.POST['summary']
+        project_time = request.POST['time']
+        project_name = AssignProject.objects.get(
+            project__project_name=project_name,
+            employe__username=request.user)
+        obj = EmployeeDailyUpdate.objects.create(project_name=project_name,
+             project_summary=project_summary,time_taken=project_time)
+        obj.save()
+           #import pdb;pdb.set_trace()
         return HttpResponseRedirect("/check_daily_update")
     return render(request, "employe/create_report.html", {"form": form})
-
 
 def checkdailyupdate(request):
     """

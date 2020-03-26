@@ -3,9 +3,26 @@
 {% load staticfiles %}
 {% block content %}
 <!DOCTYPE html>
-     <form method="post">
-       {{form.as_p}}
-       {% csrf_token %}
-       <input type="submit"class=" btn-primary btn-lg" value="SEND REPORT">
-     </form>
+<form method="post">
+   {% csrf_token %}
+   <div class="fieldWrapper">
+       <th><label>project name </label></th>
+      <select required id ='nameselection' class="selectpicker" data-show-subtext="true" data-live-search="true" name ='project_name' >
+         <option value="">Select name</option>
+         {% for name in form %}
+         <option id="{{name.project.project_name}}"  value="{{ name.project.project_name }}">
+            {{ name.project.project_name }}
+         </option>
+         {% endfor %}
+      </select>
+         <br>
+         <th><label>project summary </label></th>
+         <th><input type="text" name ='summary' required></th>
+         <br>
+         <th><label>Time taken </label></th>
+         <th><input type="time" name ='time' min="00:00" max="12:00"  value="00:00" required></th>
+      
+   <input type="submit"class=" btn-primary btn-lg" value="Submit">
+    </div>
+</form>
 {% endblock %}

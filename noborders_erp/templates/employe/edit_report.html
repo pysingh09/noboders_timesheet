@@ -5,13 +5,15 @@
 {% if report_week == current_week %}
 <form method="post">
    {% csrf_token %}
-   date:<input type="text" name="date" value="{{edit_report.date}}"><br>
-   project_name:<input type="text" name="project_name" value="{{edit_report.project_name.id}}"><br>
-   billable_summary:<input type="text" name="billable_summary" value="{{edit_report.billable_summary}}"><br>
-   billable_hour:<input type="text" name="billable_hour" value="{{edit_report.billable_hour}}"><br>
-   non_billable_summary:<input type="text" name="non_billable_summary" value="{{edit_report.non_billable_summary}}"><br>
-   non_billable_hour :<input type="text" name="non_billable_hour" value="{{edit_report.non_billable_hour}}"><br>
-   <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
+   <div class="fieldWrapper">
+      date:<input type="text" name="date" value="{{edit_report.date}}"><br>
+      project_name:<input type="text" name="project_name" value="{{edit_report.project_name.id}}"><br>
+      project_summary:<input type="text" name="project_summary" value="{{edit_report.project_summary}}"><br>
+      time_taken:
+      <th><input type="time" name ='time' min="00:00" max="12:00"  value="{{edit_report.time_taken}}" required=''></th>
+      <br>
+      <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
+   </div>
 </form>
 {% else %}
 <script type="text/javascript">

@@ -31,7 +31,7 @@
                 <li class="{% if request.resolver_match.view_name == 'employee:assign-project' %}active{% endif %} cal_btn"><a href="{% url 'employee:assign' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>Assign project</a></li>
 
 
-                <li class="{% if request.resolver_match.view_name == 'employee:daily-update' %}active{% endif %} cal_btn"><a href="{% url 'employee:daily-update' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>daily update</a></li>
+                <li class="{% if request.resolver_match.view_name == 'employee:daily-update' %}active{% endif %} cal_btn"><a href="{% url 'employee:daily-update' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>All employe daily update</a></li>
 
 
                 <li class="{% if request.resolver_match.view_name == 'employee:client-detail' %}active{% endif %} cal_btn"><a href="{% url 'employee:client-detail' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>client</a></li>

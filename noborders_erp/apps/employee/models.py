@@ -356,3 +356,4 @@ class EmployeeDailyUpdate(BaseModel):
         AssignProject, on_delete=models.CASCADE, related_name="Assign_Project"
     )
     project_summary = models.TextField()
+    time_taken = models.CharField(max_length=10, null=True)
