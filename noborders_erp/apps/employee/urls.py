@@ -122,11 +122,6 @@ urlpatterns = [
         ajax_filter_project_detail,
         name="ajax_filter_project_detail",
     ),
-    path(
-        "addsuperuserinprofile/",
-        addsuperuserinprofile,
-        name="addsuperuserinprofile",
-    ),
     
     # path(
     #     "ajax_filter_project_daily_report/",

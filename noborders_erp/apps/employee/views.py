@@ -2616,13 +2616,3 @@ def error_404(request, exception):
 def error_500(request,  exception):
     return render(request,'templates/500.html')
 
-def addsuperuserinprofile(request):
-
-    #import pdb;pdb.set_trace()
-    form = AddProfileForm()
-    if request.method == "POST":
-        form = AddProfileForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return HttpResponseRedirect("/client_detail")
-    return render(request, "profile/create.html", {"form": form})
