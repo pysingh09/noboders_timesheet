@@ -152,6 +152,15 @@ class UserProfileForm(forms.ModelForm):
             "teamlead",
         )
 
+class AddProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = "__all__"
+
+    # def __init__(self,*args,**kwargs):
+    #    # super (testForm,self ).__init__(*args,**kwargs)
+    #     self.fields['user'].queryset = Profile.objects.filter(name__icontains="1")
+
 
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(max_length=10)

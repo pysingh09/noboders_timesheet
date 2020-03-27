@@ -3,6 +3,7 @@
       <th>Date</th>
       <th>Project name</th>
       <th>Day summary</th>
+      <th>Time taken</th>      
       <th>Action</th>
    </thead>
    {% for reports in report %}
@@ -10,6 +11,7 @@
       <td>{{reports.date}}</td>
       <td>{{reports.project_name.project.project_name}}</td>
       <td>{{reports.project_summary}}</td>
+      <td>{{reports.time_taken}}</td>
       <td> <a href="/edit_daily_update/{{reports.id}}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit Report"></span></a> <a href="/delete_daily_update/{{reports.id}}" class="delete"><span class="glyphicon glyphicon-trash" title="Delete"></span></a> </td>
    </tr>
    {% endfor %}

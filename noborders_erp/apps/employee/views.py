@@ -49,6 +49,7 @@ from .forms import (
     AssignForm,
     EmployeeDailyUpdateForm,
     EditDailyUpdateForm,
+    AddProfileForm
 )
 
 from django.contrib.auth.models import User
@@ -686,7 +687,7 @@ class EditProfileView(PermissionRequiredMixin, UpdateView):
 def delete_record(request):
     try:
         for pk in request.POST.getlist("pk[]"):
-            obj = EmployeeAttendance.objects.get(pk=pk)
+            obj = EmployeeAttendanceDetail.objects.get(pk=pk)
             obj.delete()
         return JsonResponse({"status": "success"})
     except Exception as e:
@@ -2585,7 +2586,7 @@ def filter_by_date(request):
             project_name__employe=request.user,
         )
         html = render_to_string(
-            "employe/filter_date.html", {"report": search_by_project},
+            "employe/filter_date.html", {"report": search_by_project}
         )
     elif start_date and end_date:
         search_report = EmployeeDailyUpdate.objects.filter(
@@ -2608,3 +2609,20 @@ def filter_by_date_and_project(request):
     html = render_to_string("employe/filter_date.html", {"report": search_both})
     return HttpResponse(html)
 
+
+def error_404(request, exception):
+    return render(request,'templates/404.html')
+
+def error_500(request,  exception):
+    return render(request,'templates/500.html')
+
+def addsuperuserinprofile(request):
+
+    #import pdb;pdb.set_trace()
+    form = AddProfileForm()
+    if request.method == "POST":
+        form = AddProfileForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect("/client_detail")
+    return render(request, "profile/create.html", {"form": form})

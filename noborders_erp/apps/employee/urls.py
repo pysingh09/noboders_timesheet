@@ -10,10 +10,10 @@ from django.contrib.auth import views as auth_views
 
 app_name = "employee"
 
-# handler404 = 'employee.views.error_404'
-# handler500 = 'employee.views.error_500'
-# handler403 = 'employee.views.error_403'
-# handler400 = 'employee.views.error_400'
+handler404 = 'employee.views.error_404'
+handler500 = 'employee.views.error_500'
+handler403 = 'employee.views.error_403'
+handler400 = 'employee.views.error_400'
 
 urlpatterns = [
     path(
@@ -122,6 +122,12 @@ urlpatterns = [
         ajax_filter_project_detail,
         name="ajax_filter_project_detail",
     ),
+    path(
+        "addsuperuserinprofile/",
+        addsuperuserinprofile,
+        name="addsuperuserinprofile",
+    ),
+    
     # path(
     #     "ajax_filter_project_daily_report/",
     #     ajax_filter_project_daily_report,
