@@ -2314,8 +2314,6 @@ def allemployedailyupdates(request):
 
     if request.user.is_superuser:
         if request.method == "POST":
-            # import pdb; pdb.set_trace();
-            # project_name = request.POST["project_name__project"]
             employe_name = request.POST["value"]
             if project_name:
                 daily_update = EmployeeDailyUpdate.objects.filter(
@@ -2326,7 +2324,6 @@ def allemployedailyupdates(request):
                     project_name__employe__username=employe_name
                 )
             return render(request, "daily_updates.html", {"daily_update": daily_update})
-        # import pdb; pdb.set_trace();
         daily_update = EmployeeDailyUpdate.objects.all()
         employe_name = []
         project_name = []
@@ -2335,7 +2332,6 @@ def allemployedailyupdates(request):
                 employe_name.append(daily_updates.project_name.employe.username)
             if daily_updates.project_name.project.project_name not in project_name:
                 project_name.append(daily_updates.project_name.project.project_name)
-        # import pdb; pdb.set_trace();
         return render(
             request,
             "daily_updates.html",
@@ -2347,16 +2343,34 @@ def allemployedailyupdates(request):
         )
 
 
+# def employedailyupdate(request):
+#     """
+#     use this to create a report
+#     """
+#     form = EmployeeDailyUpdateForm(request.user)
+#     if request.method == "POST":
+#         form = EmployeeDailyUpdateForm(request.user, request.POST)
+#         if form.is_valid():
+#             form.save()
+#         return HttpResponseRedirect("/check_daily_update")
+#     return render(request, "employe/create_report.html", {"form": form})
+
+
 def employedailyupdate(request):
-    """
-    use this to create a report
-    """
-    form = EmployeeDailyUpdateForm(request.user)
+    form = AssignProject.objects.filter(employe__username=request.user)
     if request.method == "POST":
-        form = EmployeeDailyUpdateForm(request.user, request.POST)
-        if form.is_valid():
-            form.save()
-        return HttpResponseRedirect("/check_daily_update")
+       project_name = request.POST['project_name']
+       project_summary = request.POST['summary']
+       project_time = request.POST['time']
+       project_name = AssignProject.objects.get(
+        project__project_name=project_name,
+        employe__username=request.user
+        )
+       obj = EmployeeDailyUpdate.objects.create(project_name=project_name,
+        project_summary=project_summary,time_taken=project_time)
+       obj.save()
+       #import pdb;pdb.set_trace()
+       return HttpResponseRedirect("/check_daily_update")
     return render(request, "employe/create_report.html", {"form": form})
 
 

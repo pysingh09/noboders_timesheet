@@ -3,6 +3,7 @@
 {% load staticfiles %}
 {% block content %}
 
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -43,20 +44,16 @@
       <thead>
          <th>Date</th>
          <th>Project name</th>
-         <th>Project billiable summary</th>
-         <th>Project billiable time</th>
-         <th>Project non-billiable summary</th>
-         <th>Project non-billiable time</th>
+         <th>Project summary</th>
+         <th>Project time taken</th>
          <th>Action</th>
       </thead>
       {% for reports in report %}
       <tr>
          <td>{{reports.date}}</td>
          <td>{{reports.project_name.project.project_name}}</td>
-         <td>{{reports.billable_summary}}</td>
-         <td>{{reports.billable_hour}}</td>
-         <td>{{reports.non_billable_summary}}</td>
-         <td>{{reports.non_billable_hour}}</td>
+         <td>{{reports.project_summary}}</td>
+         <td>{{reports.time_taken}}</td>
          <td> <a href="/edit_daily_update/{{reports.id}}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit Report"></span></a> <a href="/delete_daily_update/{{reports.id}}" class="delete"><span class="glyphicon glyphicon-trash" title="Delete"></span></a> </td>
       </tr>
       {% endfor %}

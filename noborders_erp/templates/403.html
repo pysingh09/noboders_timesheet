@@ -2,8 +2,43 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
+{% load static %}
 <!DOCTYPE html>
-
-     <h1>403 Forbidden error</h1><hr>
-     
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://fonts.googleapis.com/css?family=Oswald:700" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400" rel="stylesheet">
+      <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css" />
+      <link type="text/css" rel="stylesheet" href="css/style1.css" />
+   </head>
+   <body>
+      <div id="notfound">
+         <div class="notfound-bg">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+         </div>
+         <div class="notfound">
+            <div class="notfound-404">
+               <h1>403</h1>
+            </div>
+            <h2>Forbidden error</h2>
+            <p>Response code indicates that the server understood the request but refuses to authorize it.</p>
+            <img src="https://cdn.dribbble.com/users/440793/screenshots/2744363/dribble.jpg" alt="Image will be uploaded soon" width="1000" height="400"><br>
+            <hr>
+            <a href="/profile">Homepage</a>
+            <div class="notfound-social">
+               <a href="#"><i class="fa fa-facebook"></i></a>
+               <a href="#"><i class="fa fa-twitter"></i></a>
+               <a href="#"><i class="fa fa-pinterest"></i></a>
+               <a href="#"><i class="fa fa-google-plus"></i></a>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
 {% endblock %}

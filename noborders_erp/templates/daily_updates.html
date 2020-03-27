@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
-
 <h3 class="top-heading">All employe daily report</h3>
 <label>Select name</label>
 <select id ='nameselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
@@ -18,132 +17,118 @@
    </option>
    {% endfor %}
 </select>
-
-
 <label>Select PROJECT</label>
 <select id ='projectselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
    <option value="{{project_name}}">Select project</option>
-
    {% for name in project_name %}
    <option id="{{ name }}" value="{{ name }}">
       {{ name }}
    </option>
    {% endfor %}
 </select>
-
 <br>
 <button onclick="search_all()" class="btn btn-primary btn-lg">search all</button>
 <br>
-
-  
-
-
 <table id ='selectemp' border="5" class="table datatable">
    <thead >
       <th class="sorting_asc">Date</th>
-      <th class="sorting">employe name</th>
+      <th class="sorting">Employe name</th>
       <th class="sorting">Project name</th>
-      <th class="sorting">Project billiable summary</th>
-      <th class="sorting">Project billiable time</th>
-      <th class="sorting">Project non-billiable summary</th>
-      <th class="sorting">Project non-billiable time</th>
+      <th class="sorting">Project summary</th>
+      <th class="sorting">Project time taken</th>
    </thead>
    {% for daily_updates in daily_update %}
    <tr>
       <td>{{daily_updates.date}}</td>
       <td>{{daily_updates.project_name.employe.username}}</td>
       <td>{{daily_updates.project_name.project.project_name}}</td>
-      <td>{{daily_updates.billable_summary}}</td>
-      <td>{{daily_updates.billable_hour}}</td>
-      <td>{{daily_updates.non_billable_summary}}</td>
-      <td>{{daily_updates.non_billable_hour}}</td>
+      <td>{{daily_updates.project_summary}}</td>
+      <td>{{daily_updates.time_taken}}</td>
    </tr>
    {% endfor %}
 </table>
-
 {%endif%}
 {% endblock %}
 {% block extra_js %}
 <script type="text/javascript">
- $('#nameselection').change(function()
-  {  ename = $(this).val(); 
-     
-   $.ajax({
-          url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
-          type: 'GET',
-          data : {"ename":ename},
-          success: function(res) 
-          {	
-          	$('#selectemp').html(res);    
-          },
-          error: function (jqXHR, exception) {
-          	alert(exception);
-          }
-      });
-   });
-  
-</script>
-<script type="text/javascript">
-  $('#projectselection').change(function()
-  {  pname = $(this).val(); 
-    
-   $.ajax({
-          url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
-          type: 'GET',
-          data : {"pname":pname},
-          success: function(res) 
-          { 
-            $('#selectemp').html(res);    
-          },
-          error: function (jqXHR, exception) {
-            debugger;
-          }
-      });
-   }); 
-</script>
-<script type="text/javascript">
-function search_all(){
-    ename = $('#nameselection').val(); 
-    pname = $('#projectselection').val();
-    data = {'ename':ename,'pname':pname};
-    debugger;
+   $('#nameselection').change(function()
+    {  ename = $(this).val(); 
+       
      $.ajax({
-          url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
-          type: 'GET',
-          data : data,
-          success: function(res) 
-          { debugger
-            $('#selectemp').html(res);    
-          },
-          error: function (jqXHR, exception) {
-            debugger;
-            alert(exception);
-          }
-      });
-   };
-
-function refresh(){
-location.reload();
-};
-      function search_date(){
-         start_date = $('#start').val();
-         end_date = $('#end').val();
-         $.ajax({
-      
+            url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+            type: 'GET',
+            data : {"ename":ename},
+            success: function(res) 
+            { 
+              $('#selectemp').html(res);    
+            },
+            error: function (jqXHR, exception) {
+              alert(exception);
+            }
+        });
+     });
+    
+</script>
+<script type="text/javascript">
+   $('#projectselection').change(function()
+   {  pname = $(this).val(); 
+     
+    $.ajax({
+           url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+           type: 'GET',
+           data : {"pname":pname},
+           success: function(res) 
+           { 
+             $('#selectemp').html(res);    
+           },
+           error: function (jqXHR, exception) {
+             debugger;
+           }
+       });
+    }); 
+</script>
+<script type="text/javascript">
+   function search_all(){
+       ename = $('#nameselection').val(); 
+       pname = $('#projectselection').val();
+       data = {'ename':ename,'pname':pname};
+       debugger;
+        $.ajax({
              url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
              type: 'GET',
-             data : {"start_date":start_date,"end_date":end_date},
+             data : data,
              success: function(res) 
-           {debugger;
-            $('#selectemp').html(res);    
-          },
+             { debugger
+               $('#selectemp').html(res);    
+             },
              error: function (jqXHR, exception) {
-              debugger;
-             alert(exception);
+               debugger;
+               alert(exception);
              }
          });
       };
-
+   
+   function refresh(){
+   location.reload();
+   };
+         function search_date(){
+            start_date = $('#start').val();
+            end_date = $('#end').val();
+            $.ajax({
+         
+                url: "{% url 'employee:ajax_filter_employe_daily_report' %}",
+                type: 'GET',
+                data : {"start_date":start_date,"end_date":end_date},
+                success: function(res) 
+              {debugger;
+               $('#selectemp').html(res);    
+             },
+                error: function (jqXHR, exception) {
+                 debugger;
+                alert(exception);
+                }
+            });
+         };
+   
 </script> 
-
 {% endblock extra_js%}

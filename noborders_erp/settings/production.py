@@ -5,9 +5,6 @@ import os,sys
 
 DEBUG = True
 
-#DEBUG = False
-
-
 ALLOWED_HOSTS = ['*']
 # DEBUG = False
 # ALLOWED_HOSTS =  ['localhost', '127.0.0.1:8000']
