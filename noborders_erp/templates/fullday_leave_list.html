@@ -16,7 +16,7 @@
           <tr>
             <th>Sno.</th>          
             <th>User</th>
-            <th>Date</th>
+            <th>Date</th> 
             <th>Login Hours</th>
             <th>Status</th>
             <th>Check&Approve</th>
@@ -26,12 +26,12 @@
                 {% for leave in object_list %}
                   <tr>
                     <td>{{ forloop.counter }}</td>    
-                    <td>{{ leave.user }}</td>
+                    <td>{{ leave.employee_attendance.user }}</td>
                     <td>{{ leave.date|date:'D,d M Y' }}</td>
                     <td>{{leave.date_time_diffrence}}</td>
-                    <td>{{ leave.get_empatt_leave_status_display }}</td>
+                    <td>{{ leave.employee_attendance.get_empatt_leave_status_display }}</td>
                     <td>
-                      {% if leave.empatt_leave_status == 2  %}
+                      {% if leave.employee_attendance.empatt_leave_status == 1  %}
                       <input type="checkbox" class="chkboxs" data-leave-id="{{leave.id}}" data-leave-user="{{leave.user}}" value="{{ leave.date|date:'Y-m-d'}}" data-leave-time="{{leave.date_time_diffrence}}">
                       {% endif %}
                   </td>

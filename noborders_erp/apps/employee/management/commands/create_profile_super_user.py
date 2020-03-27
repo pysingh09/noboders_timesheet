@@ -1,7 +1,7 @@
 from ...models import Profile
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-
+from django.contrib.auth.models import Group
 """
 This scripts is a management command used for creating 
 admin user/ super user and add that user in profile table
@@ -10,8 +10,6 @@ Run this script with following command:-
 
 ./manage.py create_profile_super_user
 """
-
-
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
@@ -22,6 +20,9 @@ class Command(BaseCommand):
 
         if password == confirm_password:
             user = User.objects.create_user(username=user_name, email=email, password=password)
+            my_group = Group.objects.get(name='HR') 
+            my_group.user_set.add(user)
+
 
             user.is_superuser = True
             user.is_active = True
@@ -30,7 +31,7 @@ class Command(BaseCommand):
             user.save()
             contact_number = input("Please enter contact number: ")
             Profile.objects.update_or_create(user=user,
-                                             employee_id='112',
+                                             employee_id='1',
                                              contact_no=contact_number,
                                              teamlead=user,
                                              created_by=user)

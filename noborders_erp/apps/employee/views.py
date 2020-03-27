@@ -1971,21 +1971,50 @@ def send_ooo_on_reject(request):
     return JsonResponse({"status": "success"})
 
 
+# class FullLeaveListView(PermissionRequiredMixin, ListView):
+
+#     permission_required = ("employee.can_view_employee_attendance_list",)
+
+#     raise_exception = True
+#     model = EmployeeAttendance #EmployeeAttendanceDetail
+#     template_name = "fullday_leave_list.html"
+    
+#     def get_context_data(self, **kwargs):
+#        # import pdb;pdb.set_trace()
+#         context = super(FullLeaveListView, self).get_context_data(**kwargs)
+#         # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
+#         object_list = []
+#         less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,]).order_by("-created_at")
+#         currunt_month = only_datetime.datetime.now().month
+#         last_month = currunt_month - 1 if currunt_month > 1 else 12
+#         for less_hour in less_time_objects:
+#             if less_hour.date.month == last_month:
+#                 object_list.append(less_hour)
+#             elif less_hour.date.month == currunt_month:
+#                 object_list.append(less_hour)
+#             else:
+#                 pass
+
+#         context["object_list"] = object_list
+#         return context
+
 class FullLeaveListView(PermissionRequiredMixin, ListView):
 
     permission_required = ("employee.can_view_employee_attendance_list",)
 
     raise_exception = True
-    model = EmployeeAttendance
+    model =  EmployeeAttendanceDetail#EmployeeAttendance 
     template_name = "fullday_leave_list.html"
 
     def get_context_data(self, **kwargs):
+       # import pdb;pdb.set_trace()
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
         object_list = []
         less_time_objects = self.model.objects.filter(
-            empatt_leave_status__in=[2,]
+           employee_attendance__empatt_leave_status__in=[1,]
         ).order_by("-created_at")
+        
         currunt_month = only_datetime.datetime.now().month
         last_month = currunt_month - 1 if currunt_month > 1 else 12
         for less_hour in less_time_objects:
@@ -1995,7 +2024,7 @@ class FullLeaveListView(PermissionRequiredMixin, ListView):
                 object_list.append(less_hour)
             else:
                 pass
-
+        #import pdb;pdb.set_trace()
         context["object_list"] = object_list
         return context
 
@@ -2608,11 +2637,4 @@ def filter_by_date_and_project(request):
     ).filter(date__range=[start_date, end_date], project_name__employe=request.user)
     html = render_to_string("employe/filter_date.html", {"report": search_both})
     return HttpResponse(html)
-
-
-def error_404(request, exception):
-    return render(request,'templates/404.html')
-
-def error_500(request,  exception):
-    return render(request,'templates/500.html')
 
