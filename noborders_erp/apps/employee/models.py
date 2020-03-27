@@ -355,10 +355,8 @@ class EmployeeDailyUpdate(BaseModel):
     project_name = models.ForeignKey(
         AssignProject, on_delete=models.CASCADE, related_name="Assign_Project"
     )
-    billable_summary = models.TextField()
-    billable_hour = models.IntegerField()
-    non_billable_summary = models.TextField()
-    non_billable_hour = models.IntegerField()
+    project_summary = models.TextField(max_length=3000, null=True)
+    time_taken = models.IntegerField(default=0)
 
 
 class EmpMonthlyAttendance(BaseModel):

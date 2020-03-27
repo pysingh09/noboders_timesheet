@@ -51,11 +51,15 @@ class EmployeeDailyUpdateForm(forms.ModelForm):
         model = EmployeeDailyUpdate
         fields = "__all__"
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user, date, summary, tt, *args, **kwargs):
         super(EmployeeDailyUpdateForm, self).__init__(*args, **kwargs)
+        self.fields["date"] = date
         self.fields["project_name"].queryset = AssignProject.objects.filter(
             employe=user
         )
+        self.fields["project_summary"] = summary
+        self.fields["time_taken"] = tt
+        print(self.fields)
 
 
 class EditDailyUpdateForm(forms.ModelForm):

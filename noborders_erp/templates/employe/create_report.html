@@ -4,8 +4,13 @@
 {% block content %}
 <!DOCTYPE html>
      <form method="post">
-       {{form.as_p}}
        {% csrf_token %}
+     <label for="date">Date :</label><br>
+     <input type="text" id="date" name="date">
+     <label>Project Summary:</label><br>
+     <textarea rows = "5" cols = "60" name = "description"></textarea>
+     <label for="timetaken">Time Taken:</label><br>
+     <input type="text" id="timetaken" name="timetaken">
        <input type="submit"class=" btn-primary btn-lg" value="SEND REPORT">
      </form>
 {% endblock %}

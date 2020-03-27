@@ -2197,13 +2197,19 @@ def employedailyupdate(request):
     """
     use this to create a report
     """
-    form = EmployeeDailyUpdateForm(request.user)
+    # form = EmployeeDailyUpdateForm(request.user, date, summary, tt)
     if request.method == "POST":
-        form = EmployeeDailyUpdateForm(request.user, request.POST)
+        date_str = request.POST.get('date', '')
+        date = datetime.strptime(date_str, "%d/%m/%Y")
+        tt = int(request.POST.get('timetaken', ''))
+        summary = request.POST.get('description', '')
+        form = EmployeeDailyUpdateForm(request.user, date, summary, tt)
+        print(date, "  ", tt, "  ", summary)
+        print("form.is_valid() ", form.is_valid())
         if form.is_valid():
             form.save()
         return HttpResponseRedirect("/check_daily_update")
-    return render(request, "employe/create_report.html", {"form": form})
+    return render(request, "employe/create_report.html", {})
 
 
 def checkdailyupdate(request):
