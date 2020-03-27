@@ -1,0 +1,13 @@
+ .right_dropdown{
+      text-align: right;
+      margin-top:14px;
+    } 
+    .right_dropdown button{
+      height: 25px;
+      width: 60px;
+    }
+    .dropdown_list{
+      right: 0!important;
+      left: inherit!important;
+    }
+

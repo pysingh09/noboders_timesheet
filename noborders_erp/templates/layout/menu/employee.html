@@ -14,7 +14,7 @@
                 <li class="{% if request.resolver_match.view_name == 'employee:employe-dailyupdate' %}active{% endif %} cal_btn"><a href="{% url 'employee:employe-dailyupdate' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>employe daily update</a></li>
   
 
-                <li class="{% if request.resolver_match.view_name == 'employee:check-daily-update' %}active{% endif %} cal_btn"><a href="{% url 'employee:check-daily-update' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>My report</a></li>
+                <li class="{% if request.resolver_match.view_name == 'employee:check-daily-update' %}active{% endif %} cal_btn"><a href="{% url 'employee:check_daily_update' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-calendar fa-stack-1x "></i></span>My report</a></li>
   
 
 
