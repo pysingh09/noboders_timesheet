@@ -2,14 +2,12 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
-
 <!DOCTYPE html>
-     <h1>project Insertion Form</h1><hr>
-     <form method="post">
-       {{form.as_p}} 
-       {% csrf_token %}
-       <input type="submit"class=" btn-primary btn-lg" value="INSERT RECORD">
-     </form>
-
-
-{% endblock %} 
+<h1>project Insertion Form</h1>
+<hr>
+<form method="post">
+   {{form.as_p}} 
+   {% csrf_token %}
+   <input type="submit"class=" btn-primary btn-lg" value="INSERT RECORD">
+</form>
+{% endblock %}

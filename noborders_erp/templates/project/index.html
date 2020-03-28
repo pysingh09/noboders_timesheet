@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
+
+
 <label>Select project</label>
 <select id ='projectselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
    <option value="{{project_name_list}}">Select project</option>
@@ -38,7 +40,7 @@
 <br>
 <a href="/create_project" class="btn btn-success btn-lg">INSERT NEW PROJECT</a>
 {% endif %}
-{% endblock %}	
+{% endblock %}  
 {% block extra_js %}
 <script type="text/javascript">
    $('#projectselection').change(function()

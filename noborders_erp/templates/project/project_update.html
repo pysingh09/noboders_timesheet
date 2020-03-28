@@ -3,12 +3,15 @@
 {% load staticfiles %}
 {% block content %}
 <!DOCTYPE html>
-     <h1>Daily report Update Form</h1>
-     <form method="post" class="update_project">
-       {% csrf_token %}
-       Client :<input type="text" name="client" class="form-control" value="{{project.client.id}}"><br>
-       Project Name :<input type="text" name="project_name" class="form-control" value="{{project.project_name}}"><br>
-       Project description  :<input type="text" name="project_description" class="form-control" value="{{project.project_description}}"><br><hr><hr><hr>
-       <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
-   </form>
+<h1>Daily report Update Form</h1>
+<form method="post" class="update_project">
+   {% csrf_token %}
+   Client :<input type="text" name="client" class="form-control" value="{{project.client.id}}"><br>
+   Project Name :<input type="text" name="project_name" class="form-control" value="{{project.project_name}}"><br>
+   Project description  :<input type="text" name="project_description" class="form-control" value="{{project.project_description}}"><br>
+   <hr>
+   <hr>
+   <hr>
+   <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
+</form>
 {% endblock %}

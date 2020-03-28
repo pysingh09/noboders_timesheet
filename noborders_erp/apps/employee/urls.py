@@ -25,7 +25,7 @@ urlpatterns = [
     path("new_upload_excel/", new_uploadExcel, name="new_upload_excel"),
     path("signup/", UserCreateView.as_view(), name="signup"),
     path("home/", home, name="home"),
-   # path("file/", file_upload, name="file_upload"),
+    # path("file/", file_upload, name="file_upload"),
     path("employeelist/", EmployeeListView.as_view(), name="employee_list"),
     path("profile/", EmployeeProfile.as_view(), name="profile"),
     path("deactivate/<int:pk>/", deactivate_user, name="deactivate-user"),
@@ -122,7 +122,6 @@ urlpatterns = [
         ajax_filter_project_detail,
         name="ajax_filter_project_detail",
     ),
-    
     # path(
     #     "ajax_filter_project_daily_report/",
     #     ajax_filter_project_daily_report,

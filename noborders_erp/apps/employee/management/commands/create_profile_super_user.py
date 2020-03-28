@@ -11,7 +11,6 @@ Run this script with following command:-
 ./manage.py create_profile_super_user
 """
 class Command(BaseCommand):
-
     def handle(self, *args, **options):
         user_name = input("Please enter username:  ")
         email = input("Please enter email address:  ")

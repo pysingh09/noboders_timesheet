@@ -2,16 +2,11 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 {% block content %}
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
-
-
-
 <h1>my daily reports</h1>
-
 <label>Select PROJECT</label>
 <select id ='projectselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
    <option value="{{project_name}}">Select project</option>
@@ -22,9 +17,8 @@
    {% endfor %}
 </select>
 <button onclick="search_project()" class="btn btn-primary btn-lg">search project</button>
-
 <!-- 
-<button onclick="search_all()" class="btn btn-primary btn-lg">search all</button> -->
+   <button onclick="search_all()" class="btn btn-primary btn-lg">search all</button> -->
 <br>
 <table border="5">
 <thead >
@@ -35,11 +29,8 @@
    <button type="submit" onclick='search_date()'class="btn btn-primary btn-lg">search</button>
    <button onclick="refresh()" class="btn btn-primary btn-lg">refresh</button>
    <table id ='selectemp' border="5" class="table datatable">
-   
-<br>
-<button type="submit" onclick='search_all()'class="btn btn-primary btn-lg">search all</button>
-   
-
+      <br>
+      <button type="submit" onclick='search_all()'class="btn btn-primary btn-lg">search all</button>
       <thead>
          <th>Date</th>
          <th>Project name</th>
@@ -52,7 +43,7 @@
          <td>{{reports.date}}</td>
          <td>{{reports.project_name.project.project_name}}</td>
          <td>{{reports.project_summary}}</td>
-          <td>{{reports.time_taken}}</td>
+         <td>{{reports.time_taken}}</td>
          <td> <a href="/edit_daily_update/{{reports.id}}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit Report"></span></a> <a href="/delete_daily_update/{{reports.id}}" class="delete"><span class="glyphicon glyphicon-trash" title="Delete"></span></a> </td>
       </tr>
       {% endfor %}
@@ -85,8 +76,8 @@
    <script type="text/javascript">
       function search_project(){
       pname = $('#projectselection').val(); 
-    
-   $.ajax({
+      
+      $.ajax({
           url: "{% url 'employee:filter_by_date' %}",
           type: 'GET',
           data : {"pname":pname},
@@ -98,14 +89,14 @@
             debugger;
           }
       });
-   }; 
-  function search_all(){
-    start_date = $('#start').val()
-    end_date = $('#end').val()
-    pname = $('#projectselection').val(); 
-    data = {'pname':pname ,'start_date':start_date,'end_date':end_date};
-
-     $.ajax({
+      }; 
+      function search_all(){
+      start_date = $('#start').val()
+      end_date = $('#end').val()
+      pname = $('#projectselection').val(); 
+      data = {'pname':pname ,'start_date':start_date,'end_date':end_date};
+      
+      $.ajax({
           url: "{% url 'employee:filter_by_date_and_project' %}",
           type: 'GET',
           data : data,
@@ -118,7 +109,7 @@
             alert(exception);
           }
       });
-   };
-
-</script>
+      };
+      
+   </script>
    {% endblock extra_js %}

@@ -2,7 +2,6 @@ import json, csv, io
 from datetime import datetime, date, timedelta, tzinfo, timezone
 import datetime as only_datetime
 from dateutil import relativedelta
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.generic import View, ListView, TemplateView, UpdateView, DetailView
@@ -49,7 +48,7 @@ from .forms import (
     AssignForm,
     EmployeeDailyUpdateForm,
     EditDailyUpdateForm,
-    AddProfileForm
+    AddProfileForm,
 )
 
 from django.contrib.auth.models import User
@@ -319,16 +318,16 @@ def new_uploadExcel(request):
                             continue
                         date = datetime.strptime(date, "%d/%m/%Y")
                         print("***********       ", date)
-                        day = sheet.cell_value(k+j, 1)
-                        shift = sheet.cell_value(k+j, 2)
-                        in_time = sheet.cell_value(k+j, 3)
+                        day = sheet.cell_value(k + j, 1)
+                        shift = sheet.cell_value(k + j, 2)
+                        in_time = sheet.cell_value(k + j, 3)
                         if in_time == "--:--":
                             in_time = datetime.strptime("00:00", "%H:%M")
                         elif in_time == "":
                             in_time = datetime.strptime("00:00", "%H:%M")
                         else:
                             in_time = datetime.strptime(in_time, "%H:%M")
-                        out_time = sheet.cell_value(k+j, 6)
+                        out_time = sheet.cell_value(k + j, 6)
                         if out_time == "--:--":
                             out_time = datetime.strptime("00:00", "%H:%M")
                         elif out_time == "":
@@ -777,7 +776,7 @@ def home(request):
     attendances_data = EmployeeAttendanceDetail.objects.filter(
         employee_attendance__user=request.user
     ).order_by("-created_at")
-   # import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     names = set()
     object_list = []
     result = []
@@ -811,7 +810,7 @@ def date_time_attendence_view(request):
     attendance = EmployeeAttendanceDetail.objects.get(
         id=request.POST.get("attendance_id")
     )
-    #import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     # in_time = []
     # out_time = []
     # print(attendance)
@@ -1012,51 +1011,138 @@ class LeaveListView(PermissionRequiredMixin, ListView):
         return context
 
 
+# def attendence_request_list(request):
+
+#     attendances = (
+#         EmployeeAttendance.objects.filter(
+#             user=request.user, empatt_leave_status__in=[1, 3, 4, 5, 6]
+#         )
+#         .exclude(employee_attendance__in_time="00:00:00")
+#         .order_by("-created_at")
+#     )
+#     result = []
+#     email_data = []
+#     # and attendance.date_time_diffrence() != timedelta(hours=0)
+#     for attendance in attendances:
+
+#         if attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(
+#             hours=9
+#         ):
+
+#             result.append(attendance)
+#         elif attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(
+#             hours=8
+#         ):
+
+#             result.append(attendance)
+#         elif attendance.user.profile.working_time == 3 and attendance.date_time_diffrence() < timedelta(
+#             hours=7
+#         ):
+
+#             result.append(attendance)
+#         elif attendance.user.profile.working_time == 1 and attendance.date_time_diffrence() < timedelta(
+#             hours=6
+#         ):
+
+#             result.append(attendance)
+#         elif attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(
+#             hours=8, minutes=30
+#         ):
+
+#             result.append(attendance)
+#         elif attendance.user.profile.working_time == 4 and attendance.date_time_diffrence() < timedelta(
+#             hours=7, minutes=30
+#         ):
+
+#             result.append(attendance)
+#         elif attendance.user.profile.working_time == 2 and attendance.date_time_diffrence() < timedelta(
+#             hours=6, minutes=30
+#         ):
+
+#             result.append(attendance)
+
+#     object_list = []
+
+#     currunt_month = only_datetime.datetime.now().month
+#     last_month = currunt_month - 1 if currunt_month > 1 else 12
+#     for less_hour in result:
+#         if less_hour.date.month == last_month:
+#             object_list.append(less_hour)
+#         elif less_hour.date.month == currunt_month:
+#             object_list.append(less_hour)
+#         else:
+#             pass
+#     # context['object_list'] = object_list
+
+#     mail_list = []
+#     default_mail_list = User.objects.filter(groups__name__in=["MD", "HR"])
+#     for usr in default_mail_list:
+#         mail_list.append(usr.email)
+#     request_user = request.user.email
+#     mail_list.append(request_user)
+#     mail_list.append(request.user.profile.teamlead.email)
+#     mail_list = set(mail_list)
+#     # aaccept_email_data = []
+#     # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
+#     # for usr in default_mail_list:
+#     #         aaccept_email_data.append(usr.email)
+
+#     # for user in User.objects.all():
+#     #         email_data.append(user.email)
+#     #         email_data.sort()
+#     # return render(request,'red_list.html', {'attendance_data' : result,'emails':mail_list,'aaccept_email_data':aaccept_email_data})
+#     return render(
+#         request,
+#         "red_list.html",
+#         {"attendance_data": object_list, "mail_list": mail_list},
+#     )
 def attendence_request_list(request):
 
     attendances = (
-        EmployeeAttendance.objects.filter(
-            user=request.user, empatt_leave_status__in=[1, 3, 4, 5, 6]
+        EmployeeAttendanceDetail.objects.filter(
+            employee_attendance__user=request.user,
+            employee_attendance__empatt_leave_status__in=[1, 3, 4, 5, 6],
         )
-        .exclude(employee_attendance__in_time="00:00:00")
+        .exclude(in_time="00:00:00")
         .order_by("-created_at")
     )
+
     result = []
     email_data = []
     # and attendance.date_time_diffrence() != timedelta(hours=0)
     for attendance in attendances:
 
-        if attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(
+        if attendance.employee_attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(
             hours=9
         ):
 
             result.append(attendance)
-        elif attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.employee_attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(
             hours=8
         ):
 
             result.append(attendance)
-        elif attendance.user.profile.working_time == 3 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.employee_attendance.user.profile.working_time == 3 and attendance.date_time_diffrence() < timedelta(
             hours=7
         ):
 
             result.append(attendance)
-        elif attendance.user.profile.working_time == 1 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.employee_attendance.user.profile.working_time == 1 and attendance.date_time_diffrence() < timedelta(
             hours=6
         ):
 
             result.append(attendance)
-        elif attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.employee_attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(
             hours=8, minutes=30
         ):
 
             result.append(attendance)
-        elif attendance.user.profile.working_time == 4 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.employee_attendance.user.profile.working_time == 4 and attendance.date_time_diffrence() < timedelta(
             hours=7, minutes=30
         ):
 
             result.append(attendance)
-        elif attendance.user.profile.working_time == 2 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.employee_attendance.user.profile.working_time == 2 and attendance.date_time_diffrence() < timedelta(
             hours=6, minutes=30
         ):
 
@@ -1978,7 +2064,7 @@ def send_ooo_on_reject(request):
 #     raise_exception = True
 #     model = EmployeeAttendance #EmployeeAttendanceDetail
 #     template_name = "fullday_leave_list.html"
-    
+
 #     def get_context_data(self, **kwargs):
 #        # import pdb;pdb.set_trace()
 #         context = super(FullLeaveListView, self).get_context_data(**kwargs)
@@ -1998,23 +2084,24 @@ def send_ooo_on_reject(request):
 #         context["object_list"] = object_list
 #         return context
 
+
 class FullLeaveListView(PermissionRequiredMixin, ListView):
 
     permission_required = ("employee.can_view_employee_attendance_list",)
 
     raise_exception = True
-    model =  EmployeeAttendanceDetail#EmployeeAttendance 
+    model = EmployeeAttendanceDetail  # EmployeeAttendance
     template_name = "fullday_leave_list.html"
 
     def get_context_data(self, **kwargs):
-       # import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
         object_list = []
         less_time_objects = self.model.objects.filter(
-           employee_attendance__empatt_leave_status__in=[1,]
+            employee_attendance__empatt_leave_status__in=[1,]
         ).order_by("-created_at")
-        
+
         currunt_month = only_datetime.datetime.now().month
         last_month = currunt_month - 1 if currunt_month > 1 else 12
         for less_hour in less_time_objects:
@@ -2024,7 +2111,7 @@ class FullLeaveListView(PermissionRequiredMixin, ListView):
                 object_list.append(less_hour)
             else:
                 pass
-        #import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         context["object_list"] = object_list
         return context
 
@@ -2497,18 +2584,22 @@ def employedailyupdate(request):
     """
     form = AssignProject.objects.filter(employe__username=request.user)
     if request.method == "POST":
-        project_name = request.POST['project_name']
-        project_summary = request.POST['summary']
-        project_time = request.POST['time']
+        project_name = request.POST["project_name"]
+        project_summary = request.POST["summary"]
+        project_time = request.POST["time"]
         project_name = AssignProject.objects.get(
-            project__project_name=project_name,
-            employe__username=request.user)
-        obj = EmployeeDailyUpdate.objects.create(project_name=project_name,
-             project_summary=project_summary,time_taken=project_time)
+            project__project_name=project_name, employe__username=request.user
+        )
+        obj = EmployeeDailyUpdate.objects.create(
+            project_name=project_name,
+            project_summary=project_summary,
+            time_taken=project_time,
+        )
         obj.save()
-           #import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         return HttpResponseRedirect("/check_daily_update")
     return render(request, "employe/create_report.html", {"form": form})
+
 
 def checkdailyupdate(request):
     """
@@ -2637,4 +2728,3 @@ def filter_by_date_and_project(request):
     ).filter(date__range=[start_date, end_date], project_name__employe=request.user)
     html = render_to_string("employe/filter_date.html", {"report": search_both})
     return HttpResponse(html)
-

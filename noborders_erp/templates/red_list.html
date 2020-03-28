@@ -97,8 +97,20 @@
                 
                 <td><p>{{ attendance.date_time_diffrence }}</p></td> 
               
+              <td> 
+                  {% if attendance.employee_attendance.empatt_leave_status == 5 or  attendance.employee_attendance.empatt_leave_status == 6 or attendance.employee_attendance.empatt_leave_status == 1 %}
+                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-leave-time="{{attendance.date_time_diffrence}}">
+                  {% endif %}
+                </td>
+                <td>
+                    {% if attendance.employee_attendance.empatt_leave_status == 5 or attendance.employee_attendance.empatt_leave_status == 6 %}
+                        <p>Default</p>
+                    {%else%}
+                        {{ attendance.employee_attendance.get_empatt_leave_status_display }}
+                    {% endif %}
+                </td>
                 
-                <td> 
+            <!--     <td> 
                   {% if attendance.empatt_leave_status == 5 or  attendance.empatt_leave_status == 6 or attendance.empatt_leave_status == 1 %}
                   <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-leave-time="{{attendance.date_time_diffrence}}">
                   {% endif %}
@@ -109,7 +121,7 @@
                     {%else%}
                         {{ attendance.get_empatt_leave_status_display }}
                     {% endif %}
-                </td>
+                </td> -->
               </tr>
             {% endfor %}
           </tbody>

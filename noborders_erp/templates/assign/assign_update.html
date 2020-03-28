@@ -3,10 +3,10 @@
 {% load staticfiles %}
 {% block content %}
 <!DOCTYPE html>
-     <form method="post" class="form-group assign">
-       {% csrf_token %}
-       Employe name :<input type="text" name="employe" class="form-control"  value="{{assign.employe.id}}"><br>
-       Project Name :<input type="text" name="project" class="form-control"  value="{{assign.project.id}}"><br>
-       <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
-   </form>
+<form method="post" class="form-group assign">
+   {% csrf_token %}
+   Employe name :<input type="text" name="employe" class="form-control"  value="{{assign.employe.id}}"><br>
+   Project Name :<input type="text" name="project" class="form-control"  value="{{assign.project.id}}"><br>
+   <input type="submit"class="btn btn-primary btn-lg"  value="UPDATE RECORD">
+</form>
 {% endblock %}

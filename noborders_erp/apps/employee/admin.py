@@ -14,7 +14,6 @@ from .models import (
     AssignProject,
     EmployeeDailyUpdate
 )
-
 # admin.site.register(SignUp)
 admin.site.register(Profile)
 admin.site.register(EmployeeAttendance)

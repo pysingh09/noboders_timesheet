@@ -152,6 +152,7 @@ class UserProfileForm(forms.ModelForm):
             "teamlead",
         )
 
+
 class AddProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
