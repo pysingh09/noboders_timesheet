@@ -79,7 +79,8 @@ from .tasks import send_email_reminder
 import xlrd
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
+import xlrd
+import csv
 
 
 # def emp_wise_attendance(request):
@@ -294,9 +295,6 @@ def index(request):
     else:
         return redirect("employee:profile")
 
-
-import xlrd
-import csv
 fs = FileSystemStorage()
 @permission_required("employee.add_employeeattendance", raise_exception=True)
 def attendance_file_upload(request):
