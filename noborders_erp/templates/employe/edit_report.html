@@ -6,8 +6,9 @@
 <form method="post">
    {% csrf_token %}
    <div class="fieldWrapper">
-      date:<input type="text" name="date" value="{{edit_report.date}}"><br>
-      project_name:<input type="text" name="project_name" value="{{edit_report.project_name.id}}"><br>
+      project_name: <input type="text" name="project_name" value="{{edit_report.project_name}}" disabled>
+      <input type="hidden" name="project_name" value='{{edit_report.project_name.id}}'>
+      <br>
       project_summary:<input type="text" name="project_summary" value="{{edit_report.project_summary}}"><br>
       time_taken:
       <th><input type="time" name ='time_taken' min="00:00" max="12:00"  value="{{edit_report.time_taken}}" required=''></th>

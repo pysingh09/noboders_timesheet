@@ -1,126 +1,112 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %} 
-  <div class="search-container">
-    <h3 class="employeehead">Dashboard</h3>
-    <span class="pull-right back-button" onClick="javascript:history.go(-1);">
-       Back
-      </span>
-    
-      <div class="card">
-        
-        <div class="table-responsive">
-        <table class="table table-stripped" id="myTable1">
-          <thead>
-            <tr>
-              {% if user.is_superuser  %}
-              <th scope="col" class="action-checkbox-column">
-              <div class="text"><span><input type="checkbox" id="checkall"></span></div>
-              <div class="clear"></div>
-              {% endif %}
-              </th> 
-              <th>S.No.</th>
-              
-              <!-- <th>User</th> -->
-              <!-- <th>Employee ID</th> -->
-              <th>Date</th>
-            <!--   <th>Timing</th> -->
-              <th>In/Out Details</th>  
-            </tr>
-          </thead>
-          <tbody class="mychkboxs">
-            {% for attendance in attendances_data %}
-              <tr>
-                {% if user.is_superuser  %}
-                <td class="action-checkbox">
-                  <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date|date:'Y-m-d' }}">
-                  {% endif %}
-                </td>
-                <td>{{ forloop.counter }}</td>
-               
-                <!-- <td><p>{{ attendance.user }}</p></td> -->
-                <!-- <td>{{ attendance.employee_id }}</td> -->
-                <td>{{ attendance.date|date:'D,d M Y' }}</td>
-                <!-- <td><p>{{ attendance.date_time_diffrence }}</p></td>  -->
-                 <td><a class="attendence_datetime" href="" data-id="{{ attendance.id }}">View</a></td>
-
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
-        {% if user.is_superuser  %}
-      <button class="background_colorbtn" id="delrow" onclick="return delrow();">Delete row</button>
-       {% endif %}
+<div class="search-container">
+   <h3 class="employeehead">Dashboard</h3>
+   <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+   Back
+   </span>
+   <div class="card">
+      <div class="table-responsive">
+         <table class="table table-stripped" id="myTable1">
+            <thead>
+               <tr>
+                  {% if user.is_superuser  %}
+                  <th scope="col" class="action-checkbox-column">
+                     <div class="text"><span><input type="checkbox" id="checkall"></span></div>
+                     <div class="clear"></div>
+                     {% endif %}
+                  </th>
+                  <th>S.No.</th>
+                  <!-- <th>User</th> -->
+                  <!-- <th>Employee ID</th> -->
+                  <th>Date</th>
+                  <!--   <th>Timing</th> -->
+                  <th>In/Out Details</th>
+               </tr>
+            </thead>
+            <tbody class="mychkboxs">
+               {% for attendance in attendances_data %}
+               <tr>
+                  {% if user.is_superuser  %}
+                  <td class="action-checkbox">
+                     <input type="checkbox" name="record" value="{{ attendance.pk }}" class="action-select" data-employee-id="{{ attendance.employee_id }}" data-date="{{ attendance.date|date:'Y-m-d' }}">
+                     {% endif %}
+                  </td>
+                  <td>{{ forloop.counter }}</td>
+                  <!-- <td><p>{{ attendance.user }}</p></td> -->
+                  <!-- <td>{{ attendance.employee_id }}</td> -->
+                  <td>{{ attendance.date|date:'D,d M Y' }}</td>
+                  <!-- <td><p>{{ attendance.date_time_diffrence }}</p></td>  -->
+                  <td><a class="attendence_datetime" href="" data-id="{{ attendance.id }}">View</a></td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+         {% if user.is_superuser  %}
+         <button class="background_colorbtn" id="delrow" onclick="return delrow();">Delete row</button>
+         {% endif %}
       </div>
-      </div>
-      
-    </div>
-    
-  <!-- Modal -->
-  <div class="modal fade inmodal" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
+   </div>
+</div>
+<!-- Modal -->
+<div class="modal fade inmodal" id="myModal" role="dialog">
+   <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">In / Out Details</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">In / Out Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body" id="attendence_model">
+         </div>
       </div>
-        <div class="modal-body" id="attendence_model">
-        </div>
-      </div>
-      
-    </div>
-  </div>
+   </div>
+</div>
 {% endblock %}
-
-
 {% block extra_js %}
 {{ block.super }} 
-  <script>
-    $(document).ready(function(){
-      $(".attendence_datetime").click(function(e){
-        e.preventDefault();
-        var attendance_id = $(this).data("id");
-        $.ajax({
-           'url': "{% url "employee:date-time-attendence-view" %}",
-           'type': "POST",
-           'data': {
-               'attendance_id':attendance_id,
-               'csrfmiddlewaretoken': '{{ csrf_token }}',
-           },
-
-           success: function( data, textStatus, jQxhr )
-           {
-                $("#attendence_model").html(data);
-                $("#myModal").modal();
-            },
-            error: function( jqXhr, textStatus, errorThrown ){
-                console.log( errorThrown );
-            }
-        });
-        
-      });
-    });
-  
-  </script>
-
 <script>
-$("#checkall").change(function(){ 
-    $(".action-select").prop('checked', $(this).prop("checked")); 
-});
-
-$('.action-select').change(function(){ 
-    if(false == $(this).prop("checked")){ 
-        $("#checkall").prop('checked', false); 
-    }
-  if ($('.action-select:checked').length == $('.action-select').length ){
-    $("#checkall").prop('checked', true);
-  }
-});
+   $(document).ready(function(){
+     $(".attendence_datetime").click(function(e){
+       e.preventDefault();
+       var attendance_id = $(this).data("id");
+       $.ajax({
+          'url': "{% url "employee:date-time-attendence-view" %}",
+          'type': "POST",
+          'data': {
+              'attendance_id':attendance_id,
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+   
+          success: function( data, textStatus, jQxhr )
+          {
+               $("#attendence_model").html(data);
+               $("#myModal").modal();
+           },
+           error: function( jqXhr, textStatus, errorThrown ){
+               console.log( errorThrown );
+           }
+       });
+       
+     });
+   });
+   
 </script>
-
+<script>
+   $("#checkall").change(function(){ 
+       $(".action-select").prop('checked', $(this).prop("checked")); 
+   });
+   
+   $('.action-select').change(function(){ 
+       if(false == $(this).prop("checked")){ 
+           $("#checkall").prop('checked', false); 
+       }
+     if ($('.action-select:checked').length == $('.action-select').length ){
+       $("#checkall").prop('checked', true);
+     }
+   });
+</script>
 {% endblock extra_js %}

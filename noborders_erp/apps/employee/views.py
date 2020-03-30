@@ -2205,7 +2205,7 @@ class ForgotPassword(View):
             if request.method == "POST":
                 email = request.POST["email"]
                 try:
-                    user = User.objects.get(email=email)
+                                                                                                    user = User.objects.get(email=email)
                 except Exception as e:
 
                     messages.error(self.request, "Email Not Exist")

@@ -1,71 +1,60 @@
 {% extends 'base.html' %}
 {% block content %}
-
 <h1>Attendance Record</h1>
-
-
 <form action="{% url 'employee:employee_wise_attendance' %}" method="post">
-    {% csrf_token %}
-    <label>Double click in search box to get list of employees</label>
-    <br>
-    <label>Insert or type name of employee to get his/her detailed monthly attendance</label>
-    <br>
-<input list="employees" name="emp_name" />
-<datalist id="employees">
-    {% for basic in basic_list %}
-        <option >{{ basic.emp_name }}</option>
-        {% endfor %}
-</datalist>
-    <input type="submit" name="Submit">
+   {% csrf_token %}
+   <label>Double click in search box to get list of employees</label>
+   <br>
+   <label>Insert or type name of employee to get his/her detailed monthly attendance</label>
+   <br>
+   <input list="employees" name="emp_name" />
+   <datalist id="employees">
+      {% for basic in basic_list %}
+      <option >{{ basic.emp_name }}</option>
+      {% endfor %}
+   </datalist>
+   <input type="submit" name="Submit">
 </form>
-
 <table border="1">
-    <thead>
-         <tr>
-             <th>Name</th>
-             <th>Id</th>
-             <th>Department</th>
-             <th>Month</th>
-             <th>Date</th>
-             <th>Day</th>
-             <th>Shift</th>
-             <th>In Time</th>
-             <th>Out Time</th>
-             <th>Working Hours</th>
-             <th>Over Time</th>
-             <th>Status</th>
-             <th>Remark</th>
-         </tr>
-    </thead>
-
-         <tbody>
-{% for basic in basic_list %}
-{% for detail in detail_list %}
-<tr>
-    {% if detail.emp.emp_code == basic.emp_code %}
-
-    <td>{{ basic.emp_name }}</td>
-    <td>{{ basic.emp_code }}</td>
-<td>{{ basic.dept_name }}</td>
-<td>{{ basic.report_month }}</td>
-
-    <td>{{ detail.date }}</td>
-<td>{{ detail.day }}</td>
-<td>{{ detail.shift }}</td>
-<td>{{ detail.in_time }}</td>
-    <td>{{ detail.out_time }}</td>
-<td>{{ detail.working_hrs }}</td>
-<td>{{ detail.ot }}</td>
-<td>{{ detail.status }}</td>
-    <td>{{ detail.remark }}</td>
-
-    {% endif %}
-
-</tr>
-
-{% endfor %}
-{% endfor %}
-</tbody>
+   <thead>
+      <tr>
+         <th>Name</th>
+         <th>Id</th>
+         <th>Department</th>
+         <th>Month</th>
+         <th>Date</th>
+         <th>Day</th>
+         <th>Shift</th>
+         <th>In Time</th>
+         <th>Out Time</th>
+         <th>Working Hours</th>
+         <th>Over Time</th>
+         <th>Status</th>
+         <th>Remark</th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for basic in basic_list %}
+      {% for detail in detail_list %}
+      <tr>
+         {% if detail.emp.emp_code == basic.emp_code %}
+         <td>{{ basic.emp_name }}</td>
+         <td>{{ basic.emp_code }}</td>
+         <td>{{ basic.dept_name }}</td>
+         <td>{{ basic.report_month }}</td>
+         <td>{{ detail.date }}</td>
+         <td>{{ detail.day }}</td>
+         <td>{{ detail.shift }}</td>
+         <td>{{ detail.in_time }}</td>
+         <td>{{ detail.out_time }}</td>
+         <td>{{ detail.working_hrs }}</td>
+         <td>{{ detail.ot }}</td>
+         <td>{{ detail.status }}</td>
+         <td>{{ detail.remark }}</td>
+         {% endif %}
+      </tr>
+      {% endfor %}
+      {% endfor %}
+   </tbody>
 </table>
-
 {% endblock %}

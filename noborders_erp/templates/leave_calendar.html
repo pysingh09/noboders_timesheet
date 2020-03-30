@@ -2,120 +2,111 @@
 {% load static %}
 {% load date_time_diff_tags %}
 {% block content %}
-
-<body>     
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-      
-        <div class="modal-body" id="attendence_model">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+<body>
+   <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+         <!-- Modal content-->
+         <div class="modal-content">
+            <div class="modal-body" id="attendence_model">
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+         </div>
       </div>
-      
-    </div>
-  </div>
-
-<div id='wrap'>
-
-<div id='calendar'></div>
-
-
-<div style='clear:both'></div>
-</div>
-{% for attendance in attendances_data %}
-{{ attendance.date_time_diffrence }}
-  {% endfor %}
+   </div>
+   <div id='wrap'>
+      <div id='calendar'></div>
+      <div style='clear:both'></div>
+   </div>
+   {% for attendance in attendances_data %}
+   {{ attendance.date_time_diffrence }}
+   {% endfor %}
 </body>
 {% endblock %}
 {% block extra_js %}
 {{block.super}}
 <script>
-    
-$(document).ready(function() {
-  
-    var geodata = "{{ attendances_data | safe }}";
-    
-    $('#calendar').fullCalendar({
-            defaultDate: '2019-06-12',
-            defaultView: 'month',
-            editable: true,
-            events: 
-            [
-
-                   {% for data in demos %}
-                {
-              
-                  'title':"{{data.is_approve}}",
-                  'date':"{{data.date|date:'Y-m-d'}}",
-
-              }
-                {% if not forloop.last %},{% endif %}
-                  {% endfor %}
-
-
-
-
-                ],
-                  eventRender: function (event, element, view) {
-                      
-                       var title = event.title
-
-                       var calculation = ("True")
-                       if (title == calculation ) {
-                        
-                           var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append();
-                            }
-
-                       else if (title!==calculation){
-
-                          var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
-                           view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000');
-                       }
-                   }
-
-         
-           });
-
+   $(document).ready(function() {
+     
+       var geodata = "{{ attendances_data | safe }}";
        
-    $(".attendence_datetime").click(function(e){
-        
-        e.preventDefault();
-        var dat = $(this).data("date");
-        var emp_id = $(this).data("employee-id");
-        $.ajax({
-           'url': "{% url "employee:date-time-attendence-view" %}",
-           'type': "POST",
+       $('#calendar').fullCalendar({
+               defaultDate: '2019-06-12',
+               defaultView: 'month',
+               editable: true,
+               events: 
+               [
+   
+                      {% for data in demos %}
+                   {
+                 
+                     'title':"{{data.is_approve}}",
+                     'date':"{{data.date|date:'Y-m-d'}}",
+   
+                 }
+                   {% if not forloop.last %},{% endif %}
+                     {% endfor %}
+   
+   
+   
+   
+                   ],
+                     eventRender: function (event, element, view) {
+                         
+                          var title = event.title
+   
+                          var calculation = ("True")
+                          if (title == calculation ) {
+                           
+                              var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                              view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#25DC44').append();
+                               }
+   
+                          else if (title!==calculation){
+   
+                             var dateString = $.fullCalendar.formatDate(event.start, 'yyyy-MM-dd');
+                              view.element.find('.fc-day[data-date="' + dateString + '"]').css('background', '#ff0000');
+                          }
+                      }
+   
+            
+              });
+   
+          
+       $(".attendence_datetime").click(function(e){
            
+           e.preventDefault();
+           var dat = $(this).data("date");
+           var emp_id = $(this).data("employee-id");
+           $.ajax({
+              'url': "{% url "employee:date-time-attendence-view" %}",
+              'type': "POST",
+              
+              
+              'data': {
+   
+                  'dat': dat,
+                  'emp_id':emp_id,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+   
+              success: function( data, textStatus, jQxhr )
+              {
+                   $("#attendence_model").html(data);
+                   $("#myModal").modal();
+               },
+               error: function( jqXhr, textStatus, errorThrown ){
+                   console.log( errorThrown );
+               }
+           });
            
-           'data': {
-
-               'dat': dat,
-               'emp_id':emp_id,
-               'csrfmiddlewaretoken': '{{ csrf_token }}',
-           },
-
-           success: function( data, textStatus, jQxhr )
-           {
-                $("#attendence_model").html(data);
-                $("#myModal").modal();
-            },
-            error: function( jqXhr, textStatus, errorThrown ){
-                console.log( errorThrown );
-            }
-        });
-        
-      });
-
-
-    });
-
-
-
+         });
+   
+   
+       });
+   
+   
+   
 </script>
 {% endblock extra_js%}

@@ -1,146 +1,127 @@
 {% extends 'base.html' %}
 {% load staticfiles %}    
 {% load date_time_diff_tags %}
-
 {% block css %}
-    {{block.super}}
-    <style>
-        .dropbtn {
-          background-color: #4CAF50;
-          color: white;
-          padding: 16px;
-          font-size: 16px;
-          border: none;
-          cursor: pointer;
-        }
-
-        .dropbtn:hover, .dropbtn:focus {
-          background-color: #3e8e41;
-        }
-
-        #myInput {
-          box-sizing: border-box;
-          background-image: url('searchicon.png');
-          background-position: 14px 12px;
-          background-repeat: no-repeat;
-          font-size: 16px;
-          padding: 14px 20px 12px 45px;
-          border: none;
-          border-bottom: 1px solid #ddd;
-        }
-
-        #myInput:focus {outline: 3px solid #ddd;}
-
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f6f6f6;
-          min-width: 230px;
-          overflow: auto;
-          border: 1px solid #ddd;
-          z-index: 1;
-        }
-
-        .dropdown-content a {
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
-        }
-
-        .dropdown a:hover {background-color: #ddd;}
-
-        .show {display: block;}
-    </style>
+{{block.super}}
+<style>
+   .dropbtn {
+   background-color: #4CAF50;
+   color: white;
+   padding: 16px;
+   font-size: 16px;
+   border: none;
+   cursor: pointer;
+   }
+   .dropbtn:hover, .dropbtn:focus {
+   background-color: #3e8e41;
+   }
+   #myInput {
+   box-sizing: border-box;
+   background-image: url('searchicon.png');
+   background-position: 14px 12px;
+   background-repeat: no-repeat;
+   font-size: 16px;
+   padding: 14px 20px 12px 45px;
+   border: none;
+   border-bottom: 1px solid #ddd;
+   }
+   #myInput:focus {outline: 3px solid #ddd;}
+   .dropdown {
+   position: relative;
+   display: inline-block;
+   }
+   .dropdown-content {
+   display: none;
+   position: absolute;
+   background-color: #f6f6f6;
+   min-width: 230px;
+   overflow: auto;
+   border: 1px solid #ddd;
+   z-index: 1;
+   }
+   .dropdown-content a {
+   color: black;
+   padding: 12px 16px;
+   text-decoration: none;
+   display: block;
+   }
+   .dropdown a:hover {background-color: #ddd;}
+   .show {display: block;}
+</style>
 {% endblock css %}
 {% block content %} 
-
 <!--     {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li class="{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %} -->
-
-
-    <h3 class="employeehead"> In/Out Time Request </h3>
-    <span class="pull-right back-button" onClick="javascript:history.go(-1);">
-       Back
-      </span>
-      <!-- <p class = "no_record_in_table"></p> -->
-
-        <div class="card">
-    <div class="search-container">
-    <div class="table-responsive">
-        <table class = "table" id="myTable1">
-          <thead>
-            <tr>
-              <th>S.No.</th>
-              <th>Date</th>
-              <th>Login Hours</th>
-              <th>In/Out Requests</th> 
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for attendance in attendance_data %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ attendance.date|date:'D,d M Y'}}</td>
-                
-                
-                <td><p>{{ attendance.date_time_diffrence }}</p></td> 
-              
-              <td> 
-                  {% if attendance.employee_attendance.empatt_leave_status == 5 or  attendance.employee_attendance.empatt_leave_status == 6 or attendance.employee_attendance.empatt_leave_status == 1 %}
-                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-leave-time="{{attendance.date_time_diffrence}}">
-                  {% endif %}
-                </td>
-                <td>
-                    {% if attendance.employee_attendance.empatt_leave_status == 5 or attendance.employee_attendance.empatt_leave_status == 6 %}
-                        <p>Default</p>
-                    {%else%}
-                        {{ attendance.employee_attendance.get_empatt_leave_status_display }}
-                    {% endif %}
-                </td>
-                
-            <!--     <td> 
-                  {% if attendance.empatt_leave_status == 5 or  attendance.empatt_leave_status == 6 or attendance.empatt_leave_status == 1 %}
-                  <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-leave-time="{{attendance.date_time_diffrence}}">
-                  {% endif %}
-                </td>
-                <td>
-                    {% if attendance.empatt_leave_status == 5 or attendance.empatt_leave_status == 6 %}
-                        <p>Default</p>
-                    {%else%}
-                        {{ attendance.get_empatt_leave_status_display }}
-                    {% endif %}
-                </td> -->
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        <input type="hidden" id="emails" value="" name="emails">
-  <!-- <div class="form-group col-sm-12" id="selectemail"></div> -->
-        <div class="form-group col-sm-12" id="selectemail">
-          {% for email in mail_list %}   
+   <ul class="messages">
+     {% for message in messages %}
+       <li class="{{ message.tags }}">{{ message }}</li>
+     {% endfor %}
+   </ul>
+   {% endif %} -->
+<h3 class="employeehead"> In/Out Time Request </h3>
+<span class="pull-right back-button" onClick="javascript:history.go(-1);">
+Back
+</span>
+<!-- <p class = "no_record_in_table"></p> -->
+<div class="card">
+   <div class="search-container">
+      <div class="table-responsive">
+         <table class = "table" id="myTable1">
+            <thead>
+               <tr>
+                  <th>S.No.</th>
+                  <th>Date</th>
+                  <th>Login Hours</th>
+                  <th>In/Out Requests</th>
+                  <th>Status</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for attendance in attendance_data %}
+               <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ attendance.date|date:'D,d M Y'}}</td>
+                  <td>
+                     <p>{{ attendance.date_time_diffrence }}</p>
+                  </td>
+                  <td> 
+                     {% if attendance.employee_attendance.empatt_leave_status == 5 or  attendance.employee_attendance.empatt_leave_status == 6 or attendance.employee_attendance.empatt_leave_status == 1 %}
+                     <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-leave-time="{{attendance.date_time_diffrence}}">
+                     {% endif %}
+                  </td>
+                  <td>
+                     {% if attendance.employee_attendance.empatt_leave_status == 5 or attendance.employee_attendance.empatt_leave_status == 6 %}
+                     <p>Default</p>
+                     {%else%}
+                     {{ attendance.employee_attendance.get_empatt_leave_status_display }}
+                     {% endif %}
+                  </td>
+                  <!--     <td> 
+                     {% if attendance.empatt_leave_status == 5 or  attendance.empatt_leave_status == 6 or attendance.empatt_leave_status == 1 %}
+                     <input type="checkbox" class="chkboxs" value="{{ attendance.date|date:'Y-m-d'}}" data-leave-time="{{attendance.date_time_diffrence}}">
+                     {% endif %}
+                     </td>
+                     <td>
+                       {% if attendance.empatt_leave_status == 5 or attendance.empatt_leave_status == 6 %}
+                           <p>Default</p>
+                       {%else%}
+                           {{ attendance.get_empatt_leave_status_display }}
+                       {% endif %}
+                     </td> -->
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+         <input type="hidden" id="emails" value="" name="emails">
+         <!-- <div class="form-group col-sm-12" id="selectemail"></div> -->
+         <div class="form-group col-sm-12" id="selectemail">
+            {% for email in mail_list %}   
             <div style="margin: 2px;" class="btn btn-primary">{{ email }}</div>
-         {% endfor %}
-    
-    </div>
-   </div> 
- </div>
+            {% endfor %}
+         </div>
+      </div>
+   </div>
 </div>
-
-
 <!-- <div class = "dropdown">
-   
    <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" id="email-button" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
       <div id="myDropdown" class = "dropdown-menu drop" role = "menu">
      <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
@@ -150,129 +131,125 @@
       
       </div>
     </div> -->
-
-  <button class="btn btn-success submit-email-btn btnsuccess1" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>          
-
+<button class="btn btn-success submit-email-btn btnsuccess1" id="checkrow"  data-emails[]="emails" onclick="return checkrow();">submit</button>          
 {% endblock %}
 {% block extra_js %}
-    {{block.super}}
-    <script>
-      function checkrow() {
-        var leaveRequestArr =[];
-        var loginHour =[];
-
-        if (!$("input:checkbox").is(":checked")){
-            
-                alert("Please tick checkbox if you want to send leave request");
-                location.reload();
-                return false;
-            }
-
-        else($(document)).on("click","#checkrow",function(e){    
-          e.preventDefault();
-          var emails = Array.from( new Set(email))
-
-          $(".chkboxs:checked").each(function () {
-            leaveRequestArr.push($(this).val());
-            loginHour.push($(this).data("leave-time"));
-            });
-             $.ajax({
-             'url': "{% url "employee:request_leave" %}",
-             'type': "POST",
-             'dataType': 'json',
-             'data': {
-                 'leaveRequestArr': leaveRequestArr,
-                 'emails[]': emails ,
-                 'loginHour':loginHour,
-                 'csrfmiddlewaretoken': '{{ csrf_token }}',
-             },
-             success: function(response) {
-                if(response.status=="success"){
-                    alert("Request leave successfull")
-                    location.reload();
-                    }
-                if(response.status=="error"){
-                    alert("Request Sent but email not sent due to Limit is exceeded.")
-                    location.reload();
-                    }            
-
-                }                    
-                                                 
-            });
-
-        }) 
-    } 
-       
-
-         var email = [] ;
-
-            function add_email(){
-
-              $("#emails").val();
-              var emails = $('#selectemail').children();
-
-               for(i=0;i<emails.length;i++)
-                  {
-
-                    email.push($(emails[i]).text()+'');
-           
-                  }
-
-
-                $("#emails").val(email);
-
-            }
-
-            $(document).on('click', '.removeemailtext', function(){
-              $('.drop').append('<li><a class="emailtext" id="demo">'+$(this).text()+'</a></li>');
-              $(this).remove();
-              add_email();
-            });
-
-            $(document).on('click', '.emailtext', function(){
-              $(this).remove();
-              $("#selectemail").append('<div style="margin: 2px;" class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
-              add_email();
-            });
-
-            $(document).on('change', ".chkboxs", function(){
-              if($('input[type="checkbox"]:checked').length > 0){
-                $('#checkrow').show();
-                $('#email-button').show();
-                }
-              else{
-                $('#checkrow').hide();
-                $('#email-button').hide();
-                }
-            });
-        $(document).ready(function() {
-            
-        });
-        $('#checkrow').hide();
-        $('#email-button').hide();
-
-        /* When the user clicks on the button,
-        toggle between hiding and showing the dropdown content */
-        function myFunction() {
-          document.getElementById("myDropdown").classList.toggle("show");
-        }
-
-        function filterFunction() {
-          var input, filter, a, i;
-          input = document.getElementById("myInput");
-          filter = input.value.toUpperCase();
-          div = document.getElementById("myDropdown");
-          a = div.getElementsByTagName("a");
-          for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-              a[i].style.display = "";
-            } else {
-              a[i].style.display = "none";
-            }
-          }
-        }
-    </script>    
-
-
+{{block.super}}
+<script>
+   function checkrow() {
+     var leaveRequestArr =[];
+     var loginHour =[];
+   
+     if (!$("input:checkbox").is(":checked")){
+         
+             alert("Please tick checkbox if you want to send leave request");
+             location.reload();
+             return false;
+         }
+   
+     else($(document)).on("click","#checkrow",function(e){    
+       e.preventDefault();
+       var emails = Array.from( new Set(email))
+   
+       $(".chkboxs:checked").each(function () {
+         leaveRequestArr.push($(this).val());
+         loginHour.push($(this).data("leave-time"));
+         });
+          $.ajax({
+          'url': "{% url "employee:request_leave" %}",
+          'type': "POST",
+          'dataType': 'json',
+          'data': {
+              'leaveRequestArr': leaveRequestArr,
+              'emails[]': emails ,
+              'loginHour':loginHour,
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          success: function(response) {
+             if(response.status=="success"){
+                 alert("Request leave successfull")
+                 location.reload();
+                 }
+             if(response.status=="error"){
+                 alert("Request Sent but email not sent due to Limit is exceeded.")
+                 location.reload();
+                 }            
+   
+             }                    
+                                              
+         });
+   
+     }) 
+   } 
+    
+   
+      var email = [] ;
+   
+         function add_email(){
+   
+           $("#emails").val();
+           var emails = $('#selectemail').children();
+   
+            for(i=0;i<emails.length;i++)
+               {
+   
+                 email.push($(emails[i]).text()+'');
+        
+               }
+   
+   
+             $("#emails").val(email);
+   
+         }
+   
+         $(document).on('click', '.removeemailtext', function(){
+           $('.drop').append('<li><a class="emailtext" id="demo">'+$(this).text()+'</a></li>');
+           $(this).remove();
+           add_email();
+         });
+   
+         $(document).on('click', '.emailtext', function(){
+           $(this).remove();
+           $("#selectemail").append('<div style="margin: 2px;" class="removeemailtext btn btn-primary">'+$(this).text()+'</div>');
+           add_email();
+         });
+   
+         $(document).on('change', ".chkboxs", function(){
+           if($('input[type="checkbox"]:checked').length > 0){
+             $('#checkrow').show();
+             $('#email-button').show();
+             }
+           else{
+             $('#checkrow').hide();
+             $('#email-button').hide();
+             }
+         });
+     $(document).ready(function() {
+         
+     });
+     $('#checkrow').hide();
+     $('#email-button').hide();
+   
+     /* When the user clicks on the button,
+     toggle between hiding and showing the dropdown content */
+     function myFunction() {
+       document.getElementById("myDropdown").classList.toggle("show");
+     }
+   
+     function filterFunction() {
+       var input, filter, a, i;
+       input = document.getElementById("myInput");
+       filter = input.value.toUpperCase();
+       div = document.getElementById("myDropdown");
+       a = div.getElementsByTagName("a");
+       for (i = 0; i < a.length; i++) {
+         txtValue = a[i].textContent || a[i].innerText;
+         if (txtValue.toUpperCase().indexOf(filter) > -1) {
+           a[i].style.display = "";
+         } else {
+           a[i].style.display = "none";
+         }
+       }
+     }
+</script>    
 {% endblock extra_js %}

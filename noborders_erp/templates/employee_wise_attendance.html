@@ -1,51 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
-
 <h1>Attendance record of {{ emp_basic.emp_name }} for {{ emp_basic.report_month }}</h1>
-
 <table border="1">
-    <thead>
-         <tr>
-             <th>Name</th>
-             <th>Id</th>
-             <th>Department</th>
-             <th>Month</th>
-             <th>Date</th>
-             <th>Day</th>
-             <th>Shift</th>
-             <th>In Time</th>
-             <th>Out Time</th>
-             <th>Working Hours</th>
-             <th>Over Time</th>
-             <th>Status</th>
-             <th>Remark</th>
-         </tr>
-    </thead>
-
-         <tbody>
-
-{% for detail in emp_detail %}
-<tr>
-    <td>{{ emp_basic.emp_name }}</td>
-    <td>{{ emp_basic.emp_code }}</td>
-<td>{{ emp_basic.dept_name }}</td>
-<td>{{ emp_basic.report_month }}</td>
-
-    <td>{{ detail.date }}</td>
-<td>{{ detail.day }}</td>
-<td>{{ detail.shift }}</td>
-<td>{{ detail.in_time }}</td>
-    <td>{{ detail.out_time }}</td>
-<td>{{ detail.working_hrs }}</td>
-<td>{{ detail.ot }}</td>
-<td>{{ detail.status }}</td>
-    <td>{{ detail.remark }}</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
+   <thead>
+      <tr>
+         <th>Name</th>
+         <th>Id</th>
+         <th>Department</th>
+         <th>Month</th>
+         <th>Date</th>
+         <th>Day</th>
+         <th>Shift</th>
+         <th>In Time</th>
+         <th>Out Time</th>
+         <th>Working Hours</th>
+         <th>Over Time</th>
+         <th>Status</th>
+         <th>Remark</th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for detail in emp_detail %}
+      <tr>
+         <td>{{ emp_basic.emp_name }}</td>
+         <td>{{ emp_basic.emp_code }}</td>
+         <td>{{ emp_basic.dept_name }}</td>
+         <td>{{ emp_basic.report_month }}</td>
+         <td>{{ detail.date }}</td>
+         <td>{{ detail.day }}</td>
+         <td>{{ detail.shift }}</td>
+         <td>{{ detail.in_time }}</td>
+         <td>{{ detail.out_time }}</td>
+         <td>{{ detail.working_hrs }}</td>
+         <td>{{ detail.ot }}</td>
+         <td>{{ detail.status }}</td>
+         <td>{{ detail.remark }}</td>
+      </tr>
+      {% endfor %}
+   </tbody>
 </table>
-
 {% endblock %}

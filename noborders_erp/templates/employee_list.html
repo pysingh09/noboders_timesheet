@@ -1,70 +1,64 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %} 
-    <h3 class="employeehead">Company Employee Details</h3>  
-    <span class="pull-right back-button" onClick="javascript:history.go(-1);">
-       Back
-      </span>
-    <div class="card">
-    
-    <div class="table-responsive scrollnone">
-        <table class="table table-striped" id="myTable2">
-        <thead>
-         
-          <tr>
-            <th>S. No.</th>
-            <th>Username</th>
-             <th>Employee ID</th>
-            <th>Name</th>
-            <th>Contact</th>
-            <th>Designation</th>
-            <th>Team Lead</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-      
-        </thead>
-        <tbody>
+<h3 class="employeehead">Company Employee Details</h3>
+<span class="pull-right back-button" onClick="javascript:history.go(-1);">
+Back
+</span>
+<div class="card">
+   <div class="table-responsive scrollnone">
+      <table class="table table-striped" id="myTable2">
+         <thead>
+            <tr>
+               <th>S. No.</th>
+               <th>Username</th>
+               <th>Employee ID</th>
+               <th>Name</th>
+               <th>Contact</th>
+               <th>Designation</th>
+               <th>Team Lead</th>
+               <th>Status</th>
+               <th>Action</th>
+            </tr>
+         </thead>
+         <tbody>
             {% for profile in active_users %}
-              <tr>
-                <td>{{ forloop.counter }}</td>  
-                <td>{{ profile.user }}</td>  
-                <td>{{ profile.employee_id }}</td>
-                 <!-- <td><a href="{% url 'employee:update' profile.pk %}">{{ profile.user }}</a></td> -->
-               
-                <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
-                <td>{{ profile.contact_no}}</td>
-                <td>{{ profile.get_designation_display }}</td>
-                <td>{{ profile.teamlead }}</td>
-                <td>
+            <tr>
+               <td>{{ forloop.counter }}</td>
+               <td>{{ profile.user }}</td>
+               <td>{{ profile.employee_id }}</td>
+               <!-- <td><a href="{% url 'employee:update' profile.pk %}">{{ profile.user }}</a></td> -->
+               <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
+               <td>{{ profile.contact_no}}</td>
+               <td>{{ profile.get_designation_display }}</td>
+               <td>{{ profile.teamlead }}</td>
+               <td>
                   {% if profile.user.is_superuser %}
-                  
                   {% else %}
-                   {% if profile.user.is_active %}
-                      <button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button></td>
-                    {% else %}
-                    <button class="deactivateEmployee btn btn-success" id="Activate" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button>
-                    {% endif %}
-                  {% endif %}  
-                    
-                </td>
-                    <td>
-                      <a href="{% url 'employee:update' profile.pk %}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit" ></span></a>
-                      <a href="{% url 'employee:profile_list' profile.user.id %}" class="sameicon eyeicon"><span class="glyphicon glyphicon-eye-open" title="View" ></span></a>
-                      <a href="{% url 'employee:show_calendar' profile.user.id %}" class="sameicon calendaricon"><span class="glyphicon glyphicon-calendar" title="Calendar"></span></a> 
-                      <a href="{% url 'employee:employee_details' profile.user.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-time" title="Login"></span></a>
-                      <!-- TODO -->
-                    </td>
-              </tr>
-          {% endfor %}
-        </tbody>
-            </table>
-                <a type="button" class="background_colorbtn" href="{% url 'employee:signup' %}">Add User</a>
-          </div>
-          </div>
-        </div>
+                  {% if profile.user.is_active %}
+                  <button class="deactivateEmployee btn btn-danger" id="Deactivate" name="pk" value="{{ profile.pk }}" data-is_active="False">Deactivate</button>
+               </td>
+               {% else %}
+               <button class="deactivateEmployee btn btn-success" id="Activate" name="pk" value="{{ profile.pk }}" data-is_active="True">Activate</button>
+               {% endif %}
+               {% endif %}  
+               </td>
+               <td>
+                  <a href="{% url 'employee:update' profile.pk %}" class="sameicon pencilicon"><span class="glyphicon glyphicon-pencil" title="Edit" ></span></a>
+                  <a href="{% url 'employee:profile_list' profile.user.id %}" class="sameicon eyeicon"><span class="glyphicon glyphicon-eye-open" title="View" ></span></a>
+                  <a href="{% url 'employee:show_calendar' profile.user.id %}" class="sameicon calendaricon"><span class="glyphicon glyphicon-calendar" title="Calendar"></span></a> 
+                  <a href="{% url 'employee:employee_details' profile.user.id %}" class="sameicon timeicon"> <span class="glyphicon glyphicon-time" title="Login"></span></a>
+                  <!-- TODO -->
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+      <a type="button" class="background_colorbtn" href="{% url 'employee:signup' %}">Add User</a>
+   </div>
+</div>
+</div>
 {% endblock %}
 {% block extra_js %}
-  {{block.super}}
+{{block.super}}
 {% endblock extra_js %}
-

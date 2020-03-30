@@ -1,49 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-
 <h1>Attendance Record</h1>
-
 <table border="1">
-    <thead>
-         <tr>
-
-             <th>Id</th>
-
-
-             <th>Date</th>
-
-
-             <th>In Time</th>
-             <th>Out Time</th>
-
-
-         </tr>
-    </thead>
-
-         <tbody>
-{% for basic in basic_list %}
-{% for detail in detail_list %}
-<tr>
-    {% if detail.employee_attendance.employee_id  == basic.employee_id %}
-
-
-    <td>{{ basic.employee_id  }}</td>
-
-
-
-    <td>{{ detail.date }}</td>
-
-<td>{{ detail.in_time }}</td>
-    <td>{{ detail.out_time }}</td>
-
-
-    {% endif %}
-
-</tr>
-
-{% endfor %}
-{% endfor %}
-</tbody>
+   <thead>
+      <tr>
+         <th>Id</th>
+         <th>Date</th>
+         <th>In Time</th>
+         <th>Out Time</th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for basic in basic_list %}
+      {% for detail in detail_list %}
+      <tr>
+         {% if detail.employee_attendance.employee_id  == basic.employee_id %}
+         <td>{{ basic.employee_id  }}</td>
+         <td>{{ detail.date }}</td>
+         <td>{{ detail.in_time }}</td>
+         <td>{{ detail.out_time }}</td>
+         {% endif %}
+      </tr>
+      {% endfor %}
+      {% endfor %}
+   </tbody>
 </table>
-
 {% endblock %}

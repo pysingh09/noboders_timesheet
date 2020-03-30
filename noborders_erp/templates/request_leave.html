@@ -2,367 +2,337 @@
 {% load widget_tweaks %}
 {% block content %}
 <style type="text/css">
-  .errorlist{
-    color:red;
-    list-style: none;
-  }
+   .errorlist{
+   color:red;
+   list-style: none;
+   }
 </style>
 {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            
-                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} 
-                  <div class="alert alert-danger">
-                      <strong>{{ message }}</strong>
-
-                  </div>
-
-                {% else %}
-                     
-                        <div class="alert alert-success">
-                            <strong>{{ message }}</strong>
-
-                        </div>   
-                {% endif %}
-          
-        {% endfor %}
-    </ul>
+<ul class="messages">
+   {% for message in messages %}
+   {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} 
+   <div class="alert alert-danger">
+      <strong>{{ message }}</strong>
+   </div>
+   {% else %}
+   <div class="alert alert-success">
+      <strong>{{ message }}</strong>
+   </div>
+   {% endif %}
+   {% endfor %}
+</ul>
 {% endif %}
-
-    <h2 class="employeehead">Leave</h2>
-        {% if form.errors %}
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <div class="alert alert-danger">
-                        <strong>{{ field.label }} : {{ error|escape }}</strong>
-                    </div>
-                {% endfor %}
+<h2 class="employeehead">Leave</h2>
+{% if form.errors %}
+{% for field in form %}
+{% for error in field.errors %}
+<div class="alert alert-danger">
+   <strong>{{ field.label }} : {{ error|escape }}</strong>
+</div>
+{% endfor %}
+{% endfor %}
+{% for error in form.non_field_errors %}
+<div class="alert alert-danger">
+   <strong>{{ error|escape }}</strong>
+</div>
+{% endfor %}
+{% endif %}
+<div class="card cardleave">
+   <!-- {% if message %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div> 
+      {% endif %} -->
+   <form action="" method="POST"  >
+      {% csrf_token %}
+      <div class="col-md-6 col-sm-6 col-xs-12 pr-l0">
+         <div class="form-group col-sm-12 pr-l0 input_widthdiv">
+            <label for="sel1">Select leave :</label>
+            {{ form.select_leave|add_class:"form-control" }}
+         </div>
+         <div class="form-group col-sm-12 pr-l0 input_widthdiv">
+            <label for="sel1">Select leave type :</label>
+            {{ form.leave_type|add_class:"form-control" }}
+         </div>
+         <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="startdate">
+            <label for="sel1">Start Date:</label>
+            {{ form.startdate|add_class:"form-control"|attr:"readonly:readonly"}}
+         </div>
+         <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="starttime">
+            <label for="sel1">Time:</label>
+            {{ form.starttime|add_class:"form-control" }}
+         </div>
+         <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="enddate">
+            <label for="sel1">End Date:</label>
+            {{ form.enddate|add_class:"form-control"|attr:"readonly:readonly" }}
+         </div>
+         <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="endtime">
+            <label for="sel1">Time:</label>
+            {{ form.endtime|add_class:"form-control"|attr:"disabled:true"}}
+         </div>
+         <!--{{ form.endtime|add_class:"form-control"|attr:"disabled:true" }}-->
+         <div class="form-group col-md-12 col-sm-12 col-xs-12 pr-l0 input_widthdiv" id="reason">
+            <label for="sel1">Reason:</label>
+            {{ form.reason|add_class:"form-control" }}
+         </div>
+         <input type="hidden" id="emails" value="" name="emails">
+         <div class="form-group col-md-12 col-sm-12 col-xs-12 pr-l0 mailhide" id="selectemail">
+            {% for email in mail_list %}   
+            <div style="margin: 2px;" class="btn btn-primary">{{ email }}</div>
             {% endfor %}
-            {% for error in form.non_field_errors %}
-                <div class="alert alert-danger">
-                    <strong>{{ error|escape }}</strong>
-                </div>
-            {% endfor %}
-        {% endif %}
-    <div class="card cardleave">
-
-        <!-- {% if message %}
-        <div class="alert alert-danger">
-          {{ message }}
-        </div> 
-        {% endif %} -->
-        <form action="" method="POST"  >
-        {% csrf_token %}
-            <div class="col-md-6 col-sm-6 col-xs-12 pr-l0">
-                <div class="form-group col-sm-12 pr-l0 input_widthdiv">
-                  <label for="sel1">Select leave :</label>
-                  {{ form.select_leave|add_class:"form-control" }}
-                </div>
-
-                <div class="form-group col-sm-12 pr-l0 input_widthdiv">
-                  <label for="sel1">Select leave type :</label>
-                  {{ form.leave_type|add_class:"form-control" }}
-                </div>
-
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="startdate">
-                  <label for="sel1">Start Date:</label>
-                  {{ form.startdate|add_class:"form-control"|attr:"readonly:readonly"}}
-                  
-                </div>
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="starttime">
-                  <label for="sel1">Time:</label>
-                  {{ form.starttime|add_class:"form-control" }}
-                </div>
-
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="enddate">
-                  <label for="sel1">End Date:</label>
-                  {{ form.enddate|add_class:"form-control"|attr:"readonly:readonly" }}
-                </div>
-
-                <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12 pr-l0 input_widthdiv" id="endtime">
-                  <label for="sel1">Time:</label>
-                  {{ form.endtime|add_class:"form-control"|attr:"disabled:true"}}
-                </div>
-                <!--{{ form.endtime|add_class:"form-control"|attr:"disabled:true" }}-->
-                <div class="form-group col-md-12 col-sm-12 col-xs-12 pr-l0 input_widthdiv" id="reason">
-                  <label for="sel1">Reason:</label>
-                  {{ form.reason|add_class:"form-control" }}
-                </div>
-            
-                <input type="hidden" id="emails" value="" name="emails">
-                <div class="form-group col-md-12 col-sm-12 col-xs-12 pr-l0 mailhide" id="selectemail">
-                    {% for email in mail_list %}   
-                        <div style="margin: 2px;" class="btn btn-primary">{{ email }}</div>
-                    {% endfor %}
-                </div> <!-- get email id-->
-
-                <div class="orm-group col-md-12 cardrow">
-                  <button class="background_colorbtn" data-id="selectemail">Submit</button>
-                </div>
-
-            </div> <!--end of col sm 6-->
-            <div class = "dropdown email-drop col-md-6 col-sm-5 text-right pull-right">
-             
-                <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
-                    <div id="myDropdown" class = "dropdown-menu drop pull-right" role = "menu">
-                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
-                            {% for em in email_data %}    
-                            <li><a class="emailtext">{{ em }}</a></li>
-                            {% endfor %}      
-                    </div>
-            </div>      
-        </form>
-    </div>
-
-
+         </div>
+         <!-- get email id-->
+         <div class="orm-group col-md-12 cardrow">
+            <button class="background_colorbtn" data-id="selectemail">Submit</button>
+         </div>
+      </div>
+      <!--end of col sm 6-->
+      <div class = "dropdown email-drop col-md-6 col-sm-5 text-right pull-right">
+         <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown" onclick="myFunction()"><span class = "caret"></span>Select Email Option</button>
+         <div id="myDropdown" class = "dropdown-menu drop pull-right" role = "menu">
+            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> 
+            {% for em in email_data %}    
+            <li><a class="emailtext">{{ em }}</a></li>
+            {% endfor %}      
+         </div>
+      </div>
+   </form>
+</div>
 {% endblock %}
-
 <!--java script -->
 {% block script %}
-
 {{ block.super }}
-  <script type="text/javascript">
-    function add_email(){
-      $("#emails").val();
-
-      var emails = $('#selectemail').children();
-      var email = [] ;
-
-       for(i=0;i<emails.length;i++)
-          {
-
-            email.push($(emails[i]).text()+'');
+<script type="text/javascript">
+   function add_email(){
+     $("#emails").val();
    
-          }
-        $("#emails").val(email);
-
-    }
-
-    $(document).on('click', '.removeemailtext', function(){
-      $('.drop').append('<li><a class="emailtext" >'+$(this).text()+'</a></li>');
-      $(this).remove();
-      add_email();
-    });
-
-    $(document).on('click', '.emailtext', function(){
-      $(this).remove();
-      $("#selectemail").append('<div style="margin: 2px;" class="removeemailtext btn btn-primary">'+$(this).text()+'</div>')
-      
-      add_email();
-    });
-    $(function(){
-      // $('#startdate').hide();
-      // $('#enddate').hide();
-      // $('#starttime').hide();
-      // $('#endtime').hide();
-      $('#reason').show();
-    $(document).on('change', '#id_leave_type', function(){
-      
-      $('#id_startdate').val("");
-      $('#id_enddate').val("");
-      $('#id_starttime').val("");
-      $('#id_endtime').val("");
-
-      $('#startdate').hide();
-      $('#enddate').hide();
-      $('#starttime').hide();
-      $('#endtime').hide();
-      $('#reason').show();
-
-      if (this.value == "3")
-      {
-        $('#startdate').show();
-        $('#enddate').show();
-      }else if (this.value == "2")
-      {
-        $('#startdate').show();
-        $('#enddate').show();
-        $('#starttime').show();
-        $('#endtime').show();
-      }
-    })
-  });
-
-
-        $( document ).ready(function() {     
-                $( "#id_enddate" ).datepicker({ 
-                    // autoclose: true, 
-                    // todayHighlight: true,
-                    dateFormat: 'yy-mm-dd',
-                      // beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
-                    // minDate: 0,
-                    onSelect: function(date) {
-                       if($('#id_leave_type').val() == '2')
-                         {
-                          $("#id_startdate").val($("#id_enddate").val());
-                         }
-                     }
-
-                });
-
-        });
- $(document).on('change', '#id_select_leave', function(){ 
-            $( "#id_startdate" ).datepicker('setDate', null);
-            $( "#id_enddate" ).datepicker('setDate', null);
-            var leave = $(this).val()
-                if(leave==='1'){
-
-                    $( "#id_startdate" ).datepicker('destroy').datepicker({ 
-                        minDate: +2, 
-                        // maxDate: ,
-                        autoclose: true, 
-                        todayHighlight: true,
-                        dateFormat: 'yy-mm-dd',
-
-                    onSelect: function(date) {
-                       
-
-                       $("#id_enddate").datepicker('option', date);
-                       if($('#id_leave_type').val() == '2')
-                         {
-                          $("#id_enddate").val($("#id_startdate").val());
-                         }
-                     }
-
-                });
-            }else if (leave==='2'){
-                $( "#id_startdate" ).datepicker('destroy').datepicker({ 
-                        maxDate:+1, 
-                        autoclose: true, 
-                        todayHighlight: true,
-                        dateFormat: 'yy-mm-dd',
-
-                        // maxDate: 1,
-                    onSelect: function(date){
-                       
-
-                       $("#id_enddate").datepicker('option', date);
-                       if($('#id_leave_type').val() == '2')
-                         {
-                          $("#id_enddate").val($("#id_startdate").val());
-                         }
-                     }
-
-                });
-
-            }
-        }); 
-
-
-
-$(document).on("change","#starttime",function(){
-
-    var currentTime = $(this).find('select').val()
-    var time = currentTime.split(':');
-    var hour = time[0];
-    var minute = time[1];
-    var newHour = parseInt(hour) + 4;
-
-    newHour = newHour.toString()
-    var newTime = newHour + ':' + minute;
-    $('#id_endtime').val(newTime).attr('selected', 'true');
-
-
-});
-
-
-// $(document).on("click","#demo",function(){
-//    
-//    var checked = $(this).prop('click');
-
-//    if( checked == true){
- 
-//      $('.mychkboxs').find('input:click').prop('checked', checked);
-//    }
-//      else if(checked == false){
-              
-//                 alert("Checkbox is unchecked.");
-//               }
-
-// });
-
+     var emails = $('#selectemail').children();
+     var email = [] ;
+   
+      for(i=0;i<emails.length;i++)
+         {
+   
+           email.push($(emails[i]).text()+'');
+   
+         }
+       $("#emails").val(email);
+   
+   }
+   
+   $(document).on('click', '.removeemailtext', function(){
+     $('.drop').append('<li><a class="emailtext" >'+$(this).text()+'</a></li>');
+     $(this).remove();
+     add_email();
+   });
+   
+   $(document).on('click', '.emailtext', function(){
+     $(this).remove();
+     $("#selectemail").append('<div style="margin: 2px;" class="removeemailtext btn btn-primary">'+$(this).text()+'</div>')
+     
+     add_email();
+   });
+   $(function(){
+     // $('#startdate').hide();
+     // $('#enddate').hide();
+     // $('#starttime').hide();
+     // $('#endtime').hide();
+     $('#reason').show();
+   $(document).on('change', '#id_leave_type', function(){
+     
+     $('#id_startdate').val("");
+     $('#id_enddate').val("");
+     $('#id_starttime').val("");
+     $('#id_endtime').val("");
+   
+     $('#startdate').hide();
+     $('#enddate').hide();
+     $('#starttime').hide();
+     $('#endtime').hide();
+     $('#reason').show();
+   
+     if (this.value == "3")
+     {
+       $('#startdate').show();
+       $('#enddate').show();
+     }else if (this.value == "2")
+     {
+       $('#startdate').show();
+       $('#enddate').show();
+       $('#starttime').show();
+       $('#endtime').show();
+     }
+   })
+   });
+   
+   
+       $( document ).ready(function() {     
+               $( "#id_enddate" ).datepicker({ 
+                   // autoclose: true, 
+                   // todayHighlight: true,
+                   dateFormat: 'yy-mm-dd',
+                     // beforeShowDay: function(date){ return [date.getDay() == 6 ||date.getDay() == 5 ||date.getDay() == 4 ||date.getDay() == 3|| date.getDay() == 2 || date.getDay() == 1,""]},
+                   // minDate: 0,
+                   onSelect: function(date) {
+                      if($('#id_leave_type').val() == '2')
+                        {
+                         $("#id_startdate").val($("#id_enddate").val());
+                        }
+                    }
+   
+               });
+   
+       });
+   $(document).on('change', '#id_select_leave', function(){ 
+           $( "#id_startdate" ).datepicker('setDate', null);
+           $( "#id_enddate" ).datepicker('setDate', null);
+           var leave = $(this).val()
+               if(leave==='1'){
+   
+                   $( "#id_startdate" ).datepicker('destroy').datepicker({ 
+                       minDate: +2, 
+                       // maxDate: ,
+                       autoclose: true, 
+                       todayHighlight: true,
+                       dateFormat: 'yy-mm-dd',
+   
+                   onSelect: function(date) {
+                      
+   
+                      $("#id_enddate").datepicker('option', date);
+                      if($('#id_leave_type').val() == '2')
+                        {
+                         $("#id_enddate").val($("#id_startdate").val());
+                        }
+                    }
+   
+               });
+           }else if (leave==='2'){
+               $( "#id_startdate" ).datepicker('destroy').datepicker({ 
+                       maxDate:+1, 
+                       autoclose: true, 
+                       todayHighlight: true,
+                       dateFormat: 'yy-mm-dd',
+   
+                       // maxDate: 1,
+                   onSelect: function(date){
+                      
+   
+                      $("#id_enddate").datepicker('option', date);
+                      if($('#id_leave_type').val() == '2')
+                        {
+                         $("#id_enddate").val($("#id_startdate").val());
+                        }
+                    }
+   
+               });
+   
+           }
+       }); 
+   
+   
+   
+   $(document).on("change","#starttime",function(){
+   
+   var currentTime = $(this).find('select').val()
+   var time = currentTime.split(':');
+   var hour = time[0];
+   var minute = time[1];
+   var newHour = parseInt(hour) + 4;
+   
+   newHour = newHour.toString()
+   var newTime = newHour + ':' + minute;
+   $('#id_endtime').val(newTime).attr('selected', 'true');
+   
+   
+   });
+   
+   
+   // $(document).on("click","#demo",function(){
+   //    
+   //    var checked = $(this).prop('click');
+   
+   //    if( checked == true){
+   
+   //      $('.mychkboxs').find('input:click').prop('checked', checked);
+   //    }
+   //      else if(checked == false){
+             
+   //                 alert("Checkbox is unchecked.");
+   //               }
+   
+   // });
+   
 </script>
 <style>
-.dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #3e8e41;
-}
-
-#myInput {
-  box-sizing: border-box;
-  background-image: url('searchicon.png');
-  background-position: 14px 12px;
-  background-repeat: no-repeat;
-  font-size: 16px;
-  padding: 6px 20px 3px 29px;
-  border: none;
-  border-bottom: 1px solid #ddd;
-}
-.dropdown .dropdown-menu.drop.pull-right {
-    right: 14px;
-    left: auto;
-}
-
-#myInput:focus {outline: 3px solid #ddd;}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f6f6f6;
-  min-width: 230px;
-  overflow: auto;
-  border: 1px solid #ddd;
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown a:hover {background-color: #ddd;}
-
-.show {display: block;}
+   .dropbtn {
+   background-color: #4CAF50;
+   color: white;
+   padding: 16px;
+   font-size: 16px;
+   border: none;
+   cursor: pointer;
+   }
+   .dropbtn:hover, .dropbtn:focus {
+   background-color: #3e8e41;
+   }
+   #myInput {
+   box-sizing: border-box;
+   background-image: url('searchicon.png');
+   background-position: 14px 12px;
+   background-repeat: no-repeat;
+   font-size: 16px;
+   padding: 6px 20px 3px 29px;
+   border: none;
+   border-bottom: 1px solid #ddd;
+   }
+   .dropdown .dropdown-menu.drop.pull-right {
+   right: 14px;
+   left: auto;
+   }
+   #myInput:focus {outline: 3px solid #ddd;}
+   .dropdown {
+   position: relative;
+   display: inline-block;
+   }
+   .dropdown-content {
+   display: none;
+   position: absolute;
+   background-color: #f6f6f6;
+   min-width: 230px;
+   overflow: auto;
+   border: 1px solid #ddd;
+   z-index: 1;
+   }
+   .dropdown-content a {
+   color: black;
+   padding: 12px 16px;
+   text-decoration: none;
+   display: block;
+   }
+   .dropdown a:hover {background-color: #ddd;}
+   .show {display: block;}
 </style>
-
 <script>
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
-
-function filterFunction() {
-  var input, filter, a, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
-    }
-  }
-}
+   /* When the user clicks on the button,
+   toggle between hiding and showing the dropdown content */
+   function myFunction() {
+     document.getElementById("myDropdown").classList.toggle("show");
+   }
+   
+   function filterFunction() {
+     var input, filter, a, i;
+     input = document.getElementById("myInput");
+     filter = input.value.toUpperCase();
+     div = document.getElementById("myDropdown");
+     a = div.getElementsByTagName("a");
+     for (i = 0; i < a.length; i++) {
+       txtValue = a[i].textContent || a[i].innerText;
+       if (txtValue.toUpperCase().indexOf(filter) > -1) {
+         a[i].style.display = "";
+       } else {
+         a[i].style.display = "none";
+       }
+     }
+   }
 </script>
-
-
 {% endblock %}

@@ -2,62 +2,50 @@
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block content %}
-
 <div class="justify-content-center">
- <div class="col=8">
-  <h3 class="employeehead">Employee Details</h3>
-  <div class="card">
-    <div class="card-body">
-     <h2>Update Employee Details</h2>
-    {% if form.errors %}
-           {% for field in form %}
-               {% for error in field.errors %}
-                   <div class="alert alert-danger">
-                       <strong>{{ field.label }} : {{ error|escape }}</strong>
-                   </div>
-               {% endfor %}
-           {% endfor %}
-           {% for error in form.non_field_errors %}
-               <div class="alert alert-danger">
-                   <strong>{{ error|escape }}</strong>
+   <div class="col=8">
+      <h3 class="employeehead">Employee Details</h3>
+      <div class="card">
+         <div class="card-body">
+            <h2>Update Employee Details</h2>
+            {% if form.errors %}
+            {% for field in form %}
+            {% for error in field.errors %}
+            <div class="alert alert-danger">
+               <strong>{{ field.label }} : {{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+               <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <form class="form-horizontal signup_form sign_form1" method="post" action="" enctype="multipart/form-data" novalidate autocomplete="off">
+               {% csrf_token %}
+               <div class="col-md-6">
+                  <label>First Name:</label>
+                  {{ form.first_name }}
                </div>
-           {% endfor %}
-       {% endif %}
-
-       <form class="form-horizontal signup_form sign_form1" method="post" action="" enctype="multipart/form-data" novalidate autocomplete="off">
-
-          {% csrf_token %}
-            
-            
-        <div class="col-md-6">
-          <label>First Name:</label>
-          {{ form.first_name }}
-        </div>
-
-        <div class="col-md-6">
-          <label>Last Name :</label>
-          {{ form.last_name }}
-        </div>
-
-        <div class="col-md-6">
-          <label>Contact number:</label>
-          {{ form.contact_no }}
-        </div>
-
-        <div class="col-md-6">
-          <label>Profile Upload :</label>
-          {{ form.profile_image }}
-        </div>
-        
-        <div class="cardrow">
-          <button class="background_colorbtn updatebutton" type="submit">Update</button>
-        </div>
-       </form>
-     </div>
+               <div class="col-md-6">
+                  <label>Last Name :</label>
+                  {{ form.last_name }}
+               </div>
+               <div class="col-md-6">
+                  <label>Contact number:</label>
+                  {{ form.contact_no }}
+               </div>
+               <div class="col-md-6">
+                  <label>Profile Upload :</label>
+                  {{ form.profile_image }}
+               </div>
+               <div class="cardrow">
+                  <button class="background_colorbtn updatebutton" type="submit">Update</button>
+               </div>
+            </form>
+         </div>
+      </div>
    </div>
- </div>
 </div>
-
 {% endblock %}
-
-
