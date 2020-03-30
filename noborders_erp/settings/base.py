@@ -41,7 +41,9 @@ SECRET_KEY = "b6ehjxx)la#yrzhlt$e!+to=$p$#%uz4coa!0*9bxeu9w&-zm0"
 
 # ALLOWED_HOSTS = ["*"]
 
-DEBUG = False
+#DEBUG = False
+
+DEBUG = True
 ALLOWED_HOSTS =  ["*"]
 
 # Application definition
@@ -57,7 +59,6 @@ INSTALLED_APPS = [
     "django_filters",
     "django_extensions",
     "employee",
-    'crispy_forms',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -168,10 +169,7 @@ STATICFILES_DIRS = [
 AUTH_USER_EMAIL_UNIQUE = True
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
-<<<<<<< HEAD
-=======
 
->>>>>>> new_ashutosh
 
 
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (

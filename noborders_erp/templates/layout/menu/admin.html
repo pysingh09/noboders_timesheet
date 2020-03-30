@@ -4,9 +4,8 @@
         <li class="{% if request.resolver_match.view_name == 'employee:home' %}active{% endif %}">               
             <a href="{% url 'employee:home' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>Dashboard</a>
    
-                <li class="{% if request.resolver_match.view_name == 'employee:file_upload' %}active{% endif %}"><a href="{% url 'employee:new_upload_excel' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-upload fa-stack-1x "></i></span>Upload Report</a></li>
-                <li class="{% if request.resolver_match.view_name == 'employee:new_upload_excel' %}active{% endif %}"><a href="{% url 'employee:new_upload_excel' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-upload fa-stack-1x "></i></span>Upload Attendance File</a></li>
-
+                <li class="{% if request.resolver_match.view_name == 'employee:new_upload_excel' %}active{% endif %}"><a href="{% url 'employee:new_upload_excel' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-upload fa-stack-1x "></i></span>Upload Report</a></li>
+              
                 <li class="{% if request.resolver_match.view_name == 'employee:signup' %}active{% endif %}"><a href="{% url 'employee:signup' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-user fa-stack-1x "></i></span>Create New Employee</a></li>
 
                 <li class="{% if request.resolver_match.view_name == 'employee:employee_list' %}active{% endif %}"><a href="{% url 'employee:employee_list' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-users fa-stack-1x "></i></span>All Employee List</a></li>

@@ -1,65 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{% load staticfiles %}
 {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            
-                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} 
-                <div class="alert alert-danger">
-                    <strong>{{ message }}</strong>
-
-                </div>
-                    {% else %}
-                     
-                        <div class="alert alert-success">
-                            <strong>{{ message }}</strong>
-
-                        </div>   
-                {% endif %}
-          
-        {% endfor %}
-    </ul>
+<ul class="messages">
+   {% for message in messages %}
+   {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+   <div class="alert alert-danger">
+      <strong>{{ message }}</strong>
+   </div>
+   {% else %}
+   <div class="alert alert-success">
+      <strong>{{ message }}</strong>
+   </div>
+   {% endif %}
+   {% endfor %}
+</ul>
 {% endif %}
-
-
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filecard">
-    <h3 class="employeehead">Upload File</h3>
-    <span class="pull-right back-button" onClick="javascript:history.go(-1);">
-       Back
-      </span>
-    <div class="card card-upload">
-        
-        <form action="{% url 'employee:file_upload' %}" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
-            {% csrf_token %}
-            <div class="form-group nomargiform">
-                <label for="name" class="col-md-1 col-sm-3 col-xs-12 control-label">File: </label>
-                <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                    <input type="file" name="excel_file" id="excel_file" required="True" class="form-control">
-                </div>                    
+   <h3 class="employeehead">Upload File</h3>
+   <span class="pull-right back-button" onClick="javascript:history.go(-1);">
+   Back
+   </span>
+   <div class="card card-upload">
+      <form action="{% url 'employee:file_upload' %}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+         {% csrf_token %}
+         <div class="form-group nomargiform">
+            <label for="name" class="col-md-1 col-sm-3 col-xs-12 control-label">File: </label>
+            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+               <input type="file" name="excel_file" id="excel_file" required="True" class="form-control">
             </div>
-            <div class="form-group nomargiform">                    
-                <div class="col-md-3 col-sm-4 col-sm-offset-1 col-md-offset-1 col-xs-12" style="margin-bottom:10px;">
-                    <button class="upload background_colorbtn"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload</button> 
-                </div> 
+         </div>
+         <div class="form-group nomargiform">
+            <div class="col-md-3 col-sm-4 col-sm-offset-1 col-md-offset-1 col-xs-12" style="margin-bottom:10px;">
+               <button class="upload background_colorbtn"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload</button>
             </div>
-        </form>
-    </div>
+            <a href="sample_attendance_file.xls" download><button>Download Sample File</button></a>
+         </div>
+      </form>
+   </div>
 </div>
-
-<script>
-//      $(document).ready(function(){
-//     $(document).on("click",".upload",function(){
-//          onSuccess:function()
-//     {
-//         alert("File Uploaded successfully");
-//     },
-//         onError: function()
-//     {       
-//         alert("Upload Failed");
-//     }
-// });
-// });
-</script>
-
 {% endblock %}

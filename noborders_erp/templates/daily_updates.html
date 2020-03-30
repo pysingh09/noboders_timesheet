@@ -10,7 +10,6 @@
    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
 </head>
 <button onclick="refresh()" class="btn btn-primary btn-lg">refresh</button> 
-
 <h3 class="top-heading">All employe daily report</h3>
 <label>Select name</label>
 <select id ='nameselection' class="selectpicker" data-show-subtext="true" data-live-search="true">
@@ -39,7 +38,10 @@ End date :<input type="date" name="end_date"  id ='end'class="form-control"
 <button type="submit" onclick='search_date()'class="btn btn-primary btn-lg">search date</button>
 <br>
 <br>
-<button onclick="search_all()" class="btn btn-primary btn-lg">search all</<table id ='selectemp' border="5" class="table datatable">
+<br>
+<button onclick="search_all()" class="btn btn-primary btn-lg">search all</button>
+<br>
+<table id ='selectemp' border="5" class="table datatable">
    <thead >
       <th class="sorting_asc">Date</th>
       <th class="sorting">Employe name</th>
