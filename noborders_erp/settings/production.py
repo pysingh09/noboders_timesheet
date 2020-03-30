@@ -2,9 +2,12 @@ import dj_database_url
 from .base import *
 import os,sys
 
-DEBUG = False
+
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+# DEBUG = False
+# ALLOWED_HOSTS =  ['localhost', '127.0.0.1:8000']
 
 # DATABASES = {
 #     'default': {

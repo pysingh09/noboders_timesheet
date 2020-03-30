@@ -2,23 +2,19 @@ import json, csv, io
 from datetime import datetime, date, timedelta, tzinfo, timezone
 import datetime as only_datetime
 from dateutil import relativedelta
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.generic import View, ListView, TemplateView, UpdateView, DetailView
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic import View, ListView, TemplateView, CreateView
-from django.contrib.auth.decorators import (
-    login_required,
-    permission_required,
-    user_passes_test,
-)
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.forms import ValidationError
 from django.template.loader import render_to_string
 from django.db.models import Q
 import smtplib
-from django.shortcuts import render
 
 
 from .models import (
@@ -33,7 +29,8 @@ from .models import (
     Client,
     AssignProject,
     EmployeeDailyUpdate,
-)
+    AttendanceDetails,
+    )
 from .forms import (
     SignUpForm,
     ProfileForm,
@@ -48,7 +45,6 @@ from .forms import (
     AssignForm,
     EmployeeDailyUpdateForm,
     EditDailyUpdateForm,
-    AddProfileForm,
 )
 
 from django.contrib.auth.models import User
@@ -89,53 +85,44 @@ fs = FileSystemStorage()
 
 
 def emp_wise_attendance(request):
-    if request.method == "POST":
-        emp_name = request.POST.get("emp_name", "")
+    if request.method == 'POST':
+        emp_name = request.POST.get('emp_name', '')
         detailed_object = EmpMonthlyAttendance.objects.get(emp_name=emp_name)
         emp_details = AttendanceDetails.objects.filter(emp=detailed_object)
-        return render(
-            request,
-            "employee_wise_attendance.html",
-            {"emp_basic": detailed_object, "emp_detail": emp_details},
-        )
+        return render(request, 'employee_wise_attendance.html', {'emp_basic': detailed_object,
+                                                                 'emp_detail': emp_details})
     else:
-        return render(request, "show_attendance.html", {})
+        return render(request, 'show_attendance.html', {})
 
 
-def uploadExcel(request):
+
+
+
+def new_emp_wise_attendance(request):
+    if request.method == 'POST':
+        emp_name = request.POST.get('emp_name', '')
+        detailed_object = EmpMonthlyAttendance.objects.get(emp_name=emp_name)
+        emp_details = AttendanceDetails.objects.filter(emp=detailed_object)
+        return render(request, 'employee_wise_attendance.html', {'emp_basic': detailed_object,
+                                                                 'emp_detail': emp_details})
+    else:
+        return render(request, 'show_attendance.html', {})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def new_uploadExcel(request):
     if request.method == "POST":
         # import pdb;pdb.set_trace()
         file = request.FILES["upload_excel"]
         workbook = xlrd.open_workbook(file_contents=file.read())
-        dept_name, emp_name, report_month, emp_code, date, day, shift = (
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )
-        in_time, out_time, wrk_hrs, ot, status, remark, total_present = (
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )
-        total_abs, total_wo, total_wkr_hrs, total_ot_hrs, emp_att = (
-            None,
-            None,
-            None,
-            None,
-            None,
-        )
+        dept_name, emp_name, report_month, emp_code, date, day, shift = None, None, None, None, None, None, None
+        in_time, out_time, wrk_hrs, ot, status, remark, total_present = None, None, None, None, None, None, None
+        total_abs, total_wo, total_wkr_hrs, total_ot_hrs, emp_att = None, None, None, None, None
 
         sheet = workbook.sheet_by_index(0)
         for j in range(sheet.nrows):
-            if sheet.cell_value(j, 0) == "No Borders ":
+            if sheet.cell_value(j, 0) == 'No Borders ':
                 dept_name = sheet.cell_value(j + 1, 1)
                 report_month = sheet.cell_value(j + 1, 9)
                 emp_code = sheet.cell_value(j + 2, 1)
@@ -149,237 +136,70 @@ def uploadExcel(request):
 
                 print("*********** ", emp.user)
                 if emp:
-                    EmpMonthlyAttendance.objects.update_or_create(
-                        emp=emp.user,
-                        dept_name=dept_name,
-                        emp_code=emp_code,
-                        emp_name=emp_name,
-                        report_month=report_month,
-                    )
+                    EmployeeAttendance.objects.update_or_create(user=emp.user, employee_id=emp_code)
 
                 for k in range(j + 4, sheet.nrows):
                     k = k - j
-                    print(
-                        "@@@@   k = ",
-                        k,
-                        "  j = ",
-                        j,
-                        "  ",
-                        sheet.nrows,
-                        "   ",
-                        sheet.cell_value(k, 0),
-                    )
-                    if sheet.cell_value(k, 0) == "Total Present":
+                    print("@@@@   k = ", k, "  j = ", j, "  ", sheet.nrows, "   ", sheet.cell_value(k, 0))
+                    if sheet.cell_value(k, 0) == 'Total Present':
                         j = j + k
                         break
 
                     date = sheet.cell_value(k, 0)
+                    if date == "":
+                        continue
+                    date = datetime.strptime(date, "%d/%m/%Y")
+                    print("***********       ", date)
                     day = sheet.cell_value(k, 1)
                     shift = sheet.cell_value(k, 2)
                     in_time = sheet.cell_value(k, 3)
+                    if in_time == "--:--":
+                        in_time = datetime.strptime("00:00", "%H:%M")
+                    elif in_time == "":
+                        in_time = datetime.strptime("00:00", "%H:%M")
+                    else:
+                        in_time = datetime.strptime(in_time, "%H:%M")
                     out_time = sheet.cell_value(k, 6)
+                    if out_time == "--:--":
+                        out_time = datetime.strptime("00:00", "%H:%M")
+                    elif out_time == "":
+                        out_time = datetime.strptime("00:00", "%H:%M")
+                    else:
+                        out_time = datetime.strptime(out_time, "%H:%M")
+
                     wrk_hrs = sheet.cell_value(k, 7)
                     ot = sheet.cell_value(k, 8)
                     status = sheet.cell_value(k, 9)
                     remark = sheet.cell_value(k, 10)
 
-                    emp_att = EmpMonthlyAttendance.objects.get(emp_code=emp_code)
+                    emp_att = EmployeeAttendance.objects.get(employee_id=emp_code)
 
                     if emp_att:
-                        AttendanceDetails.objects.update_or_create(
-                            emp=emp_att,
-                            date=date,
-                            day=day,
-                            shift=shift,
-                            in_time=in_time,
-                            out_time=out_time,
-                            working_hrs=wrk_hrs,
-                            ot=ot,
-                            status=status,
-                            remark=remark,
-                        )
+                        EmployeeAttendanceDetail.objects.update_or_create(employee_attendance=emp_att, date=date,
+                                                                   in_time=in_time,
+                                                                   out_time=out_time)
 
                 print("   Hi   There I am J   ", j)
-                total_present = sheet.cell_value(j, 1)
-                total_abs = sheet.cell_value(j, 4)
-                total_wo = sheet.cell_value(j, 7)
-                total_wkr_hrs = sheet.cell_value(j + 1, 1)
-                total_ot_hrs = sheet.cell_value(j + 1, 4)
-                if emp_att:
-                    EmployeeTotalAttendanceStatus.objects.update_or_create(
-                        emp=emp_att,
-                        total_present=int(total_present)
-                        if total_present.strip()
-                        else 0,
-                        total_abs=int(total_abs) if total_present.strip() else 0,
-                        total_working_hrs=int(total_wkr_hrs)
-                        if total_present.strip()
-                        else 0,
-                        total_wo=int(total_wo) if total_present.strip() else 0,
-                        total_ot_hrs=int(total_ot_hrs) if total_present.strip() else 0,
-                    )
-        basic_emp_attendance = EmpMonthlyAttendance.objects.all()
-        detailed_attendance = AttendanceDetails.objects.all()
+                # total_present = sheet.cell_value(j, 1)
+                # total_abs = sheet.cell_value(j, 4)
+                # total_wo = sheet.cell_value(j, 7)
+                # total_wkr_hrs = sheet.cell_value(j + 1, 1)
+                # total_ot_hrs = sheet.cell_value(j + 1, 4)
+                # if emp_att:
+                #     EmployeeTotalAttendanceStatus.objects.update_or_create(
+                #         emp=emp_att,
+                #         total_present=int(total_present) if total_present.strip() else 0,
+                #         total_abs=int(total_abs) if total_present.strip() else 0,
+                #         total_working_hrs=int(total_wkr_hrs) if total_present.strip() else 0,
+                #         total_wo=int(total_wo) if total_present.strip() else 0,
+                #         total_ot_hrs=int(total_ot_hrs) if total_present.strip() else 0
+                #     )
+        basic_emp_attendance = EmployeeAttendance.objects.all()
+        detailed_attendance = EmployeeAttendanceDetail.objects.all()
 
-        return render(
-            request,
-            "show_attendance.html",
-            {"basic_list": basic_emp_attendance, "detail_list": detailed_attendance},
-        )
-    return render(request, "upload_excel.html", {})
-
-
-def new_emp_wise_attendance(request):
-    if request.method == "POST":
-        emp_name = request.POST.get("emp_name", "")
-        detailed_object = EmpMonthlyAttendance.objects.get(emp_name=emp_name)
-        emp_details = AttendanceDetails.objects.filter(emp=detailed_object)
-        return render(
-            request,
-            "employee_wise_attendance.html",
-            {"emp_basic": detailed_object, "emp_detail": emp_details},
-        )
-    else:
-        return render(request, "show_attendance.html", {})
-
-
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def new_uploadExcel(request):
-    if request.method == "POST":
-        # import pdb;pdb.set_trace()
-        if request.FILES:
-            file = request.FILES["upload_excel"]
-            workbook = xlrd.open_workbook(file_contents=file.read())
-            dept_name, emp_name, report_month, emp_code, date, day, shift = (
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-            )
-            in_time, out_time, wrk_hrs, ot, status, remark, total_present = (
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-            )
-            total_abs, total_wo, total_wkr_hrs, total_ot_hrs, emp_att = (
-                None,
-                None,
-                None,
-                None,
-                None,
-            )
-
-            sheet = workbook.sheet_by_index(0)
-            for j in range(sheet.nrows):
-                if sheet.cell_value(j, 0) == "No Borders ":
-                    dept_name = sheet.cell_value(j + 1, 1)
-                    report_month = sheet.cell_value(j + 1, 9)
-                    emp_code = sheet.cell_value(j + 2, 1)
-                    emp_name = sheet.cell_value(j + 2, 6)
-                    print(dept_name, report_month, emp_code, emp_name)
-
-                    try:
-                        emp = Profile.objects.get(employee_id=emp_code)
-                    except:
-                        pass
-
-                    print("*********** ", emp.user)
-                    if emp:
-                        EmployeeAttendance.objects.update_or_create(
-                            user=emp.user, employee_id=emp_code
-                        )
-
-                    for k in range(j + 4, sheet.nrows):
-                        k = k - j
-                        print(
-                            "@@@@   k = ",
-                            k,
-                            "  j = ",
-                            j,
-                            "  ",
-                            sheet.nrows,
-                            "   ",
-                            sheet.cell_value(k, 0),
-                        )
-                        if sheet.cell_value(k, 0) == "Total Present":
-                            j = j + k
-                            break
-
-                        date = sheet.cell_value(k, 0)
-                        if date == "":
-                            continue
-                        date = datetime.strptime(date, "%d/%m/%Y")
-                        print("***********       ", date)
-                        day = sheet.cell_value(k + j, 1)
-                        shift = sheet.cell_value(k + j, 2)
-                        in_time = sheet.cell_value(k + j, 3)
-                        if in_time == "--:--":
-                            in_time = datetime.strptime("00:00", "%H:%M")
-                        elif in_time == "":
-                            in_time = datetime.strptime("00:00", "%H:%M")
-                        else:
-                            in_time = datetime.strptime(in_time, "%H:%M")
-                        out_time = sheet.cell_value(k + j, 6)
-                        if out_time == "--:--":
-                            out_time = datetime.strptime("00:00", "%H:%M")
-                        elif out_time == "":
-                            out_time = datetime.strptime("00:00", "%H:%M")
-                        else:
-                            out_time = datetime.strptime(out_time, "%H:%M")
-
-                        wrk_hrs = sheet.cell_value(k, 7)
-                        ot = sheet.cell_value(k, 8)
-                        status = sheet.cell_value(k, 9)
-                        remark = sheet.cell_value(k, 10)
-
-                        emp_att = EmployeeAttendance.objects.get(employee_id=emp_code)
-
-                        if emp_att:
-                            EmployeeAttendanceDetail.objects.update_or_create(
-                                employee_attendance=emp_att,
-                                date=date,
-                                in_time=in_time,
-                                out_time=out_time,
-                            )
-
-                    print("   Hi   There I am J   ", j)
-                    # total_present = sheet.cell_value(j, 1)
-                    # total_abs = sheet.cell_value(j, 4)
-                    # total_wo = sheet.cell_value(j, 7)
-                    # total_wkr_hrs = sheet.cell_value(j + 1, 1)
-                    # total_ot_hrs = sheet.cell_value(j + 1, 4)
-                    # if emp_att:
-                    #     EmployeeTotalAttendanceStatus.objects.update_or_create(
-                    #         emp=emp_att,
-                    #         total_present=int(total_present) if total_present.strip() else 0,
-                    #         total_abs=int(total_abs) if total_present.strip() else 0,
-                    #         total_working_hrs=int(total_wkr_hrs) if total_present.strip() else 0,
-                    #         total_wo=int(total_wo) if total_present.strip() else 0,
-                    #         total_ot_hrs=int(total_ot_hrs) if total_present.strip() else 0
-                    #     )
-            basic_emp_attendance = EmployeeAttendance.objects.all()
-            detailed_attendance = EmployeeAttendanceDetail.objects.all()
-
-            return render(
-                request,
-                "new_attendance.html",
-                {
-                    "basic_list": basic_emp_attendance,
-                    "detail_list": detailed_attendance,
-                },
-            )
-        else:
-            return HttpResponse("not found")
-    return render(request, "new_upload_excel.html", {})
-
+        return render(request, 'new_attendance.html', {'basic_list': basic_emp_attendance,
+                                                        'detail_list': detailed_attendance})
+    return render(request, 'new_upload_excel.html', {})
 
 def login_view(request):
     if not request.user.is_authenticated:
@@ -404,6 +224,94 @@ def index(request):
         return redirect("login")
     else:
         return redirect("employee:profile")
+
+
+# import xlrd
+# import csv
+# @permission_required("employee.add_employeeattendance", raise_exception=True)
+# def attendance_file_upload(request):
+#         template = "file_upload.html"
+#         prompt = {
+#             "order": "order of csv should be employee_no, in_time, out_time, date"
+#         }
+#         if request.method == "GET":
+#             return render(request, template, prompt)
+#         excel_file = request.FILES["excel_file"]
+#         import pdb;pdb.set_trace()
+#         filename = fs.save(excel_file.name, excel_file)
+#         file_url = settings.PROJECT_APPS  + fs.url(filename)
+#         wb = xlrd.open_workbook('/home/ashutosh/workspace/timesheet/noboders_timesheet/noborders_erp/media/test.xls')
+#         import pdb;pdb.set_trace()
+#         sheet = wb.sheet_by_index(0)
+#         list=[]
+#         for k in range(3,sheet.nrows -3,39):
+#             list.append(sheet.cell_value(k-1 , 1))
+#         for j in range(1,sheet.nrows -3):
+#             emp_id =sheet.cell_value(j + 1, 1)
+#             import pdb;pdb.set_trace()
+#             i=0
+#             for i in range(sheet.nrows - 3):
+#                 print(i)
+#                 if i == sheet.nrows - 1:
+#                     break
+#                 #department_name = sheet.cell_value(i + 1, 1)
+#                 #report_month = sheet.cell_value(i + 1, 9)
+#                 employee_id =emp_id
+#                 #name = sheet.cell_value(i + 2, 6)
+#                 date = sheet.cell_value(i+4, 0).split("/")
+#                 day = sheet.cell_value(i + 4, 1)
+#                 shift = sheet.cell_value(i + 4, 2)
+#                 in_time=sheet.cell_value(i + 4, 3)
+#                 l_start = sheet.cell_value(i + 4, 4)
+#                 l_end = sheet.cell_value(i + 4, 5)
+#                 out_time = sheet.cell_value(i + 4,7)
+#                 work  = sheet.cell_value(i + 4, 7)
+#                 ot   = sheet.cell_value(i + 4, 8)
+#                 status  = sheet.cell_value(i + 4, 9)
+#                 remark = sheet.cell_value(i + 4, 10)
+#                 if sheet.cell_value(i+4,0) == '' or sheet.cell_value(i+4,0) == 'Total Present' or sheet.cell_value(i+4,0) == 'Total Working HRS' or sheet.cell_value(i+4,0) == 'Dept. Name' or sheet.cell_value(i+4,0) == 'Empcode' or sheet.cell_value(i+4,0) == 'Date' :
+#                     continue
+#                 else:
+#                     if in_time == "--:--" and out_time == "--:--":
+#                         in_time = datetime.strptime("00:00", "%H:%M")
+#                         out_time = datetime.strptime("00:00", "%H:%M")
+#                     elif out_time == "--:--":
+#                         out_time = datetime.strptime("00:00", "%H:%M")
+#                     elif in_time == "--:--":
+#                         in_time = datetime.strptime("00:00", "%H:%M")
+#                     elif in_time == '' and out_time == '':
+#                         in_time = datetime.strptime("00:00", "%H:%M")
+#                         out_time = datetime.strptime("00:00", "%H:%M")
+#                     else:
+#                         in_time = datetime.strptime(in_time, "%H:%M")
+#                         out_time = datetime.strptime(out_time, "%H:%M")
+#                     profile = Profile.objects.filter(employee_id=employee_id)
+#                     if profile.exists():
+#                         profile = Profile.objects.get(employee_id=employee_id)
+#                         emp, created = EmployeeAttendance.objects.update_or_create(
+#                             user=profile.user,
+#                             employee_id=profile.employee_id,
+#                             date=date[2] + "-" + date[1] + "-" + date[0],
+#                             created_by=profile.user,
+#                         )
+#                         if emp:
+#                             emp_details = EmployeeAttendanceDetail.objects.filter(
+#                                 employee_attendance=emp
+#                             )
+#                             if emp_details.exists():
+#                                 emp_details.delete()
+#                             detail, created = EmployeeAttendanceDetail.objects.update_or_create(
+#                                 employee_attendance=emp,
+#                                 in_time=in_time,
+#                                 out_time=out_time,
+#                                 date=date[2] + "-" + date[1] + "-" + date[0],
+#                             )
+#                     import pdb;pdb.set_trace()
+#         messages.success(request, "SUCCESSFULLY UPLOADED YOUR FILE.")
+#         return render(request, template)
+#     # except Exception as e:
+#     #     messages.error(request, "FILE UPLOAD FAILED")
+#     #     return render(request, template)
 
 
 class UserCreateView(PermissionRequiredMixin, CreateView):
@@ -686,7 +594,7 @@ class EditProfileView(PermissionRequiredMixin, UpdateView):
 def delete_record(request):
     try:
         for pk in request.POST.getlist("pk[]"):
-            obj = EmployeeAttendanceDetail.objects.get(pk=pk)
+            obj = EmployeeAttendance.objects.get(pk=pk)
             obj.delete()
         return JsonResponse({"status": "success"})
     except Exception as e:
@@ -704,79 +612,80 @@ def deactivate_user(request, pk):
     return JsonResponse({"status": "success"})
 
 
-# @permission_required("employee.add_employeeattendance", raise_exception=True)
-# def file_upload(request):
-#     try:
-#         template = "file_upload.html"
-#         prompt = {
-#             "order": "order of csv should be employee_no, in_time, out_time, date"
-#         }
-#         if request.method == "GET":
-#             return render(request, template, prompt)
 
-#         excel_file = request.FILES["excel_file"]
-#         filename = fs.save(excel_file.name, excel_file)
-#         file_url = settings.PROJECT_APPS + fs.url(
-#             filename
-#         )  # project app url + filename
-#         wb = xlrd.open_workbook(file_url)
-#         sheet = wb.sheet_by_index(0)
+@permission_required("employee.add_employeeattendance", raise_exception=True)
+def file_upload(request):
+    try:
+        template = "file_upload.html"
+        prompt = {
+            "order": "order of csv should be employee_no, in_time, out_time, date"
+        }
+        if request.method == "GET":
+            return render(request, template, prompt)
 
-#         for i in range(sheet.nrows - 3):
-#             if i == sheet.nrows - 1:  # row-1
-#                 break
-#             name = sheet.cell_value(i + 3, 1)
-#             employee_id = sheet.cell_value(i + 3, 0)
-#             in_time = sheet.cell_value(i + 3, 3)
-#             out_time = sheet.cell_value(
-#                 i + 3, sheet.ncols - 1
-#             )  # sheet.cell_value(i+4,3)
-#             date = sheet.cell_value(0, 7).split("/")
+        excel_file = request.FILES["excel_file"]
+        filename = fs.save(excel_file.name, excel_file)
+        file_url = settings.PROJECT_APPS + fs.url(
+            filename
+        )  # project app url + filename
+        wb = xlrd.open_workbook(file_url)
+        sheet = wb.sheet_by_index(0)
 
-#             if in_time == "--:--" and out_time == "--:--":
-#                 in_time = datetime.strptime("00:00", "%H:%M")
-#                 out_time = datetime.strptime("00:00", "%H:%M")
-#             elif out_time == "--:--":
-#                 in_time = datetime.strptime(in_time, "%H:%M")
-#                 # out_time = datetime.strptime(in_time ,'%H:%M')
-#                 out_time = in_time
-#             else:
-#                 in_time = datetime.strptime(in_time, "%H:%M")
-#                 out_time = datetime.strptime(out_time, "%H:%M")
+        for i in range(sheet.nrows - 3):
+            if i == sheet.nrows - 1:  # row-1
+                break
+            name = sheet.cell_value(i + 3, 1)
+            employee_id = sheet.cell_value(i + 3, 0)
+            in_time = sheet.cell_value(i + 3, 3)
+            out_time = sheet.cell_value(
+                i + 3, sheet.ncols - 1
+            )  # sheet.cell_value(i+4,3)
+            date = sheet.cell_value(0, 7).split("/")
 
-#             profile = Profile.objects.filter(employee_id=employee_id)
-#             if profile.exists():
-#                 profile = Profile.objects.get(employee_id=employee_id)
-#                 emp, created = EmployeeAttendance.objects.update_or_create(
-#                     user=profile.user,
-#                     employee_id=profile.employee_id,
-#                     date=date[2] + "-" + date[1] + "-" + date[0],
-#                     created_by=profile.user,
-#                 )
-#                 if emp:
-#                     emp_details = EmployeeAttendanceDetail.objects.filter(
-#                         employee_attendance=emp
-#                     )
-#                     if emp_details.exists():
-#                         emp_details.delete()
-#                     detail, created = EmployeeAttendanceDetail.objects.update_or_create(
-#                         employee_attendance=emp,
-#                         in_time=in_time,
-#                         out_time=out_time,
-#                         date=date[2] + "-" + date[1] + "-" + date[0],
-#                     )
-#         messages.success(request, " File Successfully Uploaded.")
-#         return render(request, template)
-#     except Exception as e:
-#         messages.error(request, "File Upload Failed")
-#         return render(request, template)
+            if in_time == "--:--" and out_time == "--:--":
+                in_time = datetime.strptime("00:00", "%H:%M")
+                out_time = datetime.strptime("00:00", "%H:%M")
+            elif out_time == "--:--":
+                in_time = datetime.strptime(in_time, "%H:%M")
+                # out_time = datetime.strptime(in_time ,'%H:%M')
+                out_time = in_time
+            else:
+                in_time = datetime.strptime(in_time, "%H:%M")
+                out_time = datetime.strptime(out_time, "%H:%M")
+
+            profile = Profile.objects.filter(employee_id=employee_id)
+            if profile.exists():
+                profile = Profile.objects.get(employee_id=employee_id)
+                emp, created = EmployeeAttendance.objects.update_or_create(
+                    user=profile.user,
+                    employee_id=profile.employee_id,
+                    date=date[2] + "-" + date[1] + "-" + date[0],
+                    created_by=profile.user,
+                )
+                if emp:
+                    emp_details = EmployeeAttendanceDetail.objects.filter(
+                        employee_attendance=emp
+                    )
+                    if emp_details.exists():
+                        emp_details.delete()
+                    detail, created = EmployeeAttendanceDetail.objects.update_or_create(
+                        employee_attendance=emp,
+                        in_time=in_time,
+                        out_time=out_time,
+                        date=date[2] + "-" + date[1] + "-" + date[0],
+                    )
+        messages.success(request, " File Successfully Uploaded.")
+        return render(request, template)
+    except Exception as e:
+        messages.error(request, "File Upload Failed")
+        return render(request, template)
 
 
 def home(request):
-    attendances_data = EmployeeAttendanceDetail.objects.filter(
-        employee_attendance__user=request.user
-    ).order_by("-created_at")
-    # import pdb;pdb.set_trace()
+
+    attendances_data = EmployeeAttendance.objects.filter(user=request.user).order_by(
+        "-created_at"
+    )
     names = set()
     object_list = []
     result = []
@@ -796,46 +705,14 @@ def home(request):
             object_list.append(login_hour)
         else:
             pass
-    in_time = []
-    out_time = []
-    for i in object_list:
-        in_time.append(i.in_time)
-        out_time.append(i.out_time)
-    # import pdb;pdb.set_trace()
+
     return render(request, "home.html", {"attendances_data": object_list})
 
 
 def date_time_attendence_view(request):
-
-    attendance = EmployeeAttendanceDetail.objects.get(
-        id=request.POST.get("attendance_id")
-    )
-    # import pdb;pdb.set_trace()
-    # in_time = []
-    # out_time = []
-    # print(attendance)
-    # in_time.append(attendance.in_time)
-    # out_time.append(attendance.out_time)
-    s1 = attendance.in_time
-    s2 = attendance.out_time  # for example
-    FMT = "%H:%M:%S"
-    login_time = datetime.strptime(str(s2), FMT) - datetime.strptime(str(s1), FMT)
-    in_time_hour = attendance.in_time.hour
-    in_time_minute = attendance.in_time.minute
-    out_time_hour = attendance.out_time.hour
-    out_time_minute = attendance.out_time.minute
+    attendance = EmployeeAttendance.objects.get(id=request.POST.get("attendance_id"))
     template_name = "partial/date_time_popup.html"
-    return render(
-        request,
-        template_name,
-        {
-            "in_time_hour": in_time_hour,
-            "in_time_minute": in_time_minute,
-            "out_time_hour": out_time_hour,
-            "out_time_minute": out_time_minute,
-            "login_time": str(login_time),
-        },
-    )
+    return render(request, template_name, {"employee_attendence": attendance})
 
 
 @permission_required("employee.can_view_employee_attendance_list", raise_exception=True)
@@ -1011,138 +888,51 @@ class LeaveListView(PermissionRequiredMixin, ListView):
         return context
 
 
-# def attendence_request_list(request):
-
-#     attendances = (
-#         EmployeeAttendance.objects.filter(
-#             user=request.user, empatt_leave_status__in=[1, 3, 4, 5, 6]
-#         )
-#         .exclude(employee_attendance__in_time="00:00:00")
-#         .order_by("-created_at")
-#     )
-#     result = []
-#     email_data = []
-#     # and attendance.date_time_diffrence() != timedelta(hours=0)
-#     for attendance in attendances:
-
-#         if attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(
-#             hours=9
-#         ):
-
-#             result.append(attendance)
-#         elif attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(
-#             hours=8
-#         ):
-
-#             result.append(attendance)
-#         elif attendance.user.profile.working_time == 3 and attendance.date_time_diffrence() < timedelta(
-#             hours=7
-#         ):
-
-#             result.append(attendance)
-#         elif attendance.user.profile.working_time == 1 and attendance.date_time_diffrence() < timedelta(
-#             hours=6
-#         ):
-
-#             result.append(attendance)
-#         elif attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(
-#             hours=8, minutes=30
-#         ):
-
-#             result.append(attendance)
-#         elif attendance.user.profile.working_time == 4 and attendance.date_time_diffrence() < timedelta(
-#             hours=7, minutes=30
-#         ):
-
-#             result.append(attendance)
-#         elif attendance.user.profile.working_time == 2 and attendance.date_time_diffrence() < timedelta(
-#             hours=6, minutes=30
-#         ):
-
-#             result.append(attendance)
-
-#     object_list = []
-
-#     currunt_month = only_datetime.datetime.now().month
-#     last_month = currunt_month - 1 if currunt_month > 1 else 12
-#     for less_hour in result:
-#         if less_hour.date.month == last_month:
-#             object_list.append(less_hour)
-#         elif less_hour.date.month == currunt_month:
-#             object_list.append(less_hour)
-#         else:
-#             pass
-#     # context['object_list'] = object_list
-
-#     mail_list = []
-#     default_mail_list = User.objects.filter(groups__name__in=["MD", "HR"])
-#     for usr in default_mail_list:
-#         mail_list.append(usr.email)
-#     request_user = request.user.email
-#     mail_list.append(request_user)
-#     mail_list.append(request.user.profile.teamlead.email)
-#     mail_list = set(mail_list)
-#     # aaccept_email_data = []
-#     # default_mail_list = User.objects.filter(groups__name__in=['MD','HR'])
-#     # for usr in default_mail_list:
-#     #         aaccept_email_data.append(usr.email)
-
-#     # for user in User.objects.all():
-#     #         email_data.append(user.email)
-#     #         email_data.sort()
-#     # return render(request,'red_list.html', {'attendance_data' : result,'emails':mail_list,'aaccept_email_data':aaccept_email_data})
-#     return render(
-#         request,
-#         "red_list.html",
-#         {"attendance_data": object_list, "mail_list": mail_list},
-#     )
 def attendence_request_list(request):
 
     attendances = (
-        EmployeeAttendanceDetail.objects.filter(
-            employee_attendance__user=request.user,
-            employee_attendance__empatt_leave_status__in=[1, 3, 4, 5, 6],
+        EmployeeAttendance.objects.filter(
+            user=request.user, empatt_leave_status__in=[1, 3, 4, 5, 6]
         )
-        .exclude(in_time="00:00:00")
+        .exclude(employee_attendance__in_time="00:00:00")
         .order_by("-created_at")
     )
-
     result = []
     email_data = []
     # and attendance.date_time_diffrence() != timedelta(hours=0)
     for attendance in attendances:
 
-        if attendance.employee_attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(
+        if attendance.user.profile.working_time == 7 and attendance.date_time_diffrence() < timedelta(
             hours=9
         ):
 
             result.append(attendance)
-        elif attendance.employee_attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.user.profile.working_time == 5 and attendance.date_time_diffrence() < timedelta(
             hours=8
         ):
 
             result.append(attendance)
-        elif attendance.employee_attendance.user.profile.working_time == 3 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.user.profile.working_time == 3 and attendance.date_time_diffrence() < timedelta(
             hours=7
         ):
 
             result.append(attendance)
-        elif attendance.employee_attendance.user.profile.working_time == 1 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.user.profile.working_time == 1 and attendance.date_time_diffrence() < timedelta(
             hours=6
         ):
 
             result.append(attendance)
-        elif attendance.employee_attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.user.profile.working_time == 6 and attendance.date_time_diffrence() < timedelta(
             hours=8, minutes=30
         ):
 
             result.append(attendance)
-        elif attendance.employee_attendance.user.profile.working_time == 4 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.user.profile.working_time == 4 and attendance.date_time_diffrence() < timedelta(
             hours=7, minutes=30
         ):
 
             result.append(attendance)
-        elif attendance.employee_attendance.user.profile.working_time == 2 and attendance.date_time_diffrence() < timedelta(
+        elif attendance.user.profile.working_time == 2 and attendance.date_time_diffrence() < timedelta(
             hours=6, minutes=30
         ):
 
@@ -1497,11 +1287,11 @@ class RequestLeaveView(CreateView):
             messages.success(self.request, "Leave Request Sent Successfully")
             current_user_mail = self.request.user.email
             # import pdb; pdb.set_trace();
-            # mail_list.remove('utkarsh.webllisto@gmail.com')
+            #mail_list.remove('utkarsh.webllisto@gmail.com')
             mail_list = list(mail_list)
-            # import pdb;pfb.set_trace()
+            #import pdb;pfb.set_trace()
             for emails in range(len(mail_list)):
-                if mail_list[emails] == "":
+                if mail_list[emails] == '':
                     continue
                 s = smtplib.SMTP("smtp.gmail.com", 587)
                 s.starttls()
@@ -1510,8 +1300,8 @@ class RequestLeaveView(CreateView):
                 """
                 s.login("utkarsh.webllisto@gmail.com", "rathore1999")
                 message = f"{self.request.user} send you a message on timesheet for leave request please check it "
-                #    import pdb; pdb.set_trace();
-                s.sendmail("utkarsh.webllisto@gmail.com", mail_list[emails], message)
+            #    import pdb; pdb.set_trace();
+                s.sendmail("utkarsh.webllisto@gmail.com",mail_list[emails], message)
                 s.quit()
 
             return HttpResponseRedirect("/leave")
@@ -1674,22 +1464,22 @@ def full_leave_status(request):
         leave_type = request.POST.get("leave_type")
         leave_status = request.POST.get("leave_status")
         leave = Leave.objects.get(id=leave_id)
-        leave_user = request.POST.get("leave_user")
-        # import pdb; pdb.set_trace();
+        leave_user = request.POST.get('leave_user')
+        #import pdb; pdb.set_trace();
         s = smtplib.SMTP("smtp.gmail.com", 587)
         s.starttls()
         """
         type company mail here 
         """
         s.login("utkarsh.webllisto@gmail.com", "rathore1999")
-        # import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         user = User.objects.get(username=leave_user)
-        user_email = user.email
-        if leave_status == "2":
+        user_email =user.email
+        if leave_status == '2':
             message = f"{leave_user} your leave request is accepted "
-        elif leave_status == "3":
+        elif leave_status == '3':
             message = f"{leave_user} your leave request is rejected "
-        s.sendmail("utkarsh.webllisto@gmail.com", user_email, message)
+        s.sendmail("utkarsh.webllisto@gmail.com",user_email, message)
         s.quit()
         leave_status = False
         if leave.status == 2:
@@ -2057,51 +1847,21 @@ def send_ooo_on_reject(request):
     return JsonResponse({"status": "success"})
 
 
-# class FullLeaveListView(PermissionRequiredMixin, ListView):
-
-#     permission_required = ("employee.can_view_employee_attendance_list",)
-
-#     raise_exception = True
-#     model = EmployeeAttendance #EmployeeAttendanceDetail
-#     template_name = "fullday_leave_list.html"
-
-#     def get_context_data(self, **kwargs):
-#        # import pdb;pdb.set_trace()
-#         context = super(FullLeaveListView, self).get_context_data(**kwargs)
-#         # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
-#         object_list = []
-#         less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,]).order_by("-created_at")
-#         currunt_month = only_datetime.datetime.now().month
-#         last_month = currunt_month - 1 if currunt_month > 1 else 12
-#         for less_hour in less_time_objects:
-#             if less_hour.date.month == last_month:
-#                 object_list.append(less_hour)
-#             elif less_hour.date.month == currunt_month:
-#                 object_list.append(less_hour)
-#             else:
-#                 pass
-
-#         context["object_list"] = object_list
-#         return context
-
-
 class FullLeaveListView(PermissionRequiredMixin, ListView):
 
     permission_required = ("employee.can_view_employee_attendance_list",)
 
     raise_exception = True
-    model = EmployeeAttendanceDetail  # EmployeeAttendance
+    model = EmployeeAttendance
     template_name = "fullday_leave_list.html"
 
     def get_context_data(self, **kwargs):
-        # import pdb;pdb.set_trace()
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
         object_list = []
         less_time_objects = self.model.objects.filter(
-            employee_attendance__empatt_leave_status__in=[1,]
+            empatt_leave_status__in=[2,]
         ).order_by("-created_at")
-
         currunt_month = only_datetime.datetime.now().month
         last_month = currunt_month - 1 if currunt_month > 1 else 12
         for less_hour in less_time_objects:
@@ -2111,7 +1871,7 @@ class FullLeaveListView(PermissionRequiredMixin, ListView):
                 object_list.append(less_hour)
             else:
                 pass
-        # import pdb;pdb.set_trace()
+
         context["object_list"] = object_list
         return context
 
@@ -2205,7 +1965,7 @@ class ForgotPassword(View):
             if request.method == "POST":
                 email = request.POST["email"]
                 try:
-                                                                                                    user = User.objects.get(email=email)
+                    user = User.objects.get(email=email)
                 except Exception as e:
 
                     messages.error(self.request, "Email Not Exist")
@@ -2545,8 +2305,6 @@ def allemployedailyupdates(request):
 
     if request.user.is_superuser:
         if request.method == "POST":
-            # import pdb; pdb.set_trace();
-            # project_name = request.POST["project_name__project"]
             employe_name = request.POST["value"]
             if project_name:
                 daily_update = EmployeeDailyUpdate.objects.filter(
@@ -2557,7 +2315,6 @@ def allemployedailyupdates(request):
                     project_name__employe__username=employe_name
                 )
             return render(request, "daily_updates.html", {"daily_update": daily_update})
-        # import pdb; pdb.set_trace();
         daily_update = EmployeeDailyUpdate.objects.all()
         employe_name = []
         project_name = []
@@ -2566,7 +2323,6 @@ def allemployedailyupdates(request):
                 employe_name.append(daily_updates.project_name.employe.username)
             if daily_updates.project_name.project.project_name not in project_name:
                 project_name.append(daily_updates.project_name.project.project_name)
-        # import pdb; pdb.set_trace();
         return render(
             request,
             "daily_updates.html",
@@ -2578,26 +2334,34 @@ def allemployedailyupdates(request):
         )
 
 
+# def employedailyupdate(request):
+#     """
+#     use this to create a report
+#     """
+#     form = EmployeeDailyUpdateForm(request.user)
+#     if request.method == "POST":
+#         form = EmployeeDailyUpdateForm(request.user, request.POST)
+#         if form.is_valid():
+#             form.save()
+#         return HttpResponseRedirect("/check_daily_update")
+#     return render(request, "employe/create_report.html", {"form": form})
+
+
 def employedailyupdate(request):
-    """
-    use this to create a report
-    """
     form = AssignProject.objects.filter(employe__username=request.user)
     if request.method == "POST":
-        project_name = request.POST["project_name"]
-        project_summary = request.POST["summary"]
-        project_time = request.POST["time"]
-        project_name = AssignProject.objects.get(
-            project__project_name=project_name, employe__username=request.user
+       project_name = request.POST['project_name']
+       project_summary = request.POST['summary']
+       project_time = request.POST['time']
+       project_name = AssignProject.objects.get(
+        project__project_name=project_name,
+        employe__username=request.user
         )
-        obj = EmployeeDailyUpdate.objects.create(
-            project_name=project_name,
-            project_summary=project_summary,
-            time_taken=project_time,
-        )
-        obj.save()
-        # import pdb;pdb.set_trace()
-        return HttpResponseRedirect("/check_daily_update")
+       obj = EmployeeDailyUpdate.objects.create(project_name=project_name,
+        project_summary=project_summary,time_taken=project_time)
+       obj.save()
+       #import pdb;pdb.set_trace()
+       return HttpResponseRedirect("/check_daily_update")
     return render(request, "employe/create_report.html", {"form": form})
 
 
@@ -2706,7 +2470,7 @@ def filter_by_date(request):
             project_name__employe=request.user,
         )
         html = render_to_string(
-            "employe/filter_date.html", {"report": search_by_project}
+            "employe/filter_date.html", {"report": search_by_project},
         )
     elif start_date and end_date:
         search_report = EmployeeDailyUpdate.objects.filter(
@@ -2728,3 +2492,48 @@ def filter_by_date_and_project(request):
     ).filter(date__range=[start_date, end_date], project_name__employe=request.user)
     html = render_to_string("employe/filter_date.html", {"report": search_both})
     return HttpResponse(html)
+
+
+def error_400(request,  exception):
+    data = {}
+    return render(request,'templates/400.html',data)
+
+
+def error_401(request,  exception):
+    data = {}
+    return render(request,'templates/401.html',data)
+
+
+def error_403(request,  exception):
+    data = {}
+    return render(request,'templates/403.html',data)
+
+
+def error_404(request, exception):
+    import pdb;pdb.set_trace()
+    data = {}
+    return render(request,'templates/404.html',data)
+
+
+def error_500(request,  exception):
+    data = {}
+    return render(request,'templates/500.html',data)
+
+
+def error_502(request,  exception):
+    data = {}
+    return render(request,'templates/502.html',data)
+
+
+def error_503(request,  exception):
+    data = {}
+    return render(request,'templates/503.html',data)
+
+
+def error_504(request,  exception):
+    data = {}
+    return render(request,'templates/504.html',data)
+
+
+
+

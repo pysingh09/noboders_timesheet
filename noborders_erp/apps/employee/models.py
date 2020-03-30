@@ -357,3 +357,4 @@ class EmployeeDailyUpdate(BaseModel):
     )
     project_summary = models.TextField()
     time_taken = models.CharField(max_length=10, null=True)
+

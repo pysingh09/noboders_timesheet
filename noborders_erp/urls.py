@@ -30,8 +30,6 @@ from django.contrib.auth import views as auth_views
 # login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/')
 
 
-
-
 urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('admin/', admin.site.urls),
@@ -40,4 +38,5 @@ urlpatterns += [
     # path('login/', auth_views.login, name='login'),
     
     path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
+    
 ]

@@ -35,9 +35,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "b6ehjxx)la#yrzhlt$e!+to=$p$#%uz4coa!0*9bxeu9w&-zm0"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = False
-ALLOWED_HOSTS = ["*"]
+
+
+
+
+# ALLOWED_HOSTS = ["*"]
+
+DEBUG = False
+ALLOWED_HOSTS =  ["*"]
 
 # Application definition
 
@@ -52,7 +57,10 @@ INSTALLED_APPS = [
     "django_filters",
     "django_extensions",
     "employee",
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -66,6 +74,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "noborders_erp.urls"
+
 
 TEMPLATES = [
     {
@@ -159,6 +168,10 @@ STATICFILES_DIRS = [
 AUTH_USER_EMAIL_UNIQUE = True
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
+<<<<<<< HEAD
+=======
+
+>>>>>>> new_ashutosh
 
 
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (

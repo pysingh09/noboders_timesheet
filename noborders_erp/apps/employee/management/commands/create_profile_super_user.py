@@ -3,14 +3,21 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group
 """
+<<<<<<< HEAD
 This scripts is a management command used for creating 
 admin user/ super user and add that user in profile table
 
 Run this script with following command:-
 
+=======
+This scripts is a management command used for creating
+admin user/ super user and add that user in profile table
+Run this script with following command:-
+>>>>>>> new_ashutosh
 ./manage.py create_profile_super_user
 """
 class Command(BaseCommand):
+   
     def handle(self, *args, **options):
         user_name = input("Please enter username:  ")
         email = input("Please enter email address:  ")
@@ -22,6 +29,11 @@ class Command(BaseCommand):
             my_group = Group.objects.get(name='HR') 
             my_group.user_set.add(user)
 
+
+        if password == confirm_password:
+            user = User.objects.create_user(username=user_name, email=email, password=password)
+            my_group = Group.objects.get(name='HR')
+            my_group.user_set.add(user)
 
             user.is_superuser = True
             user.is_active = True
