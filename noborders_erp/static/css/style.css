@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
 nav.navbar.navbar-default {
     background: #222;
 }
@@ -91,12 +92,12 @@ div#myTable1_length {
     padding: 10px 16px;
 }
 .dataTable{
-  border: 1px solid #8c8b8b !important;
+  border: 1px  #8c8b8b !important;
 }
 .dataTable tbody tr td{
-  border-top: 1px solid #8c8b8b !important;
+  border-top: 1px  #8c8b8b !important;
   padding: 13px 17px 10px;
-  border-right: 1px solid #8c8b8b;
+  border-right: 1px  #8c8b8b;
 }
 .dataTable tbody tr td:last-child{
   border-right: none !important;
@@ -127,7 +128,7 @@ a.attendence_datetime {
     font-weight: 600;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-    background: #337ab7 !important;
+    background: #5E9CFF !important;
     color: #fff !important;
     padding: 8px 16px;
     margin: 13px 0 4px;
@@ -136,16 +137,16 @@ a.attendence_datetime {
       transition: all 0.25s ease 0s;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active{
-    background: #337ab7 !important;
+    background: transparent linear-gradient(90deg, #0767FC 0%, #5E9CFF 100%) 0% 0% no-repeat padding-box !important;
     color: #fff !important;
     border-color: transparent;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled{
     background: #fff !important;
-    color: #337ab7 !important;
+    color: #5E9CFF !important;
     padding: 8px 16px;
     margin: 17px 10px 0px;
-    border: 1px solid #337ab7;
+    border: 1px solid #5E9CFF;
     font-weight: 600;
     transition: all 0.25s ease 0s;
 }
@@ -328,7 +329,7 @@ button.upload.background_colorbtn {
     padding: 0px 20px;
 }
 .background_colorbtn, .background_colorbtn:hover{
-      background: linear-gradient(to right,rgba(239,110,59,1) 0,rgba(213,63,168,1) 100%);
+      background: transparent linear-gradient(90deg, #0767FC 0%, #5E9CFF 100%) 0% 0% no-repeat padding-box !important;
       border: none;
       padding: 10px 30px;
       border-radius: 3px;
@@ -526,16 +527,16 @@ div#sidebar-wrapper {
 }
 .back-button{
     display: inline-block;
-    background: #337ab7 !important;
+    background: transparent linear-gradient(90deg, #0767FC 0%, #5E9CFF 100%) 0% 0% no-repeat padding-box !important;
     color: #fff !important;
-    border:1px solid #337ab7;
+    border: 1px solid #5E9CFF;
     padding: 5px 15px;
     cursor: pointer;
 }
 .back-button:hover{
     background: #fff !important;
-    color: #337ab7 !important;
-    border-color:#337ab7;
+    color: #5E9CFF !important;
+    border-color: #5E9CFF;
 }
 .nav-stacked>li+li{
   width: 100%;
@@ -602,7 +603,7 @@ ul.errorlist {
   }
   .table tr th {
     vertical-align: top !important;
-    padding-top: 23px !important;
+    padding-top: 12px !important;
 }
 }
 
@@ -847,7 +848,7 @@ float: right;
     background: red;
 }
 h3.top-heading {
-    font-size: 21px;
+    font-size: 24px;
     font-weight: 600;
     margin-bottom: 30px;
 }
@@ -896,8 +897,9 @@ p{
   font-family: Nunito Sans,Black;
 }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6, p{
-  font-family: Nunito Sans,Black !important;
+ font-family: 'Nunito Sans', sans-serif;
 }
+.table{font-family: 'Nunito Sans', sans-serif;}
 label b {
     color: #6A6A6A;
   }
@@ -906,7 +908,7 @@ label b {
 
 }
 .btn-group.bootstrap-select {
-    width: 185px !important;
+    width: 165px !important;
 }
 .btn-group-lg>.btn, .btn-lg {
     padding: 5px 16px !important;
@@ -918,3 +920,28 @@ button.right-btn {
 .bottom_search{
   margin-bottom: 20px;
 }
+
+.left-image img {
+    margin-top: -30px;
+}
+th.sorting_asc {
+    width: 50px;
+}
+label{font-size: 16px;}
+.right_ref{ float: right; }
+.refresh-icon:hover {
+    color: #fff;
+    border-color: #0767FC;
+    background: transparent linear-gradient(90deg, #0767FC 0%, #5E9CFF 100%) 0% 0% no-repeat padding-box;
+}
+.refresh-icon {
+    color: #0767FC;
+    border-color: #0767FC;
+    background-color: #fff; 
+}
+table th {
+    background: #5E9CFF;
+    color: #fff;
+}
+table tr:nth-child(even){background-color: #f2f2f2 !important;}
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover{background-color: #5E9CFF!important;}
