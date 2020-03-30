@@ -255,9 +255,18 @@ class EmployeeAttendanceDetail(BaseModel):
         EmployeeAttendance, on_delete=models.CASCADE, related_name="employee_attendance"
     )
     date = models.DateField(blank=True, verbose_name=_("Date"))
+    day = models.CharField(max_length=100, null=True)
+    shift = models.CharField(max_length=100, null=True)
     in_time = models.TimeField(blank=True, verbose_name=_("Time In"))
     out_time = models.TimeField(blank=True, verbose_name=_("Time Out"))
+    l_start = models.CharField(max_length=100, null=True)
+    l_end = models.CharField(max_length=100, null=True)
+    work = models.TimeField(null=True, blank=True)
+    ot = models.TimeField(null=True, blank=True)
+    status = models.CharField(max_length=100, null=True)
+    remark = models.CharField(max_length=100, null=True)
 
+    
     def date_time_diffrence(self):
         dateTimeDifference = datetime.timedelta(0, 0)
         dateTimeIn = datetime.datetime.combine(datetime.date.today(), self.in_time)

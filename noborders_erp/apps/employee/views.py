@@ -107,100 +107,101 @@ from django.core.files.storage import FileSystemStorage
 #         return render(request, 'show_attendance.html', {})
 
 
-fs = FileSystemStorage()
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def new_uploadExcel(request):
-    if request.method == "POST":
-        # import pdb;pdb.set_trace()
-        file = request.FILES["upload_excel"]
-        workbook = xlrd.open_workbook(file_contents=file.read())
-        dept_name, emp_name, report_month, emp_code, date, day, shift = None, None, None, None, None, None, None
-        in_time, out_time, wrk_hrs, ot, status, remark, total_present = None, None, None, None, None, None, None
-        total_abs, total_wo, total_wkr_hrs, total_ot_hrs, emp_att = None, None, None, None, None
+# @login_required
+# @user_passes_test(lambda u: u.is_superuser)
+# def new_uploadExcel(request):
+#     if request.method == "POST":
+#         # import pdb;pdb.set_trace()
+#         file = request.FILES["upload_excel"]
+#         workbook = xlrd.open_workbook(file_contents=file.read())
+#         dept_name, emp_name, report_month, emp_code, date, day, shift = None, None, None, None, None, None, None
+#         in_time, out_time, wrk_hrs, ot, status, remark, total_present = None, None, None, None, None, None, None
+#         total_abs, total_wo, total_wkr_hrs, total_ot_hrs, emp_att = None, None, None, None, None
 
-        sheet = workbook.sheet_by_index(0)
-        for j in range(sheet.nrows):
-            if sheet.cell_value(j, 0) == 'No Borders ':
-                dept_name = sheet.cell_value(j + 1, 1)
-                report_month = sheet.cell_value(j + 1, 9)
-                emp_code = sheet.cell_value(j + 2, 1)
-                emp_name = sheet.cell_value(j + 2, 6)
-                print(dept_name, report_month, emp_code, emp_name)    
-                try:
-                    emp = Profile.objects.get(employee_id=emp_code)
+#         sheet = workbook.sheet_by_index(0)
+#         for j in range(sheet.nrows):
+#             if sheet.cell_value(j, 0) == 'No Borders ':
+#                 dept_name = sheet.cell_value(j + 1, 1)
+#                 report_month = sheet.cell_value(j + 1, 9)
+#                 emp_code = sheet.cell_value(j + 2, 1)
+#                 emp_name = sheet.cell_value(j + 2, 6)
+#                 print(dept_name, report_month, emp_code, emp_name)    
+#                 try:
+#                     emp = Profile.objects.get(employee_id=emp_code)
                     
-                    print("*********** ", emp.user)
-                    if emp:
-                        EmployeeAttendance.objects.update_or_create(user=emp.user, employee_id=emp_code)
+#                     print("*********** ", emp.user)
+#                     if emp:
+#                         EmployeeAttendance.objects.update_or_create(user=emp.user, employee_id=emp_code)
 
-                    for k in range(j + 4, sheet.nrows):
-                        k = k - j
-                        print("@@@@   k = ", k, "  j = ", j, "  ", sheet.nrows, "   ", sheet.cell_value(k, 0))
-                        if sheet.cell_value(k, 0) == 'Total Present':
-                            j = j + k
-                            break
+#                     for k in range(j + 4, sheet.nrows):
+#                         k = k - j
+#                         print("@@@@   k = ", k, "  j = ", j, "  ", sheet.nrows, "   ", sheet.cell_value(k, 0))
+#                         if sheet.cell_value(k, 0) == 'Total Present':
+#                             j = j + k
+#                             break
 
-                        date = sheet.cell_value(k, 0)
-                        if date == "":
-                            continue
-                        date = datetime.strptime(date, "%d/%m/%Y")
-                        print("***********       ", date)
-                        day = sheet.cell_value(k + j, 1)
-                        shift = sheet.cell_value(k + j, 2)
-                        in_time = sheet.cell_value(k + j, 3)
-                        if in_time == "--:--":
-                            in_time = datetime.strptime("00:00", "%H:%M")
-                        elif in_time == "":
-                            in_time = datetime.strptime("00:00", "%H:%M")
-                        else:
-                            in_time = datetime.strptime(in_time, "%H:%M")
-                        out_time = sheet.cell_value(k, 6)
-                        if out_time == "--:--":
-                            out_time = datetime.strptime("00:00", "%H:%M")
-                        elif out_time == "":
-                            out_time = datetime.strptime("00:00", "%H:%M")
-                        else:
-                            out_time = datetime.strptime(out_time, "%H:%M")
+#                         date = sheet.cell_value(k, 0)
+#                         if date == "":
+#                             continue
+#                         date = datetime.strptime(date, "%d/%m/%Y")
+#                         print("***********       ", date)
+#                         day = sheet.cell_value(k + j, 1)
+#                         shift = sheet.cell_value(k + j, 2)
+#                         in_time = sheet.cell_value(k + j, 3)
+#                         if in_time == "--:--":
+#                             in_time = datetime.strptime("00:00", "%H:%M")
+#                         elif in_time == "":
+#                             in_time = datetime.strptime("00:00", "%H:%M")
+#                         else:
+#                             in_time = datetime.strptime(in_time, "%H:%M")
+#                         out_time = sheet.cell_value(k+j, 6)
+#                         if out_time == "--:--":
+#                             out_time = datetime.strptime("00:00", "%H:%M")
+#                         elif out_time == "":
+#                             out_time = datetime.strptime("00:00", "%H:%M")
+#                         else:
+#                             out_time = datetime.strptime(out_time, "%H:%M")
 
-                        wrk_hrs = sheet.cell_value(k, 7)
-                        ot = sheet.cell_value(k, 8)
-                        status = sheet.cell_value(k, 9)
-                        remark = sheet.cell_value(k, 10)
+#                         wrk_hrs = sheet.cell_value(k, 7)
+#                         ot = sheet.cell_value(k, 8)
+#                         status = sheet.cell_value(k, 9)
+#                         remark = sheet.cell_value(k, 10)
 
-                        emp_att = EmployeeAttendance.objects.get(employee_id=emp_code)
 
-                        if emp_att:
-                            EmployeeAttendanceDetail.objects.update_or_create(employee_attendance=emp_att, date=date,
-                                                                       in_time=in_time,
-                                                                       out_time=out_time)
-                except:
-                        pass
+#                         emp_att = EmployeeAttendance.objects.get(employee_id=emp_code)
 
-                print("   Hi   There I am J   ", j)
-                # total_present = sheet.cell_value(j, 1)
-                # total_abs = sheet.cell_value(j, 4)
-                # total_wo = sheet.cell_value(j, 7)
-                # total_wkr_hrs = sheet.cell_value(j + 1, 1)
-                # total_ot_hrs = sheet.cell_value(j + 1, 4)
-                # if emp_att:
-                #     EmployeeTotalAttendanceStatus.objects.update_or_create(
-                #         emp=emp_att,
-                #         total_present=int(total_present) if total_present.strip() else 0,
-                #         total_abs=int(total_abs) if total_present.strip() else 0,
-                #         total_working_hrs=int(total_wkr_hrs) if total_present.strip() else 0,
-                #         total_wo=int(total_wo) if total_present.strip() else 0,
-                #         total_ot_hrs=int(total_ot_hrs) if total_present.strip() else 0
+
+#                         if emp_att:
+#                             EmployeeAttendanceDetail.objects.update_or_create(employee_attendance=emp_att, date=date,
+#                                                                        in_time=in_time,
+#                                                                        out_time=out_time)
+#                 except:
+#                         pass
+
+#                 print("   Hi   There I am J   ", j)
+#                 # total_present = sheet.cell_value(j, 1)
+#                 # total_abs = sheet.cell_value(j, 4)
+#                 # total_wo = sheet.cell_value(j, 7)
+#                 # total_wkr_hrs = sheet.cell_value(j + 1, 1)
+#                 # total_ot_hrs = sheet.cell_value(j + 1, 4)
+#                 # if emp_att:
+#                 #     EmployeeTotalAttendanceStatus.objects.update_or_create(
+#                 #         emp=emp_att,
+#                 #         total_present=int(total_present) if total_present.strip() else 0,
+#                 #         total_abs=int(total_abs) if total_present.strip() else 0,
+#                 #         total_working_hrs=int(total_wkr_hrs) if total_present.strip() else 0,
+#                 #         total_wo=int(total_wo) if total_present.strip() else 0,
+#                 #         total_ot_hrs=int(total_ot_hrs) if total_present.strip() else 0
         
-                #     )
+#                 #     )
 
-      #  import pdb;pdb.set_trace()
-        basic_emp_attendance = EmployeeAttendance.objects.all()
-        detailed_attendance = EmployeeAttendanceDetail.objects.all()
+#       #  import pdb;pdb.set_trace()
+#         basic_emp_attendance = EmployeeAttendance.objects.all()
+#         detailed_attendance = EmployeeAttendanceDetail.objects.all()
 
-        return render(request, 'new_attendance.html', {'basic_list': basic_emp_attendance,
-                                                        'detail_list': detailed_attendance})
-    return render(request, 'new_upload_excel.html', {})
+#         return render(request, 'new_attendance.html', {'basic_list': basic_emp_attendance,
+#                                                         'detail_list': detailed_attendance})
+#     return render(request, 'new_upload_excel.html', {})
 
 ''' this view is used for upload attendance file '''
 # @permission_required("employee.add_employeeattendance", raise_exception=True)
@@ -294,92 +295,74 @@ def index(request):
         return redirect("employee:profile")
 
 
-# import xlrd
-# import csv
-# @permission_required("employee.add_employeeattendance", raise_exception=True)
-# def attendance_file_upload(request):
-#         template = "file_upload.html"
-#         prompt = {
-#             "order": "order of csv should be employee_no, in_time, out_time, date"
-#         }
-#         if request.method == "GET":
-#             return render(request, template, prompt)
-#         excel_file = request.FILES["excel_file"]
-#         import pdb;pdb.set_trace()
-#         filename = fs.save(excel_file.name, excel_file)
-#         file_url = settings.PROJECT_APPS  + fs.url(filename)
-#         wb = xlrd.open_workbook('/home/ashutosh/workspace/timesheet/noboders_timesheet/noborders_erp/media/test.xls')
-#         import pdb;pdb.set_trace()
-#         sheet = wb.sheet_by_index(0)
-#         list=[]
-#         for k in range(3,sheet.nrows -3,39):
-#             list.append(sheet.cell_value(k-1 , 1))
-#         for j in range(1,sheet.nrows -3):
-#             emp_id =sheet.cell_value(j + 1, 1)
-#             import pdb;pdb.set_trace()
-#             i=0
-#             for i in range(sheet.nrows - 3):
-#                 print(i)
-#                 if i == sheet.nrows - 1:
-#                     break
-#                 #department_name = sheet.cell_value(i + 1, 1)
-#                 #report_month = sheet.cell_value(i + 1, 9)
-#                 employee_id =emp_id
-#                 #name = sheet.cell_value(i + 2, 6)
-#                 date = sheet.cell_value(i+4, 0).split("/")
-#                 day = sheet.cell_value(i + 4, 1)
-#                 shift = sheet.cell_value(i + 4, 2)
-#                 in_time=sheet.cell_value(i + 4, 3)
-#                 l_start = sheet.cell_value(i + 4, 4)
-#                 l_end = sheet.cell_value(i + 4, 5)
-#                 out_time = sheet.cell_value(i + 4,7)
-#                 work  = sheet.cell_value(i + 4, 7)
-#                 ot   = sheet.cell_value(i + 4, 8)
-#                 status  = sheet.cell_value(i + 4, 9)
-#                 remark = sheet.cell_value(i + 4, 10)
-#                 if sheet.cell_value(i+4,0) == '' or sheet.cell_value(i+4,0) == 'Total Present' or sheet.cell_value(i+4,0) == 'Total Working HRS' or sheet.cell_value(i+4,0) == 'Dept. Name' or sheet.cell_value(i+4,0) == 'Empcode' or sheet.cell_value(i+4,0) == 'Date' :
-#                     continue
-#                 else:
-#                     if in_time == "--:--" and out_time == "--:--":
-#                         in_time = datetime.strptime("00:00", "%H:%M")
-#                         out_time = datetime.strptime("00:00", "%H:%M")
-#                     elif out_time == "--:--":
-#                         out_time = datetime.strptime("00:00", "%H:%M")
-#                     elif in_time == "--:--":
-#                         in_time = datetime.strptime("00:00", "%H:%M")
-#                     elif in_time == '' and out_time == '':
-#                         in_time = datetime.strptime("00:00", "%H:%M")
-#                         out_time = datetime.strptime("00:00", "%H:%M")
-#                     else:
-#                         in_time = datetime.strptime(in_time, "%H:%M")
-#                         out_time = datetime.strptime(out_time, "%H:%M")
-#                     profile = Profile.objects.filter(employee_id=employee_id)
-#                     if profile.exists():
-#                         profile = Profile.objects.get(employee_id=employee_id)
-#                         emp, created = EmployeeAttendance.objects.update_or_create(
-#                             user=profile.user,
-#                             employee_id=profile.employee_id,
-#                             date=date[2] + "-" + date[1] + "-" + date[0],
-#                             created_by=profile.user,
-#                         )
-#                         if emp:
-#                             emp_details = EmployeeAttendanceDetail.objects.filter(
-#                                 employee_attendance=emp
-#                             )
-#                             if emp_details.exists():
-#                                 emp_details.delete()
-#                             detail, created = EmployeeAttendanceDetail.objects.update_or_create(
-#                                 employee_attendance=emp,
-#                                 in_time=in_time,
-#                                 out_time=out_time,
-#                                 date=date[2] + "-" + date[1] + "-" + date[0],
-#                             )
-#                     import pdb;pdb.set_trace()
-#         messages.success(request, "SUCCESSFULLY UPLOADED YOUR FILE.")
-#         return render(request, template)
-#     # except Exception as e:
-#     #     messages.error(request, "FILE UPLOAD FAILED")
-#     #     return render(request, template)
+import xlrd
+import csv
+fs = FileSystemStorage()
+@permission_required("employee.add_employeeattendance", raise_exception=True)
+def attendance_file_upload(request):
+    try:
+        template = "file_upload.html"
+        prompt = {
+            "order": "order of csv should be employee_no, in_time, out_time, date"
+        }
+        if request.method == "GET":
+            return render(request, template, prompt)
+      #  import pdb;pdb.set_trace()
+        file = request.FILES["excel_file"]
+        wb = xlrd.open_workbook(file_contents=file.read())    
+        sheet = wb.sheet_by_index(0)
+        list=[]
+        for k in range(3,sheet.nrows -3,39):
+            list.append(sheet.cell_value(k-1 , 1))
+        emp_id=0
+        for i in range(sheet.nrows - 3):
+            if i == sheet.nrows - 1:  # row-1
+                break
+            employee_id = list[emp_id]
+            date = sheet.cell_value(i+4, 0).split("/")
+            day = sheet.cell_value(i + 4, 1)
+            shift = sheet.cell_value(i + 4, 2)
+            in_time=sheet.cell_value(i + 4, 3)
+            l_start = sheet.cell_value(i + 4, 4)
+            l_end = sheet.cell_value(i + 4, 5)
+            out_time = sheet.cell_value(i + 4,6)
+            work  = sheet.cell_value(i + 4, 7)
+            ot   = sheet.cell_value(i + 4, 8)
+            status  = sheet.cell_value(i + 4, 9)
+            remark = sheet.cell_value(i + 4, 10)
+            if sheet.cell_value(i+4,0) == '' or sheet.cell_value(i+4,0) == 'Total Present' or sheet.cell_value(i+4,0) == 'Total Working HRS' or sheet.cell_value(i+4,0) == 'Dept. Name' or sheet.cell_value(i+4,0) == 'Empcode' or sheet.cell_value(i+4,0) == 'Date' or sheet.cell_value(i+4,0) == 'No Borders ' :
+                if sheet.cell_value(i+4,0) == 'Date':
+                    emp_id = emp_id + 1
+                continue
+            else:
+                if in_time == "--:--" and out_time == "--:--":
+                    in_time = datetime.strptime("00:00", "%H:%M")
+                    out_time = datetime.strptime("00:00", "%H:%M")
+                elif out_time == "--:--":
+                    out_time = datetime.strptime("00:00", "%H:%M")
+                elif in_time == "--:--":
+                    in_time = datetime.strptime("00:00", "%H:%M")
+                else:
+                    in_time = datetime.strptime(in_time, "%H:%M")
+                    out_time = datetime.strptime(out_time, "%H:%M")
+                profile = Profile.objects.filter(employee_id=employee_id)
+                if profile.exists():
+                    profile = Profile.objects.get(employee_id=employee_id)
+                    emp, created = EmployeeAttendance.objects.update_or_create(
+                        user = profile.user,
+                        employee_id = profile.employee_id,
+                        date = date[2] + "-" + date[1] + "-" + date[0],
+                        created_by = profile.user,
+                    )
+                    if emp:
+                        emp_details = EmployeeAttendanceDetail.objects.filter(employee_attendance=emp)
+                        if emp_details.exists():
+                            emp_details.delete()
+                        detail, created = EmployeeAttendanceDetail.objects.update_or_create(employee_attendance=emp, in_time=in_time, out_time=out_time, date=date[2] + "-" + date[1] + "-" + date[0], day=day, shift=shift, l_start=l_start, l_end=l_end, work=work, ot=ot, status=status, remark=remark)
+        messages.success(request, " File Successfully Uploaded.")
+        return render(request, template)
+    except:
+        return render(request, template)
 
 
 class UserCreateView(PermissionRequiredMixin, CreateView):
@@ -643,6 +626,7 @@ class EditProfileView(PermissionRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         try:
+            #import pdb;pdb.set_trace()
             instance = Profile.objects.get(pk=kwargs["pk"])
             form = self.form_class(data=request.POST, instance=instance)
             if form.is_valid():
@@ -778,9 +762,11 @@ def home(request):
 
 
 def date_time_attendence_view(request):  
+    
     attendance = EmployeeAttendanceDetail.objects.get(
         id=request.POST.get("attendance_id")
     )
+    print(attendance)
     s1 = attendance.in_time
     s2 = attendance.out_time  # for example
     FMT = "%H:%M:%S"
@@ -1939,15 +1925,14 @@ class FullLeaveListView(PermissionRequiredMixin, ListView):
     permission_required = ("employee.can_view_employee_attendance_list",)
 
     raise_exception = True
-    model = EmployeeAttendance
+    model = EmployeeAttendance #EmployeeAttendanceDetail # 
     template_name = "fullday_leave_list.html"
 
     def get_context_data(self, **kwargs):
         context = super(FullLeaveListView, self).get_context_data(**kwargs)
         # context['object_list'] = self.model.objects.filter(empatt_leave_status__in=[2,3,4]).order_by('-created_at')
         object_list = []
-        less_time_objects = self.model.objects.filter(
-            empatt_leave_status__in=[2,]
+        less_time_objects = self.model.objects.filter(empatt_leave_status__in=[2,]
         ).order_by("-created_at")
         currunt_month = only_datetime.datetime.now().month
         last_month = currunt_month - 1 if currunt_month > 1 else 12

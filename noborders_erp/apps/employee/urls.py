@@ -28,9 +28,10 @@ urlpatterns = [
     # ),
     #path("upload_excel/", uploadExcel, name="upload_excel"),
    # path("file_upload/", attendance_file_upload, name="file_upload"),
-    path("new_upload_excel/", new_uploadExcel, name="new_upload_excel"),
+    #path("new_upload_excel/", new_uploadExcel, name="new_upload_excel"),
     # path("employee_wise_attendance/", emp_wise_attendance, name="employee_wise_attendance"),
-    #path("file_upload/", attendance_file_upload, name="file_upload"),
+    #path("file_upload/", attendance_file_upload, name="file_upload"),path("file_upload/", attendance_file_upload, name="file_upload"),
+    path("file_upload/", attendance_file_upload, name="file_upload"),
     path("signup/", UserCreateView.as_view(), name="signup"),
     path("home/", home, name="home"),
     # path("file/", file_upload, name="file_upload"),
@@ -38,7 +39,7 @@ urlpatterns = [
     path("profile/", EmployeeProfile.as_view(), name="profile"),
     path("deactivate/<int:pk>/", deactivate_user, name="deactivate-user"),
     path("delete_record/", delete_record, name="delete_record"),
-    path("update_leave/<int:pk>/", EditProfileView.as_view(), name="update"),
+    path("update_profile/<int:pk>/", EditProfileView.as_view(), name="update"),
     path(
         "profile_update/<int:pk>/", EmployeeUpdateView.as_view(), name="profile_update"
     ),

@@ -1,6 +1,8 @@
+<!DOCTYPE html>
 {% extends 'base.html' %}
 {% block content %}
 {% load staticfiles %}
+{% load static %}
 {% if messages %}
 <ul class="messages">
    {% for message in messages %}
@@ -34,9 +36,9 @@
             <div class="col-md-3 col-sm-4 col-sm-offset-1 col-md-offset-1 col-xs-12" style="margin-bottom:10px;">
                <button class="upload background_colorbtn"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload</button>
             </div>
-            <a href="sample_attendance_file.xls" download><button>Download Sample File</button></a>
          </div>
       </form>
+      <a href="{% static 'sample_attendance_file.xls' %}" download><button>Download Sample File</button></a>
    </div>
 </div>
 {% endblock %}

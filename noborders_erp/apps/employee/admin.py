@@ -12,11 +12,15 @@ from .models import (
     Client,
     Project,
     AssignProject,
-    EmployeeDailyUpdate
+    EmployeeDailyUpdate,
 )
+class EmployeeAttendanceModelAdmin(admin.ModelAdmin):
+    list_display = ("user_obj", "employee_id", "date")
+    def user_obj(request, obj):
+        return obj.user.username
 # admin.site.register(SignUp)
 admin.site.register(Profile)
-admin.site.register(EmployeeAttendance)
+admin.site.register(EmployeeAttendance, EmployeeAttendanceModelAdmin)
 admin.site.register(AllottedLeave)
 admin.site.register(EmployeeAttendanceDetail)
 admin.site.register(Leave)
@@ -26,5 +30,3 @@ admin.site.register(Client)
 admin.site.register(Project)
 admin.site.register(AssignProject)
 admin.site.register(EmployeeDailyUpdate)
-
-#admin.site.register(EmployeeTotalAttendanceStatus)
